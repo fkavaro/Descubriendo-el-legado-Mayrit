@@ -852,13 +852,13 @@ MonoBehaviour:
     m_Value: 1
   shadowResolution:
     m_OverrideState: 1
-    m_Value: 256
+    m_Value: 128
   shadowDistance:
     m_OverrideState: 1
     m_Value: 10000
   shadowOpacity:
     m_OverrideState: 1
-    m_Value: 0.8
+    m_Value: 0.6
   shadowOpacityFallback:
     m_OverrideState: 1
     m_Value: 0
