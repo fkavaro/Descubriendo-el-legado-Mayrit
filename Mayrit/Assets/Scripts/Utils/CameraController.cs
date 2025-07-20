@@ -1,50 +1,69 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.InputSystem;
+using Unity.Cinemachine;
 
 /// <summary>
 /// Camera controller supporting WASD movement, edge scrolling, zoom and orbit relative to mouse pointer.
 /// All movement is independent of Time.timeScale.
 /// </summary>
-[RequireComponent(typeof(Camera))]
+// [RequireComponent(typeof(Camera))]
 public class CameraController : MonoBehaviour
 {
     #region PUBLIC PROPERTIES
-    [Header("Movement Settings")]
+    [Header("Components")]
+    [SerializeField] Transform CameraTarget;
+    [SerializeField] CinemachineOrbitalFollow OrbitalFollow;
+
+    [Header("Movement")]
     [Tooltip("Wether to move camera at screen margins or not.")]
-    public bool edgeScrolling = true;
-    public int edgeSize = 30;
+    [SerializeField] bool edgeScrolling = true;
+    [SerializeField] int EdgeScrollingMargin = 30;
 
-    [Tooltip("Speed of camera movement with WASD/arrow keys.")]
-    public float movementSpeed;
+    [Space(10)]
+    [SerializeField] float MoveSpeed = 100f;
+    [SerializeField] AnimationCurve MoveSpeedZoomCurve = AnimationCurve.Linear(0f, 0.1f, 1f, 1f);
+    [SerializeField] float Acceleration = 100f;
+    [SerializeField] float Deceleration = 150f;
+    [SerializeField] float SprintSpeedMultiplier = 3f;
 
-    [Tooltip("Speed of camera zoom with scroll wheel.")]
-    public float scrollSpeed;
 
-    [Header("Rotation Settings")]
+    [Header("Orbit")]
     [Tooltip("Mouse sensitivity for camera rotation.")]
-    public float rotationSensitivity;
+    [SerializeField] float OrbitSensitivity = 0.5f;
+    [SerializeField] float OrbitSmoothing = 5f;
+
+    [Header("Zoom")]
+    [Tooltip("Speed of camera zoom with scroll wheel.")]
+    [SerializeField] float ZoomSpeed = 0.5f;
+    [SerializeField] float ZoomSmoothing = 5f;
+    public float ZoomLevel // value between 0 (zoomed in) and 1 (zoomed out)
+    {
+        get
+        {
+            InputAxis axis = OrbitalFollow.RadialAxis;
+
+            return Mathf.InverseLerp(axis.Range.x, axis.Range.y, axis.Value);
+        }
+    }
 
     [Header("Movement Limits")]
-    [Tooltip("Minimum allowed Y position (height) for the camera.")]
-    public float minHeightLimit;
 
     [Tooltip("Maximum allowed X, Y, Z positions (positive and negative) for the camera.")]
-    public Vector3 movementLimits;
-
-    [Header("Rotation Limits")]
-    [Tooltip("Minimum pitch angle in degrees (looking down).")]
-    public float minPitch = -85f;
-    [Tooltip("Maximum pitch angle in degrees (looking up).")]
-    public float maxPitch = 85f;
+    [SerializeField] Vector3 movementLimits;
     #endregion
 
     #region PRIVATE PROPERTIES
-    float heightFactor = 1f, // Used to interpolate movement and zoom speed according to interpolated height
-        interpolatedHeight,
-        currentPitch = 0f; // (vertical angle)
+    Vector2 edgeScrollInput;
+    float decelerationMultiplier = 1f;
+    Vector3 Velocity = Vector3.zero;
+    float CurrentZoomSpeed = 0f;
+
     GameInputActions inputActions;
-    InputAction moveAction, lookAction, scrollAction, rotateButtonAction;
-    Camera cam;
+    InputAction moveAction, lookAction, scrollAction, rotateButtonAction, sprintAction;
+    Vector2 moveInput, scrollInput, lookInput;
+    bool sprintInput, middleClickInput;
     #endregion
 
     #region MONOBEHAVIOUR
@@ -56,14 +75,10 @@ public class CameraController : MonoBehaviour
         lookAction = inputActions.Camera.Look;
         scrollAction = inputActions.Camera.Zoom;
         rotateButtonAction = inputActions.Camera.Rotate;
-        cam = GetComponent<Camera>();
-
-        // Initialize currentPitch based on initial rotation
-        Vector3 euler = transform.eulerAngles;
-        currentPitch = NormalizePitch(euler.x);
+        sprintAction = inputActions.Player.Sprint;
     }
 
-    void Update()
+    void LateUpdate()
     {
         HandleInput();
         ClampPosition();
@@ -73,185 +88,138 @@ public class CameraController : MonoBehaviour
     #region METHODS
     private void HandleInput()
     {
-        HandleMovementInput();
-        HandleScrollInput();
-        HandleRotationInput();
+        if (edgeScrolling)
+            UpdateEdgeScrolling();
+        UpdateMovement();
+        UpdateZoom();
+        UpdateOrbit();
+    }
+    void UpdateEdgeScrolling()
+    {
+        Vector2 mousePosition = Mouse.current.position.ReadValue();
+
+        edgeScrollInput = Vector2.zero;
+
+        if (mousePosition.x <= EdgeScrollingMargin)
+            edgeScrollInput.x = -1f;
+        else if (mousePosition.x >= Screen.width - EdgeScrollingMargin)
+            edgeScrollInput.x = 1f;
+
+        if (mousePosition.y <= EdgeScrollingMargin)
+            edgeScrollInput.y = -1f;
+        else if (mousePosition.y >= Screen.height - EdgeScrollingMargin)
+            edgeScrollInput.y = 1f;
     }
 
     /// <summary>
     /// Moves the camera in its local XZ plane, but keeps its Y (height) unchanged.
     /// </summary>
-    private void HandleMovementInput()
+    private void UpdateMovement()
     {
-        Vector2 movementInput = moveAction.ReadValue<Vector2>();
+        moveInput = moveAction.ReadValue<Vector2>();
+        sprintInput = sprintAction.ReadValue<float>() > 0.5f;
 
-        if (edgeScrolling)
+        Vector3 forward = Camera.main.transform.forward;
+        forward.y = 0f;
+        forward.Normalize();
+
+        Vector3 right = Camera.main.transform.right;
+        right.y = 0f;
+        right.Normalize();
+
+        Vector3 inputVector = new Vector3(moveInput.x + edgeScrollInput.x, 0,
+            moveInput.y + edgeScrollInput.y);
+        inputVector.Normalize();
+
+        float zoomMultiplier = MoveSpeedZoomCurve.Evaluate(ZoomLevel);
+
+        Vector3 targetVelocity = inputVector * MoveSpeed * zoomMultiplier;
+
+        float sprintFactor = 1f;
+        if (sprintInput)
         {
-            Vector2 mousePos = Mouse.current.position.ReadValue();
-
-            // Left
-            if (mousePos.x < edgeSize)
-                movementInput.x -= 1f;
-            // Right
-            else if (mousePos.x > Screen.width - edgeSize)
-                movementInput.x += 1f;
-
-            // Backwards
-            if (mousePos.y < edgeSize)
-                movementInput.y -= 1f;
-            // Forwards
-            else if (mousePos.y > Screen.height - edgeSize)
-                movementInput.y += 1f;
+            targetVelocity *= SprintSpeedMultiplier;
+            sprintFactor = SprintSpeedMultiplier;
         }
 
-        Vector3 localRight = transform.right;
-        Vector3 localForward = transform.forward;
-        localRight.y = 0f;
-        localForward.y = 0f;
-        localRight.Normalize();
-        localForward.Normalize();
-
-        Vector3 movement = localRight * movementInput.x + localForward * movementInput.y;
-
-        // There is input
-        if (movement.sqrMagnitude > 0.0001f)
+        if (inputVector.sqrMagnitude > 0.01f)
         {
-            movement = movementSpeed * heightFactor * Time.unscaledDeltaTime * movement.normalized;
-            Vector3 newPosition = transform.position + movement;
-            newPosition.y = transform.position.y; // Maintain height
-            transform.position = newPosition;
+            Velocity = Vector3.MoveTowards(Velocity, targetVelocity, Acceleration * sprintFactor * Time.unscaledDeltaTime);
+
+            if (sprintInput)
+                decelerationMultiplier = SprintSpeedMultiplier;
         }
+        else
+            Velocity = Vector3.MoveTowards(Velocity, Vector3.zero, Deceleration * decelerationMultiplier * Time.unscaledDeltaTime);
+
+        Vector3 motion = Velocity * Time.unscaledDeltaTime;
+
+        CameraTarget.position += forward * motion.z + right * motion.x;
+
+        if (Velocity.sqrMagnitude <= 0.01f)
+            decelerationMultiplier = 1f;
+    }
+
+
+    /// <summary>
+    /// Handles camera rotation with the right mouse button, orbiting around the point under the mouse.
+    /// </summary>
+    private void UpdateOrbit()
+    {
+        middleClickInput = rotateButtonAction.ReadValue<float>() > 0.5f;
+        lookInput = lookAction.ReadValue<Vector2>();
+
+        Vector2 orbitInput = lookInput * (middleClickInput ? 1f : 0f);
+
+        orbitInput *= OrbitSensitivity;
+
+        InputAxis horizontalAxis = OrbitalFollow.HorizontalAxis;
+        InputAxis verticalAxis = OrbitalFollow.VerticalAxis;
+
+        //horizontalAxis.Value += orbitInput.x;
+        //verticalAxis.Value -= orbitInput.y;
+
+        horizontalAxis.Value = Mathf.Lerp(horizontalAxis.Value, horizontalAxis.Value + orbitInput.x, OrbitSmoothing * Time.unscaledDeltaTime);
+        verticalAxis.Value = Mathf.Lerp(verticalAxis.Value, verticalAxis.Value - orbitInput.y, OrbitSmoothing * Time.unscaledDeltaTime);
+
+        //horizontalAxis.Value = Mathf.Clamp(horizontalAxis.Value, horizontalAxis.Range.x, horizontalAxis.Range.y);
+        verticalAxis.Value = Mathf.Clamp(verticalAxis.Value, verticalAxis.Range.x, verticalAxis.Range.y);
+
+        OrbitalFollow.HorizontalAxis = horizontalAxis;
+        OrbitalFollow.VerticalAxis = verticalAxis;
     }
 
     /// <summary>
     /// Handles zooming in/out with the mouse scroll wheel (moves toward/away from point under mouse).
     /// </summary>
-    private void HandleScrollInput()
+    private void UpdateZoom()
     {
-        Vector2 scroll = scrollAction.ReadValue<Vector2>();
-        float scrollInput = scroll.y;
+        scrollInput = scrollAction.ReadValue<Vector2>();
 
-        // There is input
-        if ((scrollInput >= 0.0001f && transform.position.y > minHeightLimit) || // Want and can to zoom in
-            (scrollInput <= 0.0001f && transform.position.y < movementLimits.y)) // Want and can to zoom out
+        InputAxis axis = OrbitalFollow.RadialAxis;
+
+        float targetZoomSpeed = 0f;
+
+        if (Mathf.Abs(scrollInput.y) >= 0.01f)
         {
-            Vector3 mouseWorldPoint = GetMouseWorldPoint();
-            float zoomAmount = scrollInput * scrollSpeed * heightFactor;
-
-            if (mouseWorldPoint != Vector3.positiveInfinity)
-            {
-                Vector3 direction = (mouseWorldPoint - transform.position).normalized;
-                float distance = Vector3.Distance(transform.position, mouseWorldPoint);
-
-                // Prevent overshooting the target point
-                if (zoomAmount > 0 && zoomAmount > distance - 0.1f)
-                    zoomAmount = distance - 0.1f;
-
-                transform.position += direction * zoomAmount;
-            }
-            else
-            {
-                // fallback: zoom along forward
-                transform.position += zoomAmount * transform.forward;
-            }
+            targetZoomSpeed = ZoomSpeed * scrollInput.y;
         }
+
+        CurrentZoomSpeed = Mathf.Lerp(CurrentZoomSpeed, targetZoomSpeed, ZoomSmoothing * Time.unscaledDeltaTime);
+
+        axis.Value -= CurrentZoomSpeed;
+        axis.Value = Mathf.Clamp(axis.Value, axis.Range.x, axis.Range.y);
+
+        OrbitalFollow.RadialAxis = axis;
     }
 
-    /// <summary>
-    /// Handles camera rotation with the right mouse button, orbiting around the point under the mouse.
-    /// </summary>
-    private void HandleRotationInput()
-    {
-        bool rotatePressed = rotateButtonAction.ReadValue<float>() > 0.5f;
-
-        // There is input
-        if (rotatePressed)
-        {
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
-
-            Vector2 mouseDelta = lookAction.ReadValue<Vector2>();
-            Vector3 mouseWorldPoint = GetMouseWorldPoint();
-
-            if (mouseWorldPoint == Vector3.positiveInfinity)
-                // fallback: orbit around camera's current position
-                mouseWorldPoint = transform.position + transform.forward * 10f;
-
-            // Calculate angles
-            float yaw = mouseDelta.x * rotationSensitivity * Time.unscaledDeltaTime;
-            float pitch = -mouseDelta.y * rotationSensitivity * Time.unscaledDeltaTime;
-
-            // Orbit horizontally (yaw)
-            transform.RotateAround(mouseWorldPoint, Vector3.up, yaw);
-
-            // Clamp pitch before applying
-            float newPitch = Mathf.Clamp(currentPitch + pitch, minPitch, maxPitch);
-            float pitchDelta = newPitch - currentPitch;
-
-            // Orbit vertically (pitch), only if not exceeding limits
-            if (Mathf.Abs(pitchDelta) > 0.0001f)
-            {
-                Vector3 right = transform.right;
-                transform.RotateAround(mouseWorldPoint, right, pitchDelta);
-                currentPitch = newPitch;
-            }
-
-            // Zero out roll
-            Vector3 euler = transform.eulerAngles;
-            transform.rotation = Quaternion.Euler(euler.x, euler.y, 0f);
-        }
-        else
-        {
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-
-            // Update currentPitch in case the camera was rotated externally
-            Vector3 euler = transform.eulerAngles;
-            currentPitch = NormalizePitch(euler.x);
-        }
-    }
-
-    /// <summary>
-    /// Raycasts from the mouse position to the ground plane (Y=0) and returns the hit point.
-    /// Returns Vector3.positiveInfinity if nothing is hit.
-    /// </summary>
-    Vector3 GetMouseWorldPoint()
-    {
-        Vector2 mousePos = Mouse.current.position.ReadValue();
-        Ray ray = cam.ScreenPointToRay(mousePos);
-
-        // Raycast to ground plane (Y=0)
-        Plane ground = new(Vector3.up, Vector3.zero);
-        if (ground.Raycast(ray, out float enter))
-        {
-            return ray.GetPoint(enter);
-        }
-        return Vector3.positiveInfinity;
-    }
-
-    /// <summary>
-    /// Limit camera to position limits and sets height factor according to its height
-    /// </summary>
     void ClampPosition()
     {
-        Vector3 pos = transform.position;
-        pos.x = Mathf.Clamp(pos.x, -movementLimits.x, movementLimits.x);
-        pos.y = Mathf.Clamp(pos.y, minHeightLimit, movementLimits.y);
-        pos.z = Mathf.Clamp(pos.z, -movementLimits.z, movementLimits.z);
-        transform.position = pos;
-
-        // Remap heightFactor: 0.1 at minHeightLimit, 1 at movementLimits.y
-        interpolatedHeight = Mathf.InverseLerp(minHeightLimit, movementLimits.y, pos.y);
-        heightFactor = Mathf.Lerp(0.1f, 1f, interpolatedHeight);
-    }
-
-    /// <summary>
-    /// Normalize pitch angle to range [-180, 180], then clamp to [-90, 90] for pitch tracking.
-    /// </summary>
-    float NormalizePitch(float angle)
-    {
-        angle = Mathf.Repeat(angle + 180f, 360f) - 180f;
-        return Mathf.Clamp(angle, -90f, 90f);
+        Vector3 targetPos = CameraTarget.position;
+        targetPos.x = Mathf.Clamp(targetPos.x, -movementLimits.x, movementLimits.x);
+        //pos.y = Mathf.Clamp(pos.y, minHeightLimit, movementLimits.y);
+        targetPos.z = Mathf.Clamp(targetPos.z, -movementLimits.z, movementLimits.z);
+        CameraTarget.position = targetPos;
     }
     #endregion
 }
