@@ -8,39 +8,46 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Camera))]
 public class CameraController : MonoBehaviour
 {
+    #region PUBLIC PROPERTIES
     [Header("Movement Settings")]
     [Tooltip("Wether to move camera at screen margins or not.")]
     public bool edgeScrolling = true;
     public int edgeSize = 30;
 
     [Tooltip("Speed of camera movement with WASD/arrow keys.")]
-    public float movementSpeed = 5f;
+    public float movementSpeed;
 
     [Tooltip("Speed of camera zoom with scroll wheel.")]
-    public float scrollSpeed = 10f;
+    public float scrollSpeed;
 
     [Header("Rotation Settings")]
     [Tooltip("Mouse sensitivity for camera rotation.")]
-    public float rotationSensitivity = 5f;
+    public float rotationSensitivity;
 
     [Header("Movement Limits")]
     [Tooltip("Minimum allowed Y position (height) for the camera.")]
-    public float minHeightLimit = 2f;
+    public float minHeightLimit;
 
     [Tooltip("Maximum allowed X, Y, Z positions (positive and negative) for the camera.")]
     public Vector3 movementLimits;
 
-    float heightFactor = 1f; // Used to interpolate movement and zoom speed according to interpolated height
-    float interpolatedHeight;
+    [Header("Rotation Limits")]
+    [Tooltip("Minimum pitch angle in degrees (looking down).")]
+    public float minPitch = -85f;
+    [Tooltip("Maximum pitch angle in degrees (looking up).")]
+    public float maxPitch = 85f;
+    #endregion
 
+    #region PRIVATE PROPERTIES
+    float heightFactor = 1f, // Used to interpolate movement and zoom speed according to interpolated height
+        interpolatedHeight,
+        currentPitch = 0f; // (vertical angle)
     GameInputActions inputActions;
-    InputAction moveAction;
-    InputAction lookAction;
-    InputAction scrollAction;
-    InputAction rotateButtonAction;
+    InputAction moveAction, lookAction, scrollAction, rotateButtonAction;
+    Camera cam;
+    #endregion
 
-    private Camera cam;
-
+    #region MONOBEHAVIOUR
     void Awake()
     {
         inputActions = new();
@@ -50,6 +57,10 @@ public class CameraController : MonoBehaviour
         scrollAction = inputActions.Camera.Zoom;
         rotateButtonAction = inputActions.Camera.Rotate;
         cam = GetComponent<Camera>();
+
+        // Initialize currentPitch based on initial rotation
+        Vector3 euler = transform.eulerAngles;
+        currentPitch = NormalizePitch(euler.x);
     }
 
     void Update()
@@ -57,7 +68,9 @@ public class CameraController : MonoBehaviour
         HandleInput();
         ClampPosition();
     }
+    #endregion
 
+    #region METHODS
     private void HandleInput()
     {
         HandleMovementInput();
@@ -76,13 +89,17 @@ public class CameraController : MonoBehaviour
         {
             Vector2 mousePos = Mouse.current.position.ReadValue();
 
+            // Left
             if (mousePos.x < edgeSize)
                 movementInput.x -= 1f;
+            // Right
             else if (mousePos.x > Screen.width - edgeSize)
                 movementInput.x += 1f;
 
+            // Backwards
             if (mousePos.y < edgeSize)
                 movementInput.y -= 1f;
+            // Forwards
             else if (mousePos.y > Screen.height - edgeSize)
                 movementInput.y += 1f;
         }
@@ -96,6 +113,7 @@ public class CameraController : MonoBehaviour
 
         Vector3 movement = localRight * movementInput.x + localForward * movementInput.y;
 
+        // There is input
         if (movement.sqrMagnitude > 0.0001f)
         {
             movement = movementSpeed * heightFactor * Time.unscaledDeltaTime * movement.normalized;
@@ -113,7 +131,9 @@ public class CameraController : MonoBehaviour
         Vector2 scroll = scrollAction.ReadValue<Vector2>();
         float scrollInput = scroll.y;
 
-        if (Mathf.Abs(scrollInput) > 0.0001f)
+        // There is input
+        if ((scrollInput >= 0.0001f && transform.position.y > minHeightLimit) || // Want and can to zoom in
+            (scrollInput <= 0.0001f && transform.position.y < movementLimits.y)) // Want and can to zoom out
         {
             Vector3 mouseWorldPoint = GetMouseWorldPoint();
             float zoomAmount = scrollInput * scrollSpeed * heightFactor;
@@ -144,30 +164,37 @@ public class CameraController : MonoBehaviour
     {
         bool rotatePressed = rotateButtonAction.ReadValue<float>() > 0.5f;
 
+        // There is input
         if (rotatePressed)
         {
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
 
             Vector2 mouseDelta = lookAction.ReadValue<Vector2>();
-            Vector3 pivot = GetMouseWorldPoint();
+            Vector3 mouseWorldPoint = GetMouseWorldPoint();
 
-            if (pivot == Vector3.positiveInfinity)
-            {
+            if (mouseWorldPoint == Vector3.positiveInfinity)
                 // fallback: orbit around camera's current position
-                pivot = transform.position + transform.forward * 10f;
-            }
+                mouseWorldPoint = transform.position + transform.forward * 10f;
 
             // Calculate angles
             float yaw = mouseDelta.x * rotationSensitivity * Time.unscaledDeltaTime;
             float pitch = -mouseDelta.y * rotationSensitivity * Time.unscaledDeltaTime;
 
             // Orbit horizontally (yaw)
-            transform.RotateAround(pivot, Vector3.up, yaw);
+            transform.RotateAround(mouseWorldPoint, Vector3.up, yaw);
 
-            // Orbit vertically (pitch)
-            Vector3 right = transform.right;
-            transform.RotateAround(pivot, right, pitch);
+            // Clamp pitch before applying
+            float newPitch = Mathf.Clamp(currentPitch + pitch, minPitch, maxPitch);
+            float pitchDelta = newPitch - currentPitch;
+
+            // Orbit vertically (pitch), only if not exceeding limits
+            if (Mathf.Abs(pitchDelta) > 0.0001f)
+            {
+                Vector3 right = transform.right;
+                transform.RotateAround(mouseWorldPoint, right, pitchDelta);
+                currentPitch = newPitch;
+            }
 
             // Zero out roll
             Vector3 euler = transform.eulerAngles;
@@ -177,6 +204,10 @@ public class CameraController : MonoBehaviour
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
+
+            // Update currentPitch in case the camera was rotated externally
+            Vector3 euler = transform.eulerAngles;
+            currentPitch = NormalizePitch(euler.x);
         }
     }
 
@@ -184,7 +215,7 @@ public class CameraController : MonoBehaviour
     /// Raycasts from the mouse position to the ground plane (Y=0) and returns the hit point.
     /// Returns Vector3.positiveInfinity if nothing is hit.
     /// </summary>
-    private Vector3 GetMouseWorldPoint()
+    Vector3 GetMouseWorldPoint()
     {
         Vector2 mousePos = Mouse.current.position.ReadValue();
         Ray ray = cam.ScreenPointToRay(mousePos);
@@ -198,7 +229,10 @@ public class CameraController : MonoBehaviour
         return Vector3.positiveInfinity;
     }
 
-    private void ClampPosition()
+    /// <summary>
+    /// Limit camera to position limits and sets height factor according to its height
+    /// </summary>
+    void ClampPosition()
     {
         Vector3 pos = transform.position;
         pos.x = Mathf.Clamp(pos.x, -movementLimits.x, movementLimits.x);
@@ -210,4 +244,14 @@ public class CameraController : MonoBehaviour
         interpolatedHeight = Mathf.InverseLerp(minHeightLimit, movementLimits.y, pos.y);
         heightFactor = Mathf.Lerp(0.1f, 1f, interpolatedHeight);
     }
+
+    /// <summary>
+    /// Normalize pitch angle to range [-180, 180], then clamp to [-90, 90] for pitch tracking.
+    /// </summary>
+    float NormalizePitch(float angle)
+    {
+        angle = Mathf.Repeat(angle + 180f, 360f) - 180f;
+        return Mathf.Clamp(angle, -90f, 90f);
+    }
+    #endregion
 }
