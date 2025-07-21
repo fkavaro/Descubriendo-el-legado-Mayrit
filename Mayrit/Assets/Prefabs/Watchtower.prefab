@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4695466637989169317}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Watchtower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 266011759740793327}
   - component: {fileID: 825483110214009607}
   - component: {fileID: 7772214713016570567}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -399,7 +399,7 @@ GameObject:
   - component: {fileID: 6212490376901364814}
   - component: {fileID: 461953852311752126}
   - component: {fileID: 3056362522718820346}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -875,17 +875,9 @@ MonoBehaviour:
   m_Mesh: {fileID: 0}
   m_VersionIndex: 446
   m_IsSelectable: 1
-  m_SelectedFaces: 04000000
-  m_SelectedEdges:
-  - a: 16
-    b: 17
-  - a: 18
-    b: 16
-  - a: 17
-    b: 19
-  - a: 19
-    b: 18
-  m_SelectedVertices: 10000000110000001200000013000000
+  m_SelectedFaces: 
+  m_SelectedEdges: []
+  m_SelectedVertices: 
 --- !u!114 &8433799141874511258
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8404425909734408605}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: House 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 8635100613363801185}
   - component: {fileID: 1273788297152944527}
   - component: {fileID: 6744805197606846161}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Prism
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -362,7 +362,7 @@ GameObject:
   - component: {fileID: 4222009039200484880}
   - component: {fileID: 3693354423318761644}
   - component: {fileID: 1850738386542276890}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
