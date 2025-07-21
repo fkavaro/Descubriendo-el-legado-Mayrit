@@ -1,0 +1,10 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/MayritStyle.uss?fileID=7433441132597879392&amp;guid=7a6c8e791557401438e2762dac509247&amp;type=3#MayritStyle" />
+    <ui:VisualElement name="Container" style="flex-grow: 1; align-content: center; background-image: none; margin-left: 30px; margin-top: 30px; margin-right: 30px; margin-bottom: 30px; justify-content: center;">
+        <ui:Button text="| |" name="PauseButton" class="button smallButton" style="top: 0; left: 0; position: absolute;" />
+        <ui:VisualElement name="EventPanel" style="flex-grow: 1; justify-content: space-evenly; position: absolute; top: 0; left: auto; right: auto; bottom: auto; height: 131px; width: 636px; flex-direction: column; align-self: center; align-items: center; -unity-text-align: upper-left;">
+            <ui:Label text="Fundación" name="Event" class="header" style="height: 45px;" />
+            <ui:Label text="860 d.C.&#10;" name="Year" class="header subHeader" style="height: 44px; -unity-text-align: lower-left;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
