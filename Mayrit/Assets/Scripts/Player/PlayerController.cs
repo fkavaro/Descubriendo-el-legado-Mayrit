@@ -27,7 +27,7 @@ public class PlayerController
     public void Start()
     {
         _cameraTransform = Camera.main.transform;
-        _orientation = _playerManager.orientation;
+        _orientation = _playerManager._orientation;
     }
 
     public void Update()
@@ -52,7 +52,7 @@ public class PlayerController
         {
             // Jump key pressed
             if (GameManager.Instance._inputActions.Player.Jump.IsPressed())
-                _verticalVelocity = _playerManager.jumpForce; // Jump
+                _verticalVelocity = _playerManager._jumpForce; // Jump
             // Not pressed
             else
                 _verticalVelocity = -1f; // Small gravity to keep grounded
@@ -60,7 +60,7 @@ public class PlayerController
         else
         {
             // Apply gravity to vertical velocity
-            _verticalVelocity -= _playerManager.gravityForce * Time.deltaTime;
+            _verticalVelocity -= _playerManager._gravityForce * Time.deltaTime;
         }
     }
 
@@ -71,9 +71,9 @@ public class PlayerController
     {
         // Sprint key pressed
         if (GameManager.Instance._inputActions.Player.Sprint.IsPressed())
-            _movementSpeed = _playerManager.sprintSpeed; // Move with sprint speed
+            _movementSpeed = _playerManager._sprintSpeed; // Move with sprint speed
         else
-            _movementSpeed = _playerManager.walkSpeed; // Move with walk speed
+            _movementSpeed = _playerManager._walkSpeed; // Move with walk speed
 
         // Get direction in 3D space based on camera orientation
         _forward = _cameraTransform.forward;
@@ -109,7 +109,7 @@ public class PlayerController
 
             Vector3 inputDir = _orientation.forward * _movement2D.y + _orientation.right * _movement2D.x;
 
-            _playerManager.transform.forward = Vector3.Slerp(_playerManager.transform.forward, inputDir.normalized, Time.deltaTime * _playerManager.rotationSpeed);
+            _playerManager.transform.forward = Vector3.Slerp(_playerManager.transform.forward, inputDir.normalized, Time.deltaTime * _playerManager._rotationSpeed);
         }
     }
     #endregion

@@ -17,12 +17,12 @@ public class PlayerManager : AHumanoid<PlayerManager>
     FiniteStateMachine<PlayerManager> _fsm;
 
     [Header("Controller Properties")]
-    public Transform orientation;
-    public float walkSpeed = 6f;
-    public float sprintSpeed = 12f;
-    public float rotationSpeed = 2f;
-    public float jumpForce = 2f;
-    public float gravityForce = 9f;
+    public Transform _orientation;
+    public float _walkSpeed = 6f;
+    public float _sprintSpeed = 12f;
+    public float _rotationSpeed = 2f;
+    public float _jumpForce = 2f;
+    public float _gravityForce = 9f;
     #endregion
 
     #region PRIVATE PROPERTIES
