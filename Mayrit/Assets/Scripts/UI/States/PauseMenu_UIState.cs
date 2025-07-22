@@ -13,7 +13,6 @@ public class PauseMenu_UIState : AUIState
     #endregion
 
     #region PRIVATE PROPERTIES
-    VisualElement _pauseMenu;
     Button _playButton;
     #endregion
 
@@ -23,16 +22,16 @@ public class PauseMenu_UIState : AUIState
 
     public override void AwakeState()
     {
-        _UI = UIManager.Instance.UIDocument;
-        _pauseMenu = _UI.rootVisualElement.Q<VisualElement>("PauseMenu");
-        _playButton = _pauseMenu.Q<Button>("PlayButton");
+        _UIDocument = UIManager.Instance.UIDocument;
+        _screen = _UIDocument.rootVisualElement.Q<VisualElement>("PauseMenu");
+        _playButton = _screen.Q<Button>("PlayButton");
 
         _playButton.RegisterCallback<ClickEvent>(SwitchToHUDState);
     }
 
     public override void StartState()
     {
-        _pauseMenu.style.display = DisplayStyle.Flex; // Show pause menu
+        _screen.style.display = DisplayStyle.Flex; // Show pause menu
 
         // Game pause state
         GameManager.Instance.fsm.SwitchState(GameManager.Instance.pauseState);
@@ -45,7 +44,7 @@ public class PauseMenu_UIState : AUIState
 
     public override void ExitState()
     {
-        _pauseMenu.style.display = DisplayStyle.None; // Hide HUD
+        _screen.style.display = DisplayStyle.None; // Hide HUD
     }
     #endregion
 

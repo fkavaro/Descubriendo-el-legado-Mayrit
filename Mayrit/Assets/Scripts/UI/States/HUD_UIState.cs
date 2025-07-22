@@ -12,10 +12,9 @@ public class HUD_UIState : AUIState
     #endregion
 
     #region PRIVATE PROPERTIES
-    VisualElement _hud;
     Label _tooltip;
     Button _pauseButton;
-    Vector2 _cursorCreenPos;
+    Vector2 _cursorScreenPos;
     #endregion
 
     #region INHERITED
@@ -24,30 +23,31 @@ public class HUD_UIState : AUIState
 
     public override void AwakeState()
     {
-        _UI = UIManager.Instance.UIDocument;
-        _hud = _UI.rootVisualElement.Q<VisualElement>("HUD");
-        _tooltip = _hud.Q<Label>("Tooltip");
-        _pauseButton = _hud.Q<Button>("PauseButton");
+        _UIDocument = UIManager.Instance.UIDocument;
+        _screen = _UIDocument.rootVisualElement.Q<VisualElement>("HUD");
+
+        _tooltip = _screen.Q<Label>("Tooltip");
+        _pauseButton = _screen.Q<Button>("PauseButton");
 
         _pauseButton.RegisterCallback<ClickEvent>(SwitchToPauseState);
     }
 
     public override void StartState()
     {
-        _hud.style.display = DisplayStyle.Flex; // Show HUD
+        _screen.style.display = DisplayStyle.Flex; // Show HUD
         HideTooltip();
     }
 
     public override void UpdateState()
     {
+        _cursorScreenPos = Mouse.current.position.ReadValue();
+
         if (_tooltip != null &&
             _tooltip.style.display == DisplayStyle.Flex)
         {
-            _cursorCreenPos = Mouse.current.position.ReadValue();
-
             // UI Toolkit's Y axis is from top to bottom, while screen coordinates are from bottom to top
-            float tooltipX = _cursorCreenPos.x + UIManager.Instance.tooltipOffsetX;
-            float tooltipY = Screen.height - _cursorCreenPos.y - UIManager.Instance.tooltipOffsetY;
+            float tooltipX = _cursorScreenPos.x + UIManager.Instance.tooltipOffsetX;
+            float tooltipY = Screen.height - _cursorScreenPos.y - UIManager.Instance.tooltipOffsetY;
 
             _tooltip.style.left = tooltipX;
             _tooltip.style.top = tooltipY;
@@ -56,7 +56,7 @@ public class HUD_UIState : AUIState
 
     public override void ExitState()
     {
-        _hud.style.display = DisplayStyle.None; // Hide HUD
+        _screen.style.display = DisplayStyle.None; // Hide HUD
     }
 
     #endregion
