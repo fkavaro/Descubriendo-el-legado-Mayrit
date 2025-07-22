@@ -23,18 +23,15 @@ public class PauseMenu_UIState : AUIState
 
     public override void AwakeState()
     {
-
-    }
-
-    public override void StartState()
-    {
-        UIManager.Instance.UIDocument = UIManager.Instance.GetComponent<UIDocument>();
         _UI = UIManager.Instance.UIDocument;
         _pauseMenu = _UI.rootVisualElement.Q<VisualElement>("PauseMenu");
         _playButton = _pauseMenu.Q<Button>("PlayButton");
 
         _playButton.RegisterCallback<ClickEvent>(SwitchToHUDState);
+    }
 
+    public override void StartState()
+    {
         _pauseMenu.style.display = DisplayStyle.Flex; // Show pause menu
 
         // Game pause state

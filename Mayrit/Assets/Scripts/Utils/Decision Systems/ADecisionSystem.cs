@@ -12,7 +12,7 @@ where TController : ABehaviourController<TController>
 
     protected abstract void DebugDecision();
 
-    public virtual void Awake() { } // Implemented in subclasses
+    public virtual void Awake() { }
     public virtual void Start() { }
     public abstract void Update();
 

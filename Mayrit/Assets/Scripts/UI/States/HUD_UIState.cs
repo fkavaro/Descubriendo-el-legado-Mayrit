@@ -24,18 +24,16 @@ public class HUD_UIState : AUIState
 
     public override void AwakeState()
     {
-
-    }
-
-    public override void StartState()
-    {
-        UIManager.Instance.UIDocument = UIManager.Instance.GetComponent<UIDocument>();
         _UI = UIManager.Instance.UIDocument;
         _hud = _UI.rootVisualElement.Q<VisualElement>("HUD");
         _tooltip = _hud.Q<Label>("Tooltip");
         _pauseButton = _hud.Q<Button>("PauseButton");
 
         _pauseButton.RegisterCallback<ClickEvent>(SwitchToPauseState);
+    }
+
+    public override void StartState()
+    {
         _hud.style.display = DisplayStyle.Flex; // Show HUD
         HideTooltip();
     }

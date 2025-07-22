@@ -21,9 +21,7 @@ public class StackFiniteStateMachine<TController> : AStateMachine<TController, S
     #region INHERITED METHODS
     public override void Start()
     {
-        currentState = initialState;
         PushCurrentState();
-        DebugDecision();
         currentState?.StartState();
     }
 
@@ -49,6 +47,7 @@ public class StackFiniteStateMachine<TController> : AStateMachine<TController, S
         currentState?.OnExitState();
         currentState = newState;
         DebugDecision();
+        currentState?.AwakeState();
         currentState?.StartState();
     }
 
@@ -61,7 +60,8 @@ public class StackFiniteStateMachine<TController> : AStateMachine<TController, S
         // Don't exit the current state, just set and start the new one
         currentState = newState;
         DebugDecision();
-        currentState.StartState();
+        currentState?.AwakeState();
+        currentState?.StartState();
     }
     #endregion
 

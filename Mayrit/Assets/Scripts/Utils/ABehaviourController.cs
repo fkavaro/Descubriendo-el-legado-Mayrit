@@ -17,7 +17,7 @@ where TController : ABehaviourController<TController>
     ADecisionSystem<TController> _decisionSystem;
 
     /// <summary>
-    /// Create the main decision system. Executed after OnStart().
+    /// Create the main decision system. Executed after OnAwake().
     /// </summary>
     protected abstract ADecisionSystem<TController> CreateDecisionSystem();
 
@@ -33,6 +33,7 @@ where TController : ABehaviourController<TController>
     private void Awake()
     {
         OnAwake();
+        _decisionSystem = CreateDecisionSystem();
         _decisionSystem?.Awake();
     }
     protected virtual void OnAwake() { } // Optionally implemented in subclasses
@@ -40,7 +41,6 @@ where TController : ABehaviourController<TController>
     private void Start()
     {
         OnStart();
-        _decisionSystem = CreateDecisionSystem();
         _decisionSystem?.Start();
     }
     protected virtual void OnStart() { } // Optionally implemented in subclasses

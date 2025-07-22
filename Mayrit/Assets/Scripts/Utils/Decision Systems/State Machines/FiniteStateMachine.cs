@@ -27,6 +27,7 @@ public class FiniteStateMachine<TController> : AStateMachine<TController, Finite
         currentState?.OnExitState();
         currentState = state;
         DebugDecision();
+        currentState?.AwakeState();
         currentState?.StartState();
     }
     #endregion

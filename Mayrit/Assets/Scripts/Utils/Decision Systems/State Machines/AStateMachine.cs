@@ -56,10 +56,15 @@ where TStateMachineType : AStateMachine<TController, TStateMachineType>
     #endregion
 
     #region UNITY EXECUTION EVENTS
-    public override void Start()
+    public override void Awake()
     {
         currentState = initialState;
         DebugDecision();
+        currentState?.AwakeState();
+    }
+
+    public override void Start()
+    {
         currentState?.StartState();
     }
 

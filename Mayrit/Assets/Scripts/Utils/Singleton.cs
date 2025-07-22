@@ -47,7 +47,7 @@ where T : ABehaviourController<T>
     /// Ensures only one instance exists in the scene.
     /// Destroys any duplicate instances.
     /// </summary>
-    protected virtual void Awake()
+    protected override void OnAwake()
     {
         lock (_lock) // Ensures thread safety when setting the instance.
         {

@@ -5,8 +5,8 @@ using UnityEngine.SceneManagement;
 public class UIManager : Singleton<UIManager>
 {
     #region PUBLIC PROPERTIES
-    [Header("User Interface Properties")]
     public UIDocument UIDocument;
+    [Header("User Interface Properties")]
     public int tooltipOffsetX = 3, tooltipOffsetY = 40;
 
     // State Machine
@@ -22,7 +22,9 @@ public class UIManager : Singleton<UIManager>
     #region INHERITED
     protected override void OnAwake()
     {
+        base.OnAwake();
 
+        UIDocument = GetComponent<UIDocument>();
     }
 
     protected override void OnStart()
