@@ -86,13 +86,13 @@ where TController : ABehaviourController<TController>
         isExecutionPaused = true;
 
         if (showtext && waitTime >= 2f)
-            animationText.text = animationName + " for " + waitTime + " seconds...";
+            //animationText.text = animationName + " for " + waitTime + " seconds...";
 
-        ChangeAnimationTo(animation);
+            ChangeAnimationTo(animation);
 
         yield return new WaitForSeconds(waitTime);
 
-        animationText.text = "";
+        //animationText.text = "";
         isExecutionPaused = false;
         onComplete?.Invoke();
     }

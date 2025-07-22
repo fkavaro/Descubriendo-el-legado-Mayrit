@@ -12,10 +12,8 @@ where TController : ABehaviourController<TController>
     [Tooltip("Whether to show debug messages in the console or not")]
     public bool debugMode = false;
     [Tooltip("Whether to update next frame or not")]
-    [SerializeField] public bool isExecutionPaused = false;
+    public bool isExecutionPaused = false;
 
-    [HideInInspector] public TextMeshProUGUI actionText, nodeText, animationText;
-    protected Transform debugCanvas;
     ADecisionSystem<TController> _decisionSystem;
 
     /// <summary>
@@ -34,19 +32,6 @@ where TController : ABehaviourController<TController>
     #region UNITY EXECUTION EVENTS
     private void Awake()
     {
-        debugCanvas = transform.Find("DebugCanvas")?.transform;
-        actionText = debugCanvas?.Find("Action").GetComponent<TextMeshProUGUI>();
-        animationText = debugCanvas?.Find("Animation").GetComponent<TextMeshProUGUI>();
-
-        try
-        {
-            nodeText = debugCanvas?.Find("Node").GetComponent<TextMeshProUGUI>();
-        }
-        catch
-        {
-
-        }
-
         OnAwake();
         _decisionSystem?.Awake();
     }

@@ -25,7 +25,7 @@ where TController : ABehaviourController<TController>
     #region INHERITED METHODS
     protected override void DebugDecision()
     {
-        controller.actionText.text = _currentAction.DebugDecision();
+        //controller.actionText.text = _currentAction.DebugDecision();
     }
 
     public override void Start()

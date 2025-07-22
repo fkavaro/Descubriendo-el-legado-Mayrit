@@ -42,7 +42,7 @@ where TStateMachineType : AStateMachine<TController, TStateMachineType>
     {
         //if (controller.debugMode)
         //Debug.LogWarning(controller.transform.name + " is " + currentState.ToString());
-        controller.actionText.text = GetCurrentStateName();
+        //controller.actionText.text = GetCurrentStateName();
     }
 
     public virtual void ForceState(AState<TController, TStateMachineType> newState)

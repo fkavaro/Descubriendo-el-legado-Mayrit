@@ -5,16 +5,18 @@ using UnityEngine;
 /// Ensures only one instance exists and destroys duplicates.
 /// </summary>
 /// <typeparam name="T">The type that extends Singleton.</typeparam>
-public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
+public abstract class Singleton<T> : ABehaviourController<T>
+where T : ABehaviourController<T>
 {
-    // Wether to destroy the instance when loading a new scene.
+    [Header("Singleton Properties")]
+    [Tooltip("Wether to destroy the instance when loading a new scene")]
     [SerializeField] protected bool dontDestroyOnLoad = true;
 
     // Static reference to the single instance of this class.
-    private static T _instance;
+    static T _instance;
 
     // Lock object to ensure thread safety when creating the instance.
-    private static readonly object _lock = new object();
+    static readonly object _lock = new object();
 
     /// <summary>
     /// Public property to access the singleton instance.
@@ -32,7 +34,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 
                     if (_instance == null) // If still null, create a new instance.
                     {
-                        GameObject singletonObj = new GameObject(typeof(T).Name); // Creates a new GameObject named after the type.
+                        GameObject singletonObj = new(typeof(T).Name); // Creates a new GameObject named after the type.
                         _instance = singletonObj.AddComponent<T>(); // Adds the singleton component to the new GameObject.
                     }
                 }
