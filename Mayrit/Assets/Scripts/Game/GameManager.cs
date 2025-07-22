@@ -5,17 +5,18 @@ public class GameManager : Singleton<GameManager>
 {
 
     #region PUBLIC PROPERTIES
-    public UIDocument currentUI;
+    // State Machine
+    public FiniteStateMachine<GameManager> fsm;
     public MainMenu_GameState mainMenuState;
     public GamePlay_GameState gamePlayState;
     public Pause_GameState pauseState;
     #endregion
 
     #region PRIVATE PROPERTIES
-    FiniteStateMachine<GameManager> gameFSM;
+
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region INHERITED
     protected override void OnAwake()
     {
 
@@ -32,15 +33,15 @@ public class GameManager : Singleton<GameManager>
     }
     protected override ADecisionSystem<GameManager> CreateDecisionSystem()
     {
-        gameFSM = new(this);
+        fsm = new(this);
 
-        mainMenuState = new(gameFSM);
-        gamePlayState = new(gameFSM);
-        pauseState = new(gameFSM);
+        mainMenuState = new(fsm);
+        gamePlayState = new(fsm);
+        pauseState = new(fsm);
 
-        //gameFSM.SetInitialState(gamePlayState);
+        fsm.SetInitialState(gamePlayState);
 
-        return gameFSM;
+        return fsm;
     }
     #endregion
 

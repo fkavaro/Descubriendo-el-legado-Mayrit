@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class MainMenu_GameState : AState<GameManager, FiniteStateMachine<GameManager>>
 {
-    public MainMenu_GameState(FiniteStateMachine<GameManager> stateMachine) : base("Main menu", stateMachine)
+    public MainMenu_GameState(FiniteStateMachine<GameManager> stateMachine)
+    : base("Main menu", stateMachine)
     {
 
     }

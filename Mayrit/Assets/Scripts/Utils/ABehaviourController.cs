@@ -17,7 +17,7 @@ where TController : ABehaviourController<TController>
     ADecisionSystem<TController> _decisionSystem;
 
     /// <summary>
-    /// Create the main decision system.
+    /// Create the main decision system. Executed after OnStart().
     /// </summary>
     protected abstract ADecisionSystem<TController> CreateDecisionSystem();
 

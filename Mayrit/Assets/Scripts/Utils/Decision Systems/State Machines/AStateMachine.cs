@@ -40,9 +40,8 @@ where TStateMachineType : AStateMachine<TController, TStateMachineType>
     /// </summary>
     protected override void DebugDecision()
     {
-        //if (controller.debugMode)
-        //Debug.LogWarning(controller.transform.name + " is " + currentState.ToString());
-        //controller.actionText.text = GetCurrentStateName();
+        if (controller.debugMode)
+            Debug.LogWarning(controller.transform.name + " is " + currentState.StateName);
     }
 
     public virtual void ForceState(AState<TController, TStateMachineType> newState)

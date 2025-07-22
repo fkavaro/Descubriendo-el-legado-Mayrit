@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class Pause_GameState : AState<GameManager, FiniteStateMachine<GameManager>>
 {
-    public Pause_GameState(FiniteStateMachine<GameManager> stateMachine) : base("Pause", stateMachine)
+    public Pause_GameState(FiniteStateMachine<GameManager> stateMachine)
+    : base("Pause", stateMachine)
     {
 
     }

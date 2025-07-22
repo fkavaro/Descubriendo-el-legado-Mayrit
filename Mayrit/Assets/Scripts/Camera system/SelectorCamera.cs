@@ -7,7 +7,7 @@ public class SelectorCamera : MonoBehaviour
     #region PUBLIC PROPERTIES
     [Header("Object selection")]
     [Tooltip("UIDocument component that contains HUD.")]
-    public HUDController hud;
+    public UIManager hud;
     [Tooltip("Layer mask to define which objects are selectable.")]
     public LayerMask selectableLayer;
     #endregion
@@ -38,6 +38,11 @@ public class SelectorCamera : MonoBehaviour
         inputActions = new();
         inputActions.Camera.Enable();
         inputActions.Camera.Select.performed += OnSelectObject;
+    }
+
+    void Start()
+    {
+        hud = UIManager.Instance;
 
         if (hud != null)
         {
@@ -245,7 +250,7 @@ public class SelectorCamera : MonoBehaviour
         //     // Apply the hover highlight material
         //     objRenderer.material = hoverMaterial;
         // }
-        hud.PlaceTooltip(hoverObject);
+        hud.gamePlayState.PlaceTooltip(hoverObject);
 
         hoverObject.transform.localScale *= 1.2f;
     }
@@ -270,7 +275,7 @@ public class SelectorCamera : MonoBehaviour
             currentHover.transform.localScale /= 1.2f;
             currentHover = null;
 
-            hud.HideTooltip();
+            hud.gamePlayState.HideTooltip();
         }
     }
     #endregion
