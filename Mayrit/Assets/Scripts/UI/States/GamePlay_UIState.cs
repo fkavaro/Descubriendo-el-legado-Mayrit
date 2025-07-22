@@ -15,23 +15,18 @@ public class GamePlay_UIState : AUIState
     public GamePlay_UIState(FiniteStateMachine<UIManager> stateMachine)
     : base("GamePlayUI", stateMachine) { }
 
+    public override void AwakeState()
+    {
+
+    }
+
     public override void StartState()
     {
-        // Get active UI
-        _UI = UIManager.Instance.GetComponent<UIDocument>();
-        UIManager.Instance.UIDocument = _UI;
-        Debug.Log(_UI.name);
-
+        UIManager.Instance.UIDocument = UIManager.Instance.GetComponent<UIDocument>();
+        _UI = UIManager.Instance.UIDocument;
         _tooltip = _UI.rootVisualElement.Q<Label>("Tooltip");
 
-        if (_tooltip == null)
-        {
-            Debug.LogWarning("Tooltip not found");
-        }
-        else
-        {
-            _tooltip.style.display = DisplayStyle.None; // Hide by default
-        }
+        HideTooltip();
     }
 
     public override void UpdateState()
@@ -55,9 +50,10 @@ public class GamePlay_UIState : AUIState
 
     public void HideTooltip()
     {
-        if (_tooltip == null) return;
-
-        _tooltip.style.display = DisplayStyle.None; // Hide tooltip
+        if (_tooltip == null)
+            Debug.LogWarning("Tooltip not found");
+        else
+            _tooltip.style.display = DisplayStyle.None; // Hide by default
     }
     #endregion
 }

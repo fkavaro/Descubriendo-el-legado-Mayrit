@@ -6,8 +6,8 @@ public class SelectorCamera : MonoBehaviour
 {
     #region PUBLIC PROPERTIES
     [Header("Object selection")]
-    [Tooltip("UIDocument component that contains HUD.")]
-    public UIManager hud;
+    [HideInInspector]
+    public UIManager UI;
     [Tooltip("Layer mask to define which objects are selectable.")]
     public LayerMask selectableLayer;
     #endregion
@@ -42,15 +42,13 @@ public class SelectorCamera : MonoBehaviour
 
     void Start()
     {
-        hud = UIManager.Instance;
+        UI = UIManager.Instance;
 
-        if (hud != null)
+        if (UI != null)
         {
-            panel = hud.UIDocument.rootVisualElement.panel;
+            panel = UI.UIDocument.rootVisualElement.panel;
             if (panel == null)
-            {
                 Debug.LogError("UI Toolkit Panel not found on the provided UIDocument's rootVisualElement.");
-            }
         }
         else
         {
@@ -102,7 +100,6 @@ public class SelectorCamera : MonoBehaviour
 
                 // Set the newly hit object as the current hover object
                 currentHover = hit.collider.gameObject;
-                //Debug.Log("Hovering over: " + currentHover.name);
 
                 // Show a small tooltip with the object's name
                 ApplyHover(currentHover);
@@ -204,37 +201,18 @@ public class SelectorCamera : MonoBehaviour
     /// </summary>
     void ApplySelection(GameObject selectedHover)
     {
-        // Renderer objRenderer = objToHighlight.GetComponent<Renderer>();
-        // if (objRenderer != null && selectedMaterial != null)
-        // {
-        //     // Store the original material before changing it
-        //     originalMaterial = objRenderer.material;
-        //     // Apply the highlight material
-        //     objRenderer.material = selectedMaterial;
-        // }
-
         selectedHover.transform.localScale *= 2;
     }
 
     /// <summary>
-    /// Resets the current selection, restoring the object's original material.
+    /// Resets the current selection.
     /// </summary>
     void ResetSelection()
     {
-        if (currentSelected != null)
-        {
-            // // Restore the original material if it was changed
-            // Renderer objRenderer = currentSelection.GetComponent<Renderer>();
-            // if (objRenderer != null && originalMaterial != null)
-            //     objRenderer.material = originalMaterial;
+        if (currentSelected == null) return;
 
-            // Debug.Log("Object deselected: " + currentSelection.name);
-            // currentSelection = null;
-            // originalMaterial = null;
-
-            currentSelected.transform.localScale /= 2;
-            currentSelected = null;
-        }
+        currentSelected.transform.localScale /= 2;
+        currentSelected = null;
     }
 
     /// <summary>
@@ -242,41 +220,19 @@ public class SelectorCamera : MonoBehaviour
     /// </summary>
     void ApplyHover(GameObject hoverObject)
     {
-        // Renderer objRenderer = hoverObject.GetComponent<Renderer>();
-        // if (objRenderer != null && hoverMaterial != null)
-        // {
-        //     // Store the original material before changing it
-        //     originalMaterial = objRenderer.material;
-        //     // Apply the hover highlight material
-        //     objRenderer.material = hoverMaterial;
-        // }
-        hud.gamePlayState.PlaceTooltip(hoverObject);
-
-        hoverObject.transform.localScale *= 1.2f;
+        UI.gamePlayState.PlaceTooltip(hoverObject);
     }
 
     /// <summary>
-    /// Resets the current hover state, restoring the object's original material.
+    /// Resets the current hover.
     /// </summary>
     void ResetHover()
     {
-        if (currentHover != null)
-        {
-            // // Restore the original material if it was changed
-            // Renderer objRenderer = currentHover.GetComponent<Renderer>();
-            // if (objRenderer != null && originalMaterial != null)
-            // {
-            //     objRenderer.material = originalMaterial;
-            // }
-            // Debug.Log("Stopped hovering over: " + currentHover.name);
-            // currentHover = null;
-            // originalMaterial = null;
+        if (currentHover == null) return;
 
-            currentHover.transform.localScale /= 1.2f;
-            currentHover = null;
+        currentHover = null;
+        UI.gamePlayState.HideTooltip();
 
-            hud.gamePlayState.HideTooltip();
-        }
     }
     #endregion
 }

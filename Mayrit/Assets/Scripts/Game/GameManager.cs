@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -39,7 +39,16 @@ public class GameManager : Singleton<GameManager>
         gamePlayState = new(fsm);
         pauseState = new(fsm);
 
-        fsm.SetInitialState(gamePlayState);
+        // Set initial state based on scene name
+        string sceneName = SceneManager.GetActiveScene().name;
+        if (sceneName == "GameScene")
+        {
+            fsm.SetInitialState(gamePlayState);
+        }
+        else
+        {
+            fsm.SetInitialState(mainMenuState);
+        }
 
         return fsm;
     }

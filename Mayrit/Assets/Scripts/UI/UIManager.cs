@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-
+using UnityEngine.SceneManagement;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -15,23 +15,12 @@ public class UIManager : Singleton<UIManager>
     #endregion
 
     #region PRIVATE PROPERTIES
-    Label tooltip;
     #endregion
 
     #region INHERITED
     protected override void OnAwake()
     {
-        UIDocument = GetComponent<UIDocument>();
-        tooltip = UIDocument.rootVisualElement.Q<Label>("Tooltip");
 
-        if (tooltip == null)
-        {
-            Debug.LogWarning("Tooltip not found");
-        }
-        else
-        {
-            tooltip.style.display = DisplayStyle.None; // Hide by default
-        }
     }
 
     protected override void OnStart()
@@ -51,7 +40,16 @@ public class UIManager : Singleton<UIManager>
         mainMenuState = new(fsm);
         gamePlayState = new(fsm);
 
-        fsm.SetInitialState(gamePlayState);
+        // Set initial state based on scene name
+        string sceneName = SceneManager.GetActiveScene().name;
+        if (sceneName == "GameScene")
+        {
+            fsm.SetInitialState(gamePlayState);
+        }
+        else
+        {
+            fsm.SetInitialState(mainMenuState);
+        }
 
         return fsm;
     }
