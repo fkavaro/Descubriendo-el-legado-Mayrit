@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.InputSystem;
 
 public class GamePlay_UIState : AUIState
 {
     #region PRIVATE PROPERTIES
     Label _tooltip;
+    Vector2 _cursorCreenPos;
     #endregion
 
     #region INHERITED
@@ -31,7 +33,16 @@ public class GamePlay_UIState : AUIState
 
     public override void UpdateState()
     {
+        if (_tooltip.style.display == DisplayStyle.None) return;
 
+        _cursorCreenPos = Mouse.current.position.ReadValue();
+
+        // UI Toolkit's Y axis is from top to bottom, while screen coordinates are from bottom to top
+        float tooltipX = _cursorCreenPos.x + UIManager.Instance.tooltipOffsetX;
+        float tooltipY = Screen.height - _cursorCreenPos.y - UIManager.Instance.tooltipOffsetY;
+
+        _tooltip.style.left = tooltipX;
+        _tooltip.style.top = tooltipY;
     }
     #endregion
 
@@ -40,10 +51,8 @@ public class GamePlay_UIState : AUIState
     {
         if (_tooltip == null) return;
 
+        // TODO: take selectableObject name component
         _tooltip.text = gameObject.name;
-        Vector3 screen = Camera.main.WorldToScreenPoint(gameObject.transform.position);
-        _tooltip.style.left = screen.x - (_tooltip.layout.width / 2);
-        _tooltip.style.top = Screen.height - screen.y - 100;
 
         _tooltip.style.display = DisplayStyle.Flex; // Show tooltip
     }

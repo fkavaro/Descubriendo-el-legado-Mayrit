@@ -7,6 +7,7 @@ public class UIManager : Singleton<UIManager>
     #region PUBLIC PROPERTIES
     [Header("User Interface Properties")]
     public UIDocument UIDocument;
+    public int tooltipOffsetX = 3, tooltipOffsetY = 40;
 
     // State Machine
     public FiniteStateMachine<UIManager> fsm;
