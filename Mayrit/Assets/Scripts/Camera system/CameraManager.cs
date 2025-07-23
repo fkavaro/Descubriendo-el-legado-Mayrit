@@ -15,7 +15,6 @@ public class CameraManager : Singleton<CameraManager>
 
     [Header("Spectator camera")]
     public CinemachineCamera _spectatorCamera;
-    //public Transform _spectatorCameraTarget;
     public int _spectatorTargetHeight = 120;
 
     [Space]
@@ -69,7 +68,14 @@ public class CameraManager : Singleton<CameraManager>
 
     protected override void OnUpdate()
     {
-
+        if (_spectatorCamera.LookAt.position.y != _spectatorTargetHeight)
+        {
+            // Fix spectator target height
+            _spectatorCamera.LookAt.position = new(
+                _spectatorCamera.LookAt.position.x,
+                _spectatorTargetHeight,
+                _spectatorCamera.LookAt.position.z);
+        }
     }
 
     protected override ADecisionSystem<CameraManager> CreateDecisionSystem()
