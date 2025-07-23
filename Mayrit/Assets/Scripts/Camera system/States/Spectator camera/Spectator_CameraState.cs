@@ -7,20 +7,16 @@ using Unity.Cinemachine;
 
 public class Spectator_CameraState : ACameraState
 {
-    readonly Transform _camera;
     readonly CameraController _cameraController;
     readonly SelectorCamera _selectorCamera;
 
-
     public Spectator_CameraState(FiniteStateMachine<CameraManager> stateMachine,
-        Transform camera,
-        Transform cameraTarget,
+        CinemachineCamera camera,
         AnimationCurve moveSpeedZoomCurve,
         LayerMask selectableLayer)
-    : base("Spectator camera", stateMachine)
+    : base("Spectator camera", stateMachine, camera)
     {
-        _camera = camera;
-        _cameraController = new(camera, cameraTarget, moveSpeedZoomCurve);
+        _cameraController = new(camera, moveSpeedZoomCurve);
         _selectorCamera = new(selectableLayer);
     }
 

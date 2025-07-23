@@ -13,8 +13,8 @@ public class CameraManager : Singleton<CameraManager>
     ThirdPerson_CameraState _thirdPersonState;
 
     [Header("Spectator camera")]
-    public GameObject _spectatorCamera;
-    public GameObject _spectatorCameraTarget;
+    public CinemachineCamera _spectatorCamera;
+    public Transform _spectatorCameraTarget;
 
     [Space]
     [Tooltip("Wether to move camera at screen margins or not.")]
@@ -45,10 +45,11 @@ public class CameraManager : Singleton<CameraManager>
     public LayerMask _selectableLayer;
 
     [Header("Third Person Camera")]
-    public GameObject _thirdPersonCamera;
+    public CinemachineCamera _thirdPersonCamera;
     #endregion
 
     #region PRIVATE PROPERTIES
+    Coroutine _moveSpectatorTargetCoroutine;
     #endregion
 
     #region INHERITED PROPERTIES
@@ -72,12 +73,12 @@ public class CameraManager : Singleton<CameraManager>
         _fsm = new(this);
 
         _spectatorState = new(_fsm,
-            _spectatorCamera.transform,
-            _spectatorCameraTarget.transform,
+            _spectatorCamera,
             _moveSpeedZoomCurve,
             _selectableLayer);
 
-        _thirdPersonState = new(_fsm, _thirdPersonCamera.transform);
+        _thirdPersonState = new(_fsm,
+            _thirdPersonCamera);
 
         _fsm.SetInitialState(_spectatorState);
 
@@ -89,6 +90,24 @@ public class CameraManager : Singleton<CameraManager>
     public void PlayPlayer()
     {
         _fsm.SwitchState(_thirdPersonState);
+    }
+
+    public void ToggleCameraState()
+    {
+        if (_fsm.IsCurrentState(_spectatorState))
+        {
+            // Spectator camera look at player
+            _spectatorCamera.LookAt = _thirdPersonCamera.LookAt;
+
+            _fsm.SwitchState(_thirdPersonState);
+        }
+        else if (_fsm.IsCurrentState(_thirdPersonState))
+        {
+            _fsm.SwitchState(_spectatorState);
+
+            // Spectator camera look at default target
+            _spectatorCamera.LookAt = _spectatorCameraTarget;
+        }
     }
     #endregion
 

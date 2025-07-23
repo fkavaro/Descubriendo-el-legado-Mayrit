@@ -11,7 +11,8 @@ using Unity.Cinemachine;
 public class CameraController
 {
     #region PUBLIC PROPERTIES
-    public readonly Transform _camera, _cameraTarget;
+    public readonly CinemachineCamera _camera;
+    public Transform _cameraTarget;
     public readonly CinemachineOrbitalFollow _orbitalFollow;
     public readonly AnimationCurve _moveSpeedZoomCurve;
 
@@ -56,12 +57,11 @@ public class CameraController
     #endregion
 
 
-    public CameraController(Transform camera,
-        Transform cameraTarget,
+    public CameraController(CinemachineCamera camera,
         AnimationCurve moveSpeedZoomCurve)
     {
         _camera = camera;
-        _cameraTarget = cameraTarget;
+        _cameraTarget = camera.Target.TrackingTarget.transform;
         _orbitalFollow = camera.GetComponent<CinemachineOrbitalFollow>();
         _moveSpeedZoomCurve = moveSpeedZoomCurve;
     }
@@ -129,11 +129,11 @@ public class CameraController
     /// </summary>
     private void UpdateMovement()
     {
-        Vector3 forward = _camera.forward;
+        Vector3 forward = _camera.transform.forward;
         forward.y = 0f;
         forward.Normalize();
 
-        Vector3 right = _camera.right;
+        Vector3 right = _camera.transform.right;
         right.y = 0f;
         right.Normalize();
 

@@ -3,17 +3,13 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Unity.Cinemachine;
 
 public class ThirdPerson_CameraState : ACameraState
 {
-    readonly Transform _camera;
-
     public ThirdPerson_CameraState(FiniteStateMachine<CameraManager> stateMachine,
-        Transform camera)
-    : base("Third person", stateMachine)
-    {
-        _camera = camera;
-    }
+        CinemachineCamera camera)
+    : base("Third person", stateMachine, camera) { }
 
     public override void StartState()
     {

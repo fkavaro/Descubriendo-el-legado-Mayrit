@@ -59,7 +59,7 @@ public class HUD_UIState : AUIState
         _pauseButton.RegisterCallback<ClickEvent>(SwitchToPauseState);
         _closeHeritagePanelButton.RegisterCallback<ClickEvent>(CloseHeritagePanel);
         //_discoverHeritageButton.RegisterCallback<ClickEvent>(CloseHeritagePanel);
-        _playerButton.RegisterCallback<ClickEvent>(PlayPlayer);
+        _playerButton.RegisterCallback<ClickEvent>(ChangeCamera);
     }
 
     public override void StartState()
@@ -174,12 +174,12 @@ public class HUD_UIState : AUIState
         _heritagePanel.style.display = DisplayStyle.None;
     }
 
-    void PlayPlayer(ClickEvent evt)
+    void ChangeCamera(ClickEvent evt)
     {
         if (_playerButton == null) return;
 
-        _playerButton.style.display = DisplayStyle.None;
-        CameraManager.Instance.PlayPlayer();
+        //_playerButton.style.display = DisplayStyle.None;
+        CameraManager.Instance.ToggleCameraState();
     }
     #endregion
 }
