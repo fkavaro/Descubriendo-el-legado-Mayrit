@@ -97,12 +97,12 @@ public class HUD_UIState : AUIState
         _playerButton.style.left = playerScreenPos.x + UIManager.Instance._playerButtonOffset.x;
         _playerButton.style.top = Screen.height - playerScreenPos.y + UIManager.Instance._playerButtonOffset.y;
 
-        // Hide the button if the player is off-screen
-        // _playerButton.style.display = (playerScreenPos.z > 0 &&
-        //                                 playerScreenPos.x >= 0 && playerScreenPos.x <= Screen.width &&
-        //                                 playerScreenPos.y >= 0 && playerScreenPos.y <= Screen.height)
-        //                                 ? DisplayStyle.Flex
-        //                                 : DisplayStyle.None;
+        //Hide the button if the player is off - screen
+        _playerButton.style.display = (playerScreenPos.z > 0 &&
+                                        playerScreenPos.x >= 0 && playerScreenPos.x <= Screen.width &&
+                                        playerScreenPos.y >= 0 && playerScreenPos.y <= Screen.height)
+                                        ? DisplayStyle.Flex
+                                        : DisplayStyle.None;
     }
 
     public override void ExitState()
