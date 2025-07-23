@@ -132,6 +132,9 @@ public class CameraManager : Singleton<CameraManager>
     #endregion
 
     #region PRIVATE METHODS
+    /// <summary>
+    /// Moves smoothly the given transform to the new position in given duration.
+    /// </summary>
     IEnumerator SmoothMove(Transform transform, Vector3 newPosition, float duration = 1f, Action onComplete = null)
     {
         if (transform == null || newPosition == null)
@@ -140,6 +143,7 @@ public class CameraManager : Singleton<CameraManager>
         Vector3 startPosition = transform.position;
         float elapsed = 0f;
 
+        // Duration remaining
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
