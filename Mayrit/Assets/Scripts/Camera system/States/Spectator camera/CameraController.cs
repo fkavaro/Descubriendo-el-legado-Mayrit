@@ -137,7 +137,7 @@ public class CameraController
         right.y = 0f;
         right.Normalize();
 
-        Vector3 inputVector = new Vector3(_moveInput.x + _edgeScrollInput.x, 0,
+        Vector3 inputVector = new(_moveInput.x + _edgeScrollInput.x, 0,
             _moveInput.y + _edgeScrollInput.y);
         inputVector.Normalize();
 

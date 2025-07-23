@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Cinemachine;
@@ -14,7 +15,8 @@ public class CameraManager : Singleton<CameraManager>
 
     [Header("Spectator camera")]
     public CinemachineCamera _spectatorCamera;
-    public Transform _spectatorCameraTarget;
+    //public Transform _spectatorCameraTarget;
+    public int _spectatorTargetHeight = 120;
 
     [Space]
     [Tooltip("Wether to move camera at screen margins or not.")]
@@ -46,10 +48,12 @@ public class CameraManager : Singleton<CameraManager>
 
     [Header("Third Person Camera")]
     public CinemachineCamera _thirdPersonCamera;
+
+    [Header("Camera transition")]
+    public float _transitionDuration = 1f;
     #endregion
 
-    #region PRIVATE PROPERTIES
-    Coroutine _moveSpectatorTargetCoroutine;
+    #region PRIVATE PROPERTIES  
     #endregion
 
     #region INHERITED PROPERTIES
@@ -87,30 +91,65 @@ public class CameraManager : Singleton<CameraManager>
     #endregion
 
     #region PUBLIC METHODS
-    public void PlayPlayer()
+    public void SwitchToThirdPersonCamera()
     {
-        _fsm.SwitchState(_thirdPersonState);
+        // Move spectator camera target smoothly to third person camera target
+        StartCoroutine(SmoothMove(_spectatorCamera.LookAt,
+            _thirdPersonCamera.LookAt.position,
+            _transitionDuration,
+            () =>
+            {
+                // Switch state when coroutine finished
+                _fsm.SwitchState(_thirdPersonState);
+            }
+        ));
+    }
+
+    public void SwitchToSpectatorCamera()
+    {
+        _fsm.SwitchState(_spectatorState);
+
+        // Fix player position for spectator camera
+        Vector3 spectatorPlayerPos = new(
+            _thirdPersonCamera.LookAt.position.x,
+            _spectatorTargetHeight, // At spectator height
+            _thirdPersonCamera.LookAt.position.z
+        );
+
+        // Move spectator camera target smoothly to fixed player position
+        StartCoroutine(SmoothMove(_spectatorCamera.LookAt, // Will be at player position, from last transition
+            spectatorPlayerPos,
+            2f));
     }
 
     public void ToggleCameraState()
     {
         if (_fsm.IsCurrentState(_spectatorState))
-        {
-            // Spectator camera look at player
-            _spectatorCamera.LookAt = _thirdPersonCamera.LookAt;
-
-            _fsm.SwitchState(_thirdPersonState);
-        }
+            SwitchToThirdPersonCamera();
         else if (_fsm.IsCurrentState(_thirdPersonState))
-        {
-            _fsm.SwitchState(_spectatorState);
-
-            // Spectator camera look at default target
-            _spectatorCamera.LookAt = _spectatorCameraTarget;
-        }
+            SwitchToSpectatorCamera();
     }
     #endregion
 
     #region PRIVATE METHODS
+    IEnumerator SmoothMove(Transform transform, Vector3 newPosition, float duration = 1f, Action onComplete = null)
+    {
+        if (transform == null || newPosition == null)
+            yield break;
+
+        Vector3 startPosition = transform.position;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            transform.position = Vector3.Lerp(startPosition, newPosition, t);
+            yield return null;
+        }
+        transform.position = newPosition;
+
+        onComplete?.Invoke();
+    }
     #endregion
 }
