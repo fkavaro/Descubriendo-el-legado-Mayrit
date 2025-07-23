@@ -63,11 +63,6 @@ public class CameraManager : Singleton<CameraManager>
 
     protected override void OnStart()
     {
-
-    }
-
-    protected override void OnUpdate()
-    {
         if (_spectatorCamera.LookAt.position.y != _spectatorTargetHeight)
         {
             // Fix spectator target height
@@ -76,6 +71,11 @@ public class CameraManager : Singleton<CameraManager>
                 _spectatorTargetHeight,
                 _spectatorCamera.LookAt.position.z);
         }
+    }
+
+    protected override void OnUpdate()
+    {
+
     }
 
     protected override ADecisionSystem<CameraManager> CreateDecisionSystem()
