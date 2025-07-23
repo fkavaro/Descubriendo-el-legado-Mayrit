@@ -27,7 +27,6 @@ public class Spectator_CameraState : ACameraState
     public override void StartState()
     {
         GameManager.Instance._inputActions.Camera.Enable();
-
         _camera.gameObject.SetActive(true);
 
         _cameraController.Start();
@@ -43,7 +42,6 @@ public class Spectator_CameraState : ACameraState
     public override void ExitState()
     {
         GameManager.Instance._inputActions.Camera.Disable();
-
         _camera.gameObject.SetActive(false);
     }
 }

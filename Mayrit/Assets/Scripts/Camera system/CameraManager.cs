@@ -10,11 +10,11 @@ public class CameraManager : Singleton<CameraManager>
     // Finite State Machine
     FiniteStateMachine<CameraManager> _fsm;
     Spectator_CameraState _spectatorState;
+    ThirdPerson_CameraState _thirdPersonState;
 
     [Header("Spectator camera")]
     public GameObject _spectatorCamera;
     public GameObject _spectatorCameraTarget;
-    //public CinemachineOrbitalFollow _orbitalFollow; // TODO: get component from _spectatorCamera
 
     [Space]
     [Tooltip("Wether to move camera at screen margins or not.")]
@@ -77,19 +77,19 @@ public class CameraManager : Singleton<CameraManager>
             _moveSpeedZoomCurve,
             _selectableLayer);
 
+        _thirdPersonState = new(_fsm, _thirdPersonCamera.transform);
+
         _fsm.SetInitialState(_spectatorState);
 
         return _fsm;
     }
-
-    internal void PlayPlayer()
-    {
-        _spectatorCamera.SetActive(false);
-        _thirdPersonCamera.SetActive(true);
-    }
     #endregion
 
     #region PUBLIC METHODS
+    public void PlayPlayer()
+    {
+        _fsm.SwitchState(_thirdPersonState);
+    }
     #endregion
 
     #region PRIVATE METHODS
