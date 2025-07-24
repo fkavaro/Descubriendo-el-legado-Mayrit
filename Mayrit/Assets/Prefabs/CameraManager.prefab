@@ -804,7 +804,7 @@ MonoBehaviour:
   _orbitalTransitionSpeed: 1
   _horizontalOffset: 10
   _3rdPersonTransitionDuration: 1
-  _spectatorTransitionDuration: 3
+  _spectatorTransitionDuration: 1
   _offsetTransitionDuration: 1
 --- !u!1 &4272530639498313931
 GameObject:

@@ -35,7 +35,7 @@ public class PlayerHUD_UIState : AUIState
         if (_pauseButton == null)
             Debug.LogWarning("_pauseButton not found");
         if (_eventArea == null)
-            Debug.LogWarning("_eventArea button not found");
+            Debug.LogWarning("_eventArea not found");
         if (_playerButton == null)
             Debug.LogWarning("_playerButton button not found");
 

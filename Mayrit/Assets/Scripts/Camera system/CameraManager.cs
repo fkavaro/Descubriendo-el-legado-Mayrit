@@ -130,8 +130,11 @@ public class CameraManager : Singleton<CameraManager>
             // Directly
             _spectatorCamera.GetComponent<CinemachineOrbitalFollow>().RadialAxis.Value = 0.5f;
         else if (_fsm.IsCurrentState(_orbitalState))
-            // Transition
+        {
+            // Transitions
             ZoomToCoroutine(_spectatorCamera.GetComponent<CinemachineOrbitalFollow>(), 0.5f);
+            HorizontalOffsetCoroutine(_spectatorCamera.GetComponent<CinemachineCameraOffset>(), 0);
+        }
 
         _fsm.SwitchState(_spectatorState);
 
@@ -163,6 +166,8 @@ public class CameraManager : Singleton<CameraManager>
 
     public void SwitchToOrbitalCamera(Transform objectToOrbitAround)
     {
+        HorizontalOffsetCoroutine(_spectatorCamera.GetComponent<CinemachineCameraOffset>(), _horizontalOffset);
+
         // Move spectator target to object position
         SmoothMoveCoroutine(_spectatorCamera.LookAt, objectToOrbitAround.position, _3rdPersonTransitionDuration,
         () =>
