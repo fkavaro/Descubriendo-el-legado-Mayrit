@@ -61,7 +61,7 @@ public class SelectorCamera
     void OnSelectObject(InputAction.CallbackContext context)
     {
         // Cursor over UI element
-        if (UIManager.Instance._hudState.IsCursorOverUI(_cursorScreenPos))
+        if (UIManager.Instance._spectatorHUDState.IsCursorOverUI(_cursorScreenPos))
         {
             ResetSelection();
             return;
@@ -99,7 +99,7 @@ public class SelectorCamera
     void ApplySelection()
     {
         //_currentSelected.transform.localScale *= 2;
-        UIManager.Instance._hudState.ShowContextualPanel(_currentSelected);
+        UIManager.Instance._spectatorHUDState.ShowContextualPanel(_currentSelected);
     }
 
     /// <summary>
@@ -108,9 +108,9 @@ public class SelectorCamera
     void ResetSelection()
     {
         if (_currentSelected == null) return;
-        if (UIManager.Instance._hudState.IsCursorOverUI(_cursorScreenPos)) return;
+        if (UIManager.Instance._spectatorHUDState.IsCursorOverUI(_cursorScreenPos)) return;
 
-        UIManager.Instance._hudState.HideContextualPanel();
+        UIManager.Instance._spectatorHUDState.HideContextualPanel();
         _currentSelected = null;
     }
 
@@ -120,7 +120,7 @@ public class SelectorCamera
     void UpdateTooltip()
     {
         // Cursor over UI element
-        if (UIManager.Instance._hudState.IsCursorOverUI(_cursorScreenPos))
+        if (UIManager.Instance._spectatorHUDState.IsCursorOverUI(_cursorScreenPos))
         {
             ResetHover();
             return;
@@ -152,7 +152,7 @@ public class SelectorCamera
     /// </summary>
     void ApplyHover()
     {
-        UIManager.Instance._hudState.ShowTooltip(_currentHover);
+        UIManager.Instance._spectatorHUDState.ShowTooltip(_currentHover);
     }
 
     /// <summary>
@@ -163,7 +163,7 @@ public class SelectorCamera
         if (_currentHover == null) return;
 
         _currentHover = null;
-        UIManager.Instance._hudState.HideTooltip();
+        UIManager.Instance._spectatorHUDState.HideTooltip();
     }
     #endregion
 }

@@ -98,22 +98,6 @@ public class CameraManager : Singleton<CameraManager>
     #endregion
 
     #region PUBLIC METHODS
-    public void SwitchToThirdPersonCamera()
-    {
-        OnCameraStateChange?.Invoke(_thirdPersonState);
-
-        // Move spectator camera target smoothly to third person camera target
-        StartCoroutine(SmoothMove(_spectatorCamera.LookAt,
-            _thirdPersonCamera.LookAt.position,
-            _transitionDuration,
-            () =>
-            {
-                // Switch state when coroutine finished
-                _fsm.SwitchState(_thirdPersonState);
-            }
-        ));
-    }
-
     public void SwitchToSpectatorCamera()
     {
         _fsm.SwitchState(_spectatorState);
@@ -134,6 +118,28 @@ public class CameraManager : Singleton<CameraManager>
                 OnCameraStateChange?.Invoke(_spectatorState);
             }
             ));
+
+        // Change HUD
+        UIManager.Instance._fsm.SwitchState(UIManager.Instance._spectatorHUDState);
+    }
+
+    public void SwitchToThirdPersonCamera()
+    {
+        OnCameraStateChange?.Invoke(_thirdPersonState);
+
+        // Move spectator camera target smoothly to third person camera target
+        StartCoroutine(SmoothMove(_spectatorCamera.LookAt,
+            _thirdPersonCamera.LookAt.position,
+            _transitionDuration,
+            () =>
+            {
+                // Switch state when coroutine finished
+                _fsm.SwitchState(_thirdPersonState);
+            }
+        ));
+
+        // Change HUD
+        UIManager.Instance._fsm.SwitchState(UIManager.Instance._playerHUDState);
     }
 
     public void ToggleCameraState()
