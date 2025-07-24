@@ -24,6 +24,8 @@ public class HUD_UIState : AUIState
 
     public override void AwakeState()
     {
+        CameraManager.Instance.OnCameraStateChange += OnCameraStateChange;
+
         _UIDocument = UIManager.Instance._UIDocument;
         _screen = _UIDocument.rootVisualElement.Q<VisualElement>("HUD");
 
@@ -80,30 +82,6 @@ public class HUD_UIState : AUIState
         }
 
         //UpdatePlayerButton();
-    }
-
-    // TODO: DEPRECATED BECAUSE UGUI SOLUTION IS MORE FRAME RESPONSIVE
-    private void UpdatePlayerButton()
-    {
-        if (_playerButton == null) return;
-
-        // Get the player's world position and an offset above the head
-        Vector3 playerWorldPos = GameObject.FindGameObjectWithTag("Player").transform.position + Vector3.up * 2.0f;
-
-        // Convert world position to screen position
-        Vector3 playerScreenPos = Camera.main.WorldToScreenPoint(playerWorldPos);
-
-        // Convert screen position to UI Toolkit coordinates
-        // UI Toolkit's y=0 is at the top, but ScreenPoint's y=0 is at the bottom, so invert y
-        _playerButton.style.left = playerScreenPos.x + UIManager.Instance._playerButtonOffset.x;
-        _playerButton.style.top = Screen.height - playerScreenPos.y + UIManager.Instance._playerButtonOffset.y;
-
-        //Hide the button if the player is off - screen
-        _playerButton.style.display = (playerScreenPos.z > 0 &&
-                                        playerScreenPos.x >= 0 && playerScreenPos.x <= Screen.width &&
-                                        playerScreenPos.y >= 0 && playerScreenPos.y <= Screen.height)
-                                        ? DisplayStyle.Flex
-                                        : DisplayStyle.None;
     }
 
     public override void ExitState()
@@ -169,6 +147,42 @@ public class HUD_UIState : AUIState
 
         //_playerButton.style.display = DisplayStyle.None;
         CameraManager.Instance.ToggleCameraState();
+    }
+
+    void OnCameraStateChange(ACameraState state)
+    {
+        if (state == CameraManager.Instance._spectatorState)
+        {
+            _eventArea.style.display = DisplayStyle.Flex;
+        }
+        else if (state == CameraManager.Instance._thirdPersonState)
+        {
+            _eventArea.style.display = DisplayStyle.None;
+        }
+    }
+
+    // TODO: DEPRECATED BECAUSE UGUI SOLUTION IS MORE FRAME RESPONSIVE
+    void UpdatePlayerButton()
+    {
+        if (_playerButton == null) return;
+
+        // Get the player's world position and an offset above the head
+        Vector3 playerWorldPos = GameObject.FindGameObjectWithTag("Player").transform.position + Vector3.up * 2.0f;
+
+        // Convert world position to screen position
+        Vector3 playerScreenPos = Camera.main.WorldToScreenPoint(playerWorldPos);
+
+        // Convert screen position to UI Toolkit coordinates
+        // UI Toolkit's y=0 is at the top, but ScreenPoint's y=0 is at the bottom, so invert y
+        _playerButton.style.left = playerScreenPos.x + UIManager.Instance._playerButtonOffset.x;
+        _playerButton.style.top = Screen.height - playerScreenPos.y + UIManager.Instance._playerButtonOffset.y;
+
+        //Hide the button if the player is off - screen
+        _playerButton.style.display = (playerScreenPos.z > 0 &&
+                                        playerScreenPos.x >= 0 && playerScreenPos.x <= Screen.width &&
+                                        playerScreenPos.y >= 0 && playerScreenPos.y <= Screen.height)
+                                        ? DisplayStyle.Flex
+                                        : DisplayStyle.None;
     }
     #endregion
 }

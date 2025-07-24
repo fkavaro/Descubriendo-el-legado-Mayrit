@@ -7,11 +7,12 @@ using Unity.Cinemachine;
 public class CameraManager : Singleton<CameraManager>
 {
     #region PUBLIC PROPERTIES
+    public event Action<ACameraState> OnCameraStateChange;
 
     // Finite State Machine
-    FiniteStateMachine<CameraManager> _fsm;
-    Spectator_CameraState _spectatorState;
-    ThirdPerson_CameraState _thirdPersonState;
+    public FiniteStateMachine<CameraManager> _fsm;
+    public Spectator_CameraState _spectatorState;
+    public ThirdPerson_CameraState _thirdPersonState;
 
     [Header("Spectator camera")]
     public CinemachineCamera _spectatorCamera;
@@ -99,6 +100,8 @@ public class CameraManager : Singleton<CameraManager>
     #region PUBLIC METHODS
     public void SwitchToThirdPersonCamera()
     {
+        OnCameraStateChange?.Invoke(_thirdPersonState);
+
         // Move spectator camera target smoothly to third person camera target
         StartCoroutine(SmoothMove(_spectatorCamera.LookAt,
             _thirdPersonCamera.LookAt.position,
@@ -125,7 +128,12 @@ public class CameraManager : Singleton<CameraManager>
         // Move spectator camera target smoothly to fixed player position
         StartCoroutine(SmoothMove(_spectatorCamera.LookAt, // Will be at player position, from last transition
             spectatorPlayerPos,
-            2f));
+            2f,
+            () =>
+            {
+                OnCameraStateChange?.Invoke(_spectatorState);
+            }
+            ));
     }
 
     public void ToggleCameraState()
