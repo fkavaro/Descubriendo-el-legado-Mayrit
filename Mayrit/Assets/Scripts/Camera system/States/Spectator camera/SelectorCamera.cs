@@ -23,7 +23,7 @@ public class SelectorCamera
     #region MONOBEHAVIOUR
     public void Start()
     {
-        GameManager.Instance._inputActions.Camera.Select.performed += OnSelectObject;
+
     }
 
     public void Update()
@@ -58,7 +58,7 @@ public class SelectorCamera
     /// It handles the raycast logic for object selection.
     /// </summary>
     /// <param name="context">The context of the input action callback.</param>
-    void OnSelectObject(InputAction.CallbackContext context)
+    public void OnSelectObject(InputAction.CallbackContext context)
     {
         // Cursor over UI element
         if (UIManager.Instance._spectatorHUDState.IsCursorOverUI(_cursorScreenPos))
@@ -98,7 +98,7 @@ public class SelectorCamera
     /// </summary>
     void ApplySelection()
     {
-        //_currentSelected.transform.localScale *= 2;
+        CameraManager.Instance.OrbitAround(_currentSelected.transform);
         UIManager.Instance._spectatorHUDState.ShowContextualPanel(_currentSelected);
     }
 
@@ -111,6 +111,7 @@ public class SelectorCamera
         if (UIManager.Instance._spectatorHUDState.IsCursorOverUI(_cursorScreenPos)) return;
 
         UIManager.Instance._spectatorHUDState.HideContextualPanel();
+        CameraManager.Instance.SwitchToSpectatorCamera();
         _currentSelected = null;
     }
 

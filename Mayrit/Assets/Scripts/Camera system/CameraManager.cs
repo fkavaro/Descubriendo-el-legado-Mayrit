@@ -13,6 +13,7 @@ public class CameraManager : Singleton<CameraManager>
     public FiniteStateMachine<CameraManager> _fsm;
     public Spectator_CameraState _spectatorState;
     public ThirdPerson_CameraState _thirdPersonState;
+    public Orbital_CameraState _orbitalState;
 
     [Header("Spectator camera")]
     public CinemachineCamera _spectatorCamera;
@@ -48,6 +49,11 @@ public class CameraManager : Singleton<CameraManager>
 
     [Header("Third Person Camera")]
     public CinemachineCamera _thirdPersonCamera;
+
+    [Header("Orbital camera")]
+    public float _orbitSpeed = 30f; // degrees per second
+    public float _orbitalCameraZoomValue = 0.2f;
+    public float _orbitalTransitionSpeed = 0.1f;
 
     [Header("Camera transition")]
     public float _SpectatorTo3rdPersonTransitionDuration = 1f;
@@ -92,6 +98,8 @@ public class CameraManager : Singleton<CameraManager>
         _thirdPersonState = new(_fsm,
             _thirdPersonCamera);
 
+        _orbitalState = new(_fsm, _spectatorCamera);
+
         _fsm.SetInitialState(_spectatorState);
 
         return _fsm;
@@ -105,7 +113,8 @@ public class CameraManager : Singleton<CameraManager>
     public void SwitchToSpectatorCamera()
     {
         // Update spectator camera target to player position
-        _spectatorCamera.LookAt.position = _thirdPersonCamera.LookAt.position;
+        if (_fsm.IsCurrentState(_thirdPersonState))
+            _spectatorCamera.LookAt.position = _thirdPersonCamera.LookAt.position;
 
         // Fix to position height
         Vector3 fixedTargetPos = new(
@@ -146,6 +155,17 @@ public class CameraManager : Singleton<CameraManager>
                 _fsm.SwitchState(_thirdPersonState);
             }
         );
+    }
+
+    public void OrbitAround(Transform objectToOrbitAround)
+    {
+        // Move spectator target to object position
+        SmoothMoveCoroutine(_spectatorCamera.LookAt, objectToOrbitAround.position, _SpectatorTo3rdPersonTransitionDuration,
+        () =>
+        {
+            // When reached, switch state
+            _fsm.SwitchState(_orbitalState);
+        });
     }
 
     public void ToggleCameraState()

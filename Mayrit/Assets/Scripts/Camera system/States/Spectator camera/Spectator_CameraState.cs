@@ -29,6 +29,9 @@ public class Spectator_CameraState : ACameraState
         UIManager.Instance._fsm.SwitchState(UIManager.Instance._spectatorHUDState);
 
         _cameraController.Start();
+
+        // Able to select
+        GameManager.Instance._inputActions.Camera.Select.performed += _selectorCamera.OnSelectObject;
         _selectorCamera.Start();
     }
 
@@ -42,5 +45,8 @@ public class Spectator_CameraState : ACameraState
     {
         GameManager.Instance._inputActions.Camera.Disable();
         _camera.gameObject.SetActive(false);
+
+        // Unable to select
+        GameManager.Instance._inputActions.Camera.Select.performed -= _selectorCamera.OnSelectObject;
     }
 }

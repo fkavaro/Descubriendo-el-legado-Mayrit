@@ -136,6 +136,10 @@ public class SpectatorHUD_UIState : AUIState
 
         // Hide panel
         _contextualPanel.style.display = DisplayStyle.None;
+
+        // Switch to spectator camera state if it's not current state
+        if (!CameraManager.Instance._fsm.IsCurrentState(CameraManager.Instance._spectatorState))
+            CameraManager.Instance.SwitchToSpectatorCamera();
     }
     #endregion
 

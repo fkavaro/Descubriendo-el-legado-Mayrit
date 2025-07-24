@@ -9,7 +9,7 @@ public class ThirdPerson_CameraState : ACameraState
 {
     public ThirdPerson_CameraState(FiniteStateMachine<CameraManager> stateMachine,
         CinemachineCamera camera)
-    : base("Third person", stateMachine, camera) { }
+    : base("Third person camera", stateMachine, camera) { }
 
     public override void StartState()
     {
