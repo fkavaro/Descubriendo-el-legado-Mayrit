@@ -13,6 +13,16 @@ public class PlayerFollower : MonoBehaviour
         if (_playerButton == null)
             return;
 
+        // Hide button if game pause
+        if (GameManager.Instance._fsm.IsCurrentState(GameManager.Instance._pauseState))
+        {
+            if (_playerButton.gameObject.activeSelf)
+                _playerButton.gameObject.SetActive(false);
+            return;
+        }
+        if (!_playerButton.gameObject.activeSelf)
+            _playerButton.gameObject.SetActive(true);
+
         Vector3 worldPos = FindFirstObjectByType<PlayerManager>().transform.position + Vector3.up;
         Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
 
@@ -21,7 +31,7 @@ public class PlayerFollower : MonoBehaviour
                     screenPos.x >= 0 && screenPos.x <= Screen.width &&
                     screenPos.y >= 0 && screenPos.y <= Screen.height;
 
-        // Set button active if is in-screen
+        // Show button if is in-screen
         _playerButton.gameObject.SetActive(playerInScreen);
 
         // And move button
