@@ -79,9 +79,10 @@ public class HUD_UIState : AUIState
             _tooltip.style.top = Screen.height - _cursorScreenPos.y + UIManager.Instance._tooltipOffset.y;
         }
 
-        UpdatePlayerButton();
+        //UpdatePlayerButton();
     }
 
+    // TODO: DEPRECATED BECAUSE UGUI SOLUTION IS MORE FRAME RESPONSIVE
     private void UpdatePlayerButton()
     {
         if (_playerButton == null) return;
