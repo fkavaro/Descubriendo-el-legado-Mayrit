@@ -170,7 +170,7 @@ public class CameraManager : Singleton<CameraManager>
 
     public void SwitchToOrbitalCamera(Transform objectToOrbitAround)
     {
-
+        ApplyContextualPanelOffset();
 
         // Move spectator target to object position
         SmoothMoveCoroutine(_spectatorCamera.LookAt, objectToOrbitAround.position, _3rdPersonTransitionDuration,

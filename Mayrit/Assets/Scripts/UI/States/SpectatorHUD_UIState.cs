@@ -12,9 +12,19 @@ public class SpectatorHUD_UIState : AUIState
     #endregion
 
     #region PRIVATE PROPERTIES
-    Label _tooltip, _contextualPanelName, _contextualPanelDescription, _eventName, _eventDate;
-    Button _pauseButton, _closeContextualPanelButton, _eventInfoButton, _playerButton;
-    VisualElement _contextualPanel, _eventArea;
+    Label _tooltip,
+        _contextualPanelName,
+        _contextualPanelDescription,
+        _eventName,
+        _eventDate,
+        _contextualPanelCaption;
+    Button _pauseButton,
+        _closeContextualPanelButton,
+        _eventInfoButton,
+        _playerButton;
+    VisualElement _contextualPanel,
+        _eventArea,
+        _contextualPanelImage;
     Vector2 _cursorScreenPos;
     #endregion
 
@@ -38,6 +48,8 @@ public class SpectatorHUD_UIState : AUIState
         _contextualPanelName = _contextualPanel.Q<Label>("Name");
         _contextualPanelDescription = _contextualPanel.Q<Label>("Description");
         _closeContextualPanelButton = _contextualPanel.Q<Button>("CloseButton");
+        _contextualPanelImage = _contextualPanel.Q<VisualElement>("Image");
+        _contextualPanelCaption = _contextualPanel.Q<Label>("Caption");
 
         if (_tooltip == null)
             Debug.LogWarning("_tooltip not found");
@@ -61,6 +73,10 @@ public class SpectatorHUD_UIState : AUIState
             Debug.LogWarning("_eventName button not found");
         if (_eventDate == null)
             Debug.LogWarning("_eventDate button not found");
+        if (_contextualPanelImage == null)
+            Debug.LogWarning("_contextualPanelImage button not found");
+        if (_contextualPanelCaption == null)
+            Debug.LogWarning("_contextualPanelCaption button not found");
 
         _pauseButton.RegisterCallback<ClickEvent>(SwitchToPauseState);
         _closeContextualPanelButton.RegisterCallback<ClickEvent>(CloseContextualPanel);
@@ -75,6 +91,7 @@ public class SpectatorHUD_UIState : AUIState
         _eventName.text = ProgressManager.Instance._currentEvent.Name;
         _eventDate.text = ProgressManager.Instance._currentEvent.Date;
 
+        HideContextualPanel();
         HideTooltip();
     }
 
@@ -122,9 +139,20 @@ public class SpectatorHUD_UIState : AUIState
         if (IsCursorOverUI(_cursorScreenPos)) return;
         if (_contextualPanel == null) return;
 
+        _eventArea.style.display = DisplayStyle.None;
+
         // Overwrite panel information
         _contextualPanelName.text = objectSelected._information.Name;
         _contextualPanelDescription.text = objectSelected._information.Description;
+
+        if (objectSelected._information.Image != null)
+        {
+            _contextualPanelImage.style.backgroundImage = new StyleBackground(objectSelected._information.Image.texture);
+            _contextualPanelImage.style.display = DisplayStyle.Flex;
+        }
+
+        _contextualPanelCaption.text = objectSelected._information.ImageCaption;
+        _contextualPanelCaption.style.display = DisplayStyle.Flex;
 
         // Show panel
         _contextualPanel.style.display = DisplayStyle.Flex;
@@ -133,6 +161,11 @@ public class SpectatorHUD_UIState : AUIState
     public void HideContextualPanel()
     {
         if (_contextualPanel == null) return;
+
+        _eventArea.style.display = DisplayStyle.Flex;
+        _contextualPanelImage.style.backgroundImage = null;
+        _contextualPanelImage.style.display = DisplayStyle.None;
+        _contextualPanelCaption.style.display = DisplayStyle.None;
 
         // Hide panel
         _contextualPanel.style.display = DisplayStyle.None;
@@ -169,6 +202,8 @@ public class SpectatorHUD_UIState : AUIState
     private void ShowEventInfo(ClickEvent evt)
     {
         CameraManager.Instance.ApplyContextualPanelOffset();
+
+        _eventArea.style.display = DisplayStyle.None;
 
         // Overwrite panel information
         _contextualPanelName.text = ProgressManager.Instance._currentEvent.Name;
