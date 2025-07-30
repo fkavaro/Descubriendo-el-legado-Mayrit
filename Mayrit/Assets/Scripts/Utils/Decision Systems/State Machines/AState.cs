@@ -52,7 +52,7 @@ public abstract class AState<TController, TStateMachine>
         UpdateState(); // Call the UpdateState method implemented in subclasses
     }
 
-    public abstract void UpdateState(); // Implemented in subclasses
+    public virtual void UpdateState() { } // Optionally implemented in subclasses
 
     public void OnExitState()
     {

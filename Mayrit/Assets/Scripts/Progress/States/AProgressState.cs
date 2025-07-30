@@ -11,10 +11,8 @@ public abstract class AProgressState : AState<ProgressManager, FiniteStateMachin
         _milestone = milestone;
     }
 
-    public override void SwitchState(AState<ProgressManager, FiniteStateMachine<ProgressManager>> nextState)
+    public override void StartState()
     {
-        _stateMachine?.SwitchState(nextState);
-
         ProgressManager.Instance._currentMilestone = _milestone;
         ProgressManager.Instance.InvokeOnMilestoneChanged();
     }

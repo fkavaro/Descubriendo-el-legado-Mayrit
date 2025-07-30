@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.InputSystem;
@@ -89,7 +85,7 @@ public class SpectatorHUD_UIState : AUIState
         _screen.style.display = DisplayStyle.Flex; // Show HUD
 
         _eventName.text = ProgressManager.Instance._currentMilestone.informationSO.Name;
-        _eventDate.text = ProgressManager.Instance._currentMilestone.informationSO.Description;
+        _eventDate.text = ProgressManager.Instance._currentMilestone.informationSO.Date;
 
         HideContextualPanel();
         HideTooltip();

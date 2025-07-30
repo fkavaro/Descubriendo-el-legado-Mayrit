@@ -49,7 +49,7 @@ MonoBehaviour:
   dontDestroyOnLoad: 1
   _currentMilestone:
     milestone: 0
-    informationSO: {fileID: 11400000, guid: 42519b1fc6c99c34b872ecff7bd76d68, type: 2}
+    informationSO: {fileID: 0}
   _milestones:
   - milestone: 0
     informationSO: {fileID: 11400000, guid: 42519b1fc6c99c34b872ecff7bd76d68, type: 2}

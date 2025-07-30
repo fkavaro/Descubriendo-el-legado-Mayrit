@@ -26,6 +26,7 @@ public class ProgressManager : Singleton<ProgressManager>
     // State Machine
     public FiniteStateMachine<ProgressManager> _fsm;
     public Foundation_AProgressState _foundationState;
+    public Conquest_AProgressState _conquestState;
     #endregion
 
     #region PRIVATE PROPERTIES
@@ -48,13 +49,15 @@ public class ProgressManager : Singleton<ProgressManager>
     {
 
     }
+
     protected override ADecisionSystem<ProgressManager> CreateDecisionSystem()
     {
         _fsm = new(this);
 
         _foundationState = new(_milestones[0], _fsm);
+        _conquestState = new(_milestones[^1], _fsm); // Last milestone is the last one in the list
 
-        _fsm.SetInitialState(_foundationState);
+        _fsm.SetInitialState(_conquestState);
 
         return _fsm;
     }
