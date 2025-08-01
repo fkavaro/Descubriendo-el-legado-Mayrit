@@ -17,7 +17,7 @@ public class SpectatorHUD_UIState : AUIState
         _contextualPanelCaption;
     Button _pauseButton,
         _closeContextualPanelButton,
-        _eventInfoButton,
+        _milestoneInfoButton,
         _playerButton,
         _nextMilestoneButton,
         _previousMilestoneButton;
@@ -40,7 +40,7 @@ public class SpectatorHUD_UIState : AUIState
         _screen = _UIDocument.rootVisualElement.Q<VisualElement>("SpectatorHUD");
         _tooltip = _screen.Q<Label>("Tooltip");
         _milestoneArea = _screen.Q<VisualElement>("MilestoneArea");
-        _eventInfoButton = _milestoneArea.Q<Button>("InfoButton");
+        _milestoneInfoButton = _milestoneArea.Q<Button>("InfoButton");
         _milestoneName = _milestoneArea.Q<Label>("Name");
         _milestoneDate = _milestoneArea.Q<Label>("Date");
         _nextMilestoneButton = _milestoneArea.Q<Button>("NextMilestoneButton");
@@ -64,7 +64,7 @@ public class SpectatorHUD_UIState : AUIState
             Debug.LogWarning("_contextualPanelDescription not found");
         if (_closeContextualPanelButton == null)
             Debug.LogWarning("_closeContextualPanelButton button not found");
-        if (_eventInfoButton == null)
+        if (_milestoneInfoButton == null)
             Debug.LogWarning("_eventInfoButton button not found");
         if (_milestoneArea == null)
             Debug.LogWarning("_milestoneArea button not found");
@@ -86,7 +86,7 @@ public class SpectatorHUD_UIState : AUIState
         _pauseButton.RegisterCallback<ClickEvent>(SwitchToPauseState);
         _closeContextualPanelButton.RegisterCallback<ClickEvent>(CloseContextualPanel);
         _playerButton.RegisterCallback<ClickEvent>(SwitchToPlayerHUDState);
-        _eventInfoButton.RegisterCallback<ClickEvent>(ShowMilestoneInfo);
+        _milestoneInfoButton.RegisterCallback<ClickEvent>(ShowMilestoneInfo);
         _nextMilestoneButton.RegisterCallback<ClickEvent>(SwitchToNextMilestone);
         _previousMilestoneButton.RegisterCallback<ClickEvent>(SwitchToPreviousMilestone);
     }
@@ -95,10 +95,11 @@ public class SpectatorHUD_UIState : AUIState
     {
         _screen.style.display = DisplayStyle.Flex; // Show HUD
 
-        OverwriteMilestoneArea();
         CheckMilestoneButtonsActivation();
         HideContextualPanel();
         HideTooltip();
+        OverwriteMilestoneArea();
+        ShowMilestoneInfo();
     }
 
     public override void UpdateState()
@@ -185,6 +186,12 @@ public class SpectatorHUD_UIState : AUIState
     #endregion
 
     #region PRIVATE METHODS
+    void OverwriteMilestoneArea()
+    {
+        _milestoneName.text = ProgressManager.Instance._currentMilestone.informationSO.Name;
+        _milestoneDate.text = ProgressManager.Instance._currentMilestone.informationSO.Date;
+    }
+
     void SwitchToPauseState(ClickEvent evt)
     {
         _stateMachine.SwitchState(UIManager.Instance._pauseState);
@@ -205,9 +212,15 @@ public class SpectatorHUD_UIState : AUIState
     }
 
 
-    private void ShowMilestoneInfo(ClickEvent evt)
+    void ShowMilestoneInfo(ClickEvent evt)
     {
-        CameraManager.Instance.ApplyContextualPanelOffset();
+        ShowMilestoneInfo();
+    }
+
+    void ShowMilestoneInfo()
+    {
+        // TODO: test experience this gives
+        //CameraManager.Instance.ApplyContextualPanelOffset();
 
         _milestoneArea.style.display = DisplayStyle.None;
 
@@ -224,6 +237,7 @@ public class SpectatorHUD_UIState : AUIState
         ProgressManager.Instance.SwitchToPreviousMilestone();
         OverwriteMilestoneArea();
         CheckMilestoneButtonsActivation();
+        ShowMilestoneInfo();
     }
 
     void SwitchToNextMilestone(ClickEvent evt)
@@ -231,9 +245,10 @@ public class SpectatorHUD_UIState : AUIState
         ProgressManager.Instance.SwitchToNextMilestone();
         OverwriteMilestoneArea();
         CheckMilestoneButtonsActivation();
+        ShowMilestoneInfo();
     }
 
-    private void CheckMilestoneButtonsActivation()
+    void CheckMilestoneButtonsActivation()
     {
         // Last milestone
         if (ProgressManager.Instance.AtLastMilestone())
@@ -252,12 +267,6 @@ public class SpectatorHUD_UIState : AUIState
         }
         else
             _previousMilestoneButton.SetEnabled(true);
-    }
-
-    void OverwriteMilestoneArea()
-    {
-        _milestoneName.text = ProgressManager.Instance._currentMilestone.informationSO.Name;
-        _milestoneDate.text = ProgressManager.Instance._currentMilestone.informationSO.Date;
     }
 
     // TODO: DEPRECATED BECAUSE UGUI SOLUTION IS MORE FRAME-RESPONSIVE
