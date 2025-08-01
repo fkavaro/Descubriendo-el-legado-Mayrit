@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ProgressManager : Singleton<ProgressManager>
@@ -91,6 +92,16 @@ public class ProgressManager : Singleton<ProgressManager>
     {
         _currentMilestone = _milestones[_currentMilestoneId];
         OnMilestoneChanged?.Invoke(_currentMilestone.milestone);
+    }
+
+    public bool AtLastMilestone()
+    {
+        return _currentMilestone.Equals(_milestones[^1]);
+    }
+
+    public bool AtFirstMilestone()
+    {
+        return _currentMilestone.Equals(_milestones[0]);
     }
     #endregion
 }

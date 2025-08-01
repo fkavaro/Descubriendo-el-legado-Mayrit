@@ -96,6 +96,7 @@ public class SpectatorHUD_UIState : AUIState
         _screen.style.display = DisplayStyle.Flex; // Show HUD
 
         OverwriteMilestoneArea();
+        CheckMilestoneButtonsActivation();
         HideContextualPanel();
         HideTooltip();
     }
@@ -222,12 +223,35 @@ public class SpectatorHUD_UIState : AUIState
     {
         ProgressManager.Instance.SwitchToPreviousMilestone();
         OverwriteMilestoneArea();
+        CheckMilestoneButtonsActivation();
     }
 
     void SwitchToNextMilestone(ClickEvent evt)
     {
         ProgressManager.Instance.SwitchToNextMilestone();
         OverwriteMilestoneArea();
+        CheckMilestoneButtonsActivation();
+    }
+
+    private void CheckMilestoneButtonsActivation()
+    {
+        // Last milestone
+        if (ProgressManager.Instance.AtLastMilestone())
+        {
+            // Disable next button
+            _nextMilestoneButton.SetEnabled(false);
+        }
+        else
+            _nextMilestoneButton.SetEnabled(true);
+
+        // First milestone
+        if (ProgressManager.Instance.AtFirstMilestone())
+        {
+            // Disable previous button
+            _previousMilestoneButton.SetEnabled(false);
+        }
+        else
+            _previousMilestoneButton.SetEnabled(true);
     }
 
     void OverwriteMilestoneArea()
