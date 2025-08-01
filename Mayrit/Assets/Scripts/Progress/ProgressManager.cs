@@ -57,7 +57,7 @@ public class ProgressManager : Singleton<ProgressManager>
         _foundationState = new(_milestones[0], _fsm);
         _conquestState = new(_milestones[^1], _fsm); // Last milestone is the last one in the list
 
-        _fsm.SetInitialState(_conquestState);
+        _fsm.SetInitialState(_foundationState);
 
         return _fsm;
     }

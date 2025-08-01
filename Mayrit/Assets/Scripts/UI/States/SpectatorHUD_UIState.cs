@@ -84,11 +84,6 @@ public class SpectatorHUD_UIState : AUIState
     {
         _screen.style.display = DisplayStyle.Flex; // Show HUD
 
-        Debug.Log($"ProgressManager.Instance: {ProgressManager.Instance}");
-        Debug.Log($"_currentMilestone: {ProgressManager.Instance?._currentMilestone}");
-        Debug.Log($"informationSO: {ProgressManager.Instance?._currentMilestone?.informationSO}");
-        Debug.Log($"_eventName: {_milestoneName}");
-
         _milestoneName.text = ProgressManager.Instance._currentMilestone.informationSO.Name;
         _milestoneDate.text = ProgressManager.Instance._currentMilestone.informationSO.Date;
 
