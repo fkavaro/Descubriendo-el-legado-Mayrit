@@ -159,6 +159,13 @@ public class CameraManager : Singleton<CameraManager>
     /// </summary>
     public void SwitchToThirdPersonCamera()
     {
+        // Update third person camera target to current playable character
+        var playerTransform = GameManager.Instance.GetCurrentPlayableCharacter().transform;
+
+        // Set camera follow and look at targets
+        _thirdPersonCamera.Follow = playerTransform;
+        _thirdPersonCamera.LookAt = playerTransform;
+
         OnCameraStateChange?.Invoke(_thirdPersonState);
 
         // Move spectator camera target smoothly to third person camera target
