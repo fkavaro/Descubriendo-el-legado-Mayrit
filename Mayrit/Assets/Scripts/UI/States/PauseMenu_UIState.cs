@@ -17,7 +17,7 @@ public class PauseMenu_UIState : AUIState
     #endregion
 
     #region INHERITED
-    public PauseMenu_UIState(FiniteStateMachine<UIManager> stateMachine)
+    public PauseMenu_UIState(StackFiniteStateMachine<UIManager> stateMachine)
     : base("PauseMenu", stateMachine) { }
 
     public override void AwakeState()

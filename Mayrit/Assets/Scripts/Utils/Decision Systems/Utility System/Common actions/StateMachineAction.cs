@@ -9,7 +9,7 @@ public class StateMachineAction<TController, TStateMachine> : ABinaryAction<TCon
 where TController : ABehaviourController<TController>
 where TStateMachine : AStateMachine<TController, TStateMachine>
 {
-    TStateMachine _stateMachine;
+    readonly TStateMachine _stateMachine;
     bool _alreadyStarted = false;
 
     public StateMachineAction(UtilitySystem<TController> utilitySystem, TStateMachine stateMachine)
@@ -46,7 +46,7 @@ where TStateMachine : AStateMachine<TController, TStateMachine>
     /// <returns>State name of FSM action</returns>
     public override string DebugDecision()
     {
-        return _stateMachine.GetCurrentStateName();
+        return _stateMachine.GetCurrentState()?.Name;
     }
 
     public override void Reset()

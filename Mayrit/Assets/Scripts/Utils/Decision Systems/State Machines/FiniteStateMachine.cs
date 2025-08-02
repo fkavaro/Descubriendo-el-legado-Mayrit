@@ -8,27 +8,17 @@ public class FiniteStateMachine<TController> : AStateMachine<TController, Finite
 
     #region INHERITED METHODS
     /// <summary>
-    /// Sets the initial state of the state machine.
-    /// </summary>
-    public override void SetInitialState(AState<TController, FiniteStateMachine<TController>> state)
-    {
-        if (state == currentState) return;
-
-        initialState = state;
-    }
-
-    /// <summary>
-    /// Switchs to another state after exiting the current..
+    /// Switchs to another state after exiting the current.
     /// </summary>
     public override void SwitchState(AState<TController, FiniteStateMachine<TController>> state)
     {
-        if (state == currentState) return;
+        if (state == _currentState) return;
 
-        currentState?.OnExitState();
-        currentState = state;
+        _currentState?.OnExitState();
+        _currentState = state;
         DebugDecision();
-        currentState?.AwakeState();
-        currentState?.StartState();
+        _currentState?.AwakeState();
+        _currentState?.StartState();
     }
     #endregion
 }

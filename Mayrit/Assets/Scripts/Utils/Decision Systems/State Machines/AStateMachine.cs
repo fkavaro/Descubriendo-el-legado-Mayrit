@@ -7,23 +7,29 @@ public abstract class AStateMachine<TController, TStateMachineType> : ADecisionS
 where TController : ABehaviourController<TController>
 where TStateMachineType : AStateMachine<TController, TStateMachineType>
 {
-    protected AState<TController, TStateMachineType> currentState, initialState;
+    protected AState<TController, TStateMachineType> _currentState, _initialState;
 
     protected AStateMachine(TController controller) : base(controller) { }
 
     #region TO BE IMPLEMENTED METHODS
-    public abstract void SetInitialState(AState<TController, TStateMachineType> state);
     public abstract void SwitchState(AState<TController, TStateMachineType> state);
     #endregion
 
-    public string GetCurrentStateName()
+    public AState<TController, TStateMachineType> GetCurrentState()
     {
-        return currentState?.StateName;
+        return _currentState;
+    }
+
+    public virtual void SetInitialState(AState<TController, TStateMachineType> state)
+    {
+        if (state == _currentState) return;
+
+        _initialState = state;
     }
 
     public bool IsCurrentState(AState<TController, TStateMachineType> state)
     {
-        return currentState == state;
+        return _currentState == state;
     }
 
     #region INHERITED METHODS
@@ -32,7 +38,7 @@ where TStateMachineType : AStateMachine<TController, TStateMachineType>
     /// </summary>
     public override void Reset()
     {
-        SwitchState(initialState);
+        SwitchState(_initialState);
     }
 
     /// <summary>
@@ -41,69 +47,69 @@ where TStateMachineType : AStateMachine<TController, TStateMachineType>
     protected override void DebugDecision()
     {
         if (controller._debugMode)
-            Debug.Log("[" + controller.name + "]" + " is " + currentState.StateName);
+            Debug.Log("[" + controller.name + "]" + " is " + _currentState.Name);
     }
 
     public virtual void ForceState(AState<TController, TStateMachineType> newState)
     {
-        if (newState == currentState) return;
+        if (newState == _currentState) return;
 
         // Don't exit the current state, just set and start the new one
-        currentState = newState;
+        _currentState = newState;
         DebugDecision();
-        currentState.StartState();
+        _currentState.StartState();
     }
     #endregion
 
     #region UNITY EXECUTION EVENTS
     public override void Awake()
     {
-        currentState = initialState;
+        _currentState = _initialState;
         DebugDecision();
-        currentState?.AwakeState();
+        _currentState?.AwakeState();
     }
 
     public override void Start()
     {
-        currentState?.StartState();
+        _currentState?.StartState();
     }
 
     public override void Update()
     {
         if (!controller._isExecutionPaused)
-            currentState?.OnUpdateState();
+            _currentState?.OnUpdateState();
     }
     #endregion
 
     # region COLLISION AND TRIGGER EVENTS
     public override void OnCollisionEnter(Collision collision)
     {
-        currentState?.OnCollisionEnter(collision);
+        _currentState?.OnCollisionEnter(collision);
     }
 
     public override void OnCollisionStay(Collision collision)
     {
-        currentState?.OnCollisionStay(collision);
+        _currentState?.OnCollisionStay(collision);
     }
 
     public override void OnCollisionExit(Collision collision)
     {
-        currentState?.OnCollisionExit(collision);
+        _currentState?.OnCollisionExit(collision);
     }
 
     public override void OnTriggerEnter(Collider other)
     {
-        currentState?.OnTriggerEnter(other);
+        _currentState?.OnTriggerEnter(other);
     }
 
     public override void OnTriggerStay(Collider other)
     {
-        currentState?.OnTriggerStay(other);
+        _currentState?.OnTriggerStay(other);
     }
 
     public override void OnTriggerExit(Collider other)
     {
-        currentState?.OnTriggerExit(other);
+        _currentState?.OnTriggerExit(other);
     }
     #endregion
 }

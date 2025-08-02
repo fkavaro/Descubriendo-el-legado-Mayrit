@@ -44,18 +44,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58ec23268d6ca574ca3d4750f006e904, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _debugMode: 1
+  _debugMode: 0
   _isExecutionPaused: 0
   dontDestroyOnLoad: 1
-  _milestoneId: 0
+  _currentMilestoneId: 0
   _currentMilestone:
-    id: 0
     milestone: 0
     informationSO: {fileID: 0}
   _milestones:
-  - id: 0
-    milestone: 0
+  - milestone: 0
     informationSO: {fileID: 11400000, guid: 42519b1fc6c99c34b872ecff7bd76d68, type: 2}
-  - id: 1
-    milestone: 1
+  - milestone: 1
     informationSO: {fileID: 11400000, guid: 529b4fbadef4cf24f943b912354f16b5, type: 2}

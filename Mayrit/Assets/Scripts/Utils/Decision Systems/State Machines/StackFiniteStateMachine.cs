@@ -9,90 +9,92 @@ using UnityEngine;
 /// </summary>
 public class StackFiniteStateMachine<TController> : AStateMachine<TController, StackFiniteStateMachine<TController>> where TController : ABehaviourController<TController>
 {
-    /// <summary>
-    /// The last active state of the state machine
-    /// </summary>
-    //AState<TController, StackFiniteStateMachine<TController>> previousState;
-
     Stack<AState<TController, StackFiniteStateMachine<TController>>> _stateStack = new();
 
     public StackFiniteStateMachine(TController controller) : base(controller) { }
 
     #region INHERITED METHODS
-    public override void Start()
-    {
-        PushCurrentState();
-        currentState?.StartState();
-    }
-
-    /// <summary>
-    /// Sets the initial state of the state machine.
-    /// </summary>
-    public override void SetInitialState(AState<TController, StackFiniteStateMachine<TController>> state)
-    {
-        if (state == currentState) return;
-
-        initialState = state;
-    }
-
     /// <summary>
     /// Switchs to another state after exiting the current,
     /// storing it in the stack.
     /// </summary>
     public override void SwitchState(AState<TController, StackFiniteStateMachine<TController>> newState)
     {
-        if (newState == currentState) return;
+        if (newState == _currentState) return;
 
         PushCurrentState();
-        currentState?.OnExitState();
-        currentState = newState;
+        _currentState?.OnExitState();
+        _currentState = newState;
         DebugDecision();
-        currentState?.AwakeState();
-        currentState?.StartState();
+        _currentState?.AwakeState();
+        _currentState?.StartState();
     }
-
 
     public override void ForceState(AState<TController, StackFiniteStateMachine<TController>> newState)
     {
-        if (newState == currentState) return;
+        if (newState == _currentState) return;
 
         PushCurrentState();
         // Don't exit the current state, just set and start the new one
-        currentState = newState;
+        _currentState = newState;
         DebugDecision();
-        currentState?.AwakeState();
-        currentState?.StartState();
+        _currentState?.AwakeState();
+        _currentState?.StartState();
     }
     #endregion
 
     #region PUBLIC METHODS
     /// <summary>
-    /// Save the last state in the stack.
+    /// Pushes the current state onto the stack,
+    /// allowing to return to it later.
     /// </summary>
     public void PushCurrentState()
     {
-        if (currentState != null)
-            _stateStack.Push(currentState);
+        if (_currentState != null)
+            _stateStack.Push(_currentState);
     }
 
     /// <summary>
-    /// Return to the last state saved in the stack, if exists.
+    /// Switches to the previous state in the stack,
+    /// removing it from the stack.
     /// </summary>
-    public void Pop()
+    public void SwitchToPreviousState()
     {
+        // Empty stack
         if (_stateStack.Count == 0)
-            Debug.LogError("State stack is empty");
-        else
+        {
+            if (controller._debugMode)
+                Debug.Log("[" + controller.name + "] state stack is empty");
+        }
+        else // Not empty
             SwitchState(_stateStack.Pop());
     }
 
     /// <summary>
-    /// Returns the current active state (top of the stack).
+    /// Returns previous state (top of the stack).
     /// </summary>
-    public AState<TController, StackFiniteStateMachine<TController>> Peek()
+    public AState<TController, StackFiniteStateMachine<TController>> GetPreviousState()
     {
-        return currentState;
-    }
+        // Empty stack
+        if (_stateStack.Count == 0)
+        {
+            if (controller._debugMode)
+                Debug.Log("[" + controller.name + "] state stack is empty");
 
+            return null;
+        }
+        else // Not empty
+        {
+            // Get the last state from the stack without removing it
+            var previousState = _stateStack.Peek();
+
+            if (controller._debugMode)
+                Debug.Log("[" + controller.name + "] Previous state: " + previousState.Name);
+
+            return previousState;
+        }
+
+
+    }
     #endregion
 }

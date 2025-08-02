@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using UnityEngine.UIElements;
 using UnityEngine;
 
-public abstract class AUIState : AState<UIManager, FiniteStateMachine<UIManager>>
+public abstract class AUIState : AState<UIManager, StackFiniteStateMachine<UIManager>>
 {
     public UIDocument _UIDocument;
     public VisualElement _screen;
 
-    protected AUIState(string name, FiniteStateMachine<UIManager> stateMachine)
+    protected AUIState(string name, StackFiniteStateMachine<UIManager> stateMachine)
     : base(name, stateMachine) { }
 
     /// <summary>

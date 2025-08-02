@@ -8,7 +8,7 @@ public abstract class AState<TController, TStateMachine>
     where TController : ABehaviourController<TController>
     where TStateMachine : AStateMachine<TController, TStateMachine>
 {
-    public string StateName => _stateName;
+    public string Name => _stateName;
 
     protected string _stateName;
     protected TController _controller;
@@ -26,21 +26,6 @@ public abstract class AState<TController, TStateMachine>
     public virtual void SwitchState(AState<TController, TStateMachine> nextState)
     {
         _stateMachine?.SwitchState(nextState);
-    }
-
-    public void ReturnToPreviousState()
-    {
-        // StateMachine is an stack state machine
-        if (_stateMachine is StackFiniteStateMachine<TController> stateFSM)
-        {
-            stateFSM.Pop();
-        }
-        else
-        {
-            Debug.LogError("State machine is not an stack state machine. Cannot return to previous state.");
-            return;
-        }
-
     }
 
     public virtual void AwakeState() { } // Optionally implemented in subclasses

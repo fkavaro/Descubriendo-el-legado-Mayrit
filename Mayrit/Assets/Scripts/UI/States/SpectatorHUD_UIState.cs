@@ -28,7 +28,7 @@ public class SpectatorHUD_UIState : AUIState
     #endregion
 
     #region INHERITED
-    public SpectatorHUD_UIState(FiniteStateMachine<UIManager> stateMachine)
+    public SpectatorHUD_UIState(StackFiniteStateMachine<UIManager> stateMachine)
     : base("SpectatorHUD", stateMachine) { }
 
     public override void AwakeState()
@@ -99,7 +99,11 @@ public class SpectatorHUD_UIState : AUIState
         HideContextualPanel();
         HideTooltip();
         OverwriteMilestoneArea();
-        ShowMilestoneInfo();
+
+        var previousState = _stateMachine.GetPreviousState();
+
+        if (previousState == null)
+            ShowMilestoneInfo();
     }
 
     public override void UpdateState()
@@ -217,7 +221,7 @@ public class SpectatorHUD_UIState : AUIState
         ShowMilestoneInfo();
     }
 
-    void ShowMilestoneInfo()
+    public void ShowMilestoneInfo()
     {
         // TODO: test experience this gives
         //CameraManager.Instance.ApplyContextualPanelOffset();
