@@ -49,6 +49,9 @@ public class ProgressManager : Singleton<ProgressManager>
     {
         _currentMilestoneId = 0;
         _currentMilestone = _milestones[_currentMilestoneId];
+
+        // Notify listeners about the initial milestone
+        OnMilestoneChanged?.Invoke(_currentMilestone.milestone);
     }
 
     protected override void OnUpdate()
@@ -60,8 +63,8 @@ public class ProgressManager : Singleton<ProgressManager>
     {
         _fsm = new(this);
 
-        //_foundationState = new(_milestones[0], _fsm);
-        _conquestState = new(_milestones[^1], _fsm); // Last milestone is the last one in the list
+        _foundationState = new(_milestones[0], _fsm);
+        _conquestState = new(_milestones[^1], _fsm); // Last in list
 
         _fsm.SetInitialState(_conquestState);
 
@@ -70,11 +73,6 @@ public class ProgressManager : Singleton<ProgressManager>
     #endregion
 
     #region PUBLIC METHODS
-    public void InvokeOnMilestoneChanged()
-    {
-        OnMilestoneChanged?.Invoke(_currentMilestone.milestone);
-    }
-
     public void SwitchToNextMilestone()
     {
         _currentMilestoneId++;

@@ -20,10 +20,17 @@ public class PlayerFollower : MonoBehaviour
                 _playerButton.gameObject.SetActive(false);
             return;
         }
+
+        // Find the player character
+        PlayableCharacter player = FindFirstObjectByType<PlayableCharacter>();
+        if (player == null)
+            return;
+
         if (!_playerButton.gameObject.activeSelf)
             _playerButton.gameObject.SetActive(true);
 
-        Vector3 worldPos = FindFirstObjectByType<PlayerManager>().transform.position + Vector3.up;
+        // Get player position in world space and convert to screen space
+        Vector3 worldPos = player.transform.position + Vector3.up;
         Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
 
         // Check if player is in-screen
