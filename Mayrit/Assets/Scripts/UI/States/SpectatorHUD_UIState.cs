@@ -222,8 +222,10 @@ public class SpectatorHUD_UIState : AUIState
     #region PRIVATE METHODS
     void OverwriteMilestoneArea()
     {
-        _milestoneName.text = ProgressManager.Instance._currentMilestone.informationSO.Name;
-        _milestoneDate.text = ProgressManager.Instance._currentMilestone.informationSO.Date;
+        AProgressState currentProgressState = (AProgressState)ProgressManager.Instance._fsm.CurrentState;
+
+        _milestoneName.text = currentProgressState._informationSO.Name;
+        _milestoneDate.text = currentProgressState._informationSO.Date;
     }
 
     void SwitchToPauseState(ClickEvent evt)
@@ -295,10 +297,11 @@ public class SpectatorHUD_UIState : AUIState
 
         _milestoneArea.style.display = DisplayStyle.None;
 
-        // Overwrite panel information
-        _contextualPanelName.text = ProgressManager.Instance._currentMilestone.informationSO.Name;
-        _contextualPanelDescription.text = ProgressManager.Instance._currentMilestone.informationSO.Description;
+        AProgressState currentProgressState = (AProgressState)ProgressManager.Instance._fsm.CurrentState;
 
+        // Overwrite panel information
+        _contextualPanelName.text = currentProgressState._informationSO.Name;
+        _contextualPanelDescription.text = currentProgressState._informationSO.Description;
         // Show panel
         _contextualPanel.style.display = DisplayStyle.Flex;
     }
