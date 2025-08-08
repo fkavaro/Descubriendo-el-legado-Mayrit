@@ -7,14 +7,14 @@ public class ProgressManager : Singleton<ProgressManager>
 {
     public enum Milestone
     {
-        Vision,
-        Foundation,
-        Albacar,
-        Almudayna,
-        RamiroII,
-        Almanzor,
-        School,
-        Conquest,
+        Vision_1,
+        Foundation_2,
+        Albacar_3,
+        Almudayna_4,
+        RamiroII_5,
+        Almanzor_6,
+        School_7,
+        Conquest_8,
     }
 
     // [Serializable]
@@ -86,14 +86,14 @@ public class ProgressManager : Singleton<ProgressManager>
         _fsm = new(this);
 
         // States initialization (from last to first)
-        _conquestState = new(Milestone.Conquest, _conquestInformation, _fsm);
-        _schoolState = new(Milestone.School, _schoolInformation, _fsm, _conquestState);
-        _almanzorState = new(Milestone.Almanzor, _almanzorInformation, _fsm, _schoolState);
-        _ramiroIIState = new(Milestone.RamiroII, _ramiroAttackInformation, _fsm, _almanzorState);
-        _almudaynaState = new(Milestone.Almudayna, _almudaynaInformation, _fsm, _ramiroIIState);
-        _albacarState = new(Milestone.Albacar, _albacarInformation, _fsm, _almudaynaState);
-        _foundationState = new(Milestone.Foundation, _foundationInformation, _fsm, _albacarState);
-        _visionState = new(Milestone.Vision, _visionInformation, _fsm, _foundationState);
+        _conquestState = new(Milestone.Conquest_8, _conquestInformation, _fsm);
+        _schoolState = new(Milestone.School_7, _schoolInformation, _fsm, _conquestState);
+        _almanzorState = new(Milestone.Almanzor_6, _almanzorInformation, _fsm, _schoolState);
+        _ramiroIIState = new(Milestone.RamiroII_5, _ramiroAttackInformation, _fsm, _almanzorState);
+        _almudaynaState = new(Milestone.Almudayna_4, _almudaynaInformation, _fsm, _ramiroIIState);
+        _albacarState = new(Milestone.Albacar_3, _albacarInformation, _fsm, _almudaynaState);
+        _foundationState = new(Milestone.Foundation_2, _foundationInformation, _fsm, _albacarState);
+        _visionState = new(Milestone.Vision_1, _visionInformation, _fsm, _foundationState);
 
         _fsm.SetInitialState(_visionState);
 
@@ -122,12 +122,12 @@ public class ProgressManager : Singleton<ProgressManager>
 
     public bool AtLastMilestone()
     {
-        return _currentMilestone.Equals(Milestone.Conquest);
+        return _currentMilestone.Equals(Milestone.Conquest_8);
     }
 
     public bool AtFirstMilestone()
     {
-        return _currentMilestone.Equals(Milestone.Vision);
+        return _currentMilestone.Equals(Milestone.Vision_1);
     }
 
     public void InvokeOnMilestoneChanged()
