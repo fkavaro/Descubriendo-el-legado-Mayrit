@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2738208781067544222
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5479522367331021950}
+  - component: {fileID: 1524226024950362450}
+  m_Layer: 0
+  m_Name: ProgressManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5479522367331021950
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2738208781067544222}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1524226024950362450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2738208781067544222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58ec23268d6ca574ca3d4750f006e904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _debugMode: 1
+  _isExecutionPaused: 0
+  dontDestroyOnLoad: 0
+  _currentMilestone: 0
+  _visionInformation: {fileID: 11400000, guid: 8c60871e8e9636c4f850947f41adae88, type: 2}
+  _foundationInformation: {fileID: 11400000, guid: 42519b1fc6c99c34b872ecff7bd76d68, type: 2}
+  _albacarInformation: {fileID: 11400000, guid: 0670cbae18ddcc54a906eef5fbebf022, type: 2}
+  _almudaynaInformation: {fileID: 11400000, guid: 3a3934e90ad3cf849a0b38ce0d4484aa, type: 2}
+  _ramiroAttackInformation: {fileID: 11400000, guid: 88207b6a03716ca46a7b1e23275513d4, type: 2}
+  _almanzorInformation: {fileID: 11400000, guid: 97c84455fb22ff7418187365d85ba44a, type: 2}
+  _schoolInformation: {fileID: 11400000, guid: 90fa41930a7134744bb7e08dfff5f26e, type: 2}
+  _conquestInformation: {fileID: 11400000, guid: 529b4fbadef4cf24f943b912354f16b5, type: 2}

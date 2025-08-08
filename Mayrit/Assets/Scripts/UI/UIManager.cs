@@ -8,10 +8,9 @@ public class UIManager : Singleton<UIManager>
     public UIDocument _UIDocument;
     [Header("User Interface Properties")]
     public Vector2 _tooltipOffset = new(-30, -30);
-    public Vector2 _playerButtonOffset = new(-85, -185);
 
     // State Machine
-    public FiniteStateMachine<UIManager> _fsm;
+    public StackFiniteStateMachine<UIManager> _fsm;
     public MainMenu_UIState _mainMenuState;
     public SpectatorHUD_UIState _spectatorHUDState;
     public PlayerHUD_UIState _playerHUDState;
@@ -24,6 +23,7 @@ public class UIManager : Singleton<UIManager>
     #region INHERITED
     protected override void OnAwake()
     {
+        // Singleton
         base.OnAwake();
 
         _UIDocument = GetComponent<UIDocument>();
@@ -49,7 +49,7 @@ public class UIManager : Singleton<UIManager>
         _pauseState = new(_fsm);
 
         // Set initial state based on scene name
-        if (SceneManager.GetActiveScene().name == "MainMenu")
+        if (SceneManager.GetActiveScene().name == "MainMenuScene")
             _fsm.SetInitialState(_mainMenuState);
         else
             _fsm.SetInitialState(_spectatorHUDState);

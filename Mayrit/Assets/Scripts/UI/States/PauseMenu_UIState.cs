@@ -17,7 +17,7 @@ public class PauseMenu_UIState : AUIState
     #endregion
 
     #region INHERITED
-    public PauseMenu_UIState(FiniteStateMachine<UIManager> stateMachine)
+    public PauseMenu_UIState(StackFiniteStateMachine<UIManager> stateMachine)
     : base("PauseMenu", stateMachine) { }
 
     public override void AwakeState()
@@ -59,7 +59,7 @@ public class PauseMenu_UIState : AUIState
     #region PRIVATE METHODS
     void SwitchToHUDState(ClickEvent evt)
     {
-        _stateMachine.SwitchState(UIManager.Instance._spectatorHUDState); // Switch to HUD state
+        _stateMachine.SwitchToPreviousState(); // Switch to previous state: player or spectator HUD
         GameManager.Instance._fsm.SwitchState(GameManager.Instance._gamePlayState);
     }
 

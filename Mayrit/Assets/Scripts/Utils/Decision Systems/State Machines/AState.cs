@@ -8,39 +8,41 @@ public abstract class AState<TController, TStateMachine>
     where TController : ABehaviourController<TController>
     where TStateMachine : AStateMachine<TController, TStateMachine>
 {
-    public string StateName => _stateName;
+    public string Name => _stateName;
+
+    /// <summary>
+    /// Preferred state to switch to after this state.
+    /// </summary>
+    public AState<TController, TStateMachine> NextState => _nextState;
 
     protected string _stateName;
     protected TController _controller;
     protected TStateMachine _stateMachine;
     protected float _stateTime = 0f;
+    protected readonly AState<TController, TStateMachine> _nextState;
 
-    // Constructor given AStateMachine
-    public AState(string name, TStateMachine stateMachine)
+    // Constructor
+    public AState(string name,
+    TStateMachine stateMachine,
+    AState<TController, TStateMachine> nextState = null)
     {
         _stateName = name;
         _stateMachine = stateMachine;
-        _controller = stateMachine.controller;
+        _controller = stateMachine._controller;
+        _nextState = nextState;
     }
 
-    public void SwitchState(AState<TController, TStateMachine> nextState)
+    /// <summary>
+    /// Checks if this state is the current state in the state machine.
+    /// </summary>
+    public bool IsCurrentState()
+    {
+        return _stateMachine.IsCurrentState(this);
+    }
+
+    public virtual void SwitchState(AState<TController, TStateMachine> nextState)
     {
         _stateMachine?.SwitchState(nextState);
-    }
-
-    public void ReturnToPreviousState()
-    {
-        // StateMachine is an stack state machine
-        if (_stateMachine is StackFiniteStateMachine<TController> stateFSM)
-        {
-            stateFSM.Pop();
-        }
-        else
-        {
-            Debug.LogError("State machine is not a stack state machine. Cannot return to previous state.");
-            return;
-        }
-
     }
 
     public virtual void AwakeState() { } // Optionally implemented in subclasses
@@ -52,7 +54,7 @@ public abstract class AState<TController, TStateMachine>
         UpdateState(); // Call the UpdateState method implemented in subclasses
     }
 
-    public abstract void UpdateState(); // Implemented in subclasses
+    public virtual void UpdateState() { } // Optionally implemented in subclasses
 
     public void OnExitState()
     {

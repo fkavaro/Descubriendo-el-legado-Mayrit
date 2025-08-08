@@ -16,7 +16,7 @@ public class MainMenu_UIState : AUIState
     #endregion
 
     #region INHERITED PROPERTIES
-    public MainMenu_UIState(FiniteStateMachine<UIManager> stateMachine)
+    public MainMenu_UIState(StackFiniteStateMachine<UIManager> stateMachine)
     : base("MainMenu", stateMachine) { }
 
     public override void AwakeState()

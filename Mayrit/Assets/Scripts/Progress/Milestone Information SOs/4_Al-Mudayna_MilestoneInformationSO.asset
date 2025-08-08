@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4c9f5e06d2e4eb459595789b9780e81, type: 3}
+  m_Name: 4_Al-Mudayna_MilestoneInformationSO
+  m_EditorClassIdentifier: 
+  _name: La al-Mudayna
+  _date: Segunda mitad s.IX
+  _description: "Con el aumento de la poblaci\xF3n en los alrededores del castillo,
+    cerca de la mezquita, tuvo que ser necesario amurallarla para protegerla. De
+    esta manera se form\xF3 una alcazaba, o en este caso, una al-Mudayna, denominaci\xF3n
+    de la que posteriormente deriv\xF3 la palabra \u201CAlmudena\u201D. Se dejaron
+    tres accesos: la puerta de la Vega, llamada as\xED porque llevaba hacia la vega
+    del r\xEDo Manzanares; la puerta de la al-Mudayna, o Almudena, hacia el este;
+    y la puerta de la Xagra, que daba acceso al albacar desde el arroyo de Arenales.\r\n\r\nFuera
+    de la al-Mudayna quedaron al menos un arrabal musulm\xE1n, al este y con su propia
+    mezquita, y un arrabal cristiano, sobre el cerro de San Andr\xE9s, al otro lado
+    del arroyo de San Pedro.\r\n\r\n* En este proyecto se ha puesto una cuarta puerta
+    que hipot\xE9ticamente conectar\xEDa el albacar y la ciudadela desde el interior,
+    aunque es una suposici\xF3n.\r"
