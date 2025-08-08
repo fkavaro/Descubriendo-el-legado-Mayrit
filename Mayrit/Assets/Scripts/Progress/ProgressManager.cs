@@ -17,14 +17,6 @@ public class ProgressManager : Singleton<ProgressManager>
         Conquest_8,
     }
 
-    // [Serializable]
-    // public struct MilestoneEntry
-    // {
-    //     public Milestone milestone;
-    //     public MilestoneInformationSO informationSO;
-    // }
-
-
     #region PUBLIC PROPERTIES
     public event Action<Milestone> OnMilestoneChanged;
 
@@ -66,9 +58,6 @@ public class ProgressManager : Singleton<ProgressManager>
 
     protected override void OnStart()
     {
-        //_currentMilestoneId = 0;
-        //_currentMilestone = _milestones[_currentMilestoneId];
-
         // Notify listeners about the initial milestone
         OnMilestoneChanged?.Invoke(_currentMilestone);
 
@@ -106,8 +95,7 @@ public class ProgressManager : Singleton<ProgressManager>
     {
         if (_fsm.SwitchToNextState())
         {
-            //_currentMilestoneId++;
-            //ChangeMilestone();
+
         }
     }
 
@@ -115,8 +103,7 @@ public class ProgressManager : Singleton<ProgressManager>
     {
         if (_fsm.SwitchToPreviousState())
         {
-            //_currentMilestoneId--;
-            //ChangeMilestone();
+
         }
     }
 
@@ -137,14 +124,6 @@ public class ProgressManager : Singleton<ProgressManager>
     #endregion
 
     #region PRIVATE METHODS
-    // void ChangeMilestone()
-    // {
-    //     //_currentMilestone = _milestones[_currentMilestoneId];
-    //     //_currentMilestone = _fsm.CurrentState._milestone;
-    //     //OnMilestoneChanged?.Invoke(_currentMilestone.milestone);
 
-    //     // Update current playable character
-    //     GameManager.Instance.GetCurrentPlayableCharacter();
-    // }
     #endregion
 }
