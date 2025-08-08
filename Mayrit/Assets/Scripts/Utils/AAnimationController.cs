@@ -6,16 +6,18 @@ using System;
 /// Defines a common class for all animation controllers.
 /// Handles animation transitions.
 /// </summary>
-[RequireComponent(typeof(Animator))]
 public abstract class AAnimationController<TController> : ABehaviourController<TController>
 where TController : ABehaviourController<TController>
 {
-    protected Animator _animator;
+    [Header("Animation Controller Properties")]
+    public Animator _animator;
     protected int _currentAnimation, _lastAnimation;
 
     #region COMMON ANIMATIONS
     readonly public int idleAnim = Animator.StringToHash("Idle"),
-        walkAnim = Animator.StringToHash("Walk");
+        walkAnim = Animator.StringToHash("Walk"),
+        runAnim = Animator.StringToHash("Run"),
+        jumpAnim = Animator.StringToHash("Jump");
     #endregion
     // Specific animations must be defined in derived classes
 

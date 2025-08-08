@@ -13,12 +13,10 @@ public class PlayableCharacter : AHumanoid<PlayableCharacter>
     [HideInInspector] public CharacterController _characterController;
     public PlayerController _playerController;
 
-    // Finite State Machine
-    FiniteStateMachine<PlayableCharacter> _fsm;
-    [Header("Information")]
+    [Header("Character Information")]
     public CharacterInformationSO _characterInformation;
 
-    [Header("Controller Properties")]
+    [Header("Movement Controller Properties")]
     public Transform _orientation;
     public float _walkSpeed = 6f;
     public float _sprintSpeed = 12f;
@@ -28,11 +26,15 @@ public class PlayableCharacter : AHumanoid<PlayableCharacter>
     #endregion
 
     #region PRIVATE PROPERTIES
+    // Finite State Machine
+    FiniteStateMachine<PlayableCharacter> _fsm;
     #endregion
 
     #region INHERITED PROPERTIES
     protected override void OnAwake()
     {
+        base.OnAwake();
+
         _characterController = GetComponent<CharacterController>();
         _playerController = new(this);
     }
