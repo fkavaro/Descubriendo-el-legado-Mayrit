@@ -7,7 +7,7 @@ using UnityEngine.AI;
 /// Requires a NavMeshAgent component to be attached to the GameObject.
 /// </summary>
 [RequireComponent(typeof(NavMeshAgent))]
-public abstract class ANPC<TController> : AHumanoid<TController>
+public abstract class ANPC<TController> : AAnimationController<TController>
 where TController : ABehaviourController<TController>
 {
     protected NavMeshAgent _agent;

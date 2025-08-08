@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 /// Manages the player states and data
 /// </summary>
 [RequireComponent(typeof(CharacterController))]
-public class PlayableCharacter : AHumanoid<PlayableCharacter>
+public class PlayableCharacter : AAnimationController<PlayableCharacter>
 {
     #region PUBLIC PROPERTIES
     [HideInInspector] public CharacterController _characterController;
