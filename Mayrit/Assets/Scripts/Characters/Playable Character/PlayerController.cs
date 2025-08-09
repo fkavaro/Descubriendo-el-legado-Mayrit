@@ -38,15 +38,19 @@ public class PlayerController
 
     public void Update()
     {
-        // Read input actions from GameManager
-        _movementInput = GameManager.Instance._inputActions.Player.Move.ReadValue<Vector2>();
+        // Prevent movement if jumping and grounded (pre-jump animation)
+        if (_isJumping && _player._characterController.isGrounded)
+            _movementInput = Vector2.zero;
+        else
+            _movementInput = GameManager.Instance._inputActions.Player.Move.ReadValue<Vector2>();
+
         _isRunPressed = GameManager.Instance._inputActions.Player.Sprint.IsPressed();
         _isJumpPressed = GameManager.Instance._inputActions.Player.Jump.IsPressed();
 
-        HandleAnimations();
         HandleMovement();
         HandleGravity();
         HandleRotation();
+        HandleAnimations();
         ApplyMovement();
     }
 
@@ -58,7 +62,7 @@ public class PlayerController
     {
         if (_player._characterController.isGrounded)
         {
-            // Jumping
+            // Handle jump sequence
             if (_isJumping)
             {
                 if (_player.IsAnimationFinished(_player._preJumpAnim))
@@ -71,21 +75,25 @@ public class PlayerController
                     _isJumping = false; // Reset jumping state after jump animation
                 }
             }
-            // Not jumping
-            else
+            else if (_isJumpPressed)
             {
-                if (_isJumpPressed)
-                {
-                    _player.ChangeAnimationTo(_player._preJumpAnim, 0f);
-                    _isJumping = true;
-                }
-                else if (_movementInput == Vector2.zero)
-                    _player.ChangeAnimationTo(_player._idleAnim);
-                else if (_isRunPressed)
-                    _player.ChangeAnimationTo(_player._runAnim);
-                else
-                    _player.ChangeAnimationTo(_player._walkAnim);
+                _player.ChangeAnimationTo(_player._preJumpAnim, 0f);
+                _isJumping = true;
             }
+            else if (_movementInput == Vector2.zero)
+                _player.ChangeAnimationTo(_player._idleAnim);
+            else if (_isRunPressed)
+                _player.ChangeAnimationTo(_player._runAnim);
+            else
+                _player.ChangeAnimationTo(_player._walkAnim);
+        }
+        else // In air
+        {
+            // Play falling animation if not jumping
+            // if (!_isJumping && _verticalVelocity < 0)
+            // {
+            //     _player.ChangeAnimationTo(_player._fallAnim);
+            // }
         }
     }
 
@@ -94,26 +102,12 @@ public class PlayerController
     /// </summary>
     void HandleMovement()
     {
-        // Don't apply movement if jumping but still on ground (pre-jump animation)
-        if (_isJumping && _player._characterController.isGrounded)
-        {
-            _movementInput = Vector2.zero;
-            return;
-        }
-
         // Sprint key pressed
-        if (_isRunPressed)
-            _movementSpeed = _player._runSpeed; // Move with sprint speed
-                                                // Not pressed
-        else
-            _movementSpeed = _player._walkSpeed; // Move with walk speed
+        _movementSpeed = _isRunPressed ? _player._runSpeed : _player._walkSpeed;
 
         // Get direction in 3D space based on camera orientation
-        _forward = _cameraTransform.forward;
-        _right = _cameraTransform.right;
-
-        _forward.Normalize();
-        _right.Normalize();
+        _forward = _cameraTransform.forward.normalized;
+        _right = _cameraTransform.right.normalized;
     }
 
     /// <summary>
@@ -124,19 +118,15 @@ public class PlayerController
         // Player on ground
         if (_player._characterController.isGrounded)
         {
-            // Pre-jump animation finished
-            if (_player.IsAnimationFinished(_player._preJumpAnim))
+            // Only apply jump force after pre-jump animation is finished
+            if (_isJumping && _player.IsAnimationFinished(_player._preJumpAnim))
                 _verticalVelocity = _player._jumpForce; // Jump
-            // Not finished
             else
                 _verticalVelocity = -1f; // Small gravity to keep grounded
         }
-        // Not on ground
         else
-        {
             // Apply gravity to vertical velocity
             _verticalVelocity -= _player._gravityForce * Time.deltaTime;
-        }
     }
 
     /// <summary>
@@ -145,7 +135,6 @@ public class PlayerController
     void HandleRotation()
     {
         // If there is any movement
-        // To maintain rotation when stopping
         if (_movementInput != Vector2.zero)
         {
             // Rotate orientation
@@ -155,10 +144,7 @@ public class PlayerController
             Vector3 inputDir = _orientation.forward * _movementInput.y + _orientation.right * _movementInput.x;
 
             // Faster rotation if walking
-            if (!_isRunPressed)
-                _rotationSpeed = _player._rotationSpeed;
-            else
-                _rotationSpeed = _player._rotationSpeed * 2f;
+            _rotationSpeed = _isRunPressed ? _player._rotationSpeed : _player._rotationSpeed * 2f;
 
             _player.transform.forward = Vector3.Slerp(_player.transform.forward, inputDir.normalized, Time.deltaTime * _rotationSpeed);
         }
