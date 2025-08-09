@@ -10,7 +10,8 @@ public class PlayerController
         _movementSpeed;
 
     bool _isRunPressed,
-        _isJumpPressed;
+        _isJumpPressed,
+        _isJumping;
 
     Vector3 _movement3D,
         _forward,
@@ -41,36 +42,53 @@ public class PlayerController
         _isRunPressed = GameManager.Instance._inputActions.Player.Sprint.IsPressed();
         _isJumpPressed = GameManager.Instance._inputActions.Player.Jump.IsPressed();
 
-        if (_player._characterController.isGrounded)
-        {
-            if (_isJumpPressed)
-                _player.ChangeAnimationTo(_player._preJumpAnim, 0f);
-            else if (_player.IsAnimationFinished(_player._preJumpAnim))
-            {
-                Debug.Log("Pre-jumped");
-                _player.ChangeAnimationTo(_player._jumpAnim, 0f);
-            }
-            else if (_player.IsAnimationFinished(_player._jumpAnim))
-            {
-                Debug.Log("Jumped");
-                _player.ChangeAnimationTo(_player._afterJumpAnim, 0f);
-            }
-            else if (_movementInput == Vector2.zero)
-                _player.ChangeAnimationTo(_player._idleAnim);
-            else if (_isRunPressed)
-                _player.ChangeAnimationTo(_player._runAnim);
-            else
-                _player.ChangeAnimationTo(_player._walkAnim);
-        }
-
+        HandleAnimations();
         HandleMovement();
         HandleRotation();
         HandleGravity();
         ApplyMovement();
+    }
 
-        // // TODO: add Falling animation
-        // if (!_player._characterController.isGrounded &&
-        //      _verticalVelocity < 0)
+    private void HandleAnimations()
+    {
+        if (_player._characterController.isGrounded)
+        {
+            if (_isJumpPressed)
+            {
+                _player.ChangeAnimationTo(_player._preJumpAnim, 0f);
+                _isJumping = true;
+            }
+            // Jumping
+            else if (_isJumping)
+            {
+                if (_player.IsAnimationFinished(_player._preJumpAnim))
+                {
+                    Debug.Log("Pre-jumped");
+                    _player.ChangeAnimationTo(_player._jumpAnim, 0f);
+                }
+                else if (_player.IsAnimationFinished(_player._jumpAnim))
+                {
+                    Debug.Log("Jumped");
+                    _player.ChangeAnimationTo(_player._afterJumpAnim, 0f);
+                    _isJumping = false; // Reset jumping state after jump animation
+                }
+            }
+            // Not jumping
+            else
+            {
+                if (_movementInput == Vector2.zero)
+                    _player.ChangeAnimationTo(_player._idleAnim);
+                else if (_isRunPressed)
+                    _player.ChangeAnimationTo(_player._runAnim);
+                else
+                    _player.ChangeAnimationTo(_player._walkAnim);
+            }
+
+        }
+
+        // TODO: add Falling animation
+        // else
+        //  if (_verticalVelocity < 0)
         //     _player.ChangeAnimationTo(_player._fallAnim);
     }
     #endregion
