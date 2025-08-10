@@ -655,18 +655,21 @@ MonoBehaviour:
   _selectableLayer:
     serializedVersion: 2
     m_Bits: 8
-  _orbitalCameraOrbitSpeed: 30
-  _orbitalCameraZoomValueForBuilding: 0.2
-  _orbitalCameraZoomValueForCharacter: 0.02
-  _orbitalTransitionSpeed: 1
-  _horizontalOffset: 20
+  _orbitalBuildingOrbitSpeed: 30
+  _orbitalBuildingZoom: 0.2
+  _orbitalBuildingOffset: 20
+  _orbitalCharacterOrbitSpeed: 15
+  _orbitalCharacterZoom: 0.02
+  _orbitalCharacterOffset: 2
   _thirdPersonCamera: {fileID: 412980351691204597}
   _3rdPersonCameraOrbitSpeed: 3
   _bottomClamp: -30
   _topClamp: 40
   _3rdPersonTransitionDuration: 1
   _spectatorTransitionDuration: 1
-  _offsetTransitionDuration: 1
+  _orbitalMoveTransitionDuration: 1
+  _orbitalOffsetTransitionDuration: 1
+  _orbitalZoomTransitionSpeed: 1
 --- !u!1 &4272530639498313931
 GameObject:
   m_ObjectHideFlags: 0
