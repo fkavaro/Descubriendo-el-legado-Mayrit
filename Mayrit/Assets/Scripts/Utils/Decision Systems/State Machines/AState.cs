@@ -9,12 +9,6 @@ public abstract class AState<TController, TStateMachine>
     where TStateMachine : AStateMachine<TController, TStateMachine>
 {
     public string Name => _stateName;
-
-    /// <summary>
-    /// Preferred state to switch to after this state.
-    /// </summary>
-    public AState<TController, TStateMachine> NextState => _nextState;
-
     protected string _stateName;
     protected TController _controller;
     protected TStateMachine _stateMachine;
@@ -23,13 +17,12 @@ public abstract class AState<TController, TStateMachine>
 
     // Constructor
     public AState(string name,
-    TStateMachine stateMachine,
-    AState<TController, TStateMachine> nextState = null)
+    TStateMachine stateMachine)
     {
         _stateName = name;
         _stateMachine = stateMachine;
+        _stateMachine.AddState(this);
         _controller = stateMachine._controller;
-        _nextState = nextState;
     }
 
     /// <summary>

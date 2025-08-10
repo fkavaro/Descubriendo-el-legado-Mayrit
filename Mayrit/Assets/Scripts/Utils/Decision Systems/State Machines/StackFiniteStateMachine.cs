@@ -79,41 +79,5 @@ where TController : ABehaviourController<TController>
             return previousState;
         }
     }
-
-    /// <summary>
-    /// Switches to the previous state in the stack,
-    /// removing it from the stack.
-    /// </summary>
-    public bool SwitchToPreviousState()
-    {
-        // Empty stack
-        if (_stateStack.Count == 0)
-        {
-            if (_controller._debugMode)
-                Debug.Log("[" + _controller.name + "] state stack is empty");
-
-            return false;
-        }
-
-        // Not empty stack
-        SwitchState(_stateStack.Pop());
-        return true;
-    }
-
-    /// <summary>
-    /// Switches to the next state if defined in the current state.
-    /// </summary>
-    public virtual bool SwitchToNextState()
-    {
-        if (_currentState.NextState == null)
-        {
-            if (_controller._debugMode)
-                Debug.Log("[" + _controller.name + "] No next state defined for " + _currentState.Name);
-            return false;
-        }
-
-        SwitchState(_currentState.NextState);
-        return true;
-    }
     #endregion
 }

@@ -32,7 +32,7 @@ public class ProgressManager : Singleton<ProgressManager>
     public MilestoneInformationSO _conquestInformation;
 
     // State Machine
-    public StackFiniteStateMachine<ProgressManager> _fsm;
+    public FiniteStateMachine<ProgressManager> _fsm;
     public Vision_AProgressState _visionState;
     public Albacar_AProgressState _albacarState;
     public Almudayna_AProgressState _almudaynaState;
@@ -57,10 +57,10 @@ public class ProgressManager : Singleton<ProgressManager>
     protected override void OnStart()
     {
         // Notify listeners about the initial milestone
-        OnMilestoneChanged?.Invoke(_currentMilestone);
+        //OnMilestoneChanged?.Invoke(_currentMilestone);
 
         // Set current playable character
-        GameManager.Instance.GetCurrentPlayableCharacter();
+        //GameManager.Instance.GetCurrentPlayableCharacter();
     }
 
     protected override void OnUpdate()
@@ -72,17 +72,17 @@ public class ProgressManager : Singleton<ProgressManager>
     {
         _fsm = new(this);
 
-        // States initialization (from last to first)
+        // States initialization
+        _visionState = new(Milestone._1_Vision, _visionInformation, _fsm);
+        _foundationState = new(Milestone._2_Foundation, _foundationInformation, _fsm);
+        _albacarState = new(Milestone._3_Albacar, _albacarInformation, _fsm);
+        _almudaynaState = new(Milestone._4_Almudayna, _almudaynaInformation, _fsm);
+        _ramiroIIState = new(Milestone._5_RamiroII, _ramiroAttackInformation, _fsm);
+        _almanzorState = new(Milestone._6_Almanzor, _almanzorInformation, _fsm);
+        _schoolState = new(Milestone._7_School, _schoolInformation, _fsm);
         _conquestState = new(Milestone._8_Conquest, _conquestInformation, _fsm);
-        _schoolState = new(Milestone._7_School, _schoolInformation, _fsm, _conquestState);
-        _almanzorState = new(Milestone._6_Almanzor, _almanzorInformation, _fsm, _schoolState);
-        _ramiroIIState = new(Milestone._5_RamiroII, _ramiroAttackInformation, _fsm, _almanzorState);
-        _almudaynaState = new(Milestone._4_Almudayna, _almudaynaInformation, _fsm, _ramiroIIState);
-        _albacarState = new(Milestone._3_Albacar, _albacarInformation, _fsm, _almudaynaState);
-        _foundationState = new(Milestone._2_Foundation, _foundationInformation, _fsm, _albacarState);
-        _visionState = new(Milestone._1_Vision, _visionInformation, _fsm, _foundationState);
 
-        _fsm.SetInitialState(_visionState);
+        //_fsm.SetInitialState(_visionState);
 
         return _fsm;
     }
@@ -91,18 +91,12 @@ public class ProgressManager : Singleton<ProgressManager>
     #region PUBLIC METHODS
     public void SwitchToNextMilestone()
     {
-        if (_fsm.SwitchToNextState())
-        {
-
-        }
+        _fsm.SwitchToNextState();
     }
 
     public void SwitchToPreviousMilestone()
     {
-        if (_fsm.SwitchToPreviousState())
-        {
-
-        }
+        _fsm.SwitchToPreviousState();
     }
 
     public bool AtLastMilestone()

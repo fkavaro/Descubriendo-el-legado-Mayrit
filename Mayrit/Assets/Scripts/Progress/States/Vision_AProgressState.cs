@@ -5,9 +5,8 @@ public class Vision_AProgressState : AProgressState
 {
     public Vision_AProgressState(ProgressManager.Milestone milestone,
     MilestoneInformationSO milestoneInfoSO,
-    StackFiniteStateMachine<ProgressManager> stateMachine,
-    AProgressState nextState = null)
-    : base("Vision", milestone, milestoneInfoSO, stateMachine, nextState) { }
+    FiniteStateMachine<ProgressManager> stateMachine)
+    : base("Vision", milestone, milestoneInfoSO, stateMachine) { }
 
     public override void UpdateState()
     {

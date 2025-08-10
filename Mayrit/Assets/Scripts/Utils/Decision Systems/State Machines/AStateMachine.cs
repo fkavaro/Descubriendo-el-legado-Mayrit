@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -10,14 +11,35 @@ where TStateMachineType : AStateMachine<TController, TStateMachineType>
     public AState<TController, TStateMachineType> CurrentState => _currentState;
 
     protected AState<TController, TStateMachineType> _currentState, _initialState;
+    protected List<AState<TController, TStateMachineType>> _states = new();
 
     // Constructor
-    protected AStateMachine(TController controller) : base(controller) { }
+    public AStateMachine(TController controller) : base(controller) { }
 
     #region TO BE IMPLEMENTED METHODS
     public abstract void SwitchState(AState<TController, TStateMachineType> state);
     #endregion
 
+    #region INHERITED METHODS
+    /// <summary>
+    /// Switchs back to initial state
+    /// </summary>
+    public override void Reset()
+    {
+        SwitchState(_initialState);
+    }
+
+    /// <summary>
+    /// Debugs the current state of the state machine.
+    /// </summary>
+    protected override void DebugDecision()
+    {
+        if (_controller._debugMode)
+            Debug.Log("[" + _controller.name + "]" + " is " + _currentState.Name);
+    }
+    #endregion
+
+    #region PUBLIC METHODS
     public virtual void SetInitialState(AState<TController, TStateMachineType> state)
     {
         if (state == _currentState) return;
@@ -39,24 +61,49 @@ where TStateMachineType : AStateMachine<TController, TStateMachineType>
         DebugDecision();
         _currentState.StartState();
     }
-    #region INHERITED METHODS
-    /// <summary>
-    /// Switchs back to initial state
-    /// </summary>
-    public override void Reset()
+
+    public void AddState(AState<TController, TStateMachineType> state)
     {
-        SwitchState(_initialState);
+        if (_states.Contains(state)) return;
+        _states.Add(state);
+        _initialState ??= state;
     }
 
     /// <summary>
-    /// Debugs the current state of the state machine.
+    /// Switches to the previous state in the list.
     /// </summary>
-    protected override void DebugDecision()
+    public bool SwitchToPreviousState()
     {
-        if (_controller._debugMode)
-            Debug.Log("[" + _controller.name + "]" + " is " + _currentState.Name);
+        if (_states.Count == 0 || _currentState == null) return false;
+
+        int currentIndex = _states.IndexOf(_currentState);
+
+        if (currentIndex <= 0) // First state
+            return false;
+
+        AState<TController, TStateMachineType> previousState = _states[currentIndex - 1];
+
+        SwitchState(previousState);
+        return true;
     }
 
+    /// <summary>
+    /// Switches to the next state in the list.
+    /// </summary>
+    public virtual bool SwitchToNextState()
+    {
+        if (_states.Count == 0 || _currentState == null) return false;
+
+        int currentIndex = _states.IndexOf(_currentState);
+
+        if (currentIndex >= _states.Count - 1) // Last state
+            return false;
+
+        AState<TController, TStateMachineType> nextState = _states[currentIndex + 1];
+
+        SwitchState(nextState);
+        return true;
+    }
     #endregion
 
     #region UNITY EXECUTION EVENTS
