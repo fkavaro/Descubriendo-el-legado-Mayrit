@@ -17,19 +17,16 @@ public class CameraManager : Singleton<CameraManager>
 
     [Header("Spectator camera")]
     public CinemachineCamera _spectatorCamera;
-
     [Space]
     [Tooltip("Wether to move camera at screen margins or not.")]
     public bool _edgeScrolling = false;
     public int _edgeScrollingMargin = 30;
-
     [Space]
     public float _moveSpeed = 500f;
     public AnimationCurve _moveSpeedZoomCurve = AnimationCurve.Linear(0f, 0.1f, 1f, 1f);
     public float _acceleration = 200f;
     public float _deceleration = 250f;
     public float _printSpeedMultiplier = 2f;
-
     [Space]
     [Tooltip("Camera limits in X axis (min, max)")]
     public Vector2 _movementLimitsX = new(-1000, 700);
@@ -37,26 +34,26 @@ public class CameraManager : Singleton<CameraManager>
     public Vector2 _movementLimitsY = new(120, 400);
     [Tooltip("Camera limits in Z axis (min, max)")]
     public Vector2 _movementLimitsZ = new(-800, 800);
-
     [Space]
     [Tooltip("Mouse sensitivity for camera rotation.")]
     public float _spectatorCameraOrbitSpeed = 0.5f;
     public float _orbitSmoothing = 5f;
-
     [Space]
     [Tooltip("Speed of camera zoom with scroll wheel.")]
     public float _zoomSpeed = 0.1f;
     public float _zoomSmoothing = 5f;
-
     [Space]
     [Tooltip("Layer mask to define which objects are selectable.")]
     public LayerMask _selectableLayer;
 
     [Header("Orbital camera")]
-    public float _orbitalCameraOrbitSpeed = 30f;
-    public float _orbitalCameraZoomValue = 0.2f;
-    public float _orbitalTransitionSpeed = 1f;
-    public float _horizontalOffset = -10f;
+    public float _orbitalBuildingOrbitSpeed = 30f;
+    public float _orbitalBuildingZoom = 0.2f;
+    public float _orbitalBuildingOffset = 20f;
+    [Space]
+    public float _orbitalCharacterOrbitSpeed = 15f;
+    public float _orbitalCharacterZoom = 0.02f;
+    public float _orbitalCharacterOffset = 10f;
 
     [Header("Third Person Camera")]
     public CinemachineCamera _thirdPersonCamera;
@@ -67,7 +64,9 @@ public class CameraManager : Singleton<CameraManager>
     [Header("Camera transitions")]
     public float _3rdPersonTransitionDuration = 1f;
     public float _spectatorTransitionDuration = 3f;
-    public float _offsetTransitionDuration = 1f;
+    public float _orbitalMoveTransitionDuration = 1f;
+    public float _orbitalOffsetTransitionDuration = 1f;
+    public float _orbitalZoomTransitionSpeed = 1f;
     #endregion
 
     #region PRIVATE PROPERTIES  
@@ -137,15 +136,17 @@ public class CameraManager : Singleton<CameraManager>
             _spectatorCamera.LookAt.position.z
         );
 
-        // Long distance to the target to avoid weird behaviour
         if (_fsm.IsCurrentState(_thirdPersonState))
-            // Directly
-            _spectatorCamera.GetComponent<CinemachineOrbitalFollow>().RadialAxis.Value = 0.5f;
+        {
+            // Directly long distance to the target to avoid weird behaviour
+            //_spectatorCamera.GetComponent<CinemachineOrbitalFollow>().RadialAxis.Value = 0.5f;
+            ZoomToCoroutine(_spectatorCamera.GetComponent<CinemachineOrbitalFollow>(), 0.5f);
+        }
         else if (_fsm.IsCurrentState(_orbitalState))
         {
             // Transitions
             ZoomToCoroutine(_spectatorCamera.GetComponent<CinemachineOrbitalFollow>(), 0.5f);
-            //ResetContextualPanelOffset();
+            ResetContextualPanelOffset();
         }
 
         _fsm.SwitchState(_spectatorState);
@@ -188,8 +189,15 @@ public class CameraManager : Singleton<CameraManager>
         // Hide contextual panel
         UIManager.Instance._spectatorHUDState._contextualPanel.Hide();
 
+        // Is character information
+        if (information.InformationType == InformationSO.Type.Character)
+            ApplyContextualPanelOffset(_orbitalCharacterOffset);
+        // Other
+        else
+            ApplyContextualPanelOffset(_orbitalBuildingOffset);
+
         // Move spectator target to object position
-        SmoothMoveCoroutine(_spectatorCamera.LookAt, objectToOrbitAround.position, _3rdPersonTransitionDuration,
+        SmoothMoveCoroutine(_spectatorCamera.LookAt, objectToOrbitAround.position, _orbitalMoveTransitionDuration,
         () =>
         {
             _orbitalState._information = information;
@@ -202,7 +210,7 @@ public class CameraManager : Singleton<CameraManager>
     /// <summary>
     /// Moves smoothly the given transform to the new position in given duration.
     /// </summary>
-    public void SmoothMoveCoroutine(Transform lookAt, Vector3 newPosition, float duration = 1f, Action onComplete = null)
+    public void SmoothMoveCoroutine(Transform lookAt, Vector3 newPosition, float duration, Action onComplete = null)
     {
         StartCoroutine(SmoothMove(lookAt, newPosition, duration, onComplete));
     }
@@ -212,9 +220,9 @@ public class CameraManager : Singleton<CameraManager>
         StartCoroutine(ZoomTo(orbitalFollow, targetZoom, onComplete));
     }
 
-    public void ApplyContextualPanelOffset()
+    public void ApplyContextualPanelOffset(float offset)
     {
-        StartCoroutine(SmoothHorizontalOffset(_spectatorCamera.GetComponent<CinemachineCameraOffset>(), _horizontalOffset));
+        StartCoroutine(SmoothHorizontalOffset(_spectatorCamera.GetComponent<CinemachineCameraOffset>(), offset));
     }
 
     public void ResetContextualPanelOffset()
@@ -254,7 +262,7 @@ public class CameraManager : Singleton<CameraManager>
     /// </summary>
     IEnumerator ZoomTo(CinemachineOrbitalFollow orbitalFollow, float targetZoom, Action onComplete)
     {
-        float zoomSpeed = _orbitalTransitionSpeed;
+        float zoomSpeed = _orbitalZoomTransitionSpeed;
         float startZoom = orbitalFollow.RadialAxis.Value;
         float elapsed = 0f;
         float duration = Mathf.Abs(targetZoom - startZoom) / (zoomSpeed > 0 ? zoomSpeed : 1f);
@@ -282,15 +290,15 @@ public class CameraManager : Singleton<CameraManager>
     /// <summary>
     /// Smoothly interpolates the camera's horizontal offset to the target value.
     /// </summary>
-    IEnumerator SmoothHorizontalOffset(CinemachineCameraOffset offsetComponent, float targetOffset, float duration = 1f, Action onComplete = null)
+    IEnumerator SmoothHorizontalOffset(CinemachineCameraOffset offsetComponent, float targetOffset, Action onComplete = null)
     {
         float startOffset = offsetComponent.Offset.x;
         float elapsed = 0f;
 
-        while (elapsed < duration)
+        while (elapsed < _orbitalOffsetTransitionDuration)
         {
             elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
+            float t = Mathf.Clamp01(elapsed / _orbitalOffsetTransitionDuration);
             offsetComponent.Offset.x = Mathf.Lerp(startOffset, targetOffset, t);
             yield return null;
         }

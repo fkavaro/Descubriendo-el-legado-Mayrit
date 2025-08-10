@@ -648,21 +648,22 @@ MonoBehaviour:
   _movementLimitsX: {x: -1000, y: 700}
   _movementLimitsY: {x: 120, y: 400}
   _movementLimitsZ: {x: -800, y: 800}
-  _orbitSensitivity: 0.5
+  _spectatorCameraOrbitSpeed: 0.5
   _orbitSmoothing: 5
   _zoomSpeed: 0.1
   _zoomSmoothing: 5
   _selectableLayer:
     serializedVersion: 2
     m_Bits: 8
-  _thirdPersonCamera: {fileID: 412980351691204597}
-  _rotationSpeed: 3
-  _bottomClamp: -30
-  _topClamp: 40
-  _orbitSpeed: 10
-  _orbitalCameraZoomValue: 0.2
+  _orbitalCameraOrbitSpeed: 30
+  _orbitalCameraZoomValueForBuilding: 0.2
+  _orbitalCameraZoomValueForCharacter: 0.02
   _orbitalTransitionSpeed: 1
   _horizontalOffset: 20
+  _thirdPersonCamera: {fileID: 412980351691204597}
+  _3rdPersonCameraOrbitSpeed: 3
+  _bottomClamp: -30
+  _topClamp: 40
   _3rdPersonTransitionDuration: 1
   _spectatorTransitionDuration: 1
   _offsetTransitionDuration: 1

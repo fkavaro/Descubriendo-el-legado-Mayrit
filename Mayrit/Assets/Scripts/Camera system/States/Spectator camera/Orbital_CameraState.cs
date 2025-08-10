@@ -6,6 +6,9 @@ public class Orbital_CameraState : ACameraState
     public InformationSO _information;
     public readonly CinemachineOrbitalFollow _orbitalFollow;
 
+    float _orbitSpeed,
+        _zoomValue;
+
     public Orbital_CameraState(FiniteStateMachine<CameraManager> stateMachine,
         CinemachineCamera camera)
         : base("Orbitational camera", stateMachine, camera)
@@ -17,20 +20,31 @@ public class Orbital_CameraState : ACameraState
     {
         _camera.gameObject.SetActive(true);
 
-        CameraManager.Instance.ZoomToCoroutine(_orbitalFollow, CameraManager.Instance._orbitalCameraZoomValue);
+        // Is character information
+        if (_information.InformationType == InformationSO.Type.Character)
+        {
+            _orbitSpeed = CameraManager.Instance._orbitalCharacterOrbitSpeed;
+            _zoomValue = CameraManager.Instance._orbitalCharacterZoom;
+        }
+        // Other
+        else
+        {
+            _orbitSpeed = CameraManager.Instance._orbitalBuildingOrbitSpeed;
+            _zoomValue = CameraManager.Instance._orbitalBuildingZoom;
+        }
+
+        CameraManager.Instance.ZoomToCoroutine(_orbitalFollow, _zoomValue);
         UIManager.Instance._spectatorHUDState.ShowContextualPanel(_information);
-        CameraManager.Instance.ApplyContextualPanelOffset();
     }
 
     public override void UpdateState()
     {
         // Orbit around target
-        _orbitalFollow.HorizontalAxis.Value += CameraManager.Instance._orbitalCameraOrbitSpeed * Time.deltaTime;
+        _orbitalFollow.HorizontalAxis.Value += _orbitSpeed * Time.deltaTime;
     }
 
     public override void ExitState()
     {
-        CameraManager.Instance.ResetContextualPanelOffset();
         _camera.gameObject.SetActive(false);
     }
 }

@@ -38,9 +38,8 @@ public class PlayerButton : MonoBehaviour
                     screenPos.x >= 0 && screenPos.x <= Screen.width &&
                     screenPos.y >= 0 && screenPos.y <= Screen.height;
 
-        // Show button if is in-screen and not already active
-        if (playerInScreen && !_playerButton.gameObject.activeSelf)
-            _playerButton.gameObject.SetActive(true);
+        // Show button if is in-screen
+        _playerButton.gameObject.SetActive(playerInScreen);
 
         // And move button
         if (playerInScreen)
@@ -53,20 +52,9 @@ public class PlayerButton : MonoBehaviour
 
         // Spectator camera
         if (CameraManager.Instance._spectatorState.IsCurrentState())
-        {
             CameraManager.Instance.SwitchToOrbitalCamera(_playableCharacter.transform, _playableCharacter._information);
-        }
-        // Orbital camera
-        else if (CameraManager.Instance._orbitalState.IsCurrentState())
-        {
-            // Show the player information in contextual panel
-            //UIManager.Instance._spectatorHUDState.ShowContextualPanel(_playableCharacter._characterInformation);
-            // Button in contextual panel will change to 3rd person camera
-        }
         // Third person camera
         else if (CameraManager.Instance._thirdPersonState.IsCurrentState())
-        {
             CameraManager.Instance.SwitchToSpectatorCamera();
-        }
     }
 }
