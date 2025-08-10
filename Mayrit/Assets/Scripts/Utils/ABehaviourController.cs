@@ -51,9 +51,17 @@ where TController : ABehaviourController<TController>
         _decisionSystem?.Update();
     }
     protected virtual void OnUpdate() { } // Optionally implemented in subclasses
-    # endregion
 
-    # region COLLISION AND TRIGGER EVENTS
+    private void LateUpdate()
+    {
+        OnLateUpdate();
+        _decisionSystem?.LateUpdate();
+    }
+    protected virtual void OnLateUpdate() { } // Optionally implemented in subclasses
+
+    #endregion
+
+    #region COLLISION AND TRIGGER EVENTS
     private void OnCollisionEnter(Collision collision)
     {
         _decisionSystem?.OnCollisionEnter(collision);

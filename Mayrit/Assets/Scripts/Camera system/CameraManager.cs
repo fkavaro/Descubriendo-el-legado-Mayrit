@@ -8,8 +8,6 @@ public class CameraManager : Singleton<CameraManager>
 {
     #region PUBLIC PROPERTIES
     public event Action<ACameraState> OnCameraStateChange;
-    public CameraController _cameraController;
-    public SelectorCamera _selectorCamera;
 
     // Finite State Machine
     public FiniteStateMachine<CameraManager> _fsm;
@@ -19,7 +17,6 @@ public class CameraManager : Singleton<CameraManager>
 
     [Header("Spectator camera")]
     public CinemachineCamera _spectatorCamera;
-    //public int _spectatorTargetHeight = 120;
 
     [Space]
     [Tooltip("Wether to move camera at screen margins or not.")]
@@ -43,7 +40,7 @@ public class CameraManager : Singleton<CameraManager>
 
     [Space]
     [Tooltip("Mouse sensitivity for camera rotation.")]
-    public float _orbitSensitivity = 0.5f;
+    public float _spectatorCameraOrbitSpeed = 0.5f;
     public float _orbitSmoothing = 5f;
 
     [Space]
@@ -55,16 +52,19 @@ public class CameraManager : Singleton<CameraManager>
     [Tooltip("Layer mask to define which objects are selectable.")]
     public LayerMask _selectableLayer;
 
-    [Header("Third Person Camera")]
-    public CinemachineCamera _thirdPersonCamera;
-
     [Header("Orbital camera")]
-    public float _orbitSpeed = 30f;
+    public float _orbitalCameraOrbitSpeed = 30f;
     public float _orbitalCameraZoomValue = 0.2f;
     public float _orbitalTransitionSpeed = 1f;
     public float _horizontalOffset = -10f;
 
-    [Header("Camera transition")]
+    [Header("Third Person Camera")]
+    public CinemachineCamera _thirdPersonCamera;
+    public float _3rdPersonCameraOrbitSpeed = 3f,
+        _bottomClamp = -30f,
+        _topClamp = 40f;
+
+    [Header("Camera transitions")]
     public float _3rdPersonTransitionDuration = 1f;
     public float _spectatorTransitionDuration = 3f;
     public float _offsetTransitionDuration = 1f;
@@ -79,10 +79,7 @@ public class CameraManager : Singleton<CameraManager>
         // Singleton
         base.OnAwake();
 
-        _cameraController = new(_spectatorCamera, _moveSpeedZoomCurve);
-        _selectorCamera = new(_selectableLayer);
-
-        // Set camera max height
+        // Set camera target at min height
         CinemachineOrbitalFollow _orbitalFollow = _spectatorCamera.GetComponent<CinemachineOrbitalFollow>();
         _orbitalFollow.Radius = _movementLimitsY.y;
     }
@@ -109,9 +106,7 @@ public class CameraManager : Singleton<CameraManager>
         _fsm = new(this);
 
         _spectatorState = new(_fsm,
-            _spectatorCamera,
-            _cameraController,
-            _selectorCamera);
+            _spectatorCamera);
 
         _thirdPersonState = new(_fsm,
             _thirdPersonCamera);
@@ -170,11 +165,11 @@ public class CameraManager : Singleton<CameraManager>
     public void SwitchToThirdPersonCamera()
     {
         // Update third person camera target to current playable character
-        var playerTransform = GameManager.Instance.GetCurrentPlayableCharacter().transform;
+        PlayableCharacter playerTransform = GameManager.Instance.GetCurrentPlayableCharacter();
 
         // Set camera follow and look at targets
-        _thirdPersonCamera.Follow = playerTransform;
-        _thirdPersonCamera.LookAt = playerTransform;
+        _thirdPersonCamera.Follow = playerTransform._orientation;
+        _thirdPersonCamera.LookAt = playerTransform._orientation;
 
         OnCameraStateChange?.Invoke(_thirdPersonState);
 

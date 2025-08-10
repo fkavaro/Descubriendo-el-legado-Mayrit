@@ -1,23 +1,17 @@
-using System;
-using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.InputSystem;
+
 using Unity.Cinemachine;
 
 public class Spectator_CameraState : ACameraState
 {
-    readonly CameraController _cameraController;
+    readonly SpectatorCameraController _cameraController;
     readonly SelectorCamera _selectorCamera;
 
     public Spectator_CameraState(FiniteStateMachine<CameraManager> stateMachine,
-        CinemachineCamera camera,
-        CameraController cameraController,
-        SelectorCamera selectorCamera)
+        CinemachineCamera camera)
     : base("Spectator camera", stateMachine, camera)
     {
-        _cameraController = cameraController;
-        _selectorCamera = selectorCamera;
+        _cameraController = new(camera, CameraManager.Instance._moveSpeedZoomCurve);
+        _selectorCamera = new(CameraManager.Instance._selectableLayer);
     }
 
     public override void StartState()
@@ -39,6 +33,11 @@ public class Spectator_CameraState : ACameraState
     {
         _cameraController.Update();
         _selectorCamera.Update();
+    }
+
+    public override void LateUpdateState()
+    {
+        _cameraController.LateUpdate();
     }
 
     public override void ExitState()

@@ -22,7 +22,7 @@ public class Orbital_CameraState : ACameraState
     public override void UpdateState()
     {
         // Orbit around target
-        _orbitalFollow.HorizontalAxis.Value += CameraManager.Instance._orbitSpeed * Time.deltaTime;
+        _orbitalFollow.HorizontalAxis.Value += CameraManager.Instance._orbitalCameraOrbitSpeed * Time.deltaTime;
     }
 
     public override void ExitState()

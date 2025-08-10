@@ -77,9 +77,16 @@ where TStateMachineType : AStateMachine<TController, TStateMachineType>
         if (!_controller._isExecutionPaused)
             _currentState?.OnUpdateState();
     }
+
+    public override void LateUpdate()
+    {
+        if (!_controller._isExecutionPaused)
+            _currentState?.OnLateUpdateState();
+    }
+
     #endregion
 
-    # region COLLISION AND TRIGGER EVENTS
+    #region COLLISION AND TRIGGER EVENTS
     public override void OnCollisionEnter(Collision collision)
     {
         _currentState?.OnCollisionEnter(collision);

@@ -15,6 +15,7 @@ where TController : ABehaviourController<TController>
     public virtual void Awake() { }
     public virtual void Start() { }
     public abstract void Update();
+    public virtual void LateUpdate() { }
 
     public abstract void Reset();
 

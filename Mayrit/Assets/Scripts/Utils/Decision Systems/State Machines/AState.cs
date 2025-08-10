@@ -53,8 +53,13 @@ public abstract class AState<TController, TStateMachine>
         _stateTime += Time.deltaTime; // Update the state time
         UpdateState(); // Call the UpdateState method implemented in subclasses
     }
-
     public virtual void UpdateState() { } // Optionally implemented in subclasses
+
+    public void OnLateUpdateState()
+    {
+        LateUpdateState(); // Call the LateUpdateState method implemented in subclasses
+    }
+    public virtual void LateUpdateState() { } // Optionally implemented in subclasses
 
     public void OnExitState()
     {
