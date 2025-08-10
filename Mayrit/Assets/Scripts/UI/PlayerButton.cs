@@ -14,16 +14,14 @@ public class PlayerButton : MonoBehaviour
         if (_playerButton == null)
             return;
 
-        // Hide button if game pause
-        if (GameManager.Instance._fsm.IsCurrentState(GameManager.Instance._pauseState))
+        // Hide button if game pause or orbital camera state
+        if (GameManager.Instance._fsm.IsCurrentState(GameManager.Instance._pauseState) ||
+            CameraManager.Instance._fsm.IsCurrentState(CameraManager.Instance._orbitalState))
         {
             if (_playerButton.gameObject.activeSelf)
                 _playerButton.gameObject.SetActive(false);
             return;
         }
-
-        if (!_playerButton.gameObject.activeSelf)
-            _playerButton.gameObject.SetActive(true);
 
         // Get player position in world space and convert to screen space
         Vector3 worldPos = GameManager.Instance._currentPlayableCharacter.transform.position + Vector3.up;
@@ -34,8 +32,9 @@ public class PlayerButton : MonoBehaviour
                     screenPos.x >= 0 && screenPos.x <= Screen.width &&
                     screenPos.y >= 0 && screenPos.y <= Screen.height;
 
-        // Show button if is in-screen
-        _playerButton.gameObject.SetActive(playerInScreen);
+        // Show button if is in-screen and not already active
+        if (playerInScreen && !_playerButton.gameObject.activeSelf)
+            _playerButton.gameObject.SetActive(true);
 
         // And move button
         if (playerInScreen)
@@ -46,13 +45,11 @@ public class PlayerButton : MonoBehaviour
     {
         if (_playerButton == null) return;
 
-        //_image.enabled = false; // Hide button
-
         // Check if the player HUD state is active
         if (UIManager.Instance._playerHUDState.IsCurrentState())
             CameraManager.Instance.ToggleCameraState();
         else if (UIManager.Instance._spectatorHUDState.IsCurrentState())
             // Show the player information in contextual panel
-            UIManager.Instance._spectatorHUDState.ShowCharacterInfo(GameManager.Instance._currentPlayableCharacter._characterInformation);
+            UIManager.Instance._spectatorHUDState.ShowContextualPanel(GameManager.Instance._currentPlayableCharacter._characterInformation);
     }
 }

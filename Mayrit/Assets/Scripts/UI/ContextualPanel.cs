@@ -56,12 +56,13 @@ public class ContextualPanel
     }
 
     #region PUBLIC METHODS
-    public void ShowObjectInfo(ObjectInformationSO objectInfo)
+    public void ShowInfo(InformationSO objectInfo)
     {
         Reset();
 
         // Overwrite panel information
-        _header.text = objectInfo.Name;
+        _header.text = objectInfo.Header;
+        _subHeader.text = objectInfo.SubHeader;
         _description.text = objectInfo.Description;
 
         // Theres is an icon
@@ -80,57 +81,11 @@ public class ContextualPanel
             _imageCaption.style.display = DisplayStyle.Flex;
         }
 
-        // Show panel
-        _root.style.display = DisplayStyle.Flex;
-
-
-        // TODO: test experience this gives
-        //CameraManager.Instance.ApplyContextualPanelOffset();
-    }
-
-    public void ShowCharacterInfo(CharacterInformationSO characterInfo)
-    {
-        Reset();
-
-        // Overwrite panel information
-        _header.text = characterInfo.Name;
-        _description.text = characterInfo.Description;
-
-        // Theres is an icon
-        if (characterInfo.Icon != null)
+        // If the information type is Character, show the play button
+        if (objectInfo.InformationType == InformationSO.Type.Character)
         {
-            _icon.style.backgroundImage = new StyleBackground(characterInfo.Icon.texture);
-            _icon.style.display = DisplayStyle.Flex;
+            _playCharacterButton.style.display = DisplayStyle.Flex;
         }
-
-        // There is an image
-        if (characterInfo.Image != null)
-        {
-            _image.style.backgroundImage = new StyleBackground(characterInfo.Image.texture);
-            _image.style.display = DisplayStyle.Flex;
-            _imageCaption.text = characterInfo.ImageCaption;
-            _imageCaption.style.display = DisplayStyle.Flex;
-        }
-
-        // Show play character button
-        _playCharacterButton.style.display = DisplayStyle.Flex;
-
-        // Show panel
-        _root.style.display = DisplayStyle.Flex;
-
-
-        // TODO: test experience this gives
-        //CameraManager.Instance.ApplyContextualPanelOffset();
-    }
-
-    public void ShowMilestoneInfo(MilestoneInformationSO milestoneInfo)
-    {
-        Reset();
-
-        // Overwrite panel information
-        _header.text = milestoneInfo.Name;
-        _subHeader.text = milestoneInfo.Date;
-        _description.text = milestoneInfo.Description;
 
         // Show panel
         _root.style.display = DisplayStyle.Flex;

@@ -112,7 +112,7 @@ public class SpectatorHUD_UIState : AUIState
         if (_tooltip == null) return;
 
         // Overwrite and show tooltip
-        _tooltip.text = objectHovered._information.Name;
+        _tooltip.text = objectHovered._information.Header;
         _tooltip.style.display = DisplayStyle.Flex;
     }
 
@@ -123,22 +123,13 @@ public class SpectatorHUD_UIState : AUIState
         _tooltip.style.display = DisplayStyle.None;
     }
 
-    public void ShowObjectInfo(ObjectInformationSO objectInfo)
+    public void ShowContextualPanel(InformationSO objectInfo)
     {
         if (IsCursorOverUI(_cursorScreenPos)) return;
 
         _milestoneArea.style.display = DisplayStyle.None;
 
-        _contextualPanel.ShowObjectInfo(objectInfo);
-    }
-
-    public void ShowCharacterInfo(CharacterInformationSO characterInfo)
-    {
-        if (IsCursorOverUI(_cursorScreenPos)) return;
-
-        _milestoneArea.style.display = DisplayStyle.None;
-
-        _contextualPanel.ShowCharacterInfo(characterInfo);
+        _contextualPanel.ShowInfo(objectInfo);
     }
 
     public void OnContextualPanelClosed()
@@ -160,15 +151,15 @@ public class SpectatorHUD_UIState : AUIState
 
         AProgressState currentProgressState = (AProgressState)ProgressManager.Instance._fsm.CurrentState;
 
-        _contextualPanel.ShowMilestoneInfo(currentProgressState._informationSO);
+        _contextualPanel.ShowInfo(currentProgressState._informationSO);
     }
 
     void OverwriteMilestoneArea()
     {
         AProgressState currentProgressState = (AProgressState)ProgressManager.Instance._fsm.CurrentState;
 
-        _milestoneName.text = currentProgressState._informationSO.Name;
-        _milestoneDate.text = currentProgressState._informationSO.Date;
+        _milestoneName.text = currentProgressState._informationSO.Header;
+        _milestoneDate.text = currentProgressState._informationSO.SubHeader;
     }
 
     void CheckMilestoneButtonsActivation()

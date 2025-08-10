@@ -101,7 +101,7 @@ public class SelectorCamera
     void ApplySelection()
     {
         CameraManager.Instance.SwitchToOrbitalCamera(_currentSelected.transform);
-        UIManager.Instance._spectatorHUDState.ShowObjectInfo(_currentSelected._information);
+        UIManager.Instance._spectatorHUDState.ShowContextualPanel(_currentSelected._information);
     }
 
     /// <summary>

@@ -3,12 +3,12 @@ using UnityEngine;
 
 public abstract class AProgressState : AState<ProgressManager, FiniteStateMachine<ProgressManager>>
 {
-    public readonly MilestoneInformationSO _informationSO;
+    public readonly InformationSO _informationSO;
     public readonly ProgressManager.Milestone _milestone;
 
     public AProgressState(string name,
         ProgressManager.Milestone milestone,
-    MilestoneInformationSO milestoneInfoSo,
+    InformationSO milestoneInfoSo,
     FiniteStateMachine<ProgressManager> stateMachine)
     : base(name, stateMachine)
     {

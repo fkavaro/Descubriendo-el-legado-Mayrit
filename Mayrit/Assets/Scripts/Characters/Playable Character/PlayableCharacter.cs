@@ -14,7 +14,7 @@ public class PlayableCharacter : AAnimationController<PlayableCharacter>
     public PlayerController _playerController;
 
     [Header("Character Information")]
-    public CharacterInformationSO _characterInformation;
+    public InformationSO _characterInformation;
 
     [Header("Movement Controller Properties")]
     public Transform _orientation;

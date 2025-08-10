@@ -3,7 +3,7 @@ using UnityEngine;
 public class RamiroIIAttack_AProgressState : AProgressState
 {
     public RamiroIIAttack_AProgressState(ProgressManager.Milestone milestone,
-    MilestoneInformationSO milestoneInfoSO,
+    InformationSO milestoneInfoSO,
     FiniteStateMachine<ProgressManager> stateMachine)
     : base("Ramiro II attack", milestone, milestoneInfoSO, stateMachine) { }
 

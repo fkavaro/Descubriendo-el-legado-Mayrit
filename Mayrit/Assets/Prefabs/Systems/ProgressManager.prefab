@@ -48,11 +48,11 @@ MonoBehaviour:
   _isExecutionPaused: 0
   dontDestroyOnLoad: 0
   _currentMilestone: 0
-  _visionInformation: {fileID: 11400000, guid: 8c60871e8e9636c4f850947f41adae88, type: 2}
-  _foundationInformation: {fileID: 11400000, guid: 42519b1fc6c99c34b872ecff7bd76d68, type: 2}
-  _albacarInformation: {fileID: 11400000, guid: 0670cbae18ddcc54a906eef5fbebf022, type: 2}
-  _almudaynaInformation: {fileID: 11400000, guid: 3a3934e90ad3cf849a0b38ce0d4484aa, type: 2}
-  _ramiroAttackInformation: {fileID: 11400000, guid: 88207b6a03716ca46a7b1e23275513d4, type: 2}
-  _almanzorInformation: {fileID: 11400000, guid: 97c84455fb22ff7418187365d85ba44a, type: 2}
-  _schoolInformation: {fileID: 11400000, guid: 90fa41930a7134744bb7e08dfff5f26e, type: 2}
-  _conquestInformation: {fileID: 11400000, guid: 529b4fbadef4cf24f943b912354f16b5, type: 2}
+  _visionInformation: {fileID: 11400000, guid: 2a50e6330a786ce4494e053206c160f2, type: 2}
+  _foundationInformation: {fileID: 11400000, guid: 6e7fd4e297636cc418043654ce4fa611, type: 2}
+  _albacarInformation: {fileID: 11400000, guid: be5fd6d9ef0c2b948944fdcb81da923e, type: 2}
+  _almudaynaInformation: {fileID: 11400000, guid: da023678bfdfbe64b88c208fc5797ef2, type: 2}
+  _ramiroAttackInformation: {fileID: 11400000, guid: 65fa163bc49bfc54ebb61ce2fe3499f4, type: 2}
+  _almanzorInformation: {fileID: 11400000, guid: 1533da09966c8974492fdb6f66f423e4, type: 2}
+  _schoolInformation: {fileID: 11400000, guid: ea14adf8f041f1d4da3b8a421fff38dc, type: 2}
+  _conquestInformation: {fileID: 11400000, guid: 9324a489583cdec48854463b41ef2c19, type: 2}
