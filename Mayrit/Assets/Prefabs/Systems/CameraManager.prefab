@@ -20,7 +20,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1464312340161193593
 Transform:
   m_ObjectHideFlags: 0
@@ -29,8 +29,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1335179483854954053}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.14187054, y: 0.09753111, z: -0.0140479505, w: 0.9849686}
-  m_LocalPosition: {x: -160.7, y: 58.4, z: -57.2}
+  m_LocalRotation: {x: 0.14294043, y: -0.000000003687037, z: 5.3249466e-10, w: 0.9897313}
+  m_LocalPosition: {x: -168.86, y: 57.83, z: -52.74}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -102,14 +102,14 @@ MonoBehaviour:
   Radius: 10
   Orbits:
     Top:
-      Radius: 2
-      Height: 3
-    Center:
-      Radius: 5
+      Radius: 1
       Height: 2
+    Center:
+      Radius: 2
+      Height: 1
     Bottom:
-      Radius: 2.5
-      Height: 0.1
+      Radius: 2
+      Height: 0
     SplineCurvature: 0.5
   RecenteringTarget: 2
   HorizontalAxis:
@@ -123,9 +123,9 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   VerticalAxis:
-    Value: 17.5
-    Center: 17.5
-    Range: {x: -10, y: 45}
+    Value: 25
+    Center: 1
+    Range: {x: 0, y: 50}
     Wrap: 0
     Recentering:
       Enabled: 0
@@ -164,8 +164,8 @@ MonoBehaviour:
       Size: {x: 0.8, y: 0.8}
       Offset: {x: 0, y: 0}
   CenterOnActivate: 1
-  TargetOffset: {x: 1, y: 0.5, z: 0}
-  Damping: {x: 0.5, y: 0.5}
+  TargetOffset: {x: 0, y: 0.41, z: 0}
+  Damping: {x: 1, y: 1}
   Lookahead:
     Enabled: 0
     Time: 0
@@ -543,7 +543,7 @@ GameObject:
   m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8614657847463590801
 Transform:
   m_ObjectHideFlags: 0
@@ -578,7 +578,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3814782983823893589
 Transform:
   m_ObjectHideFlags: 0
@@ -1080,8 +1080,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6859964358207550459}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.38238075, y: 0.38595867, z: -0.17997551, w: 0.8200181}
-  m_LocalPosition: {x: -238.13913, y: 426.4178, z: -263.8567}
+  m_LocalRotation: {x: 0.14294045, y: -0.000000003687037, z: 5.324947e-10, w: 0.9897313}
+  m_LocalPosition: {x: -168.86, y: 57.83, z: -52.74}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1120,7 +1120,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 10000
-  field of view: 50
+  field of view: 70
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
