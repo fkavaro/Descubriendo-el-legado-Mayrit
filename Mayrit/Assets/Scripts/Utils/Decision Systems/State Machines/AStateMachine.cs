@@ -11,7 +11,7 @@ where TStateMachineType : AStateMachine<TController, TStateMachineType>
     public AState<TController, TStateMachineType> CurrentState => _currentState;
 
     protected AState<TController, TStateMachineType> _currentState, _initialState;
-    protected List<AState<TController, TStateMachineType>> _states = new();
+    protected List<AState<TController, TStateMachineType>> _statesSequence = new();
 
     // Constructor
     public AStateMachine(TController controller) : base(controller) { }
@@ -62,26 +62,26 @@ where TStateMachineType : AStateMachine<TController, TStateMachineType>
         _currentState.StartState();
     }
 
-    public void AddState(AState<TController, TStateMachineType> state)
+    public void AddStateToSequence(AState<TController, TStateMachineType> state)
     {
-        if (_states.Contains(state)) return;
-        _states.Add(state);
+        if (_statesSequence.Contains(state)) return;
+        _statesSequence.Add(state);
         _initialState ??= state;
     }
 
     /// <summary>
     /// Switches to the previous state in the list.
     /// </summary>
-    public bool SwitchToPreviousState()
+    public bool SwitchToPreviousStateInSequence()
     {
-        if (_states.Count == 0 || _currentState == null) return false;
+        if (_statesSequence.Count == 0 || _currentState == null) return false;
 
-        int currentIndex = _states.IndexOf(_currentState);
+        int currentIndex = _statesSequence.IndexOf(_currentState);
 
         if (currentIndex <= 0) // First state
             return false;
 
-        AState<TController, TStateMachineType> previousState = _states[currentIndex - 1];
+        AState<TController, TStateMachineType> previousState = _statesSequence[currentIndex - 1];
 
         SwitchState(previousState);
         return true;
@@ -90,16 +90,16 @@ where TStateMachineType : AStateMachine<TController, TStateMachineType>
     /// <summary>
     /// Switches to the next state in the list.
     /// </summary>
-    public virtual bool SwitchToNextState()
+    public virtual bool SwitchToNextStateInSequence()
     {
-        if (_states.Count == 0 || _currentState == null) return false;
+        if (_statesSequence.Count == 0 || _currentState == null) return false;
 
-        int currentIndex = _states.IndexOf(_currentState);
+        int currentIndex = _statesSequence.IndexOf(_currentState);
 
-        if (currentIndex >= _states.Count - 1) // Last state
+        if (currentIndex >= _statesSequence.Count - 1) // Last state
             return false;
 
-        AState<TController, TStateMachineType> nextState = _states[currentIndex + 1];
+        AState<TController, TStateMachineType> nextState = _statesSequence[currentIndex + 1];
 
         SwitchState(nextState);
         return true;

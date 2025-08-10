@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -78,6 +77,26 @@ where TController : ABehaviourController<TController>
 
             return previousState;
         }
+    }
+
+    /// <summary>
+    /// Switches to the previous state in the stack,
+    /// removing it from the stack.
+    /// </summary>
+    public bool SwitchToPreviousStateInStack()
+    {
+        // Empty stack
+        if (_stateStack.Count == 0)
+        {
+            if (_controller._debugMode)
+                Debug.Log("[" + _controller.name + "] state stack is empty");
+
+            return false;
+        }
+
+        // Not empty stack
+        SwitchState(_stateStack.Pop());
+        return true;
     }
     #endregion
 }

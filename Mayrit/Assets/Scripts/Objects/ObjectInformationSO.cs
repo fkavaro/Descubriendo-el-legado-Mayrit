@@ -6,6 +6,7 @@ public class ObjectInformationSO : ScriptableObject
     [SerializeField] private string _name;
     [TextArea(5, 10)]
     [SerializeField] private string _description;
+    [SerializeField] private Sprite _icon;
 
     [Header("Image Information")]
     [SerializeField] private Sprite _image;
@@ -14,6 +15,7 @@ public class ObjectInformationSO : ScriptableObject
     // Public properties for read-only access
     public string Name => _name;
     public string Description => _description;
+    public Sprite Icon => _icon;
     public Sprite Image => _image;
     public string ImageCaption => _imageCaption;
 }

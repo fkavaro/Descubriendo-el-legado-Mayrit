@@ -91,12 +91,12 @@ public class ProgressManager : Singleton<ProgressManager>
     #region PUBLIC METHODS
     public void SwitchToNextMilestone()
     {
-        _fsm.SwitchToNextState();
+        _fsm.SwitchToNextStateInSequence();
     }
 
     public void SwitchToPreviousMilestone()
     {
-        _fsm.SwitchToPreviousState();
+        _fsm.SwitchToPreviousStateInSequence();
     }
 
     public bool AtLastMilestone()

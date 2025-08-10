@@ -21,7 +21,7 @@ public abstract class AState<TController, TStateMachine>
     {
         _stateName = name;
         _stateMachine = stateMachine;
-        _stateMachine.AddState(this);
+        _stateMachine.AddStateToSequence(this);
         _controller = stateMachine._controller;
     }
 

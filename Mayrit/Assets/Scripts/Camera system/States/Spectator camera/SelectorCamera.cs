@@ -90,6 +90,7 @@ public class SelectorCamera
             else
                 ResetSelection();
         }
+        // If the ray hits nothing
         else
             ResetSelection();
     }
@@ -100,7 +101,7 @@ public class SelectorCamera
     void ApplySelection()
     {
         CameraManager.Instance.SwitchToOrbitalCamera(_currentSelected.transform);
-        UIManager.Instance._spectatorHUDState.ShowContextualPanel(_currentSelected);
+        UIManager.Instance._spectatorHUDState.ShowObjectInfo(_currentSelected._information);
     }
 
     /// <summary>
@@ -111,7 +112,7 @@ public class SelectorCamera
         if (_currentSelected == null) return;
         if (UIManager.Instance._spectatorHUDState.IsCursorOverUI(_cursorScreenPos)) return;
 
-        UIManager.Instance._spectatorHUDState.HideContextualPanel();
+        UIManager.Instance._spectatorHUDState._contextualPanel.Hide();
         CameraManager.Instance.SwitchToSpectatorCamera();
         _currentSelected = null;
     }

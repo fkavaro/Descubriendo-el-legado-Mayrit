@@ -53,6 +53,6 @@ public class PlayerButton : MonoBehaviour
             CameraManager.Instance.ToggleCameraState();
         else if (UIManager.Instance._spectatorHUDState.IsCurrentState())
             // Show the player information in contextual panel
-            UIManager.Instance._spectatorHUDState.ShowContextualPanel(GameManager.Instance._currentPlayableCharacter._characterInformation);
+            UIManager.Instance._spectatorHUDState.ShowCharacterInfo(GameManager.Instance._currentPlayableCharacter._characterInformation);
     }
 }
