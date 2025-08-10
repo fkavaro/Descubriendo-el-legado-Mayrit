@@ -3,6 +3,7 @@ using Unity.Cinemachine;
 
 public class Orbital_CameraState : ACameraState
 {
+    public InformationSO _information;
     public readonly CinemachineOrbitalFollow _orbitalFollow;
 
     public Orbital_CameraState(FiniteStateMachine<CameraManager> stateMachine,
@@ -17,6 +18,8 @@ public class Orbital_CameraState : ACameraState
         _camera.gameObject.SetActive(true);
 
         CameraManager.Instance.ZoomToCoroutine(_orbitalFollow, CameraManager.Instance._orbitalCameraZoomValue);
+        UIManager.Instance._spectatorHUDState.ShowContextualPanel(_information);
+        CameraManager.Instance.ApplyContextualPanelOffset();
     }
 
     public override void UpdateState()
@@ -27,6 +30,7 @@ public class Orbital_CameraState : ACameraState
 
     public override void ExitState()
     {
+        CameraManager.Instance.ResetContextualPanelOffset();
         _camera.gameObject.SetActive(false);
     }
 }

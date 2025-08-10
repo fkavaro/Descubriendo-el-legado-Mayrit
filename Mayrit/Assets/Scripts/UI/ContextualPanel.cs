@@ -114,7 +114,7 @@ public class ContextualPanel
 
     void PlayCharacter(ClickEvent evt)
     {
-        CameraManager.Instance.ToggleCameraState();
+        CameraManager.Instance.SwitchToThirdPersonCamera();
     }
 
     void Reset()

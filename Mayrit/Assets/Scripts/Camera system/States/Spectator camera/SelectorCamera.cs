@@ -62,10 +62,7 @@ public class SelectorCamera
     {
         // Cursor over UI element
         if (UIManager.Instance._spectatorHUDState.IsCursorOverUI(_cursorScreenPos))
-        {
-
             return;
-        }
 
         //Debug.DrawRay(_cameraRay.origin, _cameraRay.direction * 100, Color.green, 120f);
 
@@ -100,8 +97,7 @@ public class SelectorCamera
     /// </summary>
     void ApplySelection()
     {
-        CameraManager.Instance.SwitchToOrbitalCamera(_currentSelected.transform);
-        UIManager.Instance._spectatorHUDState.ShowContextualPanel(_currentSelected._information);
+        CameraManager.Instance.SwitchToOrbitalCamera(_currentSelected.transform, _currentSelected._information);
     }
 
     /// <summary>

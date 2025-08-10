@@ -137,10 +137,8 @@ public class SpectatorHUD_UIState : AUIState
         _milestoneArea.style.display = DisplayStyle.Flex;
 
         // Switch to spectator camera state if it's not current state
-        if (!CameraManager.Instance._fsm.IsCurrentState(CameraManager.Instance._spectatorState))
+        if (CameraManager.Instance._fsm.IsCurrentState(CameraManager.Instance._orbitalState))
             CameraManager.Instance.SwitchToSpectatorCamera();
-
-        CameraManager.Instance.ResetContextualPanelOffset();
     }
     #endregion
 

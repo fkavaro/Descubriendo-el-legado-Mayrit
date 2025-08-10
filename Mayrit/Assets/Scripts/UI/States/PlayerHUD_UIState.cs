@@ -13,7 +13,7 @@ public class PlayerHUD_UIState : AUIState
 
     #region PRIVATE PROPERTIES
     //Label _tooltip, _contextualPanelName, _contextualPanelDescription;
-    Button _pauseButton, _playerButton;
+    Button _pauseButton;
     VisualElement _activityArea;
     #endregion
 
@@ -25,7 +25,6 @@ public class PlayerHUD_UIState : AUIState
     {
         _UIDocument = UIManager.Instance._UIDocument;
         _pauseButton = _UIDocument.rootVisualElement.Q<Button>("PauseButton");
-        _playerButton = _UIDocument.rootVisualElement.Q<Button>("PlayerButton");
         _activityArea = _UIDocument.rootVisualElement.Q<VisualElement>("ActivityArea");
 
         _screen = _UIDocument.rootVisualElement.Q<VisualElement>("PlayerHUD");
@@ -34,11 +33,8 @@ public class PlayerHUD_UIState : AUIState
             Debug.LogWarning("_pauseButton not found");
         if (_activityArea == null)
             Debug.LogWarning("_activityArea not found");
-        if (_playerButton == null)
-            Debug.LogWarning("_playerButton button not found");
 
         _pauseButton.RegisterCallback<ClickEvent>(SwitchToPauseState);
-        _playerButton.RegisterCallback<ClickEvent>(SwitchToSpectatorHUDState);
     }
 
     public override void StartState()
@@ -65,14 +61,6 @@ public class PlayerHUD_UIState : AUIState
     void SwitchToPauseState(ClickEvent evt)
     {
         _stateMachine.SwitchState(UIManager.Instance._pauseState);
-    }
-
-    void SwitchToSpectatorHUDState(ClickEvent evt)
-    {
-        if (_playerButton == null) return;
-
-        _stateMachine.SwitchState(UIManager.Instance._spectatorHUDState);
-        CameraManager.Instance.ToggleCameraState();
     }
     #endregion
 }

@@ -183,25 +183,20 @@ public class CameraManager : Singleton<CameraManager>
         );
     }
 
-    public void SwitchToOrbitalCamera(Transform objectToOrbitAround)
+    public void SwitchToOrbitalCamera(Transform objectToOrbitAround, InformationSO information)
     {
-        ApplyContextualPanelOffset();
+        // Hide contextual panel
+        UIManager.Instance._spectatorHUDState._contextualPanel.Hide();
 
         // Move spectator target to object position
         SmoothMoveCoroutine(_spectatorCamera.LookAt, objectToOrbitAround.position, _3rdPersonTransitionDuration,
         () =>
         {
+            _orbitalState._information = information;
+
             // When reached, switch state
             _fsm.SwitchState(_orbitalState);
         });
-    }
-
-    public void ToggleCameraState()
-    {
-        if (_fsm.IsCurrentState(_spectatorState))
-            SwitchToThirdPersonCamera();
-        else if (_fsm.IsCurrentState(_thirdPersonState))
-            SwitchToSpectatorCamera();
     }
 
     /// <summary>

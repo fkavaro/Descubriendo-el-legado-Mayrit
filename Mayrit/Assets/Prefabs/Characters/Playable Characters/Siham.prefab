@@ -82,7 +82,7 @@ MonoBehaviour:
   _isExecutionPaused: 0
   _animator: {fileID: 1639577397424246107}
   _characterController: {fileID: 0}
-  _characterInformation: {fileID: 11400000, guid: b83794da0aa87f5489d6123269ab6da1, type: 2}
+  _information: {fileID: 11400000, guid: b83794da0aa87f5489d6123269ab6da1, type: 2}
   _orientation: {fileID: 3518169998641744890}
   _walkSpeed: 1
   _runSpeed: 3
