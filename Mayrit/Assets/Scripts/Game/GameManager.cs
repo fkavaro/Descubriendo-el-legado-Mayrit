@@ -50,13 +50,9 @@ public class GameManager : Singleton<GameManager>
         // Set initial state based on scene name
         string sceneName = SceneManager.GetActiveScene().name;
         if (sceneName == "GameScene")
-        {
             _fsm.SetInitialState(_gamePlayState);
-        }
         else
-        {
             _fsm.SetInitialState(_mainMenuState);
-        }
 
         return _fsm;
     }

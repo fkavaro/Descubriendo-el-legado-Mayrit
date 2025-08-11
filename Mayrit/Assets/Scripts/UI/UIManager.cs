@@ -49,10 +49,11 @@ public class UIManager : Singleton<UIManager>
         _pauseState = new(_fsm);
 
         // Set initial state based on scene name
-        if (SceneManager.GetActiveScene().name == "MainMenuScene")
-            _fsm.SetInitialState(_mainMenuState);
-        else
+        string sceneName = SceneManager.GetActiveScene().name;
+        if (sceneName == "GameScene")
             _fsm.SetInitialState(_spectatorHUDState);
+        else
+            _fsm.SetInitialState(_mainMenuState);
 
         return _fsm;
     }

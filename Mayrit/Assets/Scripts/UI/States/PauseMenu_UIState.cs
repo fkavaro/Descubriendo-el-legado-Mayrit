@@ -4,8 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityEngine.InputSystem;
-using Unity.VisualScripting;
 
 public class PauseMenu_UIState : AUIState
 {
@@ -65,7 +63,7 @@ public class PauseMenu_UIState : AUIState
 
     void SwitchToMainMenuState(ClickEvent evt)
     {
-        //_stateMachine.SwitchState(UIManager.Instance.mainMenuState); // Switch to Main Menu state
+        //_stateMachine.SwitchState(UIManager.Instance._mainMenuState); // Switch to Main Menu state
         GameManager.Instance._fsm.SwitchState(GameManager.Instance._mainMenuState);
     }
 

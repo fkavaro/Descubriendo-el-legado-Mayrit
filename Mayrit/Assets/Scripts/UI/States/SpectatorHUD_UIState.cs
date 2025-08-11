@@ -29,8 +29,8 @@ public class SpectatorHUD_UIState : AUIState
     {
         _UIDocument = UIManager.Instance._UIDocument;
         _screen = _UIDocument.rootVisualElement.Q<VisualElement>("SpectatorHUD");
-        _pauseButton = _UIDocument.rootVisualElement.Q<Button>("PauseButton");
 
+        _pauseButton = _screen.Q<Button>("PauseButton");
         _tooltip = _screen.Q<Label>("Tooltip");
         _milestoneArea = _screen.Q<VisualElement>("MilestoneArea");
         _contextualPanelRoot = _screen.Q<VisualElement>("ContextualPanel");

@@ -24,10 +24,10 @@ public class PlayerHUD_UIState : AUIState
     public override void AwakeState()
     {
         _UIDocument = UIManager.Instance._UIDocument;
-        _pauseButton = _UIDocument.rootVisualElement.Q<Button>("PauseButton");
-        _activityArea = _UIDocument.rootVisualElement.Q<VisualElement>("ActivityArea");
-
         _screen = _UIDocument.rootVisualElement.Q<VisualElement>("PlayerHUD");
+
+        _pauseButton = _screen.Q<Button>("PauseButton");
+        _activityArea = _screen.Q<VisualElement>("ActivityArea");
 
         if (_pauseButton == null)
             Debug.LogWarning("_pauseButton not found");
