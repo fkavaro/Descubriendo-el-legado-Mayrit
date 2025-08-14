@@ -7,7 +7,6 @@ public class TimeManager : MonoBehaviour
     [Header("Time Settings")]
     [Tooltip("Whether the time will advance automatically or just to reach a wanted time")]
     public bool _isDynamic = false;
-    public bool _isWantedTimeReached;
 
     [Tooltip("Wanted time in hours to be reached. If dynamic time is enabled, this will be ignored")]
     [Range(0f, 24f)]
@@ -19,13 +18,6 @@ public class TimeManager : MonoBehaviour
 
     [Tooltip("Time cycle speed multiplier")]
     public float _timeSpeed = 1f;
-
-    [Tooltip("Whether current time is between 6 and 18 hours or not")]
-    public bool _isDayTime = true;
-
-    [Tooltip("Normalised time value between 0 and 1, where 0 is midnight and 1 is the next midnight")]
-    [Range(0f, 1f)]
-    public float _normalisedTime;
 
     [Header("Sun Light Settings")]
     public Light _sunSource;
@@ -49,7 +41,9 @@ public class TimeManager : MonoBehaviour
     #endregion
 
     #region PRIVATE PROPERTIES
-
+    [HideInInspector] public bool _isDayTime = true; // Whether current time is between 6 and 18 hours or not
+    bool _isWantedTimeReached; // Whether the current time is close enough to the wanted time
+    float _normalisedTime; // Normalised time value between 0 and 1, where 0 is midnight and 1 is the next midnight
     #endregion
 
     #region INHERITED METHODS
@@ -103,11 +97,9 @@ public class TimeManager : MonoBehaviour
         _sunAngle = _currentTime / 24f * 360f; // Calculate sun angle based on current time
 
         // Rotate sun light source
-        //_sunSource.transform.rotation = Quaternion.Euler(_sunAngle - 90f, _sunPosition, 0f); // -90 so that its down at midnight
         _sunSource.transform.localRotation = Quaternion.Euler(_sunLatitude - 90, _sunLongitude, 0) * Quaternion.Euler(0, _sunAngle, 0);
 
         // Rotate moon light source (contrary to the sun)
-        //_moonSource.transform.rotation = Quaternion.Euler(_sunAngle + 90f, _sunPosition, 0f); // +90 so that its up at midnight
         _moonSource.transform.localRotation = Quaternion.Euler(90 - _moonLatitude, _moonLongitude, 0) * Quaternion.Euler(0, _sunAngle, 0);
 
         // Normalise current time to a value between 0 and 1
