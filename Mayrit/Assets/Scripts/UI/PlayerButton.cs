@@ -16,11 +16,15 @@ public class PlayerButton : MonoBehaviour
         if (_playerButton == null)
             return;
 
-        // Rerturn if game UI isn't spectator hud
-        if (!UIManager.Instance._fsm.IsCurrentState(UIManager.Instance._spectatorHUDState))
+        // Hide if not in spectator HUD state or if orbital camera is active
+        if (!UIManager.Instance._spectatorHUDState.IsCurrentState() ||
+            CameraManager.Instance._orbitalState.IsCurrentState())
+        {
+            _playerButton.gameObject.SetActive(false);
             return;
+        }
 
-        // Current playable character has changed
+        // Update current playable character if changed
         if (_playableCharacter != GameManager.Instance._currentPlayableCharacter)
             _playableCharacter = GameManager.Instance._currentPlayableCharacter;
 
@@ -33,20 +37,21 @@ public class PlayerButton : MonoBehaviour
                     screenPos.x >= 0 && screenPos.x <= Screen.width &&
                     screenPos.y >= 0 && screenPos.y <= Screen.height;
 
-        // Show button if game UI is spectator hud and player is in-screen
-        if (UIManager.Instance._fsm.IsCurrentState(UIManager.Instance._spectatorHUDState)
-            && playerInScreen)
+        // Show button and update position if player is in-screen
+        if (playerInScreen)
         {
             if (!_playerButton.gameObject.activeSelf)
                 _playerButton.gameObject.SetActive(true);
 
             // Update button position
-            if (playerInScreen)
-                _playerButton.position = screenPos + (Vector3)_screenOffset;
+            _playerButton.position = screenPos + (Vector3)_screenOffset;
         }
-        // Hide button
+        // Hide button if not
         else
-            _playerButton.gameObject.SetActive(false);
+        {
+            if (_playerButton.gameObject.activeSelf)
+                _playerButton.gameObject.SetActive(false);
+        }
     }
 
     public void OnPlayerButtonClick()
