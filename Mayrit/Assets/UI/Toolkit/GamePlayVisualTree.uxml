@@ -49,10 +49,10 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="PauseMenu" enabled="true" style="display: none; position: absolute; top: 0; left: 0; bottom: 0; right: 0; flex-direction: row; justify-content: space-between; margin-top: 30px; margin-right: 30px; margin-bottom: 30px; margin-left: 30px;">
+        <ui:VisualElement name="PauseMenu" enabled="true" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; flex-direction: row; justify-content: space-between; margin-top: 30px; margin-right: 30px; margin-bottom: 30px; margin-left: 30px; display: none;">
             <ui:Button text="&gt;" name="PlayButton" class="button smallButton" style="align-self: flex-start; top: 0; left: 0; background-image: url(&quot;project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1087164816274819069&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-right@2x&quot;); position: relative;" />
             <ui:VisualElement style="flex-direction: row;">
-                <ui:Button text="Ajustes" name="SettingsButton" class="button mediumButton" style="align-self: flex-start; position: relative;" />
+                <ui:Button text="Ajustes" name="SettingsButton" enabled="false" class="button mediumButton" style="align-self: flex-start; position: relative;" />
                 <ui:Button text="Inicio" name="MainMenuButton" class="button mediumButton" style="align-self: flex-start; position: relative;" />
                 <ui:Button text="Salir" name="QuitButton" class="button mediumButton" style="align-self: flex-start; position: relative;" />
             </ui:VisualElement>
