@@ -42,7 +42,8 @@ public class TimeManager : MonoBehaviour
 
     #region PRIVATE PROPERTIES
     [HideInInspector] public bool _isDayTime = true; // Whether current time is between 6 and 18 hours or not
-    bool _isWantedTimeReached; // Whether the current time is close enough to the wanted time
+    bool _isWantedTimeReached, // Whether the current time is close enough to the wanted time
+        _increaseTime; // Whether the time should be increased or decreased
     float _normalisedTime; // Normalised time value between 0 and 1, where 0 is midnight and 1 is the next midnight
     #endregion
 
@@ -65,6 +66,15 @@ public class TimeManager : MonoBehaviour
     {
         // Difference between current time and wanted time is less than threshold of 0.1f
         _isWantedTimeReached = Mathf.Abs(_currentTime - _wantedTime) < 0.1f;
+
+        float timeDifference = _currentTime - _wantedTime;
+
+        // If positive, current time is ahead of wanted time, so decrease time
+        if (timeDifference > 0f)
+            _increaseTime = false;
+        // If negative, current time is behind wanted time, so increase time
+        else
+            _increaseTime = true;
 
         // If dynamic time is enabled or if the wanted time has not been reached yet
         if (_isDynamic || !_isWantedTimeReached)
@@ -91,7 +101,10 @@ public class TimeManager : MonoBehaviour
     void UpdateTimeOfDay()
     {
         // Update the current time based on the time speed
-        _currentTime += Time.deltaTime * _timeSpeed;
+        if (_increaseTime)
+            _currentTime += Time.deltaTime * _timeSpeed;
+        else
+            _currentTime -= Time.deltaTime * _timeSpeed;
 
         // Ensure current time wraps around after 24 hours
         if (_currentTime >= 24f)
