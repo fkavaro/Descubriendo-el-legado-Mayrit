@@ -102,21 +102,18 @@ public class TimeManager : MonoBehaviour
     {
         _sunAngle = _currentTime / 24f * 360f; // Calculate sun angle based on current time
 
-        // Rotate sun light source
+        // Rotate light sources based on latitude, longitude, and angle
         _sunSource.transform.localRotation = Quaternion.Euler(_sunLatitude - 90, _sunLongitude, 0) * Quaternion.Euler(0, _sunAngle, 0);
-
-        // Rotate moon light source (contrary to the sun)
         _moonSource.transform.localRotation = Quaternion.Euler(90 - _moonLatitude, _moonLongitude, 0) * Quaternion.Euler(0, _sunAngle, 0);
 
         // Normalise current time to a value between 0 and 1
         _normalisedTime = _currentTime / 24f;
 
-        // Set the intensity of the sun light based on the evaluated curve
+        // Modify sun properties based on the evaluated curves
         _sunSource.intensity = _sunMaxIntensity * _sunIntensityCurve.Evaluate(_normalisedTime);
-        // Set the color temperature of the sun light based on the evaluated curve
-        _sunSource.colorTemperature = 10000f * _sunTemperatureCurve.Evaluate(_normalisedTime); // In kelvin units
+        _sunSource.colorTemperature = _sunTemperatureCurve.Evaluate(_normalisedTime) * 10000f; // In kelvin units
 
-        // Set the intensity of the moon light based on the evaluated curve
+        // Modify moon properties based on the evaluated curves
         _moonSource.intensity = _moonMaxIntensity * _moonIntensityCurve.Evaluate(_normalisedTime);
     }
 
@@ -149,7 +146,7 @@ public class TimeManager : MonoBehaviour
         }
 
         // Roughly during day time
-        if (_currentTime >= 5f && _currentTime < 19f)
+        if (_currentTime >= 4f && _currentTime < 20f)
             _sunSource.gameObject.SetActive(true); // Enable sun
         else // Roughly during night time
             _sunSource.gameObject.SetActive(false); // Disable sun
