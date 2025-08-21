@@ -56,7 +56,7 @@ public class ContextualPanel
     }
 
     #region PUBLIC METHODS
-    public void ShowInfo(InformationSO objectInfo)
+    public void ShowInfo(AInformationSO objectInfo)
     {
         Reset();
 
@@ -82,7 +82,7 @@ public class ContextualPanel
         }
 
         // If the information type is Character, show the play button
-        if (objectInfo.InformationType == InformationSO.Type.Character)
+        if (objectInfo is Character_InformationSO)
         {
             _playCharacterButton.style.display = DisplayStyle.Flex;
         }

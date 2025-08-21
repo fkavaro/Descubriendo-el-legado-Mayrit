@@ -3,7 +3,7 @@ using Unity.Cinemachine;
 
 public class Orbital_CameraState : ACameraState
 {
-    public InformationSO _information;
+    public AInformationSO _information;
     public readonly CinemachineOrbitalFollow _orbitalFollow;
 
     float _orbitSpeed,
@@ -21,7 +21,7 @@ public class Orbital_CameraState : ACameraState
         _camera.gameObject.SetActive(true);
 
         // Is character information
-        if (_information.InformationType == InformationSO.Type.Character)
+        if (_information is Character_InformationSO)
         {
             _orbitSpeed = CameraManager.Instance._orbitalCharacterOrbitSpeed;
             _zoomValue = CameraManager.Instance._orbitalCharacterZoom;

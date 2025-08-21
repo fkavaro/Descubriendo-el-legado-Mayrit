@@ -184,13 +184,13 @@ public class CameraManager : Singleton<CameraManager>
         );
     }
 
-    public void SwitchToOrbitalCamera(Transform objectToOrbitAround, InformationSO information)
+    public void SwitchToOrbitalCamera(Transform objectToOrbitAround, AInformationSO information)
     {
         // Hide contextual panel
         UIManager.Instance._spectatorHUDState._contextualPanel.Hide();
 
         // Is character information
-        if (information.InformationType == InformationSO.Type.Character)
+        if (information is Character_InformationSO)
             ApplyContextualPanelOffset(_orbitalCharacterOffset);
         // Other
         else

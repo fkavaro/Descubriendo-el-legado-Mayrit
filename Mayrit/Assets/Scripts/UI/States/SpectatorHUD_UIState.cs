@@ -126,7 +126,7 @@ public class SpectatorHUD_UIState : AUIState
         _tooltip.style.display = DisplayStyle.None;
     }
 
-    public void ShowContextualPanel(InformationSO objectInfo)
+    public void ShowContextualPanel(AInformationSO objectInfo)
     {
         if (IsCursorOverUI()) return;
 
