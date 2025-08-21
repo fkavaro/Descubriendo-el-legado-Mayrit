@@ -106,12 +106,12 @@ public class TimeManager : MonoBehaviour
         _normalisedTime = _currentTime / 24f;
 
         // Set the intensity of the sun light based on the evaluated curve
-        _sunSource.intensity = _sunMaxIntensity * _sunIntensityCurve.Evaluate(_normalisedTime);
+        //_sunSource.intensity = _sunMaxIntensity * _sunIntensityCurve.Evaluate(_normalisedTime);
         // Set the color temperature of the sun light based on the evaluated curve
-        _sunSource.colorTemperature = 10000f * _sunTemperatureCurve.Evaluate(_normalisedTime); // In kelvin units
+        //_sunSource.colorTemperature = 10000f * _sunTemperatureCurve.Evaluate(_normalisedTime); // In kelvin units
 
         // Set the intensity of the moon light based on the evaluated curve
-        _moonSource.intensity = _moonMaxIntensity * _moonIntensityCurve.Evaluate(_normalisedTime);
+        //_moonSource.intensity = _moonMaxIntensity * _moonIntensityCurve.Evaluate(_normalisedTime);
     }
 
     void CheckActiveLightSource()

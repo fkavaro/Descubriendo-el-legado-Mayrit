@@ -22,15 +22,15 @@ public class ProgressManager : Singleton<ProgressManager>
     [Header("Milestone properties")]
     public Milestone _currentMilestone;
 
-    [Space(10)]
-    public InformationSO _visionInformation;
-    public InformationSO _foundationInformation;
-    public InformationSO _albacarInformation;
-    public InformationSO _almudaynaInformation;
-    public InformationSO _ramiroAttackInformation;
-    public InformationSO _almanzorInformation;
-    public InformationSO _schoolInformation;
-    public InformationSO _conquestInformation;
+    [Space()]
+    public Milestone_InformationSO _visionInformation;
+    public Milestone_InformationSO _foundationInformation;
+    public Milestone_InformationSO _albacarInformation;
+    public Milestone_InformationSO _almudaynaInformation;
+    public Milestone_InformationSO _ramiroAttackInformation;
+    public Milestone_InformationSO _almanzorInformation;
+    public Milestone_InformationSO _schoolInformation;
+    public Milestone_InformationSO _conquestInformation;
 
     // State Machine
     public FiniteStateMachine<ProgressManager> _fsm;
