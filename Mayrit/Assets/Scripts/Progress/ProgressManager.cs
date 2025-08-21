@@ -57,11 +57,7 @@ public class ProgressManager : Singleton<ProgressManager>
 
     protected override void OnStart()
     {
-        // Notify listeners about the initial milestone
-        //OnMilestoneChanged?.Invoke(_currentMilestone);
 
-        // Set current playable character
-        //GameManager.Instance.GetCurrentPlayableCharacter();
     }
 
     protected override void OnUpdate()

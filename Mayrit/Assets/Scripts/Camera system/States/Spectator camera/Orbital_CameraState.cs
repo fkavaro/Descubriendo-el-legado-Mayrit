@@ -11,7 +11,7 @@ public class Orbital_CameraState : ACameraState
 
     public Orbital_CameraState(FiniteStateMachine<CameraManager> stateMachine,
         CinemachineCamera camera)
-        : base("Orbitational camera", stateMachine, camera)
+        : base("Orbital camera", stateMachine, camera)
     {
         _orbitalFollow = camera.GetComponent<CinemachineOrbitalFollow>();
     }

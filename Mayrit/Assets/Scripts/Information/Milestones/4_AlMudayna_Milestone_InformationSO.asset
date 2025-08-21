@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8afea8fe5a2c454a8016a077e6ce91e, type: 3}
   m_Name: 4_AlMudayna_Milestone_InformationSO
   m_EditorClassIdentifier: 
-  _informationType: 2
   _header: La al-Mudayna
   _subHeader: Segunda mitad s.IX
   _description: "Con el aumento de la poblaci\xF3n en los alrededores del castillo,
@@ -30,4 +29,4 @@ MonoBehaviour:
   _icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   _image: {fileID: 0}
   _imageCaption: 
-  _wantedTime: 14
+  _wantedTime: 11

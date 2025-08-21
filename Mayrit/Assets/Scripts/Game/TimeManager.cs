@@ -14,7 +14,7 @@ public class TimeManager : MonoBehaviour
 
     [Tooltip("Current time in hours since the start of the game")]
     [Range(0f, 24f)]
-    public float _currentTime = 8f;
+    public float _currentTime;
 
     [Tooltip("Time cycle speed multiplier")]
     public float _timeSpeed = 1f;
@@ -47,11 +47,17 @@ public class TimeManager : MonoBehaviour
     #endregion
 
     #region INHERITED METHODS
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    // Awake is called when the script instance is being loaded
+    void Awake()
     {
         // Subscribe to ProgressManager event to set the wanted time when the game starts
         ProgressManager.Instance.OnTimeSet += (time) => { _wantedTime = time; };
+    }
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+
     }
 
     // Update is called once per frame
@@ -106,12 +112,12 @@ public class TimeManager : MonoBehaviour
         _normalisedTime = _currentTime / 24f;
 
         // Set the intensity of the sun light based on the evaluated curve
-        //_sunSource.intensity = _sunMaxIntensity * _sunIntensityCurve.Evaluate(_normalisedTime);
+        _sunSource.intensity = _sunMaxIntensity * _sunIntensityCurve.Evaluate(_normalisedTime);
         // Set the color temperature of the sun light based on the evaluated curve
-        //_sunSource.colorTemperature = 10000f * _sunTemperatureCurve.Evaluate(_normalisedTime); // In kelvin units
+        _sunSource.colorTemperature = 10000f * _sunTemperatureCurve.Evaluate(_normalisedTime); // In kelvin units
 
         // Set the intensity of the moon light based on the evaluated curve
-        //_moonSource.intensity = _moonMaxIntensity * _moonIntensityCurve.Evaluate(_normalisedTime);
+        _moonSource.intensity = _moonMaxIntensity * _moonIntensityCurve.Evaluate(_normalisedTime);
     }
 
     void CheckActiveLightSource()

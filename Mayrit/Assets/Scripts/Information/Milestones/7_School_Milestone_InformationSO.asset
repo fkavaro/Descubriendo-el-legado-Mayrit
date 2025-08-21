@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8afea8fe5a2c454a8016a077e6ce91e, type: 3}
   m_Name: 7_School_Milestone_InformationSO
   m_EditorClassIdentifier: 
-  _informationType: 2
   _header: Nueva escuela
   _subHeader: 1004
   _description: 
   _icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   _image: {fileID: 0}
   _imageCaption: 
-  _wantedTime: 10
+  _wantedTime: 20
