@@ -1,4 +1,6 @@
+using System;
 using Unity.Cinemachine;
+using UnityEngine.InputSystem;
 
 public class ThirdPerson_CameraState : ACameraState
 {
@@ -11,6 +13,9 @@ public class ThirdPerson_CameraState : ACameraState
     public override void StartState()
     {
         GameManager.Instance._inputActions.Player.Enable();
+        GameManager.Instance._inputActions.Camera.Enable();
+        GameManager.Instance._inputActions.Camera.ExitMode.performed += SwicthToSpectatorCamera;
+
         _camera.gameObject.SetActive(true);
 
         // Change HUD
@@ -27,6 +32,13 @@ public class ThirdPerson_CameraState : ACameraState
     public override void ExitState()
     {
         GameManager.Instance._inputActions.Player.Disable();
+        GameManager.Instance._inputActions.Camera.Disable();
+        GameManager.Instance._inputActions.Camera.ExitMode.performed -= SwicthToSpectatorCamera;
         _camera.gameObject.SetActive(false);
+    }
+
+    void SwicthToSpectatorCamera(InputAction.CallbackContext context)
+    {
+        CameraManager.Instance.SwitchToSpectatorCamera();
     }
 }
