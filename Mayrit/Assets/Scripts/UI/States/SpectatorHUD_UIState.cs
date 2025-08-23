@@ -100,6 +100,10 @@ public class SpectatorHUD_UIState : AUIState
             _tooltip.style.left = _cursorScreenPos.x + UIManager.Instance._tooltipOffset.x; ;
             _tooltip.style.top = Screen.height - _cursorScreenPos.y + UIManager.Instance._tooltipOffset.y;
         }
+
+        // Hide tooltip if camera is not spectator
+        if (!CameraManager.Instance._spectatorState.IsCurrentState())
+            HideTooltip();
     }
 
     public override void ExitState()
