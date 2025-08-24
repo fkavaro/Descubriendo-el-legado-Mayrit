@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca25dc2e123c61f499d1dc5f06e88f2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _debugMode: 1
+  _debugMode: 0
   _isExecutionPaused: 0
 --- !u!114 &1524226024950362450
 MonoBehaviour:
@@ -60,8 +60,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 0
-  _debugMode: 0
-  _isExecutionPaused: 0
   _currentMilestone: 0
   _visionInformation: {fileID: 11400000, guid: c2541da2a3af8a246b55a5e4b79c1812, type: 2}
   _foundationInformation: {fileID: 11400000, guid: 9276c034d53293a459586c7287b06553, type: 2}
