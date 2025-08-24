@@ -5,6 +5,7 @@ public class PlayerController
 {
     #region PRIVATE PROPERTIES
     readonly PlayableCharacter _player;
+    readonly CharacterController _playerCharacterController;
 
     float _verticalVelocity,
         _movementSpeed,
@@ -24,12 +25,15 @@ public class PlayerController
         _orientation;
     #endregion
 
-    #region PUBLIC METHODS
-    public PlayerController(PlayableCharacter player)
+
+    // Constructor
+    public PlayerController(PlayableCharacter player, CharacterController playerCharacterController)
     {
         _player = player;
+        _playerCharacterController = playerCharacterController;
     }
 
+    #region PUBLIC METHODS
     public void Start()
     {
         _cameraTransform = Camera.main.transform;
@@ -39,7 +43,7 @@ public class PlayerController
     public void Update()
     {
         // Prevent movement if jumping and grounded (pre-jump animation)
-        if (_isJumping && _player._characterController.isGrounded)
+        if (_isJumping && _playerCharacterController.isGrounded)
             _movementInput = Vector2.zero;
         else
             _movementInput = GameManager.Instance._inputActions.Player.Move.ReadValue<Vector2>();
@@ -53,14 +57,12 @@ public class PlayerController
         HandleAnimations();
         ApplyMovement();
     }
-
-
     #endregion
 
     #region PRIVATE METHODS
     void HandleAnimations()
     {
-        if (_player._characterController.isGrounded)
+        if (_playerCharacterController.isGrounded)
         {
             // Handle jump sequence
             if (_isJumping)
@@ -116,7 +118,7 @@ public class PlayerController
     void HandleGravity()
     {
         // Player on ground
-        if (_player._characterController.isGrounded)
+        if (_playerCharacterController.isGrounded)
         {
             // Only apply jump force after pre-jump animation is finished
             if (_isJumping && _player._animationController.IsAnimationFinished(_player._animationController._preJumpAnim))
@@ -164,7 +166,7 @@ public class PlayerController
                          _movement3D.z * _movementSpeed); // Apply movement speed
 
         // Moves controller in the movement vector
-        _player._characterController.Move(Time.deltaTime * _movement3D);
+        _playerCharacterController.Move(Time.deltaTime * _movement3D);
     }
     #endregion
 }

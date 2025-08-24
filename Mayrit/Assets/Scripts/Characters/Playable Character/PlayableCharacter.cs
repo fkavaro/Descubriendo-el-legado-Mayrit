@@ -25,7 +25,6 @@ public class PlayableCharacter : ABehaviourControllable
     #endregion
 
     #region PROPERTIES
-    [HideInInspector] public CharacterController _characterController;
     public AAnimationController _animationController;
     public FiniteStateMachine _fsm;
     public FreeRoam_PlayableCharacterState _freeRoamState;
@@ -37,11 +36,9 @@ public class PlayableCharacter : ABehaviourControllable
         // ABehaviourControllable
         base.Awake();
 
-        _characterController = GetComponent<CharacterController>();
         _animationController = new(this, _animator);
-
         _fsm = new(this);
-        _freeRoamState = new(_fsm, this);
+        _freeRoamState = new(_fsm, this, GetComponent<CharacterController>());
         _fsm.SetInitialState(_freeRoamState);
     }
 

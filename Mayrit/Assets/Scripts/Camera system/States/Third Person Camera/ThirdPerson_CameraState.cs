@@ -13,7 +13,7 @@ public class ThirdPerson_CameraState : ACameraState
     public override void StartState()
     {
         GameManager.Instance._inputActions.Player.Enable();
-        GameManager.Instance._inputActions.Camera.Enable();
+        GameManager.Instance._inputActions.Camera.ExitMode.Enable();
         GameManager.Instance._inputActions.Camera.ExitMode.performed += SwicthToSpectatorCamera;
 
         _camera.gameObject.SetActive(true);
@@ -32,7 +32,7 @@ public class ThirdPerson_CameraState : ACameraState
     public override void ExitState()
     {
         GameManager.Instance._inputActions.Player.Disable();
-        GameManager.Instance._inputActions.Camera.Disable();
+        GameManager.Instance._inputActions.Camera.ExitMode.Disable();
         GameManager.Instance._inputActions.Camera.ExitMode.performed -= SwicthToSpectatorCamera;
         _camera.gameObject.SetActive(false);
     }
