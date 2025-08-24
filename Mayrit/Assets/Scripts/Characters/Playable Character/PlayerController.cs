@@ -10,8 +10,7 @@ public class PlayerController
         _cameraOrientationFollower;
 
     float _verticalVelocity,
-        _movementSpeed,
-        _rotationSpeed;
+        _movementSpeed;
 
     bool _isRunPressed,
         _isJumpPressed,
@@ -92,42 +91,13 @@ public class PlayerController
     /// </summary>
     void HandleRotation()
     {
-        // // If there is any movement
-        // if (_movementInput != Vector2.zero)
-        // {
-        //     // // Rotate orientation
-        //     // Vector3 cameraPos = new(_cameraTransform.position.x, _player.transform.position.y, _cameraTransform.position.z);
-        //     // Vector3 viewDir = _player.transform.position - cameraPos;
-        //     // _cameraOrientationFollower.forward = viewDir.normalized;
-
-        //     Vector3 inputDir = _cameraOrientationFollower.forward * _movementInput.y + _cameraOrientationFollower.right * _movementInput.x;
-        //     inputDir.y = 0f; // Prevent vertical rotation
-
-        //     // Faster rotation if walking
-        //     _rotationSpeed = _isRunPressed ? _player._rotationSpeed : _player._rotationSpeed * 2f;
-
-        //     _player.transform.forward = Vector3.Slerp(_player.transform.forward, inputDir.normalized, Time.deltaTime * _rotationSpeed);
-        // }
-
-        // Only rotate if there is movement input
+        // If there is any movement
         if (_movementInput != Vector2.zero)
         {
-            // Calculate direction based on camera orientation and input
             Vector3 inputDir = _cameraOrientationFollower.forward * _movementInput.y + _cameraOrientationFollower.right * _movementInput.x;
             inputDir.y = 0f; // Prevent vertical rotation
 
-            if (inputDir.sqrMagnitude > 0.001f)
-            {
-                // Set rotation speed: running rotates faster
-                _rotationSpeed = _isRunPressed ? _player._rotationSpeed * 2f : _player._rotationSpeed;
-
-                // Smoothly rotate player towards movement direction
-                Quaternion targetRotation = Quaternion.LookRotation(inputDir.normalized);
-                _player.transform.rotation = Quaternion.Slerp(_player.transform.rotation, targetRotation, Time.deltaTime * _rotationSpeed);
-
-                // Update orientation to match player forward
-                //_cameraOrientationFollower.forward = _player.transform.forward;
-            }
+            _player.transform.forward = Vector3.Slerp(_player.transform.forward, inputDir.normalized, Time.deltaTime * _player._rotationSpeed);
         }
     }
 
