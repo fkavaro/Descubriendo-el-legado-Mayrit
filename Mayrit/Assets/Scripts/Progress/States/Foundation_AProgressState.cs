@@ -5,7 +5,7 @@ public class Foundation_AProgressState : AProgressState
 {
     public Foundation_AProgressState(ProgressManager.Milestone milestone,
     Milestone_InformationSO milestoneInfoSO,
-    FiniteStateMachine<ProgressManager> stateMachine)
+    FiniteStateMachine stateMachine)
     : base("Foundation", milestone, milestoneInfoSO, stateMachine) { }
 
     public override void StartState()

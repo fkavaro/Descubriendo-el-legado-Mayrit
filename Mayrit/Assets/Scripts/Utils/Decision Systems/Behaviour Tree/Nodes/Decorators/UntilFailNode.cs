@@ -6,12 +6,11 @@ using UnityEngine;
 /// <summary>
 /// UntilFailNode is a node that continues running its only child as long as it doesn't return failure.
 /// </summary>
-public class UntilFailNode<TController> : Node<TController>
-where TController : MonoBehaviour
+public class UntilFailNode : Node
 {
-    private readonly Node<TController> _child; // Make sure we have a reference to the child
+    private readonly Node _child; // Make sure we have a reference to the child
 
-    public UntilFailNode(ABehaviourController<TController> controller, Node<TController> child, int priority = 0)
+    public UntilFailNode(ABehaviourController controller, Node child, int priority = 0)
     : base(controller, "UntilFail", priority)
     {
         AddChild(child); // Use the AddChild method to set the child

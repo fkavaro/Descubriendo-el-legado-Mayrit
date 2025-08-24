@@ -5,7 +5,7 @@ public class Albacar_AProgressState : AProgressState
 {
     public Albacar_AProgressState(ProgressManager.Milestone milestone,
     Milestone_InformationSO milestoneInfoSO,
-    FiniteStateMachine<ProgressManager> stateMachine)
+    FiniteStateMachine stateMachine)
     : base("Albacar", milestone, milestoneInfoSO, stateMachine) { }
 
     public override void StartState()

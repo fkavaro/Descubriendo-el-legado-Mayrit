@@ -6,12 +6,11 @@ using UnityEngine;
 /// <summary>
 /// UntilSuccessNode is a node that continues running its only child as long as it doesn't return success.
 /// </summary>
-public class UntilSuccessNode<TController> : Node<TController>
-where TController : MonoBehaviour
+public class UntilSuccessNode : Node
 {
-    private readonly Node<TController> _child; // Make sure we have a reference to the child
+    private readonly Node _child; // Make sure we have a reference to the child
 
-    public UntilSuccessNode(ABehaviourController<TController> controller, Node<TController> child, int priority = 0)
+    public UntilSuccessNode(ABehaviourController controller, Node child, int priority = 0)
     : base(controller, "UntilSuccess", priority)
     {
         AddChild(child); // Use the AddChild method to set the child

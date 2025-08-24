@@ -12,7 +12,7 @@ public class PauseMenu_UIState : AUIState
     #endregion
 
     // Constructor
-    public PauseMenu_UIState(StackFiniteStateMachine<UIManager> stateMachine)
+    public PauseMenu_UIState(StackFiniteStateMachine stateMachine)
     : base("PauseMenu", stateMachine) { }
 
     #region INHERITED

@@ -1,16 +1,15 @@
 using UnityEngine;
 
-public abstract class ADecisionSystem<TController>
-where TController : MonoBehaviour
+public abstract class ADecisionSystem
 {
-    public readonly ABehaviourController<TController> _controller;
+    public readonly ABehaviourController _controller;
     public readonly IBehaviourControllable _controllable;
 
 
-    public ADecisionSystem(ABehaviourController<TController> controller)
+    public ADecisionSystem(ABehaviourController controller)
     {
+        controller._decisionSystem = this;
         _controller = controller;
-        _controller._decisionSystem = this;
         _controllable = controller._controllable;
     }
 

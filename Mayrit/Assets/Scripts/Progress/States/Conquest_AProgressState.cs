@@ -5,7 +5,7 @@ public class Conquest_AProgressState : AProgressState
 {
     public Conquest_AProgressState(ProgressManager.Milestone milestone,
     Milestone_InformationSO milestoneInfoSO,
-    FiniteStateMachine<ProgressManager> stateMachine)
+    FiniteStateMachine stateMachine)
     : base("Conquest", milestone, milestoneInfoSO, stateMachine) { }
 
     public override void StartState()

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-public abstract class AGameState : AState<GameManager, FiniteStateMachine<GameManager>>
+public abstract class AGameState : AState<FiniteStateMachine>
 {
-    protected AGameState(string name, FiniteStateMachine<GameManager> stateMachine)
+    protected AGameState(string name, FiniteStateMachine stateMachine)
     : base(name, stateMachine)
     {
     }

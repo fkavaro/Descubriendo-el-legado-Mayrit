@@ -4,20 +4,19 @@ using UnityEngine;
 /// <summary>
 /// Abstract class for a state machine that handles the states of a controller.
 /// </summary>
-public abstract class AStateMachine<TController, TStateMachineType> : ADecisionSystem<TController>
-where TController : MonoBehaviour
-where TStateMachineType : AStateMachine<TController, TStateMachineType>
+public abstract class AStateMachine<TStateMachineType> : ADecisionSystem
+where TStateMachineType : AStateMachine<TStateMachineType>
 {
-    public AState<TController, TStateMachineType> CurrentState => _currentState;
+    public AState<TStateMachineType> CurrentState => _currentState;
 
-    protected AState<TController, TStateMachineType> _currentState, _initialState;
-    protected List<AState<TController, TStateMachineType>> _statesSequence = new();
+    protected AState<TStateMachineType> _currentState, _initialState;
+    protected List<AState<TStateMachineType>> _statesSequence = new();
 
     // Constructor
-    public AStateMachine(ABehaviourController<TController> controller) : base(controller) { }
+    public AStateMachine(ABehaviourController controller) : base(controller) { }
 
     #region TO BE IMPLEMENTED METHODS
-    public abstract void SwitchState(AState<TController, TStateMachineType> state);
+    public abstract void SwitchState(AState<TStateMachineType> state);
     #endregion
 
     #region INHERITED METHODS
@@ -40,19 +39,19 @@ where TStateMachineType : AStateMachine<TController, TStateMachineType>
     #endregion
 
     #region PUBLIC METHODS
-    public virtual void SetInitialState(AState<TController, TStateMachineType> state)
+    public virtual void SetInitialState(AState<TStateMachineType> state)
     {
         if (state == _currentState) return;
 
         _initialState = state;
     }
 
-    public bool IsCurrentState(AState<TController, TStateMachineType> state)
+    public bool IsCurrentState(AState<TStateMachineType> state)
     {
         return _currentState == state;
     }
 
-    public virtual void ForceState(AState<TController, TStateMachineType> newState)
+    public virtual void ForceState(AState<TStateMachineType> newState)
     {
         if (newState == _currentState) return;
 
@@ -62,7 +61,7 @@ where TStateMachineType : AStateMachine<TController, TStateMachineType>
         _currentState.StartState();
     }
 
-    public void AddStateToSequence(AState<TController, TStateMachineType> state)
+    public void AddStateToSequence(AState<TStateMachineType> state)
     {
         if (_statesSequence.Contains(state)) return;
         _statesSequence.Add(state);
@@ -81,7 +80,7 @@ where TStateMachineType : AStateMachine<TController, TStateMachineType>
         if (currentIndex <= 0) // First state
             return false;
 
-        AState<TController, TStateMachineType> previousState = _statesSequence[currentIndex - 1];
+        AState<TStateMachineType> previousState = _statesSequence[currentIndex - 1];
 
         SwitchState(previousState);
         return true;
@@ -99,7 +98,7 @@ where TStateMachineType : AStateMachine<TController, TStateMachineType>
         if (currentIndex >= _statesSequence.Count - 1) // Last state
             return false;
 
-        AState<TController, TStateMachineType> nextState = _statesSequence[currentIndex + 1];
+        AState<TStateMachineType> nextState = _statesSequence[currentIndex + 1];
 
         SwitchState(nextState);
         return true;

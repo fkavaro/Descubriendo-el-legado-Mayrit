@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ConditionStrategy<TController> : AStrategy<TController>
-where TController : MonoBehaviour
+public class ConditionStrategy : AStrategy
 {
     readonly Func<bool> _predicate;
 
-    public ConditionStrategy(ANPC<TController> controller, Func<bool> predicate)
+    public ConditionStrategy(ANPC controller, Func<bool> predicate)
     : base(controller)
     {
         _predicate = predicate;
     }
 
-    public override Node<TController>.Status Update()
+    public override Node.Status Update()
     {
-        return _predicate() ? Node<TController>.Status.Success : Node<TController>.Status.Failure;
+        return _predicate() ? Node.Status.Success : Node.Status.Failure;
     }
 }

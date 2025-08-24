@@ -10,7 +10,7 @@ public class Orbital_CameraState : ACameraState
         _zoomValue,
         _horizontalOffset;
 
-    public Orbital_CameraState(FiniteStateMachine<CameraManager> stateMachine,
+    public Orbital_CameraState(FiniteStateMachine stateMachine,
         CinemachineCamera camera)
         : base("Orbital camera", stateMachine, camera)
     {

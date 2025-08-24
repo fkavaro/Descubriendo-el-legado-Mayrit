@@ -4,19 +4,18 @@ using UnityEngine;
 /// <summary>
 /// Base class for actions that have a binary decision factor (true/false).
 /// </summary>
-public abstract class ABinaryAction<TController> : AAction<TController, bool>
-where TController : MonoBehaviour
+public abstract class ABinaryAction : AAction<bool>
 {
     bool _inverted;
     float _maxValue = 1f;
 
-    protected ABinaryAction(string name, UtilitySystem<TController> utilitySystem, bool inverted = false)
+    protected ABinaryAction(string name, UtilitySystem utilitySystem, bool inverted = false)
     : base(name, utilitySystem)
     {
         _inverted = inverted;
     }
 
-    protected ABinaryAction(string name, UtilitySystem<TController> utilitySystem, float maxValue, bool inverted = false)
+    protected ABinaryAction(string name, UtilitySystem utilitySystem, float maxValue, bool inverted = false)
     : base(name, utilitySystem)
     {
         _inverted = inverted;

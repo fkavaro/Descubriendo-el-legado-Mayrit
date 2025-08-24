@@ -23,7 +23,7 @@ public class SpectatorHUD_UIState : AUIState
     #endregion
 
     #region INHERITED
-    public SpectatorHUD_UIState(StackFiniteStateMachine<UIManager> stateMachine)
+    public SpectatorHUD_UIState(StackFiniteStateMachine stateMachine)
     : base("SpectatorHUD", stateMachine) { }
 
     public override void AwakeState()

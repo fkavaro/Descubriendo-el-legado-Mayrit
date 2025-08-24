@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class Pause_GameState : AState<GameManager, FiniteStateMachine<GameManager>>
+public class Pause_GameState : AState<FiniteStateMachine>
 {
-    public Pause_GameState(FiniteStateMachine<GameManager> stateMachine)
+    public Pause_GameState(FiniteStateMachine stateMachine)
     : base("Pause", stateMachine) { }
 
     public override void StartState()

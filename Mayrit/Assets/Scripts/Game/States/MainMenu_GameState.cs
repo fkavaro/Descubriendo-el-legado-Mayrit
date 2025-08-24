@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MainMenu_GameState : AState<GameManager, FiniteStateMachine<GameManager>>
+public class MainMenu_GameState : AState<FiniteStateMachine>
 {
-    public MainMenu_GameState(FiniteStateMachine<GameManager> stateMachine)
+    public MainMenu_GameState(FiniteStateMachine stateMachine)
     : base("Main menu", stateMachine) { }
 
     public override void AwakeState()

@@ -6,7 +6,7 @@ public class Spectator_CameraState : ACameraState
     readonly SpectatorCameraController _cameraController;
     readonly SpectatorCameraSelector _cameraSelector;
 
-    public Spectator_CameraState(FiniteStateMachine<CameraManager> stateMachine,
+    public Spectator_CameraState(FiniteStateMachine stateMachine,
         CinemachineCamera camera)
     : base("Spectator camera", stateMachine, camera)
     {

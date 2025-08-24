@@ -13,7 +13,7 @@ public class PlayerHUD_UIState : AUIState
     #endregion
 
     #region INHERITED
-    public PlayerHUD_UIState(StackFiniteStateMachine<UIManager> stateMachine)
+    public PlayerHUD_UIState(StackFiniteStateMachine stateMachine)
     : base("PlayerHUD", stateMachine) { }
 
     public override void AwakeState()

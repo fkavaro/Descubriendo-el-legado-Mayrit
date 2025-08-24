@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ActionStrategy<TController> : AStrategy<TController>
-where TController : MonoBehaviour
+public class ActionStrategy : AStrategy
 {
     readonly Action _action;
 
-    public ActionStrategy(ANPC<TController> controller, Action action)
+    public ActionStrategy(ANPC controller, Action action)
     : base(controller)
     {
         _action = action;
     }
 
-    public override Node<TController>.Status Update()
+    public override Node.Status Update()
     {
         _action();
-        return Node<TController>.Status.Success;
+        return Node.Status.Success;
     }
 }

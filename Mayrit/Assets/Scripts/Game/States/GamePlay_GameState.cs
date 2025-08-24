@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class GamePlay_GameState : AGameState
 {
-    public GamePlay_GameState(FiniteStateMachine<GameManager> stateMachine)
+    public GamePlay_GameState(FiniteStateMachine stateMachine)
     : base("Gameplay", stateMachine) { }
 
     public override void AwakeState()

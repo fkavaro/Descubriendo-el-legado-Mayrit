@@ -7,10 +7,9 @@ using UnityEngine;
 /// SelectorNode is a composite node that that executes its children in sequence.
 /// Like a logical OR operation, it will return success when a child return success.
 /// </summary>
-public class SelectorNode<TController> : Node<TController>
-where TController : MonoBehaviour
+public class SelectorNode : Node
 {
-    public SelectorNode(ABehaviourController<TController> controller, int priority = 0)
+    public SelectorNode(ABehaviourController controller, int priority = 0)
     : base(controller, "Selector", priority) { }
 
     public override Status UpdateNode()

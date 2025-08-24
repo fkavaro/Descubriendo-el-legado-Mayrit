@@ -4,19 +4,18 @@ using UnityEngine;
 /// <summary>
 /// Base class for actions in the Utility System.
 /// </summary>
-public abstract class AAction<TController, TFactor> : IAction
-where TController : MonoBehaviour
+public abstract class AAction<TFactor> : IAction
 {
     public string Name => name;
     public float Utility => CalculateUtility();
 
     protected string name;
     protected float utility;
-    protected ABehaviourController<TController> _controller;
-    protected UtilitySystem<TController> _utilitySystem;
+    protected ABehaviourController _controller;
+    protected UtilitySystem _utilitySystem;
     protected TFactor _decisionFactor => SetDecisionFactor();
 
-    public AAction(string name, UtilitySystem<TController> utilitySystem)
+    public AAction(string name, UtilitySystem utilitySystem)
     {
         this.name = name;
         _controller = utilitySystem._controller;

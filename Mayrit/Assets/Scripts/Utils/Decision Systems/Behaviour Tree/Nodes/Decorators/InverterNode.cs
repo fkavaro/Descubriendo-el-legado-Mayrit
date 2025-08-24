@@ -7,10 +7,9 @@ using UnityEngine;
 /// InverterNode is a logical node that inverts its only child status.
 /// Like a logical NOR operation, it will return success when the child returns failure.
 /// </summary>
-public class InverterNode<TController> : Node<TController>
-where TController : MonoBehaviour
+public class InverterNode : Node
 {
-    public InverterNode(ABehaviourController<TController> controller, int priority = 0)
+    public InverterNode(ABehaviourController controller, int priority = 0)
     : base(controller, "Inverter", priority) { }
 
     public override Status UpdateNode()

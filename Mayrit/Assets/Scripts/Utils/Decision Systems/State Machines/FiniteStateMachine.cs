@@ -4,17 +4,16 @@ using UnityEngine;
 /// <summary>
 /// Finite State Machine implementation for controlling a behaviour.
 /// </summary>
-public class FiniteStateMachine<TController> : AStateMachine<TController, FiniteStateMachine<TController>>
-where TController : MonoBehaviour
+public class FiniteStateMachine : AStateMachine<FiniteStateMachine>
 {
-    public FiniteStateMachine(ABehaviourController<TController> controller)
+    public FiniteStateMachine(ABehaviourController controller)
     : base(controller) { }
 
     #region INHERITED METHODS
     /// <summary>
     /// Switchs to another state after exiting the current.
     /// </summary>
-    public override void SwitchState(AState<TController, FiniteStateMachine<TController>> state)
+    public override void SwitchState(AState<FiniteStateMachine> state)
     {
         if (state == _currentState) return;
 

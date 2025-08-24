@@ -7,13 +7,12 @@ using UnityEngine;
 /// SelectorNode is a composite node that that executes its children randomly.
 /// Like a logical OR operation, it will return success when a child return success.
 /// </summary>
-public class RanndomSelectorNode<TController> : PrioritySelectorNode<TController>
-where TController : MonoBehaviour
+public class RanndomSelectorNode : PrioritySelectorNode
 {
-    public RanndomSelectorNode(ABehaviourController<TController> controller, int priority = 0)
+    public RanndomSelectorNode(ABehaviourController controller, int priority = 0)
     : base(controller, priority) { }
 
-    protected override List<Node<TController>> SortChildren()
+    protected override List<Node> SortChildren()
     {
         return children.Shuffle().ToList();
     }

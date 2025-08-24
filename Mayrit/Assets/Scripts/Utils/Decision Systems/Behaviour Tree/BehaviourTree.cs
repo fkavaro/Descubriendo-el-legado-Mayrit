@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-/// <summary>
-/// BehaviourTree 
-/// </summary>
-public class BehaviourTree<TController> : Node<TController>
-where TController : MonoBehaviour
+public class BehaviourTree : Node
 {
-    public BehaviourTree(ABehaviourController<TController> controller, string name = "BehaviourTree")
+    public BehaviourTree(ABehaviourController controller, string name = "BehaviourTree")
     : base(controller, name) { }
 
-    public BehaviourTree(ABehaviourController<TController> controller, Node<TController> child, string name = "BehaviourTree")
+    public BehaviourTree(ABehaviourController controller, Node child, string name = "BehaviourTree")
     : base(controller, name)
     {
         AddChild(child);

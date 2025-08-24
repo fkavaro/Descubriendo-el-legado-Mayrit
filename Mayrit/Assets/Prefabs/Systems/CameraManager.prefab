@@ -612,9 +612,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adfbd7936fe3a914fac41aa4836aeddd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 0
   _debugMode: 0
   _isExecutionPaused: 0
-  dontDestroyOnLoad: 0
   _spectatorCamera: {fileID: 5488014350122742170}
   _edgeScrolling: 0
   _edgeScrollingMargin: 30

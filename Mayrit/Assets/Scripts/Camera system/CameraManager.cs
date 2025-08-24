@@ -7,19 +7,11 @@ using Unity.Cinemachine;
 public class CameraManager : Singleton<CameraManager>, IBehaviourControllable
 {
     #region PUBLIC PROPERTIES
-    ABehaviourController<CameraManager> _behaviourController;
-
-    // Finite State Machine
-    public FiniteStateMachine<CameraManager> _fsm;
-    public Spectator_CameraState _spectatorState;
-    public ThirdPerson_CameraState _thirdPersonState;
-    public Orbital_CameraState _orbitalState;
-
     [Header("Behaviour Controller Properties")]
     [Tooltip("Whether to show debug messages in the console or not")]
-    public bool _debugMode = false;
+    [SerializeField] bool _debugMode = false;
     [Tooltip("Whether to update next frame or not")]
-    public bool _isExecutionPaused = false;
+    [SerializeField] bool _isExecutionPaused = false;
 
     public bool DebugMode
     {
@@ -74,11 +66,13 @@ public class CameraManager : Singleton<CameraManager>, IBehaviourControllable
         _bottomClamp = -30f,
         _topClamp = 40f;
 
-    // [Header("Camera transitions")]
-    // public float _3rdPersonTransitionDuration = 1f;
-    // public float _orbitalMoveTransitionDuration = 1f;
-    // public float _orbitalOffsetTransitionDuration = 1f;
-    // public float _orbitalZoomTransitionSpeed = 1f;
+    public ABehaviourController _behaviourController;
+
+    // Finite State Machine
+    public FiniteStateMachine _fsm;
+    public Spectator_CameraState _spectatorState;
+    public ThirdPerson_CameraState _thirdPersonState;
+    public Orbital_CameraState _orbitalState;
     #endregion
 
     #region PRIVATE PROPERTIES  
@@ -138,9 +132,6 @@ public class CameraManager : Singleton<CameraManager>, IBehaviourControllable
     #endregion
 
     #region PUBLIC METHODS
-    /// <summary>
-    /// Switches to the spectator camera and its target is moved smoothly above player position 
-    /// </summary>
     public void SwitchToSpectatorCamera()
     {
         if (_debugMode) Debug.Log("Switching to spectator camera");
@@ -203,9 +194,6 @@ public class CameraManager : Singleton<CameraManager>, IBehaviourControllable
         _fsm.SwitchState(_orbitalState);
     }
 
-    /// <summary>
-    /// Switches to the third person camera after spectator camera target is moved smoothly to player position    
-    /// </summary>
     public void SwitchToThirdPersonCamera()
     {
         if (_debugMode) Debug.Log("Switching to third person camera");

@@ -6,8 +6,7 @@ using UnityEngine;
 /// <summary>
 /// Base class for all nodes in the behaviour tree.
 /// </summary>
-public class Node<TController> : ADecisionSystem<TController>
-where TController : MonoBehaviour
+public class Node : ADecisionSystem
 {
     public enum Status
     {
@@ -19,11 +18,11 @@ where TController : MonoBehaviour
     public readonly string name;
     public readonly int priority;
 
-    public readonly List<Node<TController>> children = new();
+    public readonly List<Node> children = new();
     protected int _currentChildId;
     public Status status;
 
-    public Node(ABehaviourController<TController> controller, string name = "Node", int priority = 0)
+    public Node(ABehaviourController controller, string name = "Node", int priority = 0)
     : base(controller)
     {
         this.name = name;
@@ -57,7 +56,7 @@ where TController : MonoBehaviour
     #endregion
 
     #region PUBLIC	METHODS
-    public void AddChild(Node<TController> child)
+    public void AddChild(Node child)
     {
         children.Add(child);
     }

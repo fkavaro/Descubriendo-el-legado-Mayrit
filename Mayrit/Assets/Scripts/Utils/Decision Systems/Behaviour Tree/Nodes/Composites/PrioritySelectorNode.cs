@@ -7,13 +7,12 @@ using UnityEngine;
 /// PrioritySelectorNode is a composite node that that executes its children in descencing priority.
 /// Like a logical OR operation, it will return success when a child return success.
 /// </summary>
-public class PrioritySelectorNode<TController> : SelectorNode<TController>
-where TController : MonoBehaviour
+public class PrioritySelectorNode : SelectorNode
 {
-    List<Node<TController>> sortedChildren;
-    List<Node<TController>> SortedChildren => sortedChildren ??= SortChildren();
+    List<Node> sortedChildren;
+    List<Node> SortedChildren => sortedChildren ??= SortChildren();
 
-    public PrioritySelectorNode(ABehaviourController<TController> controller, int priority = 0)
+    public PrioritySelectorNode(ABehaviourController controller, int priority = 0)
     : base(controller, priority) { }
 
     public override Status UpdateNode()
@@ -40,7 +39,7 @@ where TController : MonoBehaviour
         sortedChildren = null;
     }
 
-    protected virtual List<Node<TController>> SortChildren()
+    protected virtual List<Node> SortChildren()
     {
         return children.OrderByDescending(child => child.priority).ToList();
     }

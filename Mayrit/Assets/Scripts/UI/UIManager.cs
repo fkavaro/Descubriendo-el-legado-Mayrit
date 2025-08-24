@@ -5,13 +5,11 @@ using UnityEngine.SceneManagement;
 public class UIManager : Singleton<UIManager>, IBehaviourControllable
 {
     #region PUBLIC PROPERTIES
-    ABehaviourController<UIManager> _behaviourController;
-
     [Header("Behaviour Controller Properties")]
     [Tooltip("Whether to show debug messages in the console or not")]
-    public bool _debugMode = false;
+    [SerializeField] bool _debugMode = false;
     [Tooltip("Whether to update next frame or not")]
-    public bool _isExecutionPaused = false;
+    [SerializeField] bool _isExecutionPaused = false;
 
     public bool DebugMode
     {
@@ -29,8 +27,10 @@ public class UIManager : Singleton<UIManager>, IBehaviourControllable
     [Header("User Interface Properties")]
     public Vector2 _tooltipOffset = new(-30, -30);
 
+    ABehaviourController _behaviourController;
+
     // State Machine
-    public StackFiniteStateMachine<UIManager> _fsm;
+    public StackFiniteStateMachine _fsm;
     public MainMenu_UIState _mainMenuState;
     public SpectatorHUD_UIState _spectatorHUDState;
     public PlayerHUD_UIState _playerHUDState;

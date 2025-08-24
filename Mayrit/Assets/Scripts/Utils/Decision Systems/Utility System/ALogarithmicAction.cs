@@ -4,12 +4,11 @@ using UnityEngine;
 /// <summary>
 /// Base class for actions that have a logarithmic decision factor (float).
 /// </summary>
-public abstract class ALogarithmicAction<TController> : AAction<TController, float>
-where TController : MonoBehaviour
+public abstract class ALogarithmicAction : AAction<float>
 {
     bool _inverted;
 
-    protected ALogarithmicAction(string name, UtilitySystem<TController> utilitySystem, bool inverted = false)
+    protected ALogarithmicAction(string name, UtilitySystem utilitySystem, bool inverted = false)
     : base(name, utilitySystem)
     {
         _inverted = inverted;

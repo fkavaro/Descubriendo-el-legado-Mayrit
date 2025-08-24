@@ -10,15 +10,11 @@ using UnityEngine.InputSystem;
 public class PlayableCharacter : MonoBehaviour, IBehaviourControllable
 {
     #region PUBLIC PROPERTIES
-    public AAnimationController<PlayableCharacter> _animationController;
-    [HideInInspector] public CharacterController _characterController;
-    public PlayerController _playerController;
-
     [Header("Behaviour Controller Properties")]
     [Tooltip("Whether to show debug messages in the console or not")]
-    public bool _debugMode = false;
+    [SerializeField] bool _debugMode = false;
     [Tooltip("Whether to update next frame or not")]
-    public bool _isExecutionPaused = false;
+    [SerializeField] bool _isExecutionPaused = false;
 
     public bool DebugMode
     {
@@ -41,11 +37,16 @@ public class PlayableCharacter : MonoBehaviour, IBehaviourControllable
     public float _rotationSpeed = 2f;
     public float _jumpForce = 2f;
     public float _gravityForce = 9f;
+
+    public AAnimationController _animationController;
+    [HideInInspector] public CharacterController _characterController;
+    public PlayerController _playerController;
+
+    // Finite State Machine
+    public FiniteStateMachine _fsm;
     #endregion
 
     #region PRIVATE PROPERTIES
-    // Finite State Machine
-    FiniteStateMachine<PlayableCharacter> _fsm;
     #endregion
 
     #region INHERITED PROPERTIES

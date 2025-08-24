@@ -6,7 +6,7 @@ public class ThirdPerson_CameraState : ACameraState
 {
     ThirdPersonCameraController _cameraController;
 
-    public ThirdPerson_CameraState(FiniteStateMachine<CameraManager> stateMachine,
+    public ThirdPerson_CameraState(FiniteStateMachine stateMachine,
         CinemachineCamera camera)
     : base("Third person camera", stateMachine, camera) { }
 

@@ -6,12 +6,11 @@ using UnityEngine;
 /// <summary>
 /// Stack-based Finite State Machine implementation for controlling a behaviour.
 /// </summary>
-public class StackFiniteStateMachine<TController> : AStateMachine<TController, StackFiniteStateMachine<TController>>
-where TController : MonoBehaviour
+public class StackFiniteStateMachine : AStateMachine<StackFiniteStateMachine>
 {
-    readonly Stack<AState<TController, StackFiniteStateMachine<TController>>> _stateStack = new();
+    readonly Stack<AState<StackFiniteStateMachine>> _stateStack = new();
 
-    public StackFiniteStateMachine(ABehaviourController<TController> controller)
+    public StackFiniteStateMachine(ABehaviourController controller)
     : base(controller) { }
 
     #region INHERITED METHODS
@@ -19,7 +18,7 @@ where TController : MonoBehaviour
     /// Switchs to another state after exiting the current,
     /// storing it in the stack.
     /// </summary>
-    public override void SwitchState(AState<TController, StackFiniteStateMachine<TController>> newState)
+    public override void SwitchState(AState<StackFiniteStateMachine> newState)
     {
         if (newState == _currentState) return;
 
@@ -31,7 +30,7 @@ where TController : MonoBehaviour
         _currentState?.StartState();
     }
 
-    public override void ForceState(AState<TController, StackFiniteStateMachine<TController>> newState)
+    public override void ForceState(AState<StackFiniteStateMachine> newState)
     {
         if (newState == _currentState) return;
 
@@ -58,7 +57,7 @@ where TController : MonoBehaviour
     /// <summary>
     /// Returns previous state (top of the stack).
     /// </summary>
-    public AState<TController, StackFiniteStateMachine<TController>> GetPreviousState()
+    public AState<StackFiniteStateMachine> GetPreviousState()
     {
         // Empty stack
         if (_stateStack.Count == 0)

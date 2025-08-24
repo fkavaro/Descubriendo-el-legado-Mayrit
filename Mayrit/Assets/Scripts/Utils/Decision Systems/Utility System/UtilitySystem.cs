@@ -6,8 +6,7 @@ using System.Linq;
 /// Utility System for decision making in agents.
 /// </summary>
 /// <typeparam name="TController"></typeparam>
-public class UtilitySystem<TController> : ADecisionSystem<TController>
-where TController : MonoBehaviour
+public class UtilitySystem : ADecisionSystem
 {
     /// <summary>
     /// List of actions available for the agent.
@@ -20,7 +19,7 @@ where TController : MonoBehaviour
     /// </summary>
     Dictionary<IAction, float> _actionUtilities = new();
 
-    public UtilitySystem(ABehaviourController<TController> controller) : base(controller) { }
+    public UtilitySystem(ABehaviourController controller) : base(controller) { }
 
     #region INHERITED METHODS
     protected override void DebugDecision()

@@ -16,15 +16,11 @@ public class ProgressManager : Singleton<ProgressManager>, IBehaviourControllabl
     }
 
     #region PUBLIC PROPERTIES
-    ABehaviourController<ProgressManager> _behaviourController;
-    public event Action<Milestone> OnMilestoneChanged;
-    public event Action<float> OnTimeSet;
-
     [Header("Behaviour Controller Properties")]
     [Tooltip("Whether to show debug messages in the console or not")]
-    public bool _debugMode = false;
+    [SerializeField] bool _debugMode = false;
     [Tooltip("Whether to update next frame or not")]
-    public bool _isExecutionPaused = false;
+    [SerializeField] bool _isExecutionPaused = false;
 
     public bool DebugMode
     {
@@ -50,8 +46,12 @@ public class ProgressManager : Singleton<ProgressManager>, IBehaviourControllabl
     public Milestone_InformationSO _schoolInformation;
     public Milestone_InformationSO _conquestInformation;
 
+    public event Action<Milestone> OnMilestoneChanged;
+    public event Action<float> OnTimeSet;
+    public ABehaviourController _behaviourController;
+
     // State Machine
-    public FiniteStateMachine<ProgressManager> _fsm;
+    public FiniteStateMachine _fsm;
     public Vision_AProgressState _visionState;
     public Foundation_AProgressState _foundationState;
     public Albacar_AProgressState _albacarState;

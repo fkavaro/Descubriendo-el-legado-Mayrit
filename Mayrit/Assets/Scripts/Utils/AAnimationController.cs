@@ -6,8 +6,7 @@ using System;
 /// Defines a common class for all animation controllers.
 /// Handles animation transitions.
 /// </summary>
-public class AAnimationController<TController> : ABehaviourController<TController>
-where TController : MonoBehaviour
+public class AAnimationController : ABehaviourController
 {
     readonly Animator _animator;
     public int _currentAnimation, _lastAnimation;

@@ -12,7 +12,7 @@ public class HeritageMenu_UIState : AUIState
     #endregion
 
     // Constructor
-    public HeritageMenu_UIState(StackFiniteStateMachine<UIManager> stateMachine)
+    public HeritageMenu_UIState(StackFiniteStateMachine stateMachine)
     : base("HeritageMenu", stateMachine) { }
 
     #region INHERITED

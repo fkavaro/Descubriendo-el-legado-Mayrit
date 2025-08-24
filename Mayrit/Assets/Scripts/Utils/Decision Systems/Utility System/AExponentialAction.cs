@@ -4,12 +4,11 @@ using UnityEngine;
 /// <summary>
 /// Base class for actions that have an exponential decision factor (float).
 /// </summary>
-public abstract class AExponentialAction<TController> : AAction<TController, float>
-where TController : MonoBehaviour
+public abstract class AExponentialAction : AAction<float>
 {
     bool _inverted;
 
-    protected AExponentialAction(string name, UtilitySystem<TController> utilitySystem, bool inverted = false)
+    protected AExponentialAction(string name, UtilitySystem utilitySystem, bool inverted = false)
     : base(name, utilitySystem)
     {
         _inverted = inverted;

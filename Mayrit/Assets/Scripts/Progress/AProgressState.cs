@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public abstract class AProgressState : AState<ProgressManager, FiniteStateMachine<ProgressManager>>
+public abstract class AProgressState : AState<FiniteStateMachine>
 {
     public readonly Milestone_InformationSO _informationSO;
     public readonly ProgressManager.Milestone _milestone;
@@ -9,7 +9,7 @@ public abstract class AProgressState : AState<ProgressManager, FiniteStateMachin
     public AProgressState(string name,
         ProgressManager.Milestone milestone,
     Milestone_InformationSO milestoneInfoSo,
-    FiniteStateMachine<ProgressManager> stateMachine)
+    FiniteStateMachine stateMachine)
     : base(name, stateMachine)
     {
         _milestone = milestone;

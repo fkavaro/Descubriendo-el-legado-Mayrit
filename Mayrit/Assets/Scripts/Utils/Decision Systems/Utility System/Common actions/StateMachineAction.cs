@@ -5,14 +5,13 @@ using UnityEngine;
 /// <summary>
 /// Action that runs a finite state machine (FSM) by an Utility System.
 /// </summary>
-public class StateMachineAction<TController, TStateMachine> : ABinaryAction<TController>
-where TController : MonoBehaviour
-where TStateMachine : AStateMachine<TController, TStateMachine>
+public class StateMachineAction<TStateMachine> : ABinaryAction
+where TStateMachine : AStateMachine<TStateMachine>
 {
     readonly TStateMachine _stateMachine;
     bool _alreadyStarted = false;
 
-    public StateMachineAction(UtilitySystem<TController> utilitySystem, TStateMachine stateMachine)
+    public StateMachineAction(UtilitySystem utilitySystem, TStateMachine stateMachine)
         : base("FSM", utilitySystem, 0.5f)
     {
         _stateMachine = stateMachine;
@@ -55,12 +54,12 @@ where TStateMachine : AStateMachine<TController, TStateMachine>
         _stateMachine.Reset();
     }
 
-    public void ForceState(AState<TController, TStateMachine> newState)
+    public void ForceState(AState<TStateMachine> newState)
     {
         _stateMachine.ForceState(newState);
     }
 
-    public bool IsCurrentState(AState<TController, TStateMachine> state)
+    public bool IsCurrentState(AState<TStateMachine> state)
     {
         return _stateMachine.IsCurrentState(state);
     }

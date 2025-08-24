@@ -4,17 +4,16 @@ using UnityEngine;
 /// <summary>
 /// Base class with common functionalities for all states.
 /// </summary>
-public abstract class AState<TController, TStateMachine>
-    where TController : MonoBehaviour
-    where TStateMachine : AStateMachine<TController, TStateMachine>
+public abstract class AState<TStateMachine>
+    where TStateMachine : AStateMachine<TStateMachine>
 {
     public string Name => _stateName;
     protected string _stateName;
-    protected ABehaviourController<TController> _controller;
+    protected ABehaviourController _controller;
     protected readonly IBehaviourControllable _controllable;
     protected TStateMachine _stateMachine;
     protected float _stateTime = 0f;
-    protected readonly AState<TController, TStateMachine> _nextState;
+    protected readonly AState<TStateMachine> _nextState;
 
     // Constructor
     public AState(string name,
@@ -35,7 +34,7 @@ public abstract class AState<TController, TStateMachine>
         return _stateMachine.IsCurrentState(this);
     }
 
-    public virtual void SwitchState(AState<TController, TStateMachine> nextState)
+    public virtual void SwitchState(AState<TStateMachine> nextState)
     {
         _stateMachine?.SwitchState(nextState);
     }
@@ -75,7 +74,7 @@ public abstract class AState<TController, TStateMachine>
     /// <summary>
     /// Coroutine to wait for a random amount of time before switching to the next state.
     /// </summary>
-    protected IEnumerator SwitchStateAfterRandomTime(AState<TController, TStateMachine> nextState, int min = 5, int max = 21)
+    protected IEnumerator SwitchStateAfterRandomTime(AState<TStateMachine> nextState, int min = 5, int max = 21)
     {
         int waitTime = Random.Range(min, max);
         return SwitchStateAfterCertainTime(nextState, waitTime);
@@ -84,7 +83,7 @@ public abstract class AState<TController, TStateMachine>
     /// <summary>
     /// Coroutine to wait for a specified amount of time before switching to the next state.
     /// </summary>
-    public virtual IEnumerator SwitchStateAfterCertainTime(AState<TController, TStateMachine> nextState, float waitTime)
+    public virtual IEnumerator SwitchStateAfterCertainTime(AState<TStateMachine> nextState, float waitTime)
     {
         _controllable.IsExecutionPaused = true;
 

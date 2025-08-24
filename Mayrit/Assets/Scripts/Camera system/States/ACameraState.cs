@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using Unity.Cinemachine;
 using UnityEngine;
 
-public abstract class ACameraState : AState<CameraManager, FiniteStateMachine<CameraManager>>
+public abstract class ACameraState : AState<FiniteStateMachine>
 {
     protected readonly CinemachineCamera _camera;
 
     protected ACameraState(string name,
-        FiniteStateMachine<CameraManager> stateMachine,
+        FiniteStateMachine stateMachine,
         CinemachineCamera camera)
     : base(name, stateMachine)
     {

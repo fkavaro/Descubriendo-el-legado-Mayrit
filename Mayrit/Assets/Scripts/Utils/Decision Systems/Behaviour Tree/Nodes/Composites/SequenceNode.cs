@@ -7,10 +7,9 @@ using UnityEngine;
 /// SequenceNode is a composite node that executes its children in sequence.
 /// Like a logical AND operation, it will return success only if all its children return success.
 /// </summary>
-public class SequenceNode<TController> : Node<TController>
-where TController : MonoBehaviour
+public class SequenceNode : Node
 {
-    public SequenceNode(ABehaviourController<TController> controller, int priority = 0)
+    public SequenceNode(ABehaviourController controller, int priority = 0)
     : base(controller, "Sequence", priority) { }
 
     public override Status UpdateNode()

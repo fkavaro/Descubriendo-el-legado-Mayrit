@@ -2,22 +2,12 @@ using System;
 using UnityEngine;
 using TMPro;
 
-/// <summary>
-/// Defines context methods. Implements MonoBehaviour.
-/// </summary>
-public class ABehaviourController<TController>
-where TController : MonoBehaviour
+public class ABehaviourController
 {
-    // [Header("Behaviour Controller Properties")]
-    // [Tooltip("Whether to show debug messages in the console or not")]
-    // public bool _debugMode = false;
-    // [Tooltip("Whether to update next frame or not")]
-    // public bool _isExecutionPaused = false;
-
     public readonly IBehaviourControllable _controllable;
     public readonly string _name;
 
-    public ADecisionSystem<TController> _decisionSystem;
+    public ADecisionSystem _decisionSystem;
 
     // Construtor
     public ABehaviourController(IBehaviourControllable controllable, string name)
@@ -70,48 +60,49 @@ where TController : MonoBehaviour
 
     #endregion
 
-    #region COLLISION AND TRIGGER EVENTS
-    private void OnCollisionEnter(Collision collision)
-    {
-        _decisionSystem?.OnCollisionEnter(collision);
-        AtOnCollisionEnter(collision);
-    }
-    protected virtual void AtOnCollisionEnter(Collision collision) { } // Optionally implemented in subclasses
+    // TODO: remove
+    // #region COLLISION AND TRIGGER EVENTS
+    // private void OnCollisionEnter(Collision collision)
+    // {
+    //     _decisionSystem?.OnCollisionEnter(collision);
+    //     AtOnCollisionEnter(collision);
+    // }
+    // protected virtual void AtOnCollisionEnter(Collision collision) { } // Optionally implemented in subclasses
 
-    private void OnCollisionStay(Collision collision)
-    {
-        _decisionSystem?.OnCollisionStay(collision);
-        AtOnCollisionStay(collision);
-    }
-    protected virtual void AtOnCollisionStay(Collision collision) { } // Optionally implemented in subclasses
+    // private void OnCollisionStay(Collision collision)
+    // {
+    //     _decisionSystem?.OnCollisionStay(collision);
+    //     AtOnCollisionStay(collision);
+    // }
+    // protected virtual void AtOnCollisionStay(Collision collision) { } // Optionally implemented in subclasses
 
-    private void OnCollisionExit(Collision collision)
-    {
-        _decisionSystem?.OnCollisionExit(collision);
-        AtOnCollisionExit(collision);
-    }
-    protected virtual void AtOnCollisionExit(Collision collision) { } // Optionally implemented in subclasses
+    // private void OnCollisionExit(Collision collision)
+    // {
+    //     _decisionSystem?.OnCollisionExit(collision);
+    //     AtOnCollisionExit(collision);
+    // }
+    // protected virtual void AtOnCollisionExit(Collision collision) { } // Optionally implemented in subclasses
 
 
-    private void OnTriggerEnter(Collider other)
-    {
-        _decisionSystem?.OnTriggerEnter(other);
-        AtOnTriggerEnter(other);
-    }
-    protected virtual void AtOnTriggerEnter(Collider other) { } // Optionally implemented in subclasses
+    // private void OnTriggerEnter(Collider other)
+    // {
+    //     _decisionSystem?.OnTriggerEnter(other);
+    //     AtOnTriggerEnter(other);
+    // }
+    // protected virtual void AtOnTriggerEnter(Collider other) { } // Optionally implemented in subclasses
 
-    private void OnTriggerStay(Collider other)
-    {
-        _decisionSystem?.OnTriggerEnter(other);
-        AtOnTriggerStay(other);
-    }
-    protected virtual void AtOnTriggerStay(Collider other) { } // Optionally implemented in subclasses
+    // private void OnTriggerStay(Collider other)
+    // {
+    //     _decisionSystem?.OnTriggerEnter(other);
+    //     AtOnTriggerStay(other);
+    // }
+    // protected virtual void AtOnTriggerStay(Collider other) { } // Optionally implemented in subclasses
 
-    private void OnTriggerExit(Collider other)
-    {
-        _decisionSystem?.OnTriggerEnter(other);
-        AtOnTriggerExit(other);
-    }
-    protected virtual void AtOnTriggerExit(Collider other) { } // Optionally implemented in subclasses
-    #endregion
+    // private void OnTriggerExit(Collider other)
+    // {
+    //     _decisionSystem?.OnTriggerEnter(other);
+    //     AtOnTriggerExit(other);
+    // }
+    // protected virtual void AtOnTriggerExit(Collider other) { } // Optionally implemented in subclasses
+    // #endregion
 }

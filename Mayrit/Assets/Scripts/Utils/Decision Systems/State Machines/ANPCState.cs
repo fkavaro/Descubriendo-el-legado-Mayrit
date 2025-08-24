@@ -5,13 +5,12 @@ using UnityEngine.Rendering.Universal;
 /// <summary>
 /// Base class for NPC states, allowing to handle animations.
 /// </summary>
-public abstract class ANPCState<TController, TStateMachine> : AState<TController, TStateMachine>
-    where TController : MonoBehaviour
-    where TStateMachine : AStateMachine<TController, TStateMachine>
+public abstract class ANPCState<TStateMachine> : AState<TStateMachine>
+    where TStateMachine : AStateMachine<TStateMachine>
 {
-    readonly ANPC<TController> _npc;
+    readonly ANPC _npc;
 
-    public ANPCState(string name, TStateMachine stateMachine, ANPC<TController> npc)
+    public ANPCState(string name, TStateMachine stateMachine, ANPC npc)
     : base(name, stateMachine)
     {
         _npc = npc;
@@ -20,7 +19,7 @@ public abstract class ANPCState<TController, TStateMachine> : AState<TController
     /// <summary>
     /// Switchs to the next state afer random time playing an animation.
     /// </summary>
-    protected void SwitchStateAfterRandomTime(AState<TController, TStateMachine> nextState, int animation, string animationName)
+    protected void SwitchStateAfterRandomTime(AState<TStateMachine> nextState, int animation, string animationName)
     {
         int waitTime = Random.Range(5, 21);
         // TODO: MAKE THIS WORK
@@ -30,7 +29,7 @@ public abstract class ANPCState<TController, TStateMachine> : AState<TController
     /// <summary>
     /// Switchs to the next state afer given time playing an animation.
     /// </summary>
-    protected void SwitchStateAfterCertainTime(float waitTime, AState<TController, TStateMachine> nextState, int animation, string animationName)
+    protected void SwitchStateAfterCertainTime(float waitTime, AState<TStateMachine> nextState, int animation, string animationName)
     {
         // TODO: MAKE THIS WORK
         //_controller.StartCoroutine(SwitchStateAfterCertainTimeCoroutine(waitTime, nextState, animation, animationName));
@@ -46,7 +45,7 @@ public abstract class ANPCState<TController, TStateMachine> : AState<TController
     /// <summary>
     /// Switches to the next state if the animation is finished.
     /// </summary>
-    protected void SwitchStateAfterAnimation(AState<TController, TStateMachine> nextState, int animation = -1)
+    protected void SwitchStateAfterAnimation(AState<TStateMachine> nextState, int animation = -1)
     {
         if (animation != -1)
             _npc.ChangeAnimationTo(animation);

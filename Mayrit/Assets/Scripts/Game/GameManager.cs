@@ -5,21 +5,11 @@ using UnityEngine.SceneManagement;
 public class GameManager : Singleton<GameManager>, IBehaviourControllable
 {
     #region PUBLIC PROPERTIES
-    ABehaviourController<GameManager> _behaviourController;
-
-    // Finite State Machine
-    public FiniteStateMachine<GameManager> _fsm;
-    public MainMenu_GameState _mainMenuState;
-    public GamePlay_GameState _gamePlayState;
-    public Pause_GameState _pauseState;
-
-    public GameInputActions _inputActions;
-
     [Header("Behaviour Controller Properties")]
     [Tooltip("Whether to show debug messages in the console or not")]
-    public bool _debugMode = false;
+    [SerializeField] bool _debugMode = false;
     [Tooltip("Whether to update next frame or not")]
-    public bool _isExecutionPaused = false;
+    [SerializeField] bool _isExecutionPaused = false;
 
     public bool DebugMode
     {
@@ -34,6 +24,16 @@ public class GameManager : Singleton<GameManager>, IBehaviourControllable
 
     [Header("Player")]
     public PlayableCharacter _currentPlayableCharacter;
+
+    public ABehaviourController _behaviourController;
+
+    // Finite State Machine
+    public FiniteStateMachine _fsm;
+    public MainMenu_GameState _mainMenuState;
+    public GamePlay_GameState _gamePlayState;
+    public Pause_GameState _pauseState;
+
+    public GameInputActions _inputActions;
     #endregion
 
     #region PRIVATE PROPERTIES
@@ -83,7 +83,7 @@ public class GameManager : Singleton<GameManager>, IBehaviourControllable
 
     private void OnDestroy()
     {
-        _inputActions?.Disable(); // Disables all action maps. To avoi errors
+        _inputActions?.Disable(); // Disables all action maps. To avoid errors
     }
 
     public PlayableCharacter GetCurrentPlayableCharacter()

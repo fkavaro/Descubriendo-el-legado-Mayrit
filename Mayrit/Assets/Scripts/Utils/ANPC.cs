@@ -7,8 +7,7 @@ using UnityEngine.AI;
 /// Requires a NavMeshAgent component to be attached to the GameObject.
 /// </summary>
 [RequireComponent(typeof(NavMeshAgent))]
-public class ANPC<TController> : AAnimationController<TController>
-where TController : MonoBehaviour
+public class ANPC : AAnimationController
 {
     public NavMeshAgent _agent;
     Spot _destinationSpot = null;
@@ -19,7 +18,7 @@ where TController : MonoBehaviour
     //int _animationWhenArrived = -1;
 
     #region PUBLIC PROPERTIES
-    [Header("NavMeshAgent Properties")]
+    [Header("NPC agent Properties")]
     [Tooltip("Agent speed"), Range(2f, 5f)]
     public float speed = 2f;
     [Tooltip("Agent rotation speed"), Range(0f, 5f)]
