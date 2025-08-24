@@ -83,11 +83,11 @@ public abstract class AState<TStateMachine>
     /// </summary>
     public virtual IEnumerator SwitchStateAfterCertainTime(AState<TStateMachine> nextState, float waitTime)
     {
-        _controllable.IsExecutionPaused = true;
+        _controllable.BehaviourController._isExecutionPaused = true;
 
         yield return new WaitForSeconds(waitTime);
 
         _stateMachine?.SwitchState(nextState);
-        _controllable.IsExecutionPaused = false;
+        _controllable.BehaviourController._isExecutionPaused = false;
     }
 }

@@ -8,15 +8,9 @@ using Unity.Cinemachine;
 /// <summary>
 /// Manages the camera states and data. Singleton.
 /// </summary>
-public class CameraManager : Singleton<CameraManager>, IBehaviourControllable
+public class CameraManager : ASingletonBehaviourControllable<CameraManager>
 {
     #region EDITOR PROPERTIES
-    [Header("Behaviour Controller Properties")]
-    [Tooltip("Whether to show debug messages in the console or not")]
-    [SerializeField] bool _debugMode = false;
-    [Tooltip("Whether to update next frame or not")]
-    [SerializeField] bool _isExecutionPaused = false;
-
     [Header("Spectator camera")]
     public CinemachineCamera _spectatorCamera;
     [Tooltip("Wether to move camera at screen margins or not.")]
@@ -61,19 +55,6 @@ public class CameraManager : Singleton<CameraManager>, IBehaviourControllable
     #endregion
 
     #region PROPERTIES
-    public string Name => gameObject.name;
-    public bool DebugMode
-    {
-        get => _debugMode;
-        set => _debugMode = value;
-    }
-    public bool IsExecutionPaused
-    {
-        get => _isExecutionPaused;
-        set => _isExecutionPaused = value;
-    }
-
-    public ABehaviourController _behaviourController;
     public FiniteStateMachine _fsm;
     public Spectator_CameraState _spectatorState;
     public ThirdPerson_CameraState _thirdPersonState;
@@ -83,7 +64,7 @@ public class CameraManager : Singleton<CameraManager>, IBehaviourControllable
     #region MONOBEHAVIOUR
     protected override void Awake()
     {
-        // Singleton
+        // ASingletonBehaviourControllable
         base.Awake();
 
         // Set camera target at min height
@@ -102,9 +83,6 @@ public class CameraManager : Singleton<CameraManager>, IBehaviourControllable
             _thirdPersonCamera);
 
         _fsm.SetInitialState(_spectatorState);
-
-        _behaviourController = new(_fsm);
-        _behaviourController.Awake();
     }
 
     void Start()
@@ -117,18 +95,11 @@ public class CameraManager : Singleton<CameraManager>, IBehaviourControllable
                 _movementLimitsY.x,
                 _spectatorCamera.LookAt.position.z);
         }
-
-        _behaviourController.Start();
     }
 
     void Update()
     {
-        _behaviourController.Update();
-    }
 
-    void LateUpdate()
-    {
-        _behaviourController.LateUpdate();
     }
     #endregion
 

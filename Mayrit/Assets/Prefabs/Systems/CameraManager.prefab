@@ -571,6 +571,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3768097708187529351}
+  - component: {fileID: 803419942873177935}
   - component: {fileID: 8486277609037237350}
   m_Layer: 0
   m_Name: CameraManager
@@ -600,6 +601,20 @@ Transform:
   - {fileID: 1464312340161193593}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &803419942873177935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3850563862725291741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca25dc2e123c61f499d1dc5f06e88f2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _debugMode: 1
+  _isExecutionPaused: 0
 --- !u!114 &8486277609037237350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -613,8 +628,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 0
-  _debugMode: 0
-  _isExecutionPaused: 0
   _spectatorCamera: {fileID: 5488014350122742170}
   _edgeScrolling: 0
   _edgeScrollingMargin: 30

@@ -8,7 +8,7 @@ using UnityEngine;
 public abstract class Singleton<T> : MonoBehaviour
 where T : MonoBehaviour
 {
-    [Header("Singleton Properties")]
+    [Header("Singleton")]
     [Tooltip("Wether to destroy the instance when loading a new scene")]
     [SerializeField] protected bool dontDestroyOnLoad = false;
 

@@ -163,6 +163,12 @@ public class SpectatorHUD_UIState : AUIState
     {
         AProgressState currentProgressState = (AProgressState)ProgressManager.Instance._fsm.CurrentState;
 
+        if (currentProgressState == null || currentProgressState._informationSO == null)
+        {
+            Debug.LogWarning("Current progress state or its informationSO is null");
+            return;
+        }
+
         _milestoneName.text = currentProgressState._informationSO.Header;
         _milestoneDate.text = currentProgressState._informationSO.SubHeader;
     }

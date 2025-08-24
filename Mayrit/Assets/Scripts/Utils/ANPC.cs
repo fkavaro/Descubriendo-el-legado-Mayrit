@@ -12,11 +12,6 @@ public class ANPC : AAnimationController
     public NavMeshAgent _agent;
     Spot _destinationSpot = null;
 
-    /// <summary>
-    /// Animation to play when the agent arrives at target
-    /// </summary>
-    //int _animationWhenArrived = -1;
-
     #region PUBLIC PROPERTIES
     [Header("NPC agent Properties")]
     [Tooltip("Agent speed"), Range(2f, 5f)]
@@ -33,33 +28,27 @@ public class ANPC : AAnimationController
     [Header("Energy Properties")]
     [Tooltip("Energy value"), Range(0, 100)]
     public float energy = 100;
+
+
     #endregion
 
     // Constructor
-    public ANPC(ADecisionSystem decisionSystem, Animator animator, NavMeshAgent navMeshAgent)
-    : base(decisionSystem, animator)
+    public ANPC(IBehaviourControllable controllable, Animator animator, NavMeshAgent agent)
+    : base(controllable, animator)
     {
-        _agent = navMeshAgent;
-    }
-
-    #region INHERITED METHODS
-    /// <summary>
-    /// Sets the NavMeshAgent component and initializes its speed.
-    /// </summary>
-    protected override void OnAwake()
-    {
-        base.OnAwake();
-
+        _agent = agent;
         _agent.speed = speed;
         _agent.angularSpeed = rotationSpeed * 100f;
         _agent.stoppingDistance = stoppingDistance;
         _agent.radius = avoidanceRadius;
     }
 
-    protected override void OnUpdate()
+    #region INHERITED METHODS
+
+    public void Update()
     {
         // Stop moving if execution is paused
-        if (_controllable.IsExecutionPaused)
+        if (_controllable.BehaviourController._isExecutionPaused)
             _agent.isStopped = true;
         else
         {

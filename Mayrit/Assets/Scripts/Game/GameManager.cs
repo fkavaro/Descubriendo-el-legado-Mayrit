@@ -5,33 +5,14 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// Manages the game states and data. Singleton.
 /// </summary>
-public class GameManager : Singleton<GameManager>, IBehaviourControllable
+public class GameManager : ASingletonBehaviourControllable<GameManager>
 {
     #region EDITOR PROPERTIES
-    [Header("Behaviour Controller Properties")]
-    [Tooltip("Whether to show debug messages in the console or not")]
-    [SerializeField] bool _debugMode = false;
-    [Tooltip("Whether to update next frame or not")]
-    [SerializeField] bool _isExecutionPaused = false;
-
     [Header("Player")]
     public PlayableCharacter _currentPlayableCharacter;
     #endregion
 
     #region PROPERTIES
-    public string Name => gameObject.name;
-    public bool DebugMode
-    {
-        get => _debugMode;
-        set => _debugMode = value;
-    }
-    public bool IsExecutionPaused
-    {
-        get => _isExecutionPaused;
-        set => _isExecutionPaused = value;
-    }
-
-    public ABehaviourController _behaviourController;
     public FiniteStateMachine _fsm;
     public MainMenu_GameState _mainMenuState;
     public GamePlay_GameState _gamePlayState;
@@ -60,24 +41,16 @@ public class GameManager : Singleton<GameManager>, IBehaviourControllable
             _fsm.SetInitialState(_gamePlayState);
         else
             _fsm.SetInitialState(_mainMenuState);
-
-        _behaviourController = new(_fsm);
-        _behaviourController.Awake();
     }
 
     void Start()
     {
-        _behaviourController.Start();
+
     }
 
     void Update()
     {
-        _behaviourController.Update();
-    }
 
-    void LateUpdate()
-    {
-        _behaviourController.LateUpdate();
     }
 
     private void OnDestroy()

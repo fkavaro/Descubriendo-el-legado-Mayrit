@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Manages the progress states and data. Singleton.
 /// </summary>
-public class ProgressManager : Singleton<ProgressManager>, IBehaviourControllable
+public class ProgressManager : ASingletonBehaviourControllable<ProgressManager>
 {
     public enum Milestone
     {
@@ -19,15 +19,8 @@ public class ProgressManager : Singleton<ProgressManager>, IBehaviourControllabl
     }
 
     #region EDITOR PROPERTIES
-    [Header("Behaviour Controller Properties")]
-    [Tooltip("Whether to show debug messages in the console or not")]
-    [SerializeField] bool _debugMode = false;
-    [Tooltip("Whether to update next frame or not")]
-    [SerializeField] bool _isExecutionPaused = false;
-
-    [Header("Milestone properties")]
+    [Header("Milestones")]
     public Milestone _currentMilestone;
-
     [Space]
     public Milestone_InformationSO _visionInformation;
     public Milestone_InformationSO _foundationInformation;
@@ -43,19 +36,6 @@ public class ProgressManager : Singleton<ProgressManager>, IBehaviourControllabl
     public event Action<Milestone> OnMilestoneChanged;
     public event Action<float> OnTimeSet;
 
-    public string Name => gameObject.name;
-    public bool DebugMode
-    {
-        get => _debugMode;
-        set => _debugMode = value;
-    }
-    public bool IsExecutionPaused
-    {
-        get => _isExecutionPaused;
-        set => _isExecutionPaused = value;
-    }
-
-    public ABehaviourController _behaviourController;
     public FiniteStateMachine _fsm;
     public Vision_AProgressState _visionState;
     public Foundation_AProgressState _foundationState;
@@ -86,24 +66,16 @@ public class ProgressManager : Singleton<ProgressManager>, IBehaviourControllabl
         _conquestState = new(Milestone._8_Conquest, _conquestInformation, _fsm);
 
         //_fsm.SetInitialState(_visionState);
-
-        _behaviourController = new(_fsm);
-        _behaviourController.Awake();
     }
 
     void Start()
     {
-        _behaviourController.Start();
+
     }
 
     void Update()
     {
-        _behaviourController.Update();
-    }
 
-    void LateUpdate()
-    {
-        _behaviourController.LateUpdate();
     }
     #endregion
 

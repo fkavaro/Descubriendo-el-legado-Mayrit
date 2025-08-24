@@ -6,74 +6,53 @@ using UnityEngine.InputSystem;
 /// Manages the player states and data. Singleton.
 /// </summary>
 [RequireComponent(typeof(CharacterController))]
-public class PlayableCharacter : MonoBehaviour, IBehaviourControllable
+public class PlayableCharacter : ABehaviourControllable
 {
     #region EDITOR PROPERTIES
-    [Header("Behaviour Controller Properties")]
-    [Tooltip("Whether to show debug messages in the console or not")]
-    [SerializeField] bool _debugMode = false;
-    [Tooltip("Whether to update next frame or not")]
-    [SerializeField] bool _isExecutionPaused = false;
-
     [Header("Character Information")]
     public AInformationSO _information;
 
-    [Header("Movement Controller Properties")]
+    [Header("Movement settings")]
     public Transform _orientation;
     public float _walkSpeed = 6f;
     public float _runSpeed = 12f;
     public float _rotationSpeed = 2f;
     public float _jumpForce = 2f;
     public float _gravityForce = 9f;
+
+    [Header("Animation")]
+    public Animator _animator;
     #endregion
 
     #region PROPERTIES
     [HideInInspector] public CharacterController _characterController;
     public AAnimationController _animationController;
-    public PlayerController _playerController;
-
-    public string Name => gameObject.name;
-    public bool DebugMode
-    {
-        get => _debugMode;
-        set => _debugMode = value;
-    }
-    public bool IsExecutionPaused
-    {
-        get => _isExecutionPaused;
-        set => _isExecutionPaused = value;
-    }
-
     public FiniteStateMachine _fsm;
+    public FreeRoam_PlayableCharacterState _freeRoamState;
     #endregion
 
     #region MONOBEHAVIOUR
-    void Awake()
+    protected override void Awake()
     {
+        // ABehaviourControllable
+        base.Awake();
+
         _characterController = GetComponent<CharacterController>();
-        _playerController = new(this);
+        _animationController = new(this, _animator);
 
         _fsm = new(this);
-
-        _animationController = new(_fsm, GetComponentInChildren<Animator>());
-        _animationController.Awake();
+        _freeRoamState = new(_fsm, this);
+        _fsm.SetInitialState(_freeRoamState);
     }
 
     void Start()
     {
-        _animationController.Start();
-        _playerController.Start();
+
     }
 
     void Update()
     {
-        _animationController.Update();
-        _playerController.Update();
-    }
 
-    void LateUpdate()
-    {
-        _animationController.LateUpdate();
     }
     #endregion
 

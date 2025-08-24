@@ -40,6 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7322661222714234494}
+  - component: {fileID: 965574766683643107}
   - component: {fileID: 1596673507731933656}
   - component: {fileID: 5391638514220604821}
   m_Layer: 0
@@ -66,6 +67,20 @@ Transform:
   - {fileID: 4620937447881479969}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &965574766683643107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5927973518140181291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca25dc2e123c61f499d1dc5f06e88f2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _debugMode: 1
+  _isExecutionPaused: 0
 --- !u!114 &1596673507731933656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78,17 +93,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e76bbaede81e5d042be21e82d2ef9134, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _debugMode: 0
-  _isExecutionPaused: 0
-  _animator: {fileID: 1639577397424246107}
-  _characterController: {fileID: 0}
-  _information: {fileID: 11400000, guid: b83794da0aa87f5489d6123269ab6da1, type: 2}
+  _information: {fileID: 11400000, guid: 4146047eade613e41aeaf3f8813dbe44, type: 2}
   _orientation: {fileID: 3518169998641744890}
   _walkSpeed: 1
   _runSpeed: 3
   _rotationSpeed: 4
   _jumpForce: 2
   _gravityForce: 9
+  _animator: {fileID: 1639577397424246107}
+  _characterController: {fileID: 0}
 --- !u!143 &5391638514220604821
 CharacterController:
   m_ObjectHideFlags: 0

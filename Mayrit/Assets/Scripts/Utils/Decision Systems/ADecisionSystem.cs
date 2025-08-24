@@ -6,13 +6,14 @@ using UnityEngine;
 public abstract class ADecisionSystem
 {
     public readonly IBehaviourControllable _controllable;
-    protected bool DebugMode => _controllable.DebugMode;
-    public bool IsExecutionPaused => _controllable.IsExecutionPaused;
+    protected bool DebugMode => _controllable.BehaviourController._debugMode;
+    public bool IsExecutionPaused => _controllable.BehaviourController._isExecutionPaused;
 
     // Constructor
     public ADecisionSystem(IBehaviourControllable controllable)
     {
         _controllable = controllable;
+        _controllable.BehaviourController._decisionSystem = this;
     }
 
     protected abstract void DebugDecision();

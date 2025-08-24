@@ -6,11 +6,10 @@ using System;
 /// Defines a common class for all animation controllers.
 /// Handles animation transitions.
 /// </summary>
-public class AAnimationController : ABehaviourController
+public class AAnimationController
 {
+    public readonly IBehaviourControllable _controllable;
     readonly Animator _animator;
-    public int _currentAnimation, _lastAnimation;
-
     readonly public int _idleAnim = Animator.StringToHash("Idle")
         , _walkAnim = Animator.StringToHash("Walk")
         , _runAnim = Animator.StringToHash("Run")
@@ -19,10 +18,12 @@ public class AAnimationController : ABehaviourController
         , _afterJumpAnim = Animator.StringToHash("AfterJump")
         ;
 
+    public int _currentAnimation, _lastAnimation;
+
     // Constructor
-    public AAnimationController(ADecisionSystem decisionSystem, Animator animator)
-    : base(decisionSystem)
+    public AAnimationController(IBehaviourControllable controllable, Animator animator)
     {
+        _controllable = controllable;
         _animator = animator;
     }
 
@@ -79,27 +80,25 @@ public class AAnimationController : ABehaviourController
 
     public void PlayAnimationCertainTime(float waitTime, int animation, string animationName, Action onComplete = null, bool showtext = true)
     {
-        // TODO: MAKE THIS WORK
-        //StartCoroutine(PlayAnimationCertainTimeCoroutine(waitTime, animation, animationName, onComplete, showtext));
+        _controllable.StartCoroutine(PlayAnimationCertainTimeCoroutine(waitTime, animation, animationName, onComplete, showtext));
     }
 
     public void PlayAnimationRandomTime(int animation, string animationName, Action onComplete = null, bool showtext = true)
     {
         int waitTime = UnityEngine.Random.Range(5, 21);
-        // TODO: MAKE THIS WORK
-        //StartCoroutine(PlayAnimationCertainTimeCoroutine(waitTime, animation, animationName, onComplete, showtext));
+        _controllable.StartCoroutine(PlayAnimationCertainTimeCoroutine(waitTime, animation, animationName, onComplete, showtext));
     }
 
     public IEnumerator PlayAnimationCertainTimeCoroutine(float waitTime, int animation, string animationName, Action onComplete = null, bool showtext = true)
     {
-        if (_controllable.IsExecutionPaused) yield break;
-        _controllable.IsExecutionPaused = true;
+        if (_controllable.BehaviourController._isExecutionPaused) yield break;
+        _controllable.BehaviourController._isExecutionPaused = true;
 
         if (showtext && waitTime >= 2f)
             ChangeAnimationTo(animation);
         yield return new WaitForSeconds(waitTime);
 
-        _controllable.IsExecutionPaused = false;
+        _controllable.BehaviourController._isExecutionPaused = false;
         onComplete?.Invoke();
     }
     #endregion
