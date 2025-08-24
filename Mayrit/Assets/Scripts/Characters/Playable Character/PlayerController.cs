@@ -134,7 +134,7 @@ public class PlayerController
     void ApplyMovement()
     {
         // Speed depending on sprint key
-        _movementSpeed = _isRunPressed ? _player._runSpeed : _player._walkSpeed;
+        _movementSpeed = _isRunPressed ? _player._sprintSpeed : _player._walkSpeed;
 
         // Apply forces to movement vector
         Vector3 finalMovement = new(_movement3D.x * _movementSpeed, // Apply movement speed

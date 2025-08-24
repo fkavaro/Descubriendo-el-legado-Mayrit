@@ -62,9 +62,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _information: {fileID: 11400000, guid: 4146047eade613e41aeaf3f8813dbe44, type: 2}
-  _cameraOrientationFollower: {fileID: 0}
   _walkSpeed: 1
-  _runSpeed: 3
+  _sprintSpeed: 3
   _rotationSpeed: 4
   _jumpForce: 2
   _gravityForce: 9

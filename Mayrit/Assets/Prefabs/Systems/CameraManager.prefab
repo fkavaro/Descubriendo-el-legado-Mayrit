@@ -374,7 +374,7 @@ GameObject:
   m_Layer: 0
   m_Name: Third Person Camera target
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -711,6 +711,7 @@ MonoBehaviour:
   _orbitalCharacterOffset: 2
   _thirdPersonCamera: {fileID: 412980351691204597}
   _3rdPersonCameraOrbitSpeed: 3
+  _3rdPersonCameraFollowSpeed: 3
   _bottomClamp: -30
   _topClamp: 40
 --- !u!1 &4272530639498313931

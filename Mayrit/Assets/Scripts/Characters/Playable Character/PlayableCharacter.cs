@@ -13,9 +13,9 @@ public class PlayableCharacter : ABehaviourControllable
     public AInformationSO _information;
 
     [Header("Movement settings")]
-    public float _walkSpeed = 6f;
-    public float _runSpeed = 12f;
-    public float _rotationSpeed = 2f;
+    public float _walkSpeed = 1f;
+    public float _sprintSpeed = 3f;
+    public float _rotationSpeed = 4f;
     public float _jumpForce = 2f;
     public float _gravityForce = 9f;
 

@@ -50,6 +50,7 @@ public class CameraManager : ASingletonBehaviourControllable<CameraManager>
     [Header("Third Person Camera")]
     public CinemachineCamera _thirdPersonCamera;
     public float _3rdPersonCameraOrbitSpeed = 3f,
+        _3rdPersonCameraFollowSpeed = 3f,
         _bottomClamp = -30f,
         _topClamp = 40f;
     #endregion
@@ -164,6 +165,12 @@ public class CameraManager : ASingletonBehaviourControllable<CameraManager>
 
     public void SwitchToThirdPersonCamera()
     {
+        // Update third person camera target to current playable character
+        Transform playerTranform = GameManager.Instance.GetCurrentPlayableCharacter().transform;
+
+        // Set camera follow and look at targets
+        _thirdPersonCamera.LookAt.position = playerTranform.position;
+
         _fsm.SwitchState(_thirdPersonState);
     }
 

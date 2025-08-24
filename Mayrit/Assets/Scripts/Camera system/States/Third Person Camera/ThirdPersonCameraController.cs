@@ -8,6 +8,7 @@ public class ThirdPersonCameraController
 {
     readonly Transform _cameraTarget;
     readonly float _orbitSpeed,
+        _followSpeed,
         _bottomClamp,
         _topClamp;
 
@@ -23,6 +24,7 @@ public class ThirdPersonCameraController
         _targetPitch = 0f;
         _targetYaw = 0f;
         _orbitSpeed = CameraManager.Instance._3rdPersonCameraOrbitSpeed;
+        _followSpeed = CameraManager.Instance._3rdPersonCameraFollowSpeed;
         _bottomClamp = CameraManager.Instance._bottomClamp;
         _topClamp = CameraManager.Instance._topClamp;
     }
@@ -40,11 +42,14 @@ public class ThirdPersonCameraController
         if (_targetYaw > 360f) _targetYaw -= 360f;
         if (_targetYaw < 0f) _targetYaw += 360f;
 
-        // Target follow current playable character and rotation is applied
         if (_cameraTarget != null)
-            _cameraTarget.SetPositionAndRotation(
-                GameManager.Instance.GetCurrentPlayableCharacter().transform.position,
-                Quaternion.Euler(_targetPitch, _targetYaw, 0f)
-            );
+        {
+            // Apply rotation to camera target
+            _cameraTarget.rotation = Quaternion.Euler(_targetPitch, _targetYaw, 0f);
+
+            // Move smoothly camera target to follow the player
+            PlayableCharacter player = GameManager.Instance.GetCurrentPlayableCharacter();
+            _cameraTarget.position = Vector3.Lerp(_cameraTarget.position, player.transform.position, Time.unscaledDeltaTime * _followSpeed);
+        }
     }
 }
