@@ -6,8 +6,7 @@ public class PlayerController
     #region PRIVATE PROPERTIES
     readonly PlayableCharacter _player;
     readonly CharacterController _playerCharacterController;
-    readonly Transform _cameraTransform,
-        _cameraOrientationFollower;
+    readonly Transform _cameraOrientationFollower;
 
     float _verticalVelocity,
         _movementSpeed;
@@ -29,7 +28,6 @@ public class PlayerController
     {
         _player = player;
         _playerCharacterController = playerCharacterController;
-        _cameraTransform = CameraManager.Instance._thirdPersonCamera.transform;
         _cameraOrientationFollower = _player._cameraOrientationFollower;
     }
 
@@ -45,7 +43,14 @@ public class PlayerController
         _isRunPressed = GameManager.Instance._inputActions.Player.Sprint.IsPressed();
         _isJumpPressed = GameManager.Instance._inputActions.Player.Jump.IsPressed();
 
-        HandleMovement();
+        // Get direction in 3D space based on camera orientation
+        _forward = _cameraOrientationFollower.forward.normalized;
+        _right = _cameraOrientationFollower.right.normalized;
+
+        // Movement vector from 2D to 3D from camera orientation
+        _movement3D = _right * _movementInput.x + _forward * _movementInput.y;
+        _movement3D.y = 0f; // Prevent vertical rotation
+
         HandleGravity();
         HandleRotation();
         HandleAnimations();
@@ -54,18 +59,6 @@ public class PlayerController
     #endregion
 
     #region PRIVATE METHODS
-    /// <summary>
-    /// Handles player movement based on input and camera orientation.
-    /// </summary>
-    void HandleMovement()
-    {
-        // Sprint key pressed
-        _movementSpeed = _isRunPressed ? _player._runSpeed : _player._walkSpeed;
-
-        // Get direction in 3D space based on camera orientation
-        _forward = _cameraTransform.forward.normalized;
-        _right = _cameraTransform.right.normalized;
-    }
 
     /// <summary>
     /// Applies gravity to the player, handling jumping and falling
@@ -93,12 +86,7 @@ public class PlayerController
     {
         // If there is any movement
         if (_movementInput != Vector2.zero)
-        {
-            Vector3 inputDir = _cameraOrientationFollower.forward * _movementInput.y + _cameraOrientationFollower.right * _movementInput.x;
-            inputDir.y = 0f; // Prevent vertical rotation
-
-            _player.transform.forward = Vector3.Slerp(_player.transform.forward, inputDir.normalized, Time.deltaTime * _player._rotationSpeed);
-        }
+            _player.transform.forward = Vector3.Slerp(_player.transform.forward, _movement3D.normalized, Time.deltaTime * _player._rotationSpeed);
     }
 
     void HandleAnimations()
@@ -140,23 +128,21 @@ public class PlayerController
         }
     }
 
-
-
     /// <summary>
     /// Applies movement to the player combining horizontal and vertical input.
     /// </summary>
     void ApplyMovement()
     {
-        // Movement vector from 2D to 3D from camera view
-        _movement3D = _right * _movementInput.x + _forward * _movementInput.y;
+        // Speed depending on sprint key
+        _movementSpeed = _isRunPressed ? _player._runSpeed : _player._walkSpeed;
 
         // Apply forces to movement vector
-        _movement3D = new(_movement3D.x * _movementSpeed, // Apply movement speed
-                         _verticalVelocity, // Apply vertical velocity
-                         _movement3D.z * _movementSpeed); // Apply movement speed
+        Vector3 finalMovement = new(_movement3D.x * _movementSpeed, // Apply movement speed
+                                    _verticalVelocity, // Apply vertical velocity
+                                    _movement3D.z * _movementSpeed); // Apply movement speed
 
         // Moves controller in the movement vector
-        _playerCharacterController.Move(Time.deltaTime * _movement3D);
+        _playerCharacterController.Move(Time.deltaTime * finalMovement);
     }
     #endregion
 }

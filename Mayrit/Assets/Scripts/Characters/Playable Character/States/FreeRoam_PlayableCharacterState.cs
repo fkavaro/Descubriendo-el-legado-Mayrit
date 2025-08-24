@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class FreeRoam_PlayableCharacterState : APlayableCharacterState
 {
-    public FreeRoam_PlayableCharacterState(FiniteStateMachine stateMachine, PlayableCharacter playableCharacter, CharacterController playerCharacterController)
-    : base("Free roam", stateMachine, playableCharacter, playerCharacterController)
+    public FreeRoam_PlayableCharacterState(FiniteStateMachine stateMachine, PlayableCharacter playableCharacter)
+    : base("Free roam", stateMachine, playableCharacter)
     {
     }
 
@@ -18,6 +18,6 @@ public class FreeRoam_PlayableCharacterState : APlayableCharacterState
 
     public override void UpdateState()
     {
-        _playerController.Update();
+        _playableCharacter._playerController.Update();
     }
 }
