@@ -37,7 +37,8 @@ where TController : MonoBehaviour
     #endregion
 
     // Constructor
-    public ANPC(string name, Animator animator, NavMeshAgent navMeshAgent) : base(name, animator)
+    public ANPC(IBehaviourControllable controllable, string name, Animator animator, NavMeshAgent navMeshAgent)
+    : base(controllable, name, animator)
     {
         _agent = navMeshAgent;
     }
@@ -59,7 +60,7 @@ where TController : MonoBehaviour
     protected override void OnUpdate()
     {
         // Stop moving if execution is paused
-        if (_isExecutionPaused)
+        if (_controllable.IsExecutionPaused)
             _agent.isStopped = true;
         else
         {

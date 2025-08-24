@@ -7,12 +7,29 @@ using UnityEngine.InputSystem;
 /// Manages the player states and data
 /// </summary>
 [RequireComponent(typeof(CharacterController))]
-public class PlayableCharacter : MonoBehaviour
+public class PlayableCharacter : MonoBehaviour, IBehaviourControllable
 {
     #region PUBLIC PROPERTIES
     public AAnimationController<PlayableCharacter> _animationController;
     [HideInInspector] public CharacterController _characterController;
     public PlayerController _playerController;
+
+    [Header("Behaviour Controller Properties")]
+    [Tooltip("Whether to show debug messages in the console or not")]
+    public bool _debugMode = false;
+    [Tooltip("Whether to update next frame or not")]
+    public bool _isExecutionPaused = false;
+
+    public bool DebugMode
+    {
+        get => _debugMode;
+        set => _debugMode = value;
+    }
+    public bool IsExecutionPaused
+    {
+        get => _isExecutionPaused;
+        set => _isExecutionPaused = value;
+    }
 
     [Header("Character Information")]
     public AInformationSO _information;
@@ -37,7 +54,7 @@ public class PlayableCharacter : MonoBehaviour
         _characterController = GetComponent<CharacterController>();
         _playerController = new(this);
 
-        _animationController = new(name, GetComponentInChildren<Animator>());
+        _animationController = new(this, name, GetComponentInChildren<Animator>());
         _fsm = new(_animationController);
 
         _animationController.Awake();

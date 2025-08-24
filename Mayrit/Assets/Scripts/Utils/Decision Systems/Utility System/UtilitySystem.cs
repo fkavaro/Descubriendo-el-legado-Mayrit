@@ -35,7 +35,7 @@ where TController : MonoBehaviour
 
     public override void Update()
     {
-        if (!_controller._isExecutionPaused)
+        if (!_controllable.IsExecutionPaused)
             _currentAction.UpdateAction();
 
         // Check if it has finished
@@ -81,14 +81,12 @@ where TController : MonoBehaviour
     /// </summary>
     void CalculateActionsUtilities()
     {
-        if (_controller._debugMode)
-            Debug.Log(_controller._name + " making decision...");
+        if (_controllable.DebugMode) Debug.Log(_controller._name + " making decision...");
 
         // Calculate the utility of each available action
         foreach (var action in _actions)
         {
-            if (_controller._debugMode)
-                Debug.Log($"    {_controller._name}: {action.Name} has utility of {action.Utility}");
+            if (_controllable.DebugMode) Debug.Log($"    {_controller._name}: {action.Name} has utility of {action.Utility}");
 
             _actionUtilities.Add(action, action.Utility);
         }
@@ -100,8 +98,7 @@ where TController : MonoBehaviour
         // If the best action has negative utility, continue with current action
         if (_actionUtilities[bestAction] < 0f || bestAction == null)
         {
-            if (_controller._debugMode)
-                Debug.LogError($"   {_controller._name}: best action is null or has negative utility, continuing with current action: {_currentAction.Name}");
+            if (_controllable.DebugMode) Debug.LogError($"   {_controller._name}: best action is null or has negative utility, continuing with current action: {_currentAction.Name}");
 
             bestAction = _currentAction;
         }
@@ -118,8 +115,7 @@ where TController : MonoBehaviour
         _currentAction.StartAction();
 
         // Debug the decision made
-        if (_controller._debugMode)
-            Debug.Log($"{_controller._name} is {_currentAction.Name}");
+        if (_controllable.DebugMode) Debug.Log($"{_controller._name} is {_currentAction.Name}");
 
         DebugDecision();
 

@@ -42,7 +42,7 @@ where TController : MonoBehaviour
     public override void Update()
     {
         DebugDecision();
-        if (!_controller._isExecutionPaused)
+        if (!_controllable.IsExecutionPaused)
             status = UpdateNode();
     }
 

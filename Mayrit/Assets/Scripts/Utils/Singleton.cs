@@ -10,7 +10,7 @@ where T : MonoBehaviour
 {
     [Header("Singleton Properties")]
     [Tooltip("Wether to destroy the instance when loading a new scene")]
-    [SerializeField] protected bool dontDestroyOnLoad = true;
+    [SerializeField] protected bool dontDestroyOnLoad = false;
 
     // Static reference to the single instance of this class.
     static T _instance;

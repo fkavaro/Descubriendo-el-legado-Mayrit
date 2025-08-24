@@ -286,6 +286,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4532c210d7d8f854fa2f13a2a7a04f7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 0
   _isDynamic: 0
   _wantedTime: 10
   _currentTime: 7

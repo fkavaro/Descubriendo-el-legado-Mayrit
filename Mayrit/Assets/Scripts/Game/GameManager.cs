@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : Singleton<GameManager>, IBehaviourControllable
 {
     #region PUBLIC PROPERTIES
     ABehaviourController<GameManager> _behaviourController;
@@ -14,6 +14,25 @@ public class GameManager : Singleton<GameManager>
     public Pause_GameState _pauseState;
 
     public GameInputActions _inputActions;
+
+    [Header("Behaviour Controller Properties")]
+    [Tooltip("Whether to show debug messages in the console or not")]
+    public bool _debugMode = false;
+    [Tooltip("Whether to update next frame or not")]
+    public bool _isExecutionPaused = false;
+
+    public bool DebugMode
+    {
+        get => _debugMode;
+        set => _debugMode = value;
+    }
+    public bool IsExecutionPaused
+    {
+        get => _isExecutionPaused;
+        set => _isExecutionPaused = value;
+    }
+
+    [Header("Player")]
     public PlayableCharacter _currentPlayableCharacter;
     #endregion
 
@@ -29,7 +48,7 @@ public class GameManager : Singleton<GameManager>
 
         _inputActions = new();
 
-        _behaviourController = new(name);
+        _behaviourController = new(this, name);
 
         _fsm = new(_behaviourController);
 

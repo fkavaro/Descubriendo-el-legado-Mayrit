@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class ProgressManager : Singleton<ProgressManager>
+public class ProgressManager : Singleton<ProgressManager>, IBehaviourControllable
 {
     public enum Milestone
     {
@@ -19,6 +19,23 @@ public class ProgressManager : Singleton<ProgressManager>
     ABehaviourController<ProgressManager> _behaviourController;
     public event Action<Milestone> OnMilestoneChanged;
     public event Action<float> OnTimeSet;
+
+    [Header("Behaviour Controller Properties")]
+    [Tooltip("Whether to show debug messages in the console or not")]
+    public bool _debugMode = false;
+    [Tooltip("Whether to update next frame or not")]
+    public bool _isExecutionPaused = false;
+
+    public bool DebugMode
+    {
+        get => _debugMode;
+        set => _debugMode = value;
+    }
+    public bool IsExecutionPaused
+    {
+        get => _isExecutionPaused;
+        set => _isExecutionPaused = value;
+    }
 
     [Header("Milestone properties")]
     public Milestone _currentMilestone;
@@ -55,7 +72,7 @@ public class ProgressManager : Singleton<ProgressManager>
         // Singleton
         base.Awake();
 
-        _behaviourController = new(name);
+        _behaviourController = new(this, name);
 
         _fsm = new(_behaviourController);
 

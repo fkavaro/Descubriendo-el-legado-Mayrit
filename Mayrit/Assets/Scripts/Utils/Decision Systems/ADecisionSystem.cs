@@ -4,12 +4,14 @@ public abstract class ADecisionSystem<TController>
 where TController : MonoBehaviour
 {
     public readonly ABehaviourController<TController> _controller;
+    public readonly IBehaviourControllable _controllable;
 
 
     public ADecisionSystem(ABehaviourController<TController> controller)
     {
         _controller = controller;
         _controller._decisionSystem = this;
+        _controllable = controller._controllable;
     }
 
     protected abstract void DebugDecision();

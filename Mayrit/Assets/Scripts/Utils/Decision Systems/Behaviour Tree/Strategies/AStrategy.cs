@@ -7,10 +7,12 @@ public abstract class AStrategy<TController>
 where TController : MonoBehaviour
 {
     protected readonly ANPC<TController> _controller;
+    protected readonly IBehaviourControllable _controllable;
 
     public AStrategy(ANPC<TController> controller)
     {
         _controller = controller;
+        _controllable = controller._controllable;
     }
 
     public abstract Node<TController>.Status Update();

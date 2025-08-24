@@ -34,7 +34,7 @@ where TStateMachineType : AStateMachine<TController, TStateMachineType>
     /// </summary>
     protected override void DebugDecision()
     {
-        if (_controller._debugMode)
+        if (_controllable.DebugMode)
             Debug.Log("[" + _controller._name + "]" + " is " + _currentState.Name);
     }
     #endregion
@@ -121,13 +121,13 @@ where TStateMachineType : AStateMachine<TController, TStateMachineType>
 
     public override void Update()
     {
-        if (!_controller._isExecutionPaused)
+        if (!_controllable.IsExecutionPaused)
             _currentState?.OnUpdateState();
     }
 
     public override void LateUpdate()
     {
-        if (!_controller._isExecutionPaused)
+        if (!_controllable.IsExecutionPaused)
             _currentState?.OnLateUpdateState();
     }
 

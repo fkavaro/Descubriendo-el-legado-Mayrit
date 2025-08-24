@@ -2,10 +2,27 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 
-public class UIManager : Singleton<UIManager>
+public class UIManager : Singleton<UIManager>, IBehaviourControllable
 {
     #region PUBLIC PROPERTIES
     ABehaviourController<UIManager> _behaviourController;
+
+    [Header("Behaviour Controller Properties")]
+    [Tooltip("Whether to show debug messages in the console or not")]
+    public bool _debugMode = false;
+    [Tooltip("Whether to update next frame or not")]
+    public bool _isExecutionPaused = false;
+
+    public bool DebugMode
+    {
+        get => _debugMode;
+        set => _debugMode = value;
+    }
+    public bool IsExecutionPaused
+    {
+        get => _isExecutionPaused;
+        set => _isExecutionPaused = value;
+    }
 
     [Header("User Interface Document")]
     public UIDocument _UIDocument;
@@ -32,7 +49,7 @@ public class UIManager : Singleton<UIManager>
 
         _UIDocument = GetComponent<UIDocument>();
 
-        _behaviourController = new(name);
+        _behaviourController = new(this, name);
 
         _fsm = new(_behaviourController);
 

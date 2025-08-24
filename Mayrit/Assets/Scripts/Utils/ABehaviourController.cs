@@ -8,18 +8,21 @@ using TMPro;
 public class ABehaviourController<TController>
 where TController : MonoBehaviour
 {
-    [Header("Behaviour Controller Properties")]
-    [Tooltip("Whether to show debug messages in the console or not")]
-    public bool _debugMode = false;
-    [Tooltip("Whether to update next frame or not")]
-    public bool _isExecutionPaused = false;
+    // [Header("Behaviour Controller Properties")]
+    // [Tooltip("Whether to show debug messages in the console or not")]
+    // public bool _debugMode = false;
+    // [Tooltip("Whether to update next frame or not")]
+    // public bool _isExecutionPaused = false;
 
-    public ADecisionSystem<TController> _decisionSystem;
+    public readonly IBehaviourControllable _controllable;
     public readonly string _name;
 
+    public ADecisionSystem<TController> _decisionSystem;
+
     // Construtor
-    public ABehaviourController(string name)
+    public ABehaviourController(IBehaviourControllable controllable, string name)
     {
+        _controllable = controllable;
         _name = name;
     }
 

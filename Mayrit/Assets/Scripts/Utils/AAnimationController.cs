@@ -22,8 +22,8 @@ where TController : MonoBehaviour
         ;
     #endregion
     // Constructor
-    public AAnimationController(string name, Animator animator)
-    : base(name)
+    public AAnimationController(IBehaviourControllable controllable, string name, Animator animator)
+    : base(controllable, name)
     {
         _animator = animator;
     }
@@ -97,14 +97,14 @@ where TController : MonoBehaviour
 
     public IEnumerator PlayAnimationCertainTimeCoroutine(float waitTime, int animation, string animationName, Action onComplete = null, bool showtext = true)
     {
-        if (_isExecutionPaused) yield break;
-        _isExecutionPaused = true;
+        if (_controllable.IsExecutionPaused) yield break;
+        _controllable.IsExecutionPaused = true;
 
         if (showtext && waitTime >= 2f)
             ChangeAnimationTo(animation);
         yield return new WaitForSeconds(waitTime);
 
-        _isExecutionPaused = false;
+        _controllable.IsExecutionPaused = false;
         onComplete?.Invoke();
     }
     #endregion

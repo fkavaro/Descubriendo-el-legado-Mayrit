@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class TimeManager : MonoBehaviour
+public class TimeManager : Singleton<TimeManager>
 {
     #region PUBLIC PROPERTIES
     [Header("Time Settings")]
@@ -49,8 +49,11 @@ public class TimeManager : MonoBehaviour
 
     #region INHERITED METHODS
     // Awake is called when the script instance is being loaded
-    void Awake()
+    protected override void Awake()
     {
+        // Singleton
+        base.Awake();
+
         // Subscribe to ProgressManager event to set the wanted time when the game starts
         ProgressManager.Instance.OnTimeSet += (time) => { _wantedTime = time; };
     }

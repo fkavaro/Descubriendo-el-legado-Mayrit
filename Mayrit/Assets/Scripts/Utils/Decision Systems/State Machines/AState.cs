@@ -11,6 +11,7 @@ public abstract class AState<TController, TStateMachine>
     public string Name => _stateName;
     protected string _stateName;
     protected ABehaviourController<TController> _controller;
+    protected readonly IBehaviourControllable _controllable;
     protected TStateMachine _stateMachine;
     protected float _stateTime = 0f;
     protected readonly AState<TController, TStateMachine> _nextState;
@@ -23,6 +24,7 @@ public abstract class AState<TController, TStateMachine>
         _stateMachine = stateMachine;
         _stateMachine.AddStateToSequence(this);
         _controller = stateMachine._controller;
+        _controllable = stateMachine._controllable;
     }
 
     /// <summary>
@@ -84,11 +86,11 @@ public abstract class AState<TController, TStateMachine>
     /// </summary>
     public virtual IEnumerator SwitchStateAfterCertainTime(AState<TController, TStateMachine> nextState, float waitTime)
     {
-        _controller._isExecutionPaused = true;
+        _controllable.IsExecutionPaused = true;
 
         yield return new WaitForSeconds(waitTime);
 
         _stateMachine?.SwitchState(nextState);
-        _controller._isExecutionPaused = false;
+        _controllable.IsExecutionPaused = false;
     }
 }

@@ -63,7 +63,7 @@ where TController : MonoBehaviour
         // Empty stack
         if (_stateStack.Count == 0)
         {
-            if (_controller._debugMode)
+            if (_controllable.DebugMode)
                 Debug.Log("[" + _controller._name + "] state stack is empty");
 
             return null;
@@ -73,7 +73,7 @@ where TController : MonoBehaviour
             // Get the last state from the stack without removing it
             var previousState = _stateStack.Peek();
 
-            if (_controller._debugMode)
+            if (_controllable.DebugMode)
                 Debug.Log("[" + _controller._name + "] Previous state: " + previousState.Name);
 
             return previousState;
@@ -89,7 +89,7 @@ where TController : MonoBehaviour
         // Empty stack
         if (_stateStack.Count == 0)
         {
-            if (_controller._debugMode)
+            if (_controllable.DebugMode)
                 Debug.Log("[" + _controller._name + "] state stack is empty");
 
             return false;
