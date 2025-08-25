@@ -3,24 +3,34 @@ using UnityEngine;
 
 public class ModernSuperposition : Singleton<ModernSuperposition>
 {
-    bool _isActive = false;
+    [Header("Settings")]
+    public bool _isActive = false;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    bool IsActive
     {
-        SetChildrenActive(false);
+        get { return _isActive; }
+        set
+        {
+            _isActive = value;
+            SetChildrenActive(_isActive);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
-
+        IsActive = false;
+        CameraManager.Instance.OnCameraStateChanged += CheckCameraState;
     }
 
     public void ToggleMode()
     {
-        _isActive = !_isActive;
-        SetChildrenActive(_isActive);
+        IsActive = !IsActive;
+    }
+
+    void CheckCameraState()
+    {
+        if (CameraManager.Instance._thirdPersonState.IsCurrentState())
+            IsActive = false;
     }
 
     void SetChildrenActive(bool isActive)

@@ -56,6 +56,7 @@ public class CameraManager : ASingletonBehaviourControllable<CameraManager>
     #endregion
 
     #region PROPERTIES
+    public event Action OnCameraStateChanged;
     public FiniteStateMachine _fsm;
     public Spectator_CameraState _spectatorState;
     public ThirdPerson_CameraState _thirdPersonState;
@@ -143,6 +144,8 @@ public class CameraManager : ASingletonBehaviourControllable<CameraManager>
 
             _fsm.SwitchState(_spectatorState);
         }
+
+        OnCameraStateChanged?.Invoke();
     }
 
     public void SwitchToOrbitalCamera(Transform objectToOrbitAround, AInformationSO information)
@@ -161,6 +164,8 @@ public class CameraManager : ASingletonBehaviourControllable<CameraManager>
             _spectatorCamera.GetComponent<CinemachineOrbitalFollow>().VerticalAxis.Value;
 
         _fsm.SwitchState(_orbitalState);
+
+        OnCameraStateChanged?.Invoke();
     }
 
     public void SwitchToThirdPersonCamera()
@@ -172,6 +177,8 @@ public class CameraManager : ASingletonBehaviourControllable<CameraManager>
         _thirdPersonCamera.LookAt.position = playerTranform.position;
 
         _fsm.SwitchState(_thirdPersonState);
+
+        OnCameraStateChanged?.Invoke();
     }
 
     /// <summary>
