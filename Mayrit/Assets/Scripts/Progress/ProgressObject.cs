@@ -11,17 +11,9 @@ public class ProgressObject : MonoBehaviour
         ProgressManager.Instance.OnMilestoneChanged += OnMilestoneChanged;
     }
 
-    void Start()
-    {
-
-    }
-
     void OnMilestoneChanged(ProgressManager.Milestone entry)
     {
-        if (milestonesActivated.Contains(entry))
-            SetChildrenActive(true);
-        else
-            SetChildrenActive(false);
+        SetChildrenActive(milestonesActivated.Contains(entry));
     }
 
     void SetChildrenActive(bool isActive)

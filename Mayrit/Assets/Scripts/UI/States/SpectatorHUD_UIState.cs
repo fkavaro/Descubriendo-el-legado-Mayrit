@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.InputSystem;
@@ -5,6 +6,7 @@ using UnityEngine.InputSystem;
 public class SpectatorHUD_UIState : AUIState
 {
     #region PUBLIC PROPERTIES
+    public event Action OnModernSuperpositionToggled;
     public ContextualPanel _contextualPanel;
     #endregion
 
@@ -73,7 +75,7 @@ public class SpectatorHUD_UIState : AUIState
         _milestoneInfoButton.RegisterCallback<ClickEvent>(ShowMilestoneInfo);
         _nextMilestoneButton.RegisterCallback<ClickEvent>(SwitchToNextMilestone);
         _previousMilestoneButton.RegisterCallback<ClickEvent>(SwitchToPreviousMilestone);
-        _modernSuperpositionButton.RegisterCallback<ClickEvent>(evt => ModernSuperposition.Instance.ToggleMode());
+        _modernSuperpositionButton.RegisterCallback<ClickEvent>(evt => OnModernSuperpositionToggled?.Invoke());
     }
 
     public override void StartState()
