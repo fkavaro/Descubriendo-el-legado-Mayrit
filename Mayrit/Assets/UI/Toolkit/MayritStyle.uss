@@ -118,10 +118,6 @@
 
 .button.mediumButton {
     width: 220px;
-    border-top-width: 5px;
-    border-right-width: 5px;
-    border-bottom-width: 5px;
-    border-left-width: 5px;
     height: 80px;
     font-size: 30px;
     position: absolute;

@@ -16,7 +16,8 @@ public class SpectatorHUD_UIState : AUIState
         _heritageButton,
         _milestoneInfoButton,
         _nextMilestoneButton,
-        _previousMilestoneButton;
+        _previousMilestoneButton,
+        _modernSuperpositionButton;
     VisualElement _milestoneArea,
         _contextualPanelRoot;
     Vector2 _cursorScreenPos;
@@ -41,6 +42,7 @@ public class SpectatorHUD_UIState : AUIState
         _milestoneDate = _milestoneArea.Q<Label>("Date");
         _nextMilestoneButton = _milestoneArea.Q<Button>("NextMilestoneButton");
         _previousMilestoneButton = _milestoneArea.Q<Button>("PreviousMilestoneButton");
+        _modernSuperpositionButton = _screen.Q<Button>("ModernSuperpositionButton");
 
         if (_pauseButton == null)
             Debug.LogWarning("_pauseButton not found");
@@ -60,6 +62,8 @@ public class SpectatorHUD_UIState : AUIState
             Debug.LogWarning("_nextMilestoneButton button not found");
         if (_previousMilestoneButton == null)
             Debug.LogWarning("_previousMilestoneButton button not found");
+        if (_modernSuperpositionButton == null)
+            Debug.LogWarning("_modernSuperpositionButton button not found");
 
         _contextualPanel = new(_contextualPanelRoot);
 
@@ -69,6 +73,7 @@ public class SpectatorHUD_UIState : AUIState
         _milestoneInfoButton.RegisterCallback<ClickEvent>(ShowMilestoneInfo);
         _nextMilestoneButton.RegisterCallback<ClickEvent>(SwitchToNextMilestone);
         _previousMilestoneButton.RegisterCallback<ClickEvent>(SwitchToPreviousMilestone);
+        _modernSuperpositionButton.RegisterCallback<ClickEvent>(evt => ModernSuperposition.Instance.ToggleMode());
     }
 
     public override void StartState()
