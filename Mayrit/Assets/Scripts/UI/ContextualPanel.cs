@@ -83,9 +83,7 @@ public class ContextualPanel
 
         // If the information type is Character, show the play button
         if (objectInfo is Character_InformationSO)
-        {
             _playCharacterButton.style.display = DisplayStyle.Flex;
-        }
 
         // Show panel
         _root.style.display = DisplayStyle.Flex;

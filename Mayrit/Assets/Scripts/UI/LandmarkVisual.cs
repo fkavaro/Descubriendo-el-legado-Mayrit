@@ -6,7 +6,9 @@ public class LandmarkVisual : MonoBehaviour
 {
     UIDocument _uiDocument;
     Label _nameLabel;
-    [SerializeField] string _cachedName;
+    Button _nameButton;
+
+    public AInformationSO _information;
 
     void OnEnable()
     {
@@ -22,14 +24,23 @@ public class LandmarkVisual : MonoBehaviour
             return;
         }
 
-        // No cached name: use the game object's parent name
-        if (string.IsNullOrEmpty(_cachedName))
+        _nameLabel.text = _information.Header;
+
+        // Try to find a Button with name 'NameButton' in the document
+        _nameButton = root.Q<Button>(name: "NameButton");
+        if (_nameButton == null)
         {
-            _cachedName = gameObject.transform.parent != null ?
-                                gameObject.transform.parent.name :
-                                "Unnamed";
+            Debug.LogWarning("LandmarkVisual: No Button with name 'NameButton' was found in the UIDocument.");
+            return;
         }
 
-        _nameLabel.text = _cachedName;
+        // Register click event
+        _nameButton.RegisterCallback<ClickEvent>(OnNameButtonClick);
+    }
+
+    void OnNameButtonClick(ClickEvent evt)
+    {
+        // Open contextual panel with landmark information
+        UIManager.Instance._spectatorHUDState.ShowContextualPanel(_information);
     }
 }
