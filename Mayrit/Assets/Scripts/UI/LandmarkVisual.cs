@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [RequireComponent(typeof(UIDocument))]
-public class NameVisual : MonoBehaviour
+public class LandmarkVisual : MonoBehaviour
 {
     UIDocument _uiDocument;
     Label _nameLabel;

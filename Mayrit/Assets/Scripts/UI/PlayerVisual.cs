@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [RequireComponent(typeof(UIDocument))]
-public class PlayerButtonUIToolkit : Billboard
+public class PlayerVisual : Billboard
 {
     UIDocument _uiDocument;
     Button _playerButton;

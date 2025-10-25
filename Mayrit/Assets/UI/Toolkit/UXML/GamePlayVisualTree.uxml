@@ -1,8 +1,8 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/Toolkit/USS/MayritStyle.uss?fileID=7433441132597879392&amp;guid=7a6c8e791557401438e2762dac509247&amp;type=3#MayritStyle" />
-    <ui:VisualElement name="GamePlayScreen" style="flex-grow: 1;">
-        <ui:VisualElement name="HUD" style="margin-top: 30px; margin-right: 30px; margin-bottom: 30px; margin-left: 30px; flex-grow: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
-            <ui:VisualElement name="SpectatorHUD" enabled="true" style="height: auto; width: auto; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row; display: none; flex-grow: 1; position: absolute; top: 0; left: 0; bottom: 0; right: 0;">
+    <ui:VisualElement name="GamePlayScreen" picking-mode="Ignore" style="flex-grow: 1;">
+        <ui:VisualElement name="HUD" picking-mode="Ignore" style="margin-top: 30px; margin-right: 30px; margin-bottom: 30px; margin-left: 30px; flex-grow: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
+            <ui:VisualElement name="SpectatorHUD" enabled="true" picking-mode="Ignore" style="height: auto; width: auto; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row; display: flex; flex-grow: 1; position: absolute; top: 0; left: 0; bottom: 0; right: 0;">
                 <ui:VisualElement style="flex-direction: row; position: absolute; left: 0; top: 0;">
                     <ui:Button text="| |" name="PauseButton" class="button smallButton" style="align-self: flex-start; top: 0; left: 0; position: relative;" />
                     <ui:Button text="?" name="HeritageButton" class="button smallButton" style="align-self: flex-start; display: flex; position: relative;" />
