@@ -1,8 +1,8 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI/Toolkit/MayritStyle.uss?fileID=7433441132597879392&amp;guid=7a6c8e791557401438e2762dac509247&amp;type=3#MayritStyle" />
+    <Style src="project://database/Assets/UI/Toolkit/USS/MayritStyle.uss?fileID=7433441132597879392&amp;guid=7a6c8e791557401438e2762dac509247&amp;type=3#MayritStyle" />
     <ui:VisualElement name="GamePlayScreen" style="flex-grow: 1;">
-        <ui:VisualElement name="HUD" style="margin-top: 30px; margin-right: 30px; margin-bottom: 30px; margin-left: 30px; position: absolute; top: 0; left: 0; bottom: 0; right: 0;">
-            <ui:VisualElement name="SpectatorHUD" style="height: auto; width: auto; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; left: 0; bottom: 0; right: 0; top: 0; position: absolute; flex-direction: row; display: none;">
+        <ui:VisualElement name="HUD" style="margin-top: 30px; margin-right: 30px; margin-bottom: 30px; margin-left: 30px; flex-grow: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
+            <ui:VisualElement name="SpectatorHUD" enabled="true" style="height: auto; width: auto; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row; display: none; flex-grow: 1; position: absolute; top: 0; left: 0; bottom: 0; right: 0;">
                 <ui:VisualElement style="flex-direction: row; position: absolute; left: 0; top: 0;">
                     <ui:Button text="| |" name="PauseButton" class="button smallButton" style="align-self: flex-start; top: 0; left: 0; position: relative;" />
                     <ui:Button text="?" name="HeritageButton" class="button smallButton" style="align-self: flex-start; display: flex; position: relative;" />
@@ -42,7 +42,7 @@
                 </ui:VisualElement>
                 <ui:Label text="Tooltip" name="Tooltip" class="tooltip" style="top: 1108px; left: 17px; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; background-color: rgb(41, 48, 57);" />
             </ui:VisualElement>
-            <ui:VisualElement name="PlayerHUD" style="justify-content: space-between; align-self: stretch; display: none; flex-grow: 1; flex-direction: row;">
+            <ui:VisualElement name="PlayerHUD" style="justify-content: space-between; align-self: stretch; flex-grow: 1; flex-direction: row; display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
                 <ui:Button text="| |" name="PauseButton" class="button smallButton" style="align-self: flex-start; top: 0; left: 0;" />
                 <ui:VisualElement name="ActivityArea" style="padding-right: 15px; padding-top: 10px; padding-bottom: 15px; padding-left: 15px; flex-shrink: 0; top: 0; right: 0; position: absolute;">
                     <ui:Label text="Actividad" name="Name" class="header" style="align-self: flex-end; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
@@ -50,7 +50,7 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="PauseMenu" enabled="true" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; flex-direction: row; justify-content: space-between; margin-top: 30px; margin-right: 30px; margin-bottom: 30px; margin-left: 30px; display: none;">
+        <ui:VisualElement name="PauseMenu" enabled="true" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; flex-direction: row; justify-content: space-between; margin-top: 30px; margin-right: 30px; margin-bottom: 30px; margin-left: 30px; display: none; flex-grow: 1;">
             <ui:Button text="&gt;" name="PlayButton" class="button smallButton" style="align-self: flex-start; top: 0; left: 0; background-image: url(&quot;project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1087164816274819069&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-right@2x&quot;); position: relative;" />
             <ui:VisualElement style="flex-direction: row;">
                 <ui:Button text="Ajustes" name="SettingsButton" enabled="false" class="button mediumButton" style="align-self: flex-start; position: relative;" />
@@ -58,7 +58,7 @@
                 <ui:Button text="Salir" name="QuitButton" class="button mediumButton" style="align-self: flex-start; position: relative;" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="HeritageMenu" enabled="true" style="display: none; background-color: rgb(39, 39, 39); position: absolute; top: 0; left: 0; bottom: 0; right: 0;">
+        <ui:VisualElement name="HeritageMenu" enabled="true" style="display: none; background-color: rgb(39, 39, 39); position: absolute; top: 0; left: 0; bottom: 0; right: 0; flex-grow: 0;">
             <ui:VisualElement name="Margin" style="flex-grow: 1; margin-top: 30px; margin-right: 30px; margin-bottom: 30px; margin-left: 30px;">
                 <ui:VisualElement name="UpperArea" style="flex-direction: row; justify-content: space-between;">
                     <ui:Button text="&gt;" name="PlayButton" class="button smallButton" style="align-self: flex-start; top: 0; left: 0; background-image: url(&quot;project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1087164816274819069&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-right@2x&quot;); position: relative;" />
