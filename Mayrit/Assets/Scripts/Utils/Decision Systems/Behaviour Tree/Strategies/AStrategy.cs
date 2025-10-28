@@ -12,7 +12,7 @@ public abstract class AStrategy
     public AStrategy(ANPC npc)
     {
         _npc = npc;
-        _controllable = npc._controllable;
+        _controllable = npc;
     }
 
     public abstract Node.Status Update();

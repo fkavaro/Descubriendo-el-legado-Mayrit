@@ -48,9 +48,9 @@ public abstract class ANPCState<TStateMachine> : AState<TStateMachine>
     protected void SwitchStateAfterAnimation(AState<TStateMachine> nextState, int animation = -1)
     {
         if (animation != -1)
-            _npc.ChangeAnimationTo(animation);
+            _npc._animationController.ChangeAnimationTo(animation);
 
-        if (_npc.IsCurrentAnimationFinished())
+        if (_npc._animationController.IsCurrentAnimationFinished())
             SwitchState(nextState);
     }
 }

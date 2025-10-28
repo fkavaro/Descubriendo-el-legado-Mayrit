@@ -36,7 +36,7 @@ public class PlayableCharacter : ABehaviourControllable
         // ABehaviourControllable
         base.Awake();
 
-        _animationController = new(this, _animator);
+        _animationController = new(BehaviourController, _animator);
         _playerController = new(this, GetComponent<CharacterController>());
 
         _fsm = new(this);
