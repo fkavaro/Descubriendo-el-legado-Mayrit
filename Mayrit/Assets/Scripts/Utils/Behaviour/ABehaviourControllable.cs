@@ -10,10 +10,13 @@ public abstract class ABehaviourControllable : MonoBehaviour, IBehaviourControll
     BehaviourController _behaviourController;
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region METHODS
+    public abstract ADecisionSystem CreateDecisionSystem();
+
     protected virtual void Awake()
     {
         _behaviourController = GetComponent<BehaviourController>();
+        _behaviourController._decisionSystem = CreateDecisionSystem();
     }
     #endregion
 

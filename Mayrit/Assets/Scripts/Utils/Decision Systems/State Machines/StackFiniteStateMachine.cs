@@ -72,7 +72,7 @@ public class StackFiniteStateMachine : AStateMachine<StackFiniteStateMachine>
             // Get the last state from the stack without removing it
             var previousState = _stateStack.Peek();
 
-            if (DebugMode) Debug.Log("[" + _controllable.Name + "] Previous state: " + previousState.Name);
+            if (DebugMode) Debug.Log("[" + _controllable.Name + "] Previous state: " + previousState.StateName);
 
             return previousState;
         }

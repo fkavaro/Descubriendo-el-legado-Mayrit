@@ -63,16 +63,9 @@ public class CameraManager : ASingletonBehaviourControllable<CameraManager>
     public Orbital_CameraState _orbitalState;
     #endregion
 
-    #region MONOBEHAVIOUR
-    protected override void Awake()
+    public override ADecisionSystem CreateDecisionSystem()
     {
-        // ASingletonBehaviourControllable
-        base.Awake();
-
-        // Set camera target at min height
-        CinemachineOrbitalFollow _orbitalFollow = _spectatorCamera.GetComponent<CinemachineOrbitalFollow>();
-        _orbitalFollow.Radius = _movementLimitsY.y;
-
+        // FINITE STATE MACHINE
         _fsm = new(this);
 
         _spectatorState = new(_fsm,
@@ -85,6 +78,19 @@ public class CameraManager : ASingletonBehaviourControllable<CameraManager>
             _thirdPersonCamera);
 
         _fsm.SetInitialState(_spectatorState);
+
+        return _fsm;
+    }
+
+    #region MONOBEHAVIOUR
+    protected override void Awake()
+    {
+        // ASingletonBehaviourControllable
+        base.Awake();
+
+        // Set camera target at min height
+        CinemachineOrbitalFollow _orbitalFollow = _spectatorCamera.GetComponent<CinemachineOrbitalFollow>();
+        _orbitalFollow.Radius = _movementLimitsY.y;
     }
 
     void Start()

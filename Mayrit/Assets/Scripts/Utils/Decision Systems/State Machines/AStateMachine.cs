@@ -33,7 +33,7 @@ where TStateMachineType : AStateMachine<TStateMachineType>
     protected override void DebugDecision()
     {
         if (DebugMode)
-            Debug.Log("[" + _controllable.Name + "]" + " is " + _currentState.Name);
+            Debug.Log("[" + _controllable.Name + "]" + " is " + _currentState.StateName);
     }
     #endregion
 

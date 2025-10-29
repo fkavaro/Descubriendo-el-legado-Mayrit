@@ -47,12 +47,9 @@ public class ProgressManager : ASingletonBehaviourControllable<ProgressManager>
     public Conquest_AProgressState _conquestState;
     #endregion
 
-    #region MONOBEHAVIOUR
-    protected override void Awake()
+    public override ADecisionSystem CreateDecisionSystem()
     {
-        // Singleton
-        base.Awake();
-
+        // FINITE STATE MACHINE
         _fsm = new(this);
 
         // States initialization
@@ -66,6 +63,15 @@ public class ProgressManager : ASingletonBehaviourControllable<ProgressManager>
         _conquestState = new(Milestone._8_Conquest, _conquestInformation, _fsm);
 
         //_fsm.SetInitialState(_visionState);
+
+        return _fsm;
+    }
+
+    #region MONOBEHAVIOUR
+    protected override void Awake()
+    {
+        // Singleton
+        base.Awake();
     }
 
     void Start()

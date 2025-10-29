@@ -11,10 +11,13 @@ where T : MonoBehaviour
     BehaviourController _behaviourController;
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region METHODS
+    public abstract ADecisionSystem CreateDecisionSystem();
+
     protected override void Awake()
     {
         _behaviourController = GetComponent<BehaviourController>();
+        _behaviourController._decisionSystem = CreateDecisionSystem();
     }
     #endregion
 }

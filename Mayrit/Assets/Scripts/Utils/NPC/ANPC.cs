@@ -6,7 +6,7 @@ using UnityEngine.AI;
 /// Abstract base class for NPC (Non-Player Character).
 /// </summary>
 [RequireComponent(typeof(NavMeshAgent))]
-public class ANPC : ABehaviourControllable
+public abstract class ANPC : ABehaviourControllable
 {
     #region EDITOR PROPERTIES
     [Header("Movement settings")]

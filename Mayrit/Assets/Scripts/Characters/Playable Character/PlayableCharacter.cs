@@ -30,6 +30,16 @@ public class PlayableCharacter : ABehaviourControllable
     public FreeRoam_PlayableCharacterState _freeRoamState;
     #endregion
 
+    public override ADecisionSystem CreateDecisionSystem()
+    {
+        // FINITE STATE MACHINE
+        _fsm = new(this);
+        _freeRoamState = new(_fsm, this);
+        _fsm.SetInitialState(_freeRoamState);
+
+        return _fsm;
+    }
+
     #region MONOBEHAVIOUR
     protected override void Awake()
     {
@@ -38,26 +48,6 @@ public class PlayableCharacter : ABehaviourControllable
 
         _animationController = new(BehaviourController, _animator);
         _playerController = new(this, GetComponent<CharacterController>());
-
-        _fsm = new(this);
-        _freeRoamState = new(_fsm, this);
-        _fsm.SetInitialState(_freeRoamState);
     }
-
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-
-    }
-    #endregion
-
-    #region PUBLIC METHODS
-    #endregion
-
-    #region PRIVATE METHODS
     #endregion
 }

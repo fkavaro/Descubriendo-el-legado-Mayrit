@@ -21,14 +21,9 @@ public class GameManager : ASingletonBehaviourControllable<GameManager>
     public GameInputActions _inputActions;
     #endregion
 
-    #region MONOBEHAVIOUR
-    protected override void Awake()
+    public override ADecisionSystem CreateDecisionSystem()
     {
-        // Singleton
-        base.Awake();
-
-        _inputActions = new();
-
+        // FINITE STATE MACHINE
         _fsm = new(this);
 
         _mainMenuState = new(_fsm);
@@ -41,6 +36,17 @@ public class GameManager : ASingletonBehaviourControllable<GameManager>
             _fsm.SetInitialState(_gamePlayState);
         else
             _fsm.SetInitialState(_mainMenuState);
+
+        return _fsm;
+    }
+
+    #region MONOBEHAVIOUR
+    protected override void Awake()
+    {
+        // Singleton
+        base.Awake();
+
+        _inputActions = new();
     }
 
     void Start()

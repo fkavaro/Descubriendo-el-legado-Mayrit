@@ -5,11 +5,20 @@ using UnityEngine;
 /// </summary>
 public class BehaviourController : MonoBehaviour
 {
+    public enum DecisionSystemType
+    {
+        StateMachine,
+        StackStateMachine,
+        BehaviourTree,
+        UtilitySystem,
+    }
+
     [Header("Behaviour Controller Properties")]
     [Tooltip("Whether to show debug messages in the console or not")]
     public bool _debugMode = false;
     [Tooltip("Whether to update next frame or not")]
     public bool _isExecutionPaused = false;
+    public DecisionSystemType _decisionSystemType;
 
     public ADecisionSystem _decisionSystem;
 
@@ -26,6 +35,16 @@ public class BehaviourController : MonoBehaviour
     {
         OnAwake();
         _decisionSystem.Awake();
+
+        // Identify the type of decision system
+        if (_decisionSystem is FiniteStateMachine)
+            _decisionSystemType = DecisionSystemType.StateMachine;
+        else if (_decisionSystem is StackFiniteStateMachine)
+            _decisionSystemType = DecisionSystemType.StackStateMachine;
+        else if (_decisionSystem is BehaviourTree)
+            _decisionSystemType = DecisionSystemType.BehaviourTree;
+        else if (_decisionSystem is UtilitySystem)
+            _decisionSystemType = DecisionSystemType.UtilitySystem;
     }
     protected virtual void OnAwake() { } // Optionally implemented in subclasses
 

@@ -7,9 +7,8 @@ using UnityEngine;
 public abstract class AState<TStateMachine>
     where TStateMachine : AStateMachine<TStateMachine>
 {
-    public string Name => _stateName;
+    public string StateName => _stateName;
     protected string _stateName;
-    protected readonly IBehaviourControllable _controllable;
     protected TStateMachine _stateMachine;
     protected float _stateTime = 0f;
     protected readonly AState<TStateMachine> _nextState;
@@ -21,7 +20,6 @@ public abstract class AState<TStateMachine>
         _stateName = name;
         _stateMachine = stateMachine;
         _stateMachine.AddStateToSequence(this);
-        _controllable = stateMachine._controllable;
     }
 
     /// <summary>

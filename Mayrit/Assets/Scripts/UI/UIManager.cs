@@ -27,14 +27,9 @@ public class UIManager : ASingletonBehaviourControllable<UIManager>
     public HeritageMenu_UIState _heritageState;
     #endregion
 
-    #region MONOBEHAVIOUR
-    protected override void Awake()
+    public override ADecisionSystem CreateDecisionSystem()
     {
-        // Singleton
-        base.Awake();
-
-        _UIDocument = GetComponent<UIDocument>();
-
+        // FINITE STATE MACHINE
         _fsm = new(this);
 
         _mainMenuState = new(_fsm);
@@ -49,6 +44,17 @@ public class UIManager : ASingletonBehaviourControllable<UIManager>
             _fsm.SetInitialState(_spectatorHUDState);
         else
             _fsm.SetInitialState(_mainMenuState);
+
+        return _fsm;
+    }
+
+    #region MONOBEHAVIOUR
+    protected override void Awake()
+    {
+        // Singleton
+        base.Awake();
+
+        _UIDocument = GetComponent<UIDocument>();
     }
 
     void Start()

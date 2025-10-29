@@ -21,7 +21,6 @@ public abstract class ADecisionSystem
     public ADecisionSystem(IBehaviourControllable controllable)
     {
         _controllable = controllable;
-        _controllable.BehaviourController._decisionSystem = this;
     }
 
     protected abstract void DebugDecision();
