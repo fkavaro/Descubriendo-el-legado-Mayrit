@@ -6,18 +6,23 @@ using UnityEngine;
 
 public class InfiniteLoopNode : Node
 {
+    #region CONSTRUCTORs
     private readonly Node _child;
+    #endregion
 
-    public InfiniteLoopNode(IBehaviourControllable controllable)
-    : base(controllable, "InfiniteLoop") { }
+    #region CONSTRUCTORS
+    public InfiniteLoopNode(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO)
+    : base(entity, entityGO, "InfiniteLoop") { }
 
-    public InfiniteLoopNode(IBehaviourControllable controllable, Node child)
-    : base(controllable, "InfiniteLoop")
+    public InfiniteLoopNode(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, Node child)
+    : base(entity, entityGO, "InfiniteLoop")
     {
         AddChild(child); // Use the AddChild method to set the child
-        _child = children[0]; // Store a direct reference for easier access
+        _child = _children[0]; // Store a direct reference for easier access
     }
+    #endregion
 
+    #region INHERITED METHODS
     public override Status UpdateNode()
     {
         if (_child == null)
@@ -29,4 +34,5 @@ public class InfiniteLoopNode : Node
 
         return Status.Running;
     }
+    #endregion
 }

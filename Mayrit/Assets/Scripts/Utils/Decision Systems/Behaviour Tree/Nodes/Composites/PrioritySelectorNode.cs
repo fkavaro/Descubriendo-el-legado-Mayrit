@@ -9,12 +9,17 @@ using UnityEngine;
 /// </summary>
 public class PrioritySelectorNode : SelectorNode
 {
+    #region PROPERTIES
     List<Node> sortedChildren;
     List<Node> SortedChildren => sortedChildren ??= SortChildren();
+    #endregion
 
-    public PrioritySelectorNode(IBehaviourControllable controllable, int priority = 0)
-    : base(controllable, priority) { }
+    #region CONSTRUCTOR
+    public PrioritySelectorNode(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, int priority = 0)
+    : base(entity, entityGO, priority) { }
+    #endregion
 
+    #region INHERITED METHODS
     public override Status UpdateNode()
     {
         foreach (var child in SortedChildren)
@@ -32,15 +37,17 @@ public class PrioritySelectorNode : SelectorNode
         return Status.Failure;
     }
 
-
     public override void Reset()
     {
         base.Reset();
         sortedChildren = null;
     }
+    #endregion
 
+    #region TO BE IMPLEMENTED METHODS
     protected virtual List<Node> SortChildren()
     {
-        return children.OrderByDescending(child => child.priority).ToList();
+        return _children.OrderByDescending(child => child._priority).ToList();
     }
+    #endregion
 }

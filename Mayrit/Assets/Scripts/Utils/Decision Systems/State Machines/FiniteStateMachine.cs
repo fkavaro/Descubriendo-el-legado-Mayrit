@@ -1,4 +1,6 @@
-
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -6,6 +8,10 @@ using UnityEngine;
 /// </summary>
 public class FiniteStateMachine : AStateMachine<FiniteStateMachine>
 {
+    #region CONSTRUCTOR
+    public FiniteStateMachine(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO)
+    : base(entity, entityGO) { }
+    #endregion
 
     #region INHERITED METHODS
     /// <summary>
@@ -18,7 +24,6 @@ public class FiniteStateMachine : AStateMachine<FiniteStateMachine>
         _currentState?.OnExitState();
         _currentState = state;
         DebugDecision();
-        _currentState?.AwakeState();
         _currentState?.StartState();
     }
     #endregion

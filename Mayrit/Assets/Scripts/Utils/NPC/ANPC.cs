@@ -3,10 +3,11 @@ using UnityEngine;
 using UnityEngine.AI;
 
 /// <summary>
-/// Abstract base class for NPC (Non-Player Character).
+/// Abstract base class for NPC (Non-Playable Character).
 /// </summary>
 [RequireComponent(typeof(NavMeshAgent))]
-public abstract class ANPC : ABehaviourControllable
+public abstract class ANPC<T> : ABehaviourEntity<T>
+where T : ABehaviourSystem
 {
     #region EDITOR PROPERTIES
     [Header("Movement settings")]
@@ -34,17 +35,18 @@ public abstract class ANPC : ABehaviourControllable
     public Animator _animator;
     #endregion
 
-
-    #region PROPERTIES
+    #region INTERNAL PROPERTIES
     [HideInInspector] public NavMeshAgent _agent;
     public AnimationController _animationController;
     Spot _destinationSpot = null;
     #endregion
 
-    #region INHERITED METHODS
-    void Awake()
+    #region MONOBEHAVIOUR
+    protected override void Awake()
     {
-        _animationController = new(_decisionSystem, _animator);
+        base.Awake();
+
+        _animationController = new(this, BehaviourSystem, _animator);
 
         _agent = GetComponent<NavMeshAgent>();
         _agent.speed = _walkSpeed;
@@ -53,10 +55,12 @@ public abstract class ANPC : ABehaviourControllable
         _agent.radius = _avoidanceRadius;
     }
 
-    public void Update()
+    protected override void Update()
     {
+        base.Update();
+
         // Stop moving if execution is paused
-        if (_decisionSystem._isExecutionPaused)
+        if (BehaviourSystem.IsExecutionPaused)
             _agent.isStopped = true;
         else
         {
@@ -246,22 +250,6 @@ public abstract class ANPC : ABehaviourControllable
         }
 
         _agent.isStopped = isStopped;
-    }
-
-    /// <summary>
-    /// Sets the NavMeshAgent's speed.
-    /// </summary>
-    public void SetAvoidanceRadius(float radius)
-    {
-        _agent.radius = radius;
-    }
-
-    /// <summary>
-    /// Resets the NavMeshAgent's avoidance radius to its default value.
-    /// </summary>
-    public void ResetAvoidanceRadius()
-    {
-        _agent.radius = _avoidanceRadius;
     }
 
     public bool IsPathPending()

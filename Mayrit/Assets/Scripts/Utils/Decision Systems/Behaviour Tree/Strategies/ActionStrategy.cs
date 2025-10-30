@@ -5,17 +5,23 @@ using UnityEngine;
 
 public class ActionStrategy : AStrategy
 {
+    #region PROPERTIES
     readonly Action _action;
+    #endregion
 
-    public ActionStrategy(ANPC controller, LeafNode leafNode, Action action)
-    : base(controller, leafNode)
+    #region CONSTRUCTOR
+    public ActionStrategy(ANPC<Node> npc, LeafNode leafNode, Action action)
+    : base(npc, leafNode)
     {
         _action = action;
     }
+    #endregion
 
+    #region INHERITED METHODS
     public override Node.Status Update()
     {
         _action();
         return Node.Status.Success;
     }
+    #endregion
 }

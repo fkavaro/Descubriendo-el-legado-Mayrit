@@ -5,40 +5,20 @@ using System.Linq;
 /// <summary>
 /// Utility System for decision making in agents.
 /// </summary>
-public class UtilitySystem : ADecisionSystem
+public class UtilitySystem : ABehaviourSystem
 {
-    /// <summary>
-    /// List of actions available for the agent.
-    /// </summary>
-    List<IAction> _actions = new();
+    #region PROPERTIES
+    readonly List<IAction> _actions = new();
     IAction _currentAction;
+    readonly Dictionary<IAction, float> _actionUtilities = new();
+    #endregion
 
-    /// <summary>
-    /// Dictionary to store the utility of each action.
-    /// </summary>
-    Dictionary<IAction, float> _actionUtilities = new();
+    #region CONSTRUCTOR
+    protected UtilitySystem(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO)
+    : base(entity, entityGO) { }
+    #endregion
 
     #region INHERITED METHODS
-    protected override void DebugDecision()
-    {
-
-    }
-
-    public void Start()
-    {
-        CalculateActionsUtilities();
-    }
-
-    public void Update()
-    {
-        if (!_isExecutionPaused)
-            _currentAction.UpdateAction();
-
-        // Check if it has finished
-        if (_currentAction.IsFinished())
-            CalculateActionsUtilities();
-    }
-
     /// <summary>
     /// Resets all actions and starts again.
     /// </summary>
@@ -52,6 +32,31 @@ public class UtilitySystem : ADecisionSystem
         Start();
     }
 
+    /// <summary>
+    /// Debugs the current action of the utility system.
+    /// </summary>
+    protected override void DebugDecision()
+    {
+        if (DebugMode)
+            _currentAction.DebugDecision();
+    }
+    #endregion
+
+    #region MONOBEHAVIOUR
+    public override void Start()
+    {
+        CalculateActionsUtilities();
+    }
+
+    public override void Update()
+    {
+        if (!IsExecutionPaused)
+            _currentAction.UpdateAction();
+
+        // Check if it has finished
+        if (_currentAction.IsFinished())
+            CalculateActionsUtilities();
+    }
     #endregion
 
     #region PUBLIC METHODS
@@ -77,12 +82,12 @@ public class UtilitySystem : ADecisionSystem
     /// </summary>
     void CalculateActionsUtilities()
     {
-        if (_debugMode) Debug.Log(_controllable.Name + " making decision...");
+        if (DebugMode) Debug.Log(_entityGO.name + " making decision...");
 
         // Calculate the utility of each available action
         foreach (var action in _actions)
         {
-            if (_debugMode) Debug.Log($"    {_controllable.Name}: {action.Name} has utility of {action.Utility}");
+            if (DebugMode) Debug.Log($"    {_entityGO.name}: {action.ActionName} has utility of {action.Utility}");
 
             _actionUtilities.Add(action, action.Utility);
         }
@@ -94,12 +99,12 @@ public class UtilitySystem : ADecisionSystem
         // If the best action has negative utility, continue with current action
         if (_actionUtilities[bestAction] < 0f || bestAction == null)
         {
-            if (_debugMode) Debug.LogError($"   {_controllable.Name}: best action is null or has negative utility, continuing with current action: {_currentAction.Name}");
+            if (DebugMode) Debug.LogError($"   {_entityGO.name}: best action is null or has negative utility, continuing with current action: {_currentAction.ActionName}");
 
             bestAction = _currentAction;
         }
 
-        // // Start the best action if it's different from the current one
+        // // Only start the best action if it's different from the current one
         // if (!IsCurrentAction(bestAction))
         // {
         //     _currentAction?.FinishAction();
@@ -111,7 +116,7 @@ public class UtilitySystem : ADecisionSystem
         _currentAction.StartAction();
 
         // Debug the decision made
-        if (_debugMode) Debug.Log($"{_controllable.Name} is {_currentAction.Name}");
+        if (DebugMode) Debug.Log($"{_entityGO.name} is {_currentAction.ActionName}");
 
         DebugDecision();
 

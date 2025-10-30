@@ -6,12 +6,15 @@ using UnityEngine;
 
 public class SuccederNode : Node
 {
-    public SuccederNode(IBehaviourControllable controllable, int priority = 0)
-    : base(controllable, "Successer", priority) { }
+    #region CONSTRUCTOR
+    public SuccederNode(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, int priority = 0)
+    : base(entity, entityGO, "Successer", priority) { }
+    #endregion
 
+    #region INHERITED METHODS
     public override Status UpdateNode()
     {
-        switch (children[0].UpdateNode())
+        switch (_children[0].UpdateNode())
         {
             case Status.Running:
                 return Status.Running;
@@ -19,4 +22,5 @@ public class SuccederNode : Node
                 return Status.Success;
         }
     }
+    #endregion
 }

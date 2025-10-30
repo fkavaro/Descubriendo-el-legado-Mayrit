@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// Base class for all nodes in the behaviour tree.
 /// </summary>
-public class Node : ADecisionSystem
+public class Node : ABehaviourSystem
 {
     public enum Status
     {
@@ -15,55 +15,67 @@ public class Node : ADecisionSystem
         Failure
     }
 
-    public readonly string nodeName;
-    public readonly int priority;
+    #region PROPERTIES
+    public readonly string _nodeName;
+    public readonly int _priority;
 
-    public readonly List<Node> children = new();
+    public readonly List<Node> _children = new();
     protected int _currentChildId;
-    public Status status;
+    public Status _status;
+    #endregion
 
-    public Node(IBehaviourControllable controllable, string nodeName = "Node", int priority = 0)
-    //: base(controllable)
+    #region CONSTRUCTOR
+    public Node(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, string nodeName = "Node", int priority = 0)
+    : base(entity, entityGO)
     {
-        this.nodeName = nodeName;
-        this.priority = priority;
+        _nodeName = nodeName;
+        _priority = priority;
     }
+    #endregion
 
-    #region INHERITED METHODS
-    protected override void DebugDecision()
-    {
-        if (_currentChildId < children.Count)
-            children[_currentChildId].DebugDecision();
-        //else
-        //controller.nodeText.text = "";
-    }
-
-    public void Update()
-    {
-        DebugDecision();
-        if (!_isExecutionPaused)
-            status = UpdateNode();
-    }
-
+    #region INHERITED METHODS  
+    /// <summary>
+    /// Resets all children nodes.
+    /// </summary>
     public override void Reset()
     {
         _currentChildId = 0;
-        foreach (var child in children)
+        foreach (var child in _children)
         {
             child.Reset();
         }
+    }
+
+    /// <summary>
+    /// Debugs the current node of the behaviour tree.
+    /// </summary>
+    protected override void DebugDecision()
+    {
+        if (_currentChildId < _children.Count)
+            _children[_currentChildId].DebugDecision();
+    }
+    #endregion
+
+    #region MONOBEHAVIOUR
+    public override void Update()
+    {
+        DebugDecision();
+        if (!IsExecutionPaused)
+            _status = UpdateNode();
     }
     #endregion
 
     #region PUBLIC	METHODS
     public void AddChild(Node child)
     {
-        children.Add(child);
+        _children.Add(child);
     }
+    #endregion
 
+    #region TO BE IMPLEMENTED METHODS
     public virtual Status UpdateNode()
     {
-        return children[_currentChildId].UpdateNode();
+        return _children[_currentChildId].UpdateNode();
     }
     #endregion
 }

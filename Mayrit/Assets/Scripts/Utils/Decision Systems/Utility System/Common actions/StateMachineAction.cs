@@ -3,20 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Action that runs a finite state machine (FSM) by an Utility System.
+/// Action that runs a finite state machine (FSM) on an Utility System.
 /// </summary>
 public class StateMachineAction<TStateMachine> : ABinaryAction
 where TStateMachine : AStateMachine<TStateMachine>
 {
+    #region PROPERTIES
     readonly TStateMachine _stateMachine;
     bool _alreadyStarted = false;
+    #endregion
 
+    #region CONSTRUCTOR
     public StateMachineAction(UtilitySystem utilitySystem, TStateMachine stateMachine)
-        : base("FSM", utilitySystem, 0.5f)
+    : base("FSM", utilitySystem, 0.5f)
     {
         _stateMachine = stateMachine;
     }
+    #endregion
 
+    #region INHERITED METHODS
     protected override bool SetDecisionFactor()
     {
         return true; // Will remain valid action
@@ -53,7 +58,9 @@ where TStateMachine : AStateMachine<TStateMachine>
         _alreadyStarted = false;
         _stateMachine.Reset();
     }
+    #endregion
 
+    #region PUBLIC METHODS
     public void ForceState(AState<TStateMachine> newState)
     {
         _stateMachine.ForceState(newState);
@@ -63,4 +70,5 @@ where TStateMachine : AStateMachine<TStateMachine>
     {
         return _stateMachine.IsCurrentState(state);
     }
+    #endregion
 }

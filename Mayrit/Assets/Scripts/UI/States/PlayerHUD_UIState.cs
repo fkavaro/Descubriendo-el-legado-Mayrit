@@ -16,7 +16,7 @@ public class PlayerHUD_UIState : AUIState
     public PlayerHUD_UIState(StackFiniteStateMachine stateMachine, UIDocument uiDocument)
     : base("PlayerHUD", stateMachine, uiDocument) { }
 
-    public override void AwakeState()
+    public override void StartState()
     {
         _screen = _UIDocument.rootVisualElement.Q<VisualElement>("PlayerHUD");
 
@@ -29,10 +29,7 @@ public class PlayerHUD_UIState : AUIState
             Debug.LogWarning("_activityArea not found");
 
         _pauseButton.RegisterCallback<ClickEvent>(SwitchToPauseState);
-    }
 
-    public override void StartState()
-    {
         _screen.style.display = DisplayStyle.Flex; // Show HUD
     }
 

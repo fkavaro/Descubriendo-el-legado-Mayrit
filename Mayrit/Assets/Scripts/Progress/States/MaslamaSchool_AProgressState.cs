@@ -6,14 +6,4 @@ public class MaslamaSchool_AProgressState : AProgressState
     Milestone_InformationSO milestoneInfoSO,
     FiniteStateMachine stateMachine)
     : base("Mathematics and Astronomy school", milestone, milestoneInfoSO, stateMachine) { }
-
-    public override void StartState()
-    {
-
-    }
-
-    public override void UpdateState()
-    {
-
-    }
 }

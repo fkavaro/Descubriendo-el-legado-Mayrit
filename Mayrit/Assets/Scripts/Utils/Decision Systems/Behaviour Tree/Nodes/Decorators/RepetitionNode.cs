@@ -8,18 +8,23 @@ using UnityEngine;
 /// </summary>
 public class RepetitionNode : Node
 {
+    #region PROPERTIES
     private int _repetitions;
     private int _currentRepetition = 0;
-    private Node _child; // Make sure we have a reference to the child
+    private Node _child;
+    #endregion
 
-    public RepetitionNode(IBehaviourControllable controllable, int repetitions, Node child, int priority = 0)
-    : base(controllable, repetitions.ToString() + " repetions", priority)
+    #region CONSTRUCTOR
+    public RepetitionNode(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, int repetitions, Node child, int priority = 0)
+    : base(entity, entityGO, repetitions.ToString() + " repetions", priority)
     {
         _repetitions = repetitions;
         AddChild(child); // Use the AddChild method to set the child
-        _child = children[0]; // Store a direct reference for easier access
+        _child = _children[0]; // Store a direct reference for easier access
     }
+    #endregion
 
+    #region INHERITED METHODS
     public override Status UpdateNode()
     {
         if (_child == null)
@@ -61,4 +66,5 @@ public class RepetitionNode : Node
         base.Reset();
         _currentRepetition = 0; // Reset the counter when the node is reset
     }
+    #endregion
 }

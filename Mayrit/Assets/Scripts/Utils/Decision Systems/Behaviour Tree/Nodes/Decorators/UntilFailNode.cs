@@ -8,15 +8,20 @@ using UnityEngine;
 /// </summary>
 public class UntilFailNode : Node
 {
-    private readonly Node _child; // Make sure we have a reference to the child
+    #region PROPERTIES
+    private readonly Node _child;
+    #endregion
 
-    public UntilFailNode(IBehaviourControllable controllable, Node child, int priority = 0)
-    : base(controllable, "UntilFail", priority)
+    #region CONSTRUCTOR
+    public UntilFailNode(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, Node child, int priority = 0)
+    : base(entity, entityGO, "UntilFail", priority)
     {
         AddChild(child); // Use the AddChild method to set the child
-        _child = children[0]; // Store a direct reference for easier access
+        _child = child;
     }
+    #endregion
 
+    #region INHERITED METHODS
     public override Status UpdateNode()
     {
         if (_child.UpdateNode() == Status.Failure)
@@ -26,4 +31,5 @@ public class UntilFailNode : Node
         }
         return Status.Running;
     }
+    #endregion
 }

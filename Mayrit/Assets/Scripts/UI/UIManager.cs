@@ -3,13 +3,11 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 
-[RequireComponent(typeof(UIDocument))]
-[RequireComponent(typeof(StackFiniteStateMachine))]
-
 /// <summary>
 /// Manages the user interface states and data. Singleton.
 /// </summary>
-public class UIManager : ASingletonBehaviourControllable<UIManager>
+[RequireComponent(typeof(UIDocument))]
+public class UIManager : ASingletonBehaviourEntity<UIManager, StackFiniteStateMachine>
 {
     #region EDITOR PROPERTIES
     [Header("User Interface Document")]
@@ -19,8 +17,8 @@ public class UIManager : ASingletonBehaviourControllable<UIManager>
     public Vector2 _tooltipOffset = new(-30, -30);
     #endregion
 
-    #region PROPERTIES
-    [HideInInspector] public StackFiniteStateMachine _fsm;
+    #region INTERNAL PROPERTIES
+    public StackFiniteStateMachine _fsm;
     public MainMenu_UIState _mainMenuState;
     public SpectatorHUD_UIState _spectatorHUDState;
     public PlayerHUD_UIState _playerHUDState;
@@ -29,12 +27,12 @@ public class UIManager : ASingletonBehaviourControllable<UIManager>
     #endregion
 
     #region INHERITED
-    public override void SetDecisionSystem()
+    public override void InitializeBehaviour()
     {
         // FINITE STATE MACHINE
-        _fsm = GetComponent<StackFiniteStateMachine>();
-        _fsm.enabled = true; // Ensure FSM is enabled
+        _fsm = new(this as IBehaviourEntity<ABehaviourSystem>, gameObject);
 
+        // States initialization
         _mainMenuState = new(_fsm, GetComponent<UIDocument>());
         _spectatorHUDState = new(_fsm, GetComponent<UIDocument>());
         _playerHUDState = new(_fsm, GetComponent<UIDocument>());
@@ -47,8 +45,8 @@ public class UIManager : ASingletonBehaviourControllable<UIManager>
             _fsm.SetInitialState(_spectatorHUDState);
         else
             _fsm.SetInitialState(_mainMenuState);
-
-        _fsm.enabled = true; // Ensure FSM is enabled
     }
+
+    public override StackFiniteStateMachine BehaviourSystem => _fsm;
     #endregion
 }

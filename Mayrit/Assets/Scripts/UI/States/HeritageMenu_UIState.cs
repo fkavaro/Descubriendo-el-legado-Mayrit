@@ -16,20 +16,17 @@ public class HeritageMenu_UIState : AUIState
     : base("HeritageMenu", stateMachine, uiDocument) { }
 
     #region INHERITED
-    public override void AwakeState()
+    public override void StartState()
     {
         _screen = _UIDocument.rootVisualElement.Q<VisualElement>("HeritageMenu");
         _playButton = _screen.Q<Button>("PlayButton");
 
         _playButton.RegisterCallback<ClickEvent>(SwitchToHUDState);
-    }
 
-    public override void StartState()
-    {
         _screen.style.display = DisplayStyle.Flex; // Show 
 
         // Game pause state
-        GameManager.Instance._fsm.SwitchState(GameManager.Instance._pauseState);
+        GameManager.Instance.BehaviourSystem.SwitchState(GameManager.Instance._pauseState);
     }
     public override void ExitState()
     {

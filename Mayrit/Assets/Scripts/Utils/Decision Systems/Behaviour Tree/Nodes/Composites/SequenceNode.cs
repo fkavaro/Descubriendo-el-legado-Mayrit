@@ -9,15 +9,18 @@ using UnityEngine;
 /// </summary>
 public class SequenceNode : Node
 {
-    public SequenceNode(IBehaviourControllable controllable, int priority = 0)
-    : base(controllable, "Sequence", priority) { }
+    #region CONSTRUCTOR
+    public SequenceNode(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, int priority = 0)
+    : base(entity, entityGO, "Sequence", priority) { }
+    #endregion
 
+    #region INHERITED METHODS
     public override Status UpdateNode()
     {
         // Execute every child
-        if (_currentChildId < children.Count)
+        if (_currentChildId < _children.Count)
         {
-            switch (children[_currentChildId].UpdateNode())
+            switch (_children[_currentChildId].UpdateNode())
             {
                 case Status.Running:
                     return Status.Running;
@@ -27,10 +30,11 @@ public class SequenceNode : Node
                 default: // Success
                     _currentChildId++; // Next one
                     // Success if it was the last, if not continue
-                    return _currentChildId == children.Count ? Status.Success : Status.Running;
+                    return _currentChildId == _children.Count ? Status.Success : Status.Running;
             }
         }
         Reset();
         return Status.Success;
     }
+    #endregion
 }

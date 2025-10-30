@@ -9,16 +9,21 @@ using UnityEngine.AI;
 /// </summary>
 public class WaypointPatrolStrategy : AStrategy
 {
+    #region PROPERTIES
     readonly List<Transform> _patrolPoints;
     int _currentPatrolPointIndex;
     bool _isPathCalculated;
+    #endregion
 
-    public WaypointPatrolStrategy(ANPC controller, LeafNode leafNode, List<Transform> patrolPoints)
-    : base(controller, leafNode)
+    #region CONSTRUCTOR
+    public WaypointPatrolStrategy(ANPC<Node> npc, LeafNode leafNode, List<Transform> patrolPoints)
+    : base(npc, leafNode)
     {
         _patrolPoints = patrolPoints;
     }
+    #endregion
 
+    #region INHERITED METHODS
     public override Node.Status Update()
     {
         if (_currentPatrolPointIndex >= _patrolPoints.Count)
@@ -46,4 +51,5 @@ public class WaypointPatrolStrategy : AStrategy
     {
         _currentPatrolPointIndex = 0;
     }
+    #endregion
 }

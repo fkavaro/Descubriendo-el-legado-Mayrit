@@ -603,7 +603,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3768097708187529351}
   - component: {fileID: 8486277609037237350}
-  - component: {fileID: 2908542068192279621}
   m_Layer: 0
   m_Name: "\U0001F4F9CameraManager"
   m_TagString: Untagged
@@ -646,6 +645,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 0
+  _debugMode: 0
+  _isExecutionPaused: 0
   _spectatorCamera: {fileID: 5488014350122742170}
   _edgeScrolling: 0
   _edgeScrollingMargin: 30
@@ -700,21 +701,6 @@ MonoBehaviour:
   _3rdPersonCameraFollowSpeed: 3
   _bottomClamp: -30
   _topClamp: 40
-  _fsm: {fileID: 2908542068192279621}
---- !u!114 &2908542068192279621
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3850563862725291741}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67b0dfafff00a8645ab646b826e9bccf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FiniteStateMachine
-  _debugMode: 0
-  _isExecutionPaused: 0
 --- !u!1 &4272530639498313931
 GameObject:
   m_ObjectHideFlags: 0

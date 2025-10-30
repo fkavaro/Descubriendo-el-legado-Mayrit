@@ -1,16 +1,24 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
 /// Abstract class for a state machine that handles the states of a controller.
 /// </summary>
-public abstract class AStateMachine<TStateMachineType> : ADecisionSystem
+public abstract class AStateMachine<TStateMachineType> : ABehaviourSystem
 where TStateMachineType : AStateMachine<TStateMachineType>
 {
+    #region PROPERTIES
     public AState<TStateMachineType> CurrentState => _currentState;
     public string _currentStateName = "None";
     protected AState<TStateMachineType> _currentState, _initialState;
     protected List<AState<TStateMachineType>> _statesSequence = new();
+    #endregion
+
+    #region CONSTRUCTOR
+    protected AStateMachine(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO)
+    : base(entity, entityGO) { }
+    #endregion
 
     #region TO BE IMPLEMENTED METHODS
     public abstract void SwitchState(AState<TStateMachineType> state);
@@ -32,8 +40,8 @@ where TStateMachineType : AStateMachine<TStateMachineType>
     {
         _currentStateName = _currentState.StateName;
 
-        if (_debugMode)
-            Debug.Log("[" + _controllable.Name + "]" + " is " + _currentState.StateName);
+        if (DebugMode)
+            Debug.Log("[" + _entityGO.name + "]" + " is " + _currentState.StateName);
     }
     #endregion
 
@@ -104,12 +112,12 @@ where TStateMachineType : AStateMachine<TStateMachineType>
     }
     #endregion
 
-    #region UNITY EXECUTION EVENTS
-    protected override void OnAwake()
+    #region MONOBEHAVIOUR EQUIVALENTS: DERIVED TO CURRENT STATE
+    public override void Awake()
     {
         if (_initialState == null)
         {
-            Debug.LogWarning(gameObject.name + ": AStateMachine has no initial state set.");
+            Debug.LogWarning(_entityGO.name + ": AStateMachine has no initial state set.");
             return;
         }
 
@@ -118,52 +126,49 @@ where TStateMachineType : AStateMachine<TStateMachineType>
         _currentState?.AwakeState();
     }
 
-    public void Start()
+    public override void Start()
     {
         _currentState?.StartState();
     }
 
-    public void Update()
+    public override void Update()
     {
-        if (!_isExecutionPaused)
+        if (!IsExecutionPaused)
             _currentState?.OnUpdateState();
     }
 
-    public void LateUpdate()
+    public override void LateUpdate()
     {
-        if (!_isExecutionPaused)
+        if (!IsExecutionPaused)
             _currentState?.OnLateUpdateState();
     }
 
-    #endregion
-
-    #region COLLISION AND TRIGGER EVENTS
-    public void OnCollisionEnter(Collision collision)
+    public override void OnCollisionEnter(Collision collision)
     {
         _currentState?.OnCollisionEnter(collision);
     }
 
-    public void OnCollisionStay(Collision collision)
+    public override void OnCollisionStay(Collision collision)
     {
         _currentState?.OnCollisionStay(collision);
     }
 
-    public void OnCollisionExit(Collision collision)
+    public override void OnCollisionExit(Collision collision)
     {
         _currentState?.OnCollisionExit(collision);
     }
 
-    public void OnTriggerEnter(Collider other)
+    public override void OnTriggerEnter(Collider other)
     {
         _currentState?.OnTriggerEnter(other);
     }
 
-    public void OnTriggerStay(Collider other)
+    public override void OnTriggerStay(Collider other)
     {
         _currentState?.OnTriggerStay(other);
     }
 
-    public void OnTriggerExit(Collider other)
+    public override void OnTriggerExit(Collider other)
     {
         _currentState?.OnTriggerExit(other);
     }

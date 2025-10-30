@@ -2,12 +2,8 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-/// <summary>
-/// Manages the player states and data. Singleton.
-/// </summary>
 [RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(FiniteStateMachine))]
-public class PlayableCharacter : ABehaviourControllable
+public class PlayableCharacter : ABehaviourEntity<FiniteStateMachine>
 {
     #region EDITOR PROPERTIES
     [Header("Character Information")]
@@ -24,28 +20,34 @@ public class PlayableCharacter : ABehaviourControllable
     public Animator _animator;
     #endregion
 
-    #region PROPERTIES
+    #region INTERNAL PROPERTIES
     public AnimationController _animationController;
     public PlayerController _playerController;
-    [HideInInspector] public FiniteStateMachine _fsm;
+    public FiniteStateMachine _fsm;
     public FreeRoam_PlayableCharacterState _freeRoamState;
     #endregion
 
     #region INHERITED
-    void Awake()
-    {
-        _animationController = new(_fsm, _animator);
-        _playerController = new(this, GetComponent<CharacterController>());
-    }
-
-    public override void SetDecisionSystem()
+    public override void InitializeBehaviour()
     {
         // FINITE STATE MACHINE
-        _fsm = GetComponent<FiniteStateMachine>();
-        _freeRoamState = new(_fsm, this);
-        _fsm.SetInitialState(_freeRoamState);
+        _fsm = new(this as IBehaviourEntity<ABehaviourSystem>, gameObject);
 
-        _fsm.enabled = true; // Ensure FSM is enabled
+        _freeRoamState = new(_fsm, this);
+
+        _fsm.SetInitialState(_freeRoamState);
+    }
+
+    public override FiniteStateMachine BehaviourSystem => _fsm;
+    #endregion
+
+    #region MONOBEHAVIOUR
+    protected override void Awake()
+    {
+        base.Awake();
+
+        _animationController = new(this, _fsm, _animator);
+        _playerController = new(this, GetComponent<CharacterController>());
     }
     #endregion
 }

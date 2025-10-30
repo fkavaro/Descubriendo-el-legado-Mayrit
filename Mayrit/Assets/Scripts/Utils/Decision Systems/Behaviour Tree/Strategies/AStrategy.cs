@@ -5,15 +5,21 @@ using UnityEngine;
 /// </summary>
 public abstract class AStrategy
 {
-    protected readonly ANPC _npc;
+    #region PROPERTIES
+    protected readonly ANPC<Node> _npc;
     protected readonly LeafNode _leafNode;
+    #endregion
 
-    public AStrategy(ANPC npc, LeafNode leafNode)
+    #region CONSTRUCTOR
+    public AStrategy(ANPC<Node> npc, LeafNode leafNode)
     {
         _npc = npc;
         _leafNode = leafNode;
     }
+    #endregion
 
+    #region TO BE IMPLEMENTED METHODS
     public abstract Node.Status Update();
     public virtual void Reset() { }
+    #endregion
 }

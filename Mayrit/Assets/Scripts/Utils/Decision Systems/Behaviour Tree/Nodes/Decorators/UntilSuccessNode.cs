@@ -8,16 +8,20 @@ using UnityEngine;
 /// </summary>
 public class UntilSuccessNode : Node
 {
-    private readonly Node _child; // Make sure we have a reference to the child
+    #region PROPERTIES
+    private readonly Node _child;
+    #endregion
 
-    public UntilSuccessNode(IBehaviourControllable controllable, Node child, int priority = 0)
-    : base(controllable, "UntilSuccess", priority)
+    #region CONSTRUCTOR
+    public UntilSuccessNode(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, Node child, int priority = 0)
+    : base(entity, entityGO, "UntilSuccess", priority)
     {
-        AddChild(child); // Use the AddChild method to set the child
-        _child = children[0]; // Store a direct reference for easier access
+        AddChild(child);
+        _child = child;
     }
+    #endregion
 
-
+    #region INHERITED METHODS
     public override Status UpdateNode()
     {
         if (_child.UpdateNode() == Status.Success)
@@ -27,4 +31,5 @@ public class UntilSuccessNode : Node
         }
         return Status.Running;
     }
+    #endregion
 }

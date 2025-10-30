@@ -2,20 +2,19 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-[RequireComponent(typeof(FiniteStateMachine))]
 
 /// <summary>
 /// Manages the game states and data. Singleton.
 /// </summary>
-public class GameManager : ASingletonBehaviourControllable<GameManager>
+public class GameManager : ASingletonBehaviourEntity<GameManager, FiniteStateMachine>
 {
     #region EDITOR PROPERTIES
     [Header("Player")]
     public PlayableCharacter _currentPlayableCharacter;
     #endregion
 
-    #region PROPERTIES
-    [HideInInspector] public FiniteStateMachine _fsm;
+    #region INTERNAL PROPERTIES
+    public FiniteStateMachine _fsm;
     public MainMenu_GameState _mainMenuState;
     public GamePlay_GameState _gamePlayState;
     public Pause_GameState _pauseState;
@@ -24,23 +23,12 @@ public class GameManager : ASingletonBehaviourControllable<GameManager>
     #endregion
 
     #region INHERITED
-    protected override void Awake()
-    {
-        base.Awake(); // Singleton
-        _inputActions = new();
-
-        // Subscribe to milestone change event
-        ProgressManager.Instance.OnMilestoneChanged += UpdatePlayableCharacter;
-
-        // Find the playable character
-        _currentPlayableCharacter = FindFirstObjectByType<PlayableCharacter>();
-    }
-
-    public override void SetDecisionSystem()
+    public override void InitializeBehaviour()
     {
         // FINITE STATE MACHINE
-        _fsm = GetComponent<FiniteStateMachine>();
+        _fsm = new(this as IBehaviourEntity<ABehaviourSystem>, gameObject);
 
+        // States initialization
         _mainMenuState = new(_fsm);
         _gamePlayState = new(_fsm);
         _pauseState = new(_fsm);
@@ -51,21 +39,36 @@ public class GameManager : ASingletonBehaviourControllable<GameManager>
             _fsm.SetInitialState(_gamePlayState);
         else
             _fsm.SetInitialState(_mainMenuState);
-
-        _fsm.enabled = true; // Ensure FSM is enabled
     }
+
+    public override FiniteStateMachine BehaviourSystem => _fsm;
     #endregion
 
     #region MONOBEHAVIOUR
+    protected override void Awake()
+    {
+        base.Awake();
+
+        _inputActions = new();
+
+        // Subscribe to milestone change event
+        ProgressManager.Instance.OnMilestoneChanged += UpdatePlayableCharacter;
+
+        // Find the playable character
+        _currentPlayableCharacter = FindFirstObjectByType<PlayableCharacter>();
+    }
+
     private void OnDestroy()
     {
         _inputActions?.Disable(); // Disables all action maps. To avoid errors
     }
     #endregion
 
+    #region PRIVATE METHODS
     void UpdatePlayableCharacter(ProgressManager.Milestone milestone)
     {
         // Find the playable character
         _currentPlayableCharacter = FindFirstObjectByType<PlayableCharacter>();
     }
+    #endregion
 }

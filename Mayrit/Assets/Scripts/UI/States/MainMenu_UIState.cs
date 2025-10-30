@@ -12,11 +12,11 @@ public class MainMenu_UIState : AUIState
     Button _playButton, _mainMenuButton, _quitButton;
     #endregion
 
-    #region INHERITED PROPERTIES
     public MainMenu_UIState(StackFiniteStateMachine stateMachine, UIDocument uiDocument)
     : base("MainMenu", stateMachine, uiDocument) { }
 
-    public override void AwakeState()
+    #region INHERITED PROPERTIES
+    public override void StartState()
     {
         _screen = _UIDocument.rootVisualElement;//.Q<VisualElement>("MainMenu");
         _playButton = _screen.Q<Button>("PlayButton");
@@ -26,16 +26,6 @@ public class MainMenu_UIState : AUIState
         _playButton.RegisterCallback<ClickEvent>(SwitchToGamePlayState);
         _mainMenuButton.RegisterCallback<ClickEvent>(SwitchToSettingsState);
         _quitButton.RegisterCallback<ClickEvent>(QuitGame);
-    }
-
-    public override void StartState()
-    {
-
-    }
-
-    public override void UpdateState()
-    {
-
     }
     #endregion
 

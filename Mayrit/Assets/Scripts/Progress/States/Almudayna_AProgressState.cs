@@ -6,14 +6,4 @@ public class Almudayna_AProgressState : AProgressState
     Milestone_InformationSO milestoneInfoSO,
     FiniteStateMachine stateMachine)
     : base("Almudayna", milestone, milestoneInfoSO, stateMachine) { }
-
-    public override void StartState()
-    {
-
-    }
-
-    public override void UpdateState()
-    {
-
-    }
 }

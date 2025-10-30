@@ -1,12 +1,10 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(FiniteStateMachine))]
-
 /// <summary>
 /// Manages the progress states and data. Singleton.
 /// </summary>
-public class ProgressManager : ASingletonBehaviourControllable<ProgressManager>
+public class ProgressManager : ASingletonBehaviourEntity<ProgressManager, FiniteStateMachine>
 {
     public enum Milestone
     {
@@ -34,7 +32,7 @@ public class ProgressManager : ASingletonBehaviourControllable<ProgressManager>
     public Milestone_InformationSO _conquestInformation;
     #endregion
 
-    #region PROPERTIES
+    #region INTERNAL PROPERTIES
     public event Action<Milestone> OnMilestoneChanged;
     public event Action<float> OnTimeSet;
 
@@ -50,10 +48,10 @@ public class ProgressManager : ASingletonBehaviourControllable<ProgressManager>
     #endregion
 
     #region INHERITED
-    public override void SetDecisionSystem()
+    public override void InitializeBehaviour()
     {
         // FINITE STATE MACHINE
-        _fsm = GetComponent<FiniteStateMachine>();
+        _fsm = new(this as IBehaviourEntity<ABehaviourSystem>, gameObject);
 
         // States initialization
         _visionState = new(Milestone._1_Vision, _visionInformation, _fsm);
@@ -66,9 +64,9 @@ public class ProgressManager : ASingletonBehaviourControllable<ProgressManager>
         _conquestState = new(Milestone._8_Conquest, _conquestInformation, _fsm);
 
         _fsm.SetInitialState(_visionState);
-
-        _fsm.enabled = true; // Ensure FSM is enabled
     }
+
+    public override FiniteStateMachine BehaviourSystem => _fsm;
     #endregion
 
     #region PUBLIC METHODS

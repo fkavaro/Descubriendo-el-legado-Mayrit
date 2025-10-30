@@ -1,14 +1,12 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Unity.Cinemachine;
 
-[RequireComponent(typeof(FiniteStateMachine))]
 /// <summary>
 /// Manages the camera states and data. Singleton.
 /// </summary>
-public class CameraManager : ASingletonBehaviourControllable<CameraManager>
+public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStateMachine>
 {
     #region EDITOR PROPERTIES
     [Header("Spectator camera")]
@@ -55,7 +53,7 @@ public class CameraManager : ASingletonBehaviourControllable<CameraManager>
         _topClamp = 40f;
     #endregion
 
-    #region PROPERTIES
+    #region INTERNAL PROPERTIES
     public event Action OnCameraStateChanged;
     [HideInInspector] public FiniteStateMachine _fsm;
     public Spectator_CameraState _spectatorState;
@@ -64,38 +62,31 @@ public class CameraManager : ASingletonBehaviourControllable<CameraManager>
     #endregion
 
     #region INHERITED
-    protected override void Awake()
+    public override void InitializeBehaviour()
     {
-        base.Awake(); // Singleton
+        // FINITE STATE MACHINE
+        _fsm = new(this as IBehaviourEntity<ABehaviourSystem>, gameObject);
+
+        // States initialization
+        _spectatorState = new(_fsm, _spectatorCamera);
+        _orbitalState = new(_fsm, _orbitalCamera);
+        _thirdPersonState = new(_fsm, _thirdPersonCamera);
+
+        _fsm.SetInitialState(_spectatorState);
+    }
+
+    public override FiniteStateMachine BehaviourSystem => _fsm;
+    #endregion
+
+    #region MONOBEHAVIOUR
+    protected override void Start()
+    {
+        base.Start();
 
         // Set camera target at min height
         CinemachineOrbitalFollow _orbitalFollow = _spectatorCamera.GetComponent<CinemachineOrbitalFollow>();
         _orbitalFollow.Radius = _movementLimitsY.y;
-    }
 
-    public override void SetDecisionSystem()
-    {
-        // FINITE STATE MACHINE
-        _fsm = GetComponent<FiniteStateMachine>();
-
-        _spectatorState = new(_fsm,
-            _spectatorCamera);
-
-        _orbitalState = new(_fsm,
-            _orbitalCamera);
-
-        _thirdPersonState = new(_fsm,
-            _thirdPersonCamera);
-
-        _fsm.SetInitialState(_spectatorState);
-
-        _fsm.enabled = true; // Ensure FSM is enabled
-    }
-    #endregion
-
-    #region MONOBEHAVIOUR
-    void Start()
-    {
         if (_spectatorCamera.LookAt.position.y != _movementLimitsY.x)
         {
             // Fix spectator target height
@@ -190,21 +181,6 @@ public class CameraManager : ASingletonBehaviourControllable<CameraManager>
     {
         StartCoroutine(SmoothMove(lookAt, newPosition, speed, onComplete));
     }
-
-    // public void ZoomToCoroutine(CinemachineOrbitalFollow orbitalFollow, float targetZoom, Action onComplete = null)
-    // {
-    //     StartCoroutine(ZoomTo(orbitalFollow, targetZoom, onComplete));
-    // }
-
-    // public void ApplyContextualPanelOffset(CinemachineCamera camera, float offset)
-    // {
-    //     StartCoroutine(SmoothHorizontalOffset(camera.GetComponent<CinemachineCameraOffset>(), offset));
-    // }
-
-    // public void ResetContextualPanelOffset(CinemachineCamera camera)
-    // {
-    //     StartCoroutine(SmoothHorizontalOffset(camera.GetComponent<CinemachineCameraOffset>(), 0));
-    // }
     #endregion
 
     #region PRIVATE METHODS
@@ -238,56 +214,5 @@ public class CameraManager : ASingletonBehaviourControllable<CameraManager>
         transform.position = newPosition;
         onComplete?.Invoke();
     }
-
-    // /// <summary>
-    // /// Smoothly zooms the given CinemachineOrbitalFollow component to the target zoom value.
-    // /// </summary>
-    // IEnumerator ZoomTo(CinemachineOrbitalFollow orbitalFollow, float targetZoom, Action onComplete)
-    // {
-    //     float zoomSpeed = _orbitalZoomTransitionSpeed;
-    //     float startZoom = orbitalFollow.RadialAxis.Value;
-    //     float elapsed = 0f;
-    //     float duration = Mathf.Abs(targetZoom - startZoom) / (zoomSpeed > 0 ? zoomSpeed : 1f);
-
-    //     // If duration is very small, snap to target
-    //     if (duration < 0.01f)
-    //     {
-    //         orbitalFollow.RadialAxis.Value = targetZoom;
-    //         yield break;
-    //     }
-
-    //     while (elapsed < duration)
-    //     {
-    //         elapsed += Time.deltaTime;
-    //         float t = Mathf.Clamp01(elapsed / duration);
-    //         orbitalFollow.RadialAxis.Value = Mathf.Lerp(startZoom, targetZoom, t);
-    //         yield return null;
-    //     }
-
-    //     orbitalFollow.RadialAxis.Value = targetZoom;
-
-    //     onComplete?.Invoke();
-    // }
-
-    // /// <summary>
-    // /// Smoothly interpolates the camera's horizontal offset to the target value.
-    // /// </summary>
-    // IEnumerator SmoothHorizontalOffset(CinemachineCameraOffset offsetComponent, float targetOffset, Action onComplete = null)
-    // {
-    //     float startOffset = offsetComponent.Offset.x;
-    //     float elapsed = 0f;
-
-    //     while (elapsed < _orbitalOffsetTransitionDuration)
-    //     {
-    //         elapsed += Time.deltaTime;
-    //         float t = Mathf.Clamp01(elapsed / _orbitalOffsetTransitionDuration);
-    //         offsetComponent.Offset.x = Mathf.Lerp(startOffset, targetOffset, t);
-    //         yield return null;
-    //     }
-
-    //     offsetComponent.Offset.x = targetOffset;
-
-    //     onComplete?.Invoke();
-    // }
     #endregion
 }

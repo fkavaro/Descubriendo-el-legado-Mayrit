@@ -10,19 +10,9 @@ public class GamePlay_GameState : AGameState
     public GamePlay_GameState(FiniteStateMachine stateMachine)
     : base("Gameplay", stateMachine) { }
 
-    public override void AwakeState()
+    public override void StartState()
     {
         if (SceneManager.GetActiveScene().name != "GameScene")
             SceneManager.LoadScene("GameScene");
-    }
-
-    public override void StartState()
-    {
-
-    }
-
-    public override void UpdateState()
-    {
-
     }
 }

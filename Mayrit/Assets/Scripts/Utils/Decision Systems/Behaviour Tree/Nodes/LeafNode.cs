@@ -8,19 +8,19 @@ using UnityEngine;
 /// </summary>
 public class LeafNode : Node
 {
+    #region PROPERTIES
     readonly AStrategy _strategy;
+    #endregion
 
-    public LeafNode(IBehaviourControllable controllable, string name, AStrategy strategy, int priority = 0)
-    : base(controllable, name, priority)
+    #region CONSTRUCTOR
+    public LeafNode(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, string name, AStrategy strategy, int priority = 0)
+    : base(entity, entityGO, name, priority)
     {
         _strategy = strategy;
     }
+    #endregion
 
-    protected override void DebugDecision()
-    {
-
-    }
-
+    #region INHERITED METHODS
     public override Status UpdateNode()
     {
         return _strategy.Update();
@@ -30,4 +30,5 @@ public class LeafNode : Node
     {
         _strategy.Reset();
     }
+    #endregion
 }

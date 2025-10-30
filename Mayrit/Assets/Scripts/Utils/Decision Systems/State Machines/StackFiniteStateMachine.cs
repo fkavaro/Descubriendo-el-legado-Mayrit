@@ -10,6 +10,11 @@ public class StackFiniteStateMachine : AStateMachine<StackFiniteStateMachine>
 {
     readonly Stack<AState<StackFiniteStateMachine>> _stateStack = new();
 
+    #region CONSTRUCTOR
+    public StackFiniteStateMachine(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO)
+    : base(entity, entityGO) { }
+    #endregion
+
     #region INHERITED METHODS
     /// <summary>
     /// Switchs to another state after exiting the current,
@@ -24,7 +29,6 @@ public class StackFiniteStateMachine : AStateMachine<StackFiniteStateMachine>
         _currentState = newState;
         DebugDecision();
         _currentStateName = _currentState.StateName;
-        _currentState?.AwakeState();
         _currentState?.StartState();
     }
 
@@ -36,7 +40,6 @@ public class StackFiniteStateMachine : AStateMachine<StackFiniteStateMachine>
         // Don't exit the current state, just set and start the new one
         _currentState = newState;
         DebugDecision();
-        _currentState?.AwakeState();
         _currentState?.StartState();
     }
     #endregion
@@ -60,7 +63,7 @@ public class StackFiniteStateMachine : AStateMachine<StackFiniteStateMachine>
         // Empty stack
         if (_stateStack.Count == 0)
         {
-            if (_debugMode) Debug.Log("[" + _controllable.Name + "] state stack is empty");
+            if (DebugMode) Debug.Log("[" + _entityGO.name + "] state stack is empty");
 
             return null;
         }
@@ -69,7 +72,7 @@ public class StackFiniteStateMachine : AStateMachine<StackFiniteStateMachine>
             // Get the last state from the stack without removing it
             var previousState = _stateStack.Peek();
 
-            if (_debugMode) Debug.Log("[" + _controllable.Name + "] Previous state: " + previousState.StateName);
+            if (DebugMode) Debug.Log("[" + _entityGO.name + "] Previous state: " + previousState.StateName);
 
             return previousState;
         }
@@ -84,7 +87,7 @@ public class StackFiniteStateMachine : AStateMachine<StackFiniteStateMachine>
         // Empty stack
         if (_stateStack.Count == 0)
         {
-            if (_debugMode) Debug.Log("[" + _controllable.Name + "] state stack is empty");
+            if (DebugMode) Debug.Log("[" + _entityGO.name + "] state stack is empty");
 
             return false;
         }

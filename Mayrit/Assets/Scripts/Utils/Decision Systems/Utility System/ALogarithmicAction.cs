@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -6,22 +7,28 @@ using UnityEngine;
 /// </summary>
 public abstract class ALogarithmicAction : AAction<float>
 {
-    bool _inverted;
+    #region PROPERTIES
+    readonly bool _inverted;
+    #endregion
 
+    #region CONSTRUCTOR
     protected ALogarithmicAction(string name, UtilitySystem utilitySystem, bool inverted = false)
     : base(name, utilitySystem)
     {
         _inverted = inverted;
     }
+    #endregion
 
+    #region INHERITED METHODS
     protected override float CalculateUtility()
     {
-        utility = (float)Math.Log(DecisionFactor + 1); // Logarithmic function
+        _utility = (float)Math.Log(DecisionFactor + 1); // Logarithmic function
 
         if (_inverted)
-            utility = 1f - utility; // Inverted logarithmic function
+            _utility = 1f - _utility; // Inverted logarithmic function
 
         //Debug.Log(name + " utility: " + utility);
-        return utility;
+        return _utility;
     }
+    #endregion
 }

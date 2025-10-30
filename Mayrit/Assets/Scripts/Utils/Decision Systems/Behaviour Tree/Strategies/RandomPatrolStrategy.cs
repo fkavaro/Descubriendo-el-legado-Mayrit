@@ -8,18 +8,23 @@ using UnityEngine;
 /// </summary>
 public class RandomPatrolStrategy : AStrategy
 {
+    #region PROPERTIES
     protected readonly Transform _centerPoint;
     protected readonly int _samplingIterations;
     protected readonly float _areaRadious;
+    #endregion
 
-    public RandomPatrolStrategy(ANPC controller, LeafNode leadNode, Transform centerPoint, int samplingIterations = 30, float areaRadious = 10f)
-    : base(controller, leadNode)
+    #region CONSTRUCTOR
+    public RandomPatrolStrategy(ANPC<Node> npc, LeafNode leadNode, Transform centerPoint, int samplingIterations = 30, float areaRadious = 10f)
+    : base(npc, leadNode)
     {
         _centerPoint = centerPoint;
         _samplingIterations = samplingIterations;
         _areaRadious = areaRadious;
     }
+    #endregion
 
+    #region INHERITED METHODS
     public override Node.Status Update()
     {
         if (_npc.HasArrivedAtDestination())
@@ -33,4 +38,5 @@ public class RandomPatrolStrategy : AStrategy
         }
         return Node.Status.Running;
     }
+    #endregion
 }

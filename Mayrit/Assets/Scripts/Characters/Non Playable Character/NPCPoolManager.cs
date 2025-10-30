@@ -8,15 +8,15 @@ using UnityEngine.Pool;
 public class NPCPoolManager : MonoBehaviour
 {
     #region PUBLIC PROPERTIES
-    public ObjectPool<ANPC> _npcsPool;
+    public ObjectPool<Villager> _villagerPool;
 
-    [Header("NPCs pool")]
-    [Tooltip("All npc models to be spawned randomly")]
-    public GameObject[] _npcsPrefabs;
-    [Tooltip("Maximum number of npcs at once")]
-    public int _maxNpcs = 10;
-    public int _minSecondsForNewNPC = 2,
-        _maxSecondsForNewNPC = 15;
+    [Header("Villagers pool")]
+    [Tooltip("All villager models to be spawned randomly")]
+    public GameObject[] _villagerPrefabs;
+    [Tooltip("Maximum number of villager at once")]
+    public int _maxVillagers = 10;
+    public int _minSecondsForNewVillager = 2,
+        _maxSecondsForNewVillager = 15;
 
     public Transform entrancePosition;
     #endregion
@@ -29,60 +29,60 @@ public class NPCPoolManager : MonoBehaviour
     void Awake()
     {
         // Pool creation
-        _npcsPool = new ObjectPool<ANPC>(
-            createFunc: CreateNPC,
-            actionOnGet: GetNPC,
-            actionOnRelease: ReleaseNPC,
-            actionOnDestroy: (npc) => Destroy(npc.gameObject),
-            maxSize: _maxNpcs
+        _villagerPool = new ObjectPool<Villager>(
+            createFunc: CreateVillager,
+            actionOnGet: GetVillager,
+            actionOnRelease: ReleaseVillager,
+            actionOnDestroy: (villager) => Destroy(villager.gameObject),
+            maxSize: _maxVillagers
         );
     }
 
     // Update is called once per frame
     void Update()
     {
-        // npcs keep coming if there's room for them
-        if (Time.time >= _lastSpawnTime && _npcsPool.CountActive < _maxNpcs)
+        // Villagers keep coming if there's room for them
+        if (Time.time >= _lastSpawnTime && _villagerPool.CountActive < _maxVillagers)
         {
-            _lastSpawnTime = Time.time + UnityEngine.Random.Range(_minSecondsForNewNPC, _maxSecondsForNewNPC);
-            _npcsPool.Get();
+            _lastSpawnTime = Time.time + UnityEngine.Random.Range(_minSecondsForNewVillager, _maxSecondsForNewVillager);
+            _villagerPool.Get();
         }
     }
     #endregion
 
     #region PRIVATE METHODS
     /// <summary>
-    /// Creation method for npcs pool: instantiates a random npc prefab.
+    /// Creation method for villagers pool: instantiates a random villager prefab.
     /// </summary>
-    /// <returns>Instantiated npc.</returns>
-    ANPC CreateNPC()
+    /// <returns>Instantiated villager.</returns>
+    Villager CreateVillager()
     {
-        ANPC npc = Instantiate(
-            _npcsPrefabs[UnityEngine.Random.Range(0, _npcsPrefabs.Length)], // Random model
-            entrancePosition.position, // TODO: npc's house entrance spot position
+        Villager villager = Instantiate(
+            _villagerPrefabs[UnityEngine.Random.Range(0, _villagerPrefabs.Length)], // Random model
+            entrancePosition.position, // TODO: villager's house entrance spot position
             Quaternion.identity, // TODO: house entrance spot rotation
-            transform) // TODO: each npc parent should be its house
-        .GetComponent<ANPC>();
-        return npc;
+            transform) // TODO: each villager parent should be its house
+        .GetComponent<Villager>();
+        return villager;
     }
 
     /// <summary>
-    /// Get method for npcs pool: resets npc position and behaviour.
+    /// Get method for villagers pool: resets villager position and behaviour.
     /// </summary>>
-    void GetNPC(ANPC npc)
+    void GetVillager(Villager villager)
     {
-        npc.transform.position = entrancePosition.position; // TODO: npc's house entrance spot position
-        npc._animationController.ChangeAnimationTo(npc._animationController._walkAnim);
-        npc.gameObject.SetActive(true);
-        npc.DecisionSystem.Reset();
+        villager.transform.position = entrancePosition.position; // TODO: villager's house entrance spot position
+        villager._animationController.ChangeAnimationTo(villager._animationController._walkAnim);
+        villager.gameObject.SetActive(true);
+        villager.BehaviourSystem.Reset();
     }
 
     /// <summary>
-    /// Release method for npcs pool: deactivates npc gameobject.
+    /// Release method for villagers pool: deactivates villager gameobject.
     /// </summary>
-    void ReleaseNPC(ANPC npc)
+    void ReleaseVillager(Villager villager)
     {
-        npc.gameObject.SetActive(false);
+        villager.gameObject.SetActive(false);
     }
     #endregion
 }

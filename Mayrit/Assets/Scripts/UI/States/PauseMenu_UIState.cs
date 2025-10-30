@@ -16,7 +16,7 @@ public class PauseMenu_UIState : AUIState
     : base("PauseMenu", stateMachine, uiDocument) { }
 
     #region INHERITED
-    public override void AwakeState()
+    public override void StartState()
     {
         _screen = _UIDocument.rootVisualElement.Q<VisualElement>("PauseMenu");
         _playButton = _screen.Q<Button>("PlayButton");
@@ -26,19 +26,11 @@ public class PauseMenu_UIState : AUIState
         _playButton.RegisterCallback<ClickEvent>(SwitchToHUDState);
         _mainMenuButton.RegisterCallback<ClickEvent>(SwitchToMainMenuState);
         _quitButton.RegisterCallback<ClickEvent>(QuitGame);
-    }
 
-    public override void StartState()
-    {
         _screen.style.display = DisplayStyle.Flex; // Show pause menu
 
         // Game pause state
         GameManager.Instance._fsm.SwitchState(GameManager.Instance._pauseState);
-    }
-
-    public override void UpdateState()
-    {
-
     }
 
     public override void ExitState()

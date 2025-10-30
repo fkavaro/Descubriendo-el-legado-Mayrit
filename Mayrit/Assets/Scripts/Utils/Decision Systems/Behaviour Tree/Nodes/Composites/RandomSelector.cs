@@ -9,11 +9,15 @@ using UnityEngine;
 /// </summary>
 public class RanndomSelectorNode : PrioritySelectorNode
 {
-    public RanndomSelectorNode(IBehaviourControllable controllable, int priority = 0)
-    : base(controllable, priority) { }
+    #region CONSTRUCTOR
+    public RanndomSelectorNode(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, int priority = 0)
+    : base(entity, entityGO, priority) { }
+    #endregion
 
+    #region INHERITED METHODS
     protected override List<Node> SortChildren()
     {
-        return children.Shuffle().ToList();
+        return _children.Shuffle().ToList();
     }
+    #endregion
 }

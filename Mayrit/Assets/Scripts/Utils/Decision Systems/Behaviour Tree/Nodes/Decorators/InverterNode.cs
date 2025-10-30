@@ -9,12 +9,15 @@ using UnityEngine;
 /// </summary>
 public class InverterNode : Node
 {
-    public InverterNode(IBehaviourControllable controllable, int priority = 0)
-    : base(controllable, "Inverter", priority) { }
+    #region CONSTRUCTOR
+    public InverterNode(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, int priority = 0)
+    : base(entity, entityGO, "Inverter", priority) { }
+    #endregion
 
+    #region INHERITED METHODS
     public override Status UpdateNode()
     {
-        switch (children[0].UpdateNode())
+        switch (_children[0].UpdateNode())
         {
             case Status.Success:
                 return Status.Failure;
@@ -24,4 +27,5 @@ public class InverterNode : Node
                 return Status.Running;
         }
     }
+    #endregion
 }

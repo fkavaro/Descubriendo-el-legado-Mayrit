@@ -8,13 +8,17 @@ using UnityEngine;
 /// </summary>
 public class RandomDestinationStrategy : RandomPatrolStrategy
 {
+    #region PROPERTIES
     bool _destinationIsSet = false; // Dirty flag
+    #endregion
 
+    #region CONSTRUCTOR
     // Center point is the controller transform
-    public RandomDestinationStrategy(ANPC controller, LeafNode leafNode, int samplingIterations = 30, float areaRadious = 10f)
-    : base(controller, leafNode, controller._agent.transform, samplingIterations, areaRadious) { }
+    public RandomDestinationStrategy(ANPC<Node> npc, LeafNode leafNode, int samplingIterations = 30, float areaRadious = 10f)
+    : base(npc, leafNode, npc._agent.transform, samplingIterations, areaRadious) { }
+    #endregion
 
-
+    #region INHERITED METHODS
     public override Node.Status Update()
     {
         // Destination not yet set
@@ -34,7 +38,7 @@ public class RandomDestinationStrategy : RandomPatrolStrategy
         // Is close to destination
         if (_npc.IsCloseToDestination(1f))
         {
-            if (_leafNode._debugMode) Debug.Log(_npc.Name + " arrived at random destination");
+            if (_leafNode.DebugMode) Debug.Log(_npc.gameObject.name + " arrived at random destination");
             return Node.Status.Success;
         }
         else // Hasn't arrived
@@ -50,4 +54,5 @@ public class RandomDestinationStrategy : RandomPatrolStrategy
     {
         _destinationIsSet = false;
     }
+    #endregion
 }

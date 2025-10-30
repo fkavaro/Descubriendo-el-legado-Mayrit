@@ -1,4 +1,5 @@
-
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -6,21 +7,26 @@ using UnityEngine;
 /// </summary>
 public abstract class AAction<TFactor> : IAction
 {
-    public string Name => name;
+    #region PROPERTIES
+    public string ActionName => _actionName;
     public float Utility => CalculateUtility();
 
-    protected string name;
-    protected float utility;
+    protected string _actionName;
+    protected float _utility;
     protected UtilitySystem _utilitySystem;
     protected TFactor DecisionFactor => SetDecisionFactor();
+    #endregion
 
-    public AAction(string name, UtilitySystem utilitySystem)
+    #region CONSTRUCTOR
+    public AAction(string actionName, UtilitySystem utilitySystem)
     {
-        this.name = name;
+        _actionName = actionName;
         _utilitySystem = utilitySystem;
         utilitySystem.AddAction(this);
     }
+    #endregion
 
+    #region TO BE IMPLEMENTED METHODS
     protected abstract TFactor SetDecisionFactor();
     protected abstract float CalculateUtility();
     public abstract void StartAction();
@@ -30,6 +36,7 @@ public abstract class AAction<TFactor> : IAction
 
     public virtual string DebugDecision()
     {
-        return Name;
+        return ActionName;
     }
+    #endregion
 }

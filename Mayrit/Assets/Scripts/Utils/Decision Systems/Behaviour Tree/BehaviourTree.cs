@@ -5,20 +5,28 @@ using UnityEngine;
 
 public class BehaviourTree : Node
 {
-    public BehaviourTree(IBehaviourControllable controllable, string name = "BehaviourTree")
-    : base(controllable, name) { }
+    #region CONSTRUCTORs
+    public BehaviourTree(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, string name = "BehaviourTree")
+    : base(entity, entityGO, name) { }
 
-    public BehaviourTree(IBehaviourControllable controllable, Node child, string name = "BehaviourTree")
-    : base(controllable, name)
+    public BehaviourTree(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, Node child, string name = "BehaviourTree")
+    : base(entity, entityGO, name)
     {
         AddChild(child);
     }
+    #endregion
 
+    #region INHERITED METHODS
+    /// <summary>
+    /// Updates all child nodes of the behaviour tree.
+    /// Changes when child succeeds.
+    /// </summary>
+    /// <returns>Success when all children have returned success</returns>
     public override Status UpdateNode()
     {
-        while (_currentChildId < children.Count)
+        while (_currentChildId < _children.Count)
         {
-            var status = children[_currentChildId].UpdateNode();
+            var status = _children[_currentChildId].UpdateNode();
 
             if (status != Status.Success)
                 return status;
@@ -27,4 +35,5 @@ public class BehaviourTree : Node
         }
         return Status.Success;
     }
+    #endregion
 }
