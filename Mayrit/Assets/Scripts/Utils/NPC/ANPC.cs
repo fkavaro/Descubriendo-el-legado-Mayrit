@@ -10,16 +10,20 @@ public abstract class ANPC : ABehaviourControllable
 {
     #region EDITOR PROPERTIES
     [Header("Movement settings")]
-    [Tooltip("Agent speed")]
+    [Tooltip("Walking speed of the agent")]
     public float _walkSpeed = 2f;
+    [Tooltip("Sprinting speed of the agent")]
     public float _sprintSpeed = 3f;
-    [Tooltip("Agent rotation speed")]
+    [Tooltip("Rotation speed of the agent")]
     public float _rotationSpeed = 3f;
     [Tooltip("Distance to which the agent will avoid other agents"), Range(0.5f, 2f)]
     public float _avoidanceRadius = 0.7f;
-    public float _maxSamplingDistance = 1f, // Max distance from the random point to a point on the navmesh, for target position sampling
-         _stoppingDistance = 0.3f, // Distance to which it's considered as arrived
-         _nearDistance = 2f; // Distance to which it's close to the destination
+    [Tooltip("Max distance from the random point to a point on the navmesh, for target position sampling")]
+    public float _maxSamplingDistance = 1f;
+    [Tooltip("Distance to which it's considered as arrived at destination")]
+    public float _stoppingDistance = 0.3f;
+    [Tooltip("Distance to which it's close to the destination")]
+    public float _nearDistance = 2f;
     public bool _isStopped = false;
 
     [Header("Energy Properties")]
