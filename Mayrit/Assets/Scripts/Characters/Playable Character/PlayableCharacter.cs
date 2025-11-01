@@ -28,17 +28,16 @@ public class PlayableCharacter : ABehaviourEntity<FiniteStateMachine>
     #endregion
 
     #region INHERITED
-    public override void InitializeBehaviour()
+    public override FiniteStateMachine InitializeBehaviourSystem()
     {
-        // FINITE STATE MACHINE
         _fsm = new(this);
 
         _freeRoamState = new(_fsm, this);
 
         _fsm.SetInitialState(_freeRoamState);
-    }
 
-    public override FiniteStateMachine BehaviourSystem => _fsm;
+        return _fsm;
+    }
     #endregion
 
     #region MONOBEHAVIOUR

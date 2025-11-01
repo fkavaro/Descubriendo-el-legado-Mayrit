@@ -27,9 +27,8 @@ public class UIManager : ASingletonBehaviourEntity<UIManager, StackFiniteStateMa
     #endregion
 
     #region INHERITED
-    public override void InitializeBehaviour()
+    public override StackFiniteStateMachine InitializeBehaviourSystem()
     {
-        // FINITE STATE MACHINE
         _sfsm = new(this);
 
         UIDocument uiDocument = GetComponent<UIDocument>();
@@ -47,8 +46,8 @@ public class UIManager : ASingletonBehaviourEntity<UIManager, StackFiniteStateMa
             _sfsm.SetInitialState(_spectatorHUDState);
         else
             _sfsm.SetInitialState(_mainMenuState);
-    }
 
-    public override StackFiniteStateMachine BehaviourSystem => _sfsm;
+        return _sfsm;
+    }
     #endregion
 }

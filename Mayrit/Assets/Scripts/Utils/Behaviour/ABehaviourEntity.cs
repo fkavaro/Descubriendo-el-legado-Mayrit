@@ -4,17 +4,9 @@ using UnityEngine;
 /// Abstract behaviour entity class with a generic behaviour system.
 /// </summary>
 /// <typeparam name="T"> The type of the behaviour system.</typeparam>
-public abstract class ABehaviourEntity<T> : MonoBehaviour, IBehaviourEntityGeneric<T>
+public abstract class ABehaviourEntity<T> : MonoBehaviour, IBehaviourEntity
 where T : ABehaviourSystem
 {
-    #region EDITOR PROPERTIES
-    [Header("Behaviour System settings")]
-    [Tooltip("Whether to show debug messages in the console or not")]
-    public bool _debugMode;
-    [Tooltip("Whether to pause the execution of the behaviour system or not")]
-    public bool _isExecutionPaused;
-    #endregion
-
     #region INTERFACE IMPLEMENTATION
     public GameObject GO => gameObject;
     public bool DebugMode
@@ -27,23 +19,33 @@ where T : ABehaviourSystem
         get => _isExecutionPaused;
         set => _isExecutionPaused = value;
     }
+    #endregion
+
+    #region EDITOR PROPERTIES
+    [Header("Behaviour System settings")]
+    [Tooltip("Whether to show debug messages in the console or not")]
+    public bool _debugMode;
+    [Tooltip("Whether to pause the execution of the behaviour system or not")]
+    public bool _isExecutionPaused;
+    #endregion
+
+    #region TO BE IMPLEMENTED METHODS
+    /// <summary>
+    /// Returned value will be assigned to the BehaviourSystem property.
+    /// Is executed in Awake().
+    /// </summary>
+    public abstract T InitializeBehaviourSystem();
 
     /// <summary>
-    /// The behaviour system should be initialized here.
-    /// Is executed in Monobehaviour/Awake().
+    /// The behaviour system of the entity.
     /// </summary>
-    public abstract void InitializeBehaviour();
-
-    /// <summary>
-    /// The behaviour system of the object.
-    /// </summary>
-    public abstract T BehaviourSystem { get; }
+    public T BehaviourSystem;
     #endregion
 
     #region MONOBEHAVIOUR: DERIVED TO BEHAVIOUR SYSTEM
     protected virtual void Awake()
     {
-        InitializeBehaviour();
+        BehaviourSystem = InitializeBehaviourSystem();
         BehaviourSystem.Awake();
     }
 

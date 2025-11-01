@@ -23,9 +23,8 @@ public class GameManager : ASingletonBehaviourEntity<GameManager, FiniteStateMac
     #endregion
 
     #region INHERITED
-    public override void InitializeBehaviour()
+    public override FiniteStateMachine InitializeBehaviourSystem()
     {
-        // FINITE STATE MACHINE
         _fsm = new(this);
 
         // States initialization
@@ -39,9 +38,9 @@ public class GameManager : ASingletonBehaviourEntity<GameManager, FiniteStateMac
             _fsm.SetInitialState(_gamePlayState);
         else
             _fsm.SetInitialState(_mainMenuState);
-    }
 
-    public override FiniteStateMachine BehaviourSystem => _fsm;
+        return _fsm;
+    }
     #endregion
 
     #region MONOBEHAVIOUR

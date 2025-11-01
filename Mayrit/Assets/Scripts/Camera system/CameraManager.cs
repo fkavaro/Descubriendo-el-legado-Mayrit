@@ -62,9 +62,8 @@ public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStat
     #endregion
 
     #region INHERITED
-    public override void InitializeBehaviour()
+    public override FiniteStateMachine InitializeBehaviourSystem()
     {
-        // FINITE STATE MACHINE
         _fsm = new(this);
 
         // States initialization
@@ -73,9 +72,9 @@ public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStat
         _thirdPersonState = new(_fsm, _thirdPersonCamera);
 
         _fsm.SetInitialState(_spectatorState);
-    }
 
-    public override FiniteStateMachine BehaviourSystem => _fsm;
+        return _fsm;
+    }
     #endregion
 
     #region MONOBEHAVIOUR
