@@ -9,8 +9,8 @@ using UnityEngine;
 public class FiniteStateMachine : AStateMachine<FiniteStateMachine>
 {
     #region CONSTRUCTOR
-    public FiniteStateMachine(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO)
-    : base(entity, entityGO) { }
+    public FiniteStateMachine(IBehaviourEntity entity)
+    : base(entity) { }
     #endregion
 
     #region INHERITED METHODS

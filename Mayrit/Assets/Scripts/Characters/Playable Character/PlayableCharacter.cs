@@ -31,7 +31,7 @@ public class PlayableCharacter : ABehaviourEntity<FiniteStateMachine>
     public override void InitializeBehaviour()
     {
         // FINITE STATE MACHINE
-        _fsm = new(this as IBehaviourEntity<ABehaviourSystem>, gameObject);
+        _fsm = new(this);
 
         _freeRoamState = new(_fsm, this);
 
@@ -46,7 +46,7 @@ public class PlayableCharacter : ABehaviourEntity<FiniteStateMachine>
     {
         base.Awake();
 
-        _animationController = new(this, this as IBehaviourEntity<ABehaviourSystem>, _animator);
+        _animationController = new(this, this, _animator);
         _playerController = new(this, GetComponent<CharacterController>());
     }
     #endregion

@@ -15,8 +15,8 @@ public class RepetitionNode : Node
     #endregion
 
     #region CONSTRUCTOR
-    public RepetitionNode(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, int repetitions, Node child, int priority = 0)
-    : base(entity, entityGO, repetitions.ToString() + " repetions", priority)
+    public RepetitionNode(IBehaviourEntity entity, int repetitions, Node child, int priority = 0)
+    : base(entity, repetitions.ToString() + " repetions", priority)
     {
         _repetitions = repetitions;
         AddChild(child); // Use the AddChild method to set the child

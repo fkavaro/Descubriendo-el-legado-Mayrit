@@ -14,8 +14,8 @@ public class UtilitySystem : ABehaviourSystem
     #endregion
 
     #region CONSTRUCTOR
-    protected UtilitySystem(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO)
-    : base(entity, entityGO) { }
+    protected UtilitySystem(IBehaviourEntity entity)
+    : base(entity) { }
     #endregion
 
     #region INHERITED METHODS
@@ -82,12 +82,13 @@ public class UtilitySystem : ABehaviourSystem
     /// </summary>
     void CalculateActionsUtilities()
     {
-        if (DebugMode) Debug.Log(_behaviourEntityGO.name + " making decision...");
+        if (DebugMode) Debug.Log(_behaviourEntity.GO.name + " making decision...");
 
         // Calculate the utility of each available action
         foreach (var action in _actions)
         {
-            if (DebugMode) Debug.Log($"    {_behaviourEntityGO.name}: {action.ActionName} has utility of {action.Utility}");
+            if (DebugMode)
+                Debug.Log($"    {_behaviourEntity.GO.name}: {action.ActionName} has utility of {action.Utility}");
 
             _actionUtilities.Add(action, action.Utility);
         }
@@ -99,7 +100,8 @@ public class UtilitySystem : ABehaviourSystem
         // If the best action has negative utility, continue with current action
         if (_actionUtilities[bestAction] < 0f || bestAction == null)
         {
-            if (DebugMode) Debug.LogError($"   {_behaviourEntityGO.name}: best action is null or has negative utility, continuing with current action: {_currentAction.ActionName}");
+            if (DebugMode)
+                Debug.LogError($"   {_behaviourEntity.GO.name}: best action is null or has negative utility, continuing with current action: {_currentAction.ActionName}");
 
             bestAction = _currentAction;
         }
@@ -116,7 +118,8 @@ public class UtilitySystem : ABehaviourSystem
         _currentAction.StartAction();
 
         // Debug the decision made
-        if (DebugMode) Debug.Log($"{_behaviourEntityGO.name} is {_currentAction.ActionName}");
+        if (DebugMode)
+            Debug.Log($"{_behaviourEntity.GO.name} is {_currentAction.ActionName}");
 
         DebugDecision();
 

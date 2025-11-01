@@ -16,8 +16,8 @@ where TStateMachineType : AStateMachine<TStateMachineType>
     #endregion
 
     #region CONSTRUCTOR
-    protected AStateMachine(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO)
-    : base(entity, entityGO) { }
+    protected AStateMachine(IBehaviourEntity entity)
+    : base(entity) { }
     #endregion
 
     #region TO BE IMPLEMENTED METHODS
@@ -41,7 +41,7 @@ where TStateMachineType : AStateMachine<TStateMachineType>
         _currentStateName = _currentState.StateName;
 
         if (DebugMode)
-            Debug.Log("[" + _behaviourEntityGO.name + "]" + " is " + _currentState.StateName);
+            Debug.Log("[" + _behaviourEntity.GO.name + "]" + " is " + _currentState.StateName);
     }
     #endregion
 
@@ -117,7 +117,7 @@ where TStateMachineType : AStateMachine<TStateMachineType>
     {
         if (_initialState == null)
         {
-            Debug.LogWarning(_behaviourEntityGO.name + ": AStateMachine has no initial state set.");
+            Debug.LogWarning(_behaviourEntity.GO.name + ": AStateMachine has no initial state set.");
             return;
         }
 

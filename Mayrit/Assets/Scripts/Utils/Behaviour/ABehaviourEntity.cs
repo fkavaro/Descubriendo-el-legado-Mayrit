@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class ABehaviourEntity<T> : MonoBehaviour, IBehaviourEntity<T>
+public abstract class ABehaviourEntity<T> : MonoBehaviour, IBehaviourEntityGeneric<T>
 where T : ABehaviourSystem
 {
     #region EDITOR PROPERTIES
@@ -12,6 +12,7 @@ where T : ABehaviourSystem
     #endregion
 
     #region INTERFACE IMPLEMENTATION
+    public GameObject GO => gameObject;
     public bool DebugMode
     {
         get => _debugMode;

@@ -13,8 +13,8 @@ public class UntilSuccessNode : Node
     #endregion
 
     #region CONSTRUCTOR
-    public UntilSuccessNode(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, Node child, int priority = 0)
-    : base(entity, entityGO, "UntilSuccess", priority)
+    public UntilSuccessNode(IBehaviourEntity entity, Node child, int priority = 0)
+    : base(entity, "UntilSuccess", priority)
     {
         AddChild(child);
         _child = child;

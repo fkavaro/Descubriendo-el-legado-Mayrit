@@ -7,8 +7,7 @@ using System.Collections;
 public abstract class ABehaviourSystem
 {
     #region PROPERTIES
-    public IBehaviourEntity<ABehaviourSystem> _behaviourEntity;
-    public GameObject _behaviourEntityGO;
+    public IBehaviourEntity _behaviourEntity;
 
     /// <summary>
     /// Whether to show debug messages in the console or not
@@ -32,10 +31,12 @@ public abstract class ABehaviourSystem
     #endregion
 
     #region CONSTRUCTOR
-    public ABehaviourSystem(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO)
+    public ABehaviourSystem(IBehaviourEntity behaviourEntity)
     {
-        _behaviourEntity = entity;
-        _behaviourEntityGO = entityGO;
+        _behaviourEntity = behaviourEntity;
+
+        if (_behaviourEntity == null)
+            Debug.LogError(_behaviourEntity.GO.name + ": Behaviour Entity is null in " + GetType().Name);
     }
     #endregion
 

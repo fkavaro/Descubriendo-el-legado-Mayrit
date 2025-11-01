@@ -18,7 +18,7 @@ public class UIManager : ASingletonBehaviourEntity<UIManager, StackFiniteStateMa
     #endregion
 
     #region INTERNAL PROPERTIES
-    public StackFiniteStateMachine _fsm;
+    public StackFiniteStateMachine _sfsm;
     public MainMenu_UIState _mainMenuState;
     public SpectatorHUD_UIState _spectatorHUDState;
     public PlayerHUD_UIState _playerHUDState;
@@ -30,25 +30,25 @@ public class UIManager : ASingletonBehaviourEntity<UIManager, StackFiniteStateMa
     public override void InitializeBehaviour()
     {
         // FINITE STATE MACHINE
-        _fsm = new(this as IBehaviourEntity<ABehaviourSystem>, gameObject);
+        _sfsm = new(this);
 
         UIDocument uiDocument = GetComponent<UIDocument>();
 
         // States initialization
-        _mainMenuState = new(_fsm, uiDocument);
-        _spectatorHUDState = new(_fsm, uiDocument);
-        _playerHUDState = new(_fsm, uiDocument);
-        _pauseState = new(_fsm, uiDocument);
-        _heritageState = new(_fsm, uiDocument);
+        _mainMenuState = new(_sfsm, uiDocument);
+        _spectatorHUDState = new(_sfsm, uiDocument);
+        _playerHUDState = new(_sfsm, uiDocument);
+        _pauseState = new(_sfsm, uiDocument);
+        _heritageState = new(_sfsm, uiDocument);
 
         // Set initial state based on scene name
         string sceneName = SceneManager.GetActiveScene().name;
         if (sceneName == "GameScene")
-            _fsm.SetInitialState(_spectatorHUDState);
+            _sfsm.SetInitialState(_spectatorHUDState);
         else
-            _fsm.SetInitialState(_mainMenuState);
+            _sfsm.SetInitialState(_mainMenuState);
     }
 
-    public override StackFiniteStateMachine BehaviourSystem => _fsm;
+    public override StackFiniteStateMachine BehaviourSystem => _sfsm;
     #endregion
 }

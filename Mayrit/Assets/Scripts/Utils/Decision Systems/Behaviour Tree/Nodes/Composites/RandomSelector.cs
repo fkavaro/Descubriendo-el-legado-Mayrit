@@ -10,8 +10,8 @@ using UnityEngine;
 public class RanndomSelectorNode : PrioritySelectorNode
 {
     #region CONSTRUCTOR
-    public RanndomSelectorNode(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, int priority = 0)
-    : base(entity, entityGO, priority) { }
+    public RanndomSelectorNode(IBehaviourEntity entity, int priority = 0)
+    : base(entity, priority) { }
     #endregion
 
     #region INHERITED METHODS

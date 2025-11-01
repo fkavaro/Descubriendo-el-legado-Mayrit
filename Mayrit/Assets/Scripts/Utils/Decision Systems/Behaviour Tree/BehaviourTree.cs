@@ -6,11 +6,11 @@ using UnityEngine;
 public class BehaviourTree : Node
 {
     #region CONSTRUCTORs
-    public BehaviourTree(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, string name = "BehaviourTree")
-    : base(entity, entityGO, name) { }
+    public BehaviourTree(IBehaviourEntity entity, GameObject entityGO, string name = "BehaviourTree")
+    : base(entity, name) { }
 
-    public BehaviourTree(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, Node child, string name = "BehaviourTree")
-    : base(entity, entityGO, name)
+    public BehaviourTree(IBehaviourEntity entity, GameObject entityGO, Node child, string name = "BehaviourTree")
+    : base(entity, name)
     {
         AddChild(child);
     }

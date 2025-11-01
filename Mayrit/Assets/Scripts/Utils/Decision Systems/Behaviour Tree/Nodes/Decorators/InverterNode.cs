@@ -10,8 +10,8 @@ using UnityEngine;
 public class InverterNode : Node
 {
     #region CONSTRUCTOR
-    public InverterNode(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, int priority = 0)
-    : base(entity, entityGO, "Inverter", priority) { }
+    public InverterNode(IBehaviourEntity entity, int priority = 0)
+    : base(entity, "Inverter", priority) { }
     #endregion
 
     #region INHERITED METHODS

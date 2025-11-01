@@ -13,8 +13,8 @@ public class LeafNode : Node
     #endregion
 
     #region CONSTRUCTOR
-    public LeafNode(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, string name, AStrategy strategy, int priority = 0)
-    : base(entity, entityGO, name, priority)
+    public LeafNode(IBehaviourEntity entity, string name, AStrategy strategy, int priority = 0)
+    : base(entity, name, priority)
     {
         _strategy = strategy;
     }

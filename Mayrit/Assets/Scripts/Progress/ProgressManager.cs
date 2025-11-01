@@ -51,7 +51,7 @@ public class ProgressManager : ASingletonBehaviourEntity<ProgressManager, Finite
     public override void InitializeBehaviour()
     {
         // FINITE STATE MACHINE
-        _fsm = new(this as IBehaviourEntity<ABehaviourSystem>, gameObject);
+        _fsm = new(this);
 
         // States initialization
         _visionState = new(Milestone._1_Vision, _visionInformation, _fsm);

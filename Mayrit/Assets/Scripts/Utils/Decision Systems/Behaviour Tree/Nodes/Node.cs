@@ -25,8 +25,8 @@ public class Node : ABehaviourSystem
     #endregion
 
     #region CONSTRUCTOR
-    public Node(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, string nodeName = "Node", int priority = 0)
-    : base(entity, entityGO)
+    public Node(IBehaviourEntity entity, string nodeName = "Node", int priority = 0)
+    : base(entity)
     {
         _nodeName = nodeName;
         _priority = priority;

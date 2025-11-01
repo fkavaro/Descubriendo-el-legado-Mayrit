@@ -8,7 +8,7 @@ using System;
 public class AnimationController
 {
     readonly MonoBehaviour _entity;
-    readonly IBehaviourEntity<ABehaviourSystem> _behaviourEntity;
+    readonly IBehaviourEntity _behaviourEntity;
     readonly Animator _animator;
 
     readonly public int _idleAnim = Animator.StringToHash("Idle")
@@ -22,7 +22,7 @@ public class AnimationController
     public int _currentAnimation, _lastAnimation;
 
     // Constructor
-    public AnimationController(MonoBehaviour entity, IBehaviourEntity<ABehaviourSystem> behaviourEntity, Animator animator)
+    public AnimationController(MonoBehaviour entity, IBehaviourEntity behaviourEntity, Animator animator)
     {
         _entity = entity;
         _behaviourEntity = behaviourEntity;

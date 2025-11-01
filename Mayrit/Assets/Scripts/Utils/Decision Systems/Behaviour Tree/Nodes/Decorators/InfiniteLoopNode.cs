@@ -11,11 +11,11 @@ public class InfiniteLoopNode : Node
     #endregion
 
     #region CONSTRUCTORS
-    public InfiniteLoopNode(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO)
-    : base(entity, entityGO, "InfiniteLoop") { }
+    public InfiniteLoopNode(IBehaviourEntity entity)
+    : base(entity, "InfiniteLoop") { }
 
-    public InfiniteLoopNode(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, Node child)
-    : base(entity, entityGO, "InfiniteLoop")
+    public InfiniteLoopNode(IBehaviourEntity entity, Node child)
+    : base(entity, "InfiniteLoop")
     {
         AddChild(child); // Use the AddChild method to set the child
         _child = _children[0]; // Store a direct reference for easier access

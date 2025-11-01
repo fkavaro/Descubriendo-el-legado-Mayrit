@@ -65,7 +65,7 @@ public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStat
     public override void InitializeBehaviour()
     {
         // FINITE STATE MACHINE
-        _fsm = new(this as IBehaviourEntity<ABehaviourSystem>, gameObject);
+        _fsm = new(this);
 
         // States initialization
         _spectatorState = new(_fsm, _spectatorCamera);

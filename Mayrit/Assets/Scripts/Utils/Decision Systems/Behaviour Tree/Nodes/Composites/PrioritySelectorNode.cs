@@ -15,8 +15,8 @@ public class PrioritySelectorNode : SelectorNode
     #endregion
 
     #region CONSTRUCTOR
-    public PrioritySelectorNode(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, int priority = 0)
-    : base(entity, entityGO, priority) { }
+    public PrioritySelectorNode(IBehaviourEntity entity, int priority = 0)
+    : base(entity, priority) { }
     #endregion
 
     #region INHERITED METHODS

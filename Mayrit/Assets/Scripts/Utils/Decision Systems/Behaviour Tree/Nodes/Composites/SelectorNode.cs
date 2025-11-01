@@ -10,8 +10,8 @@ using UnityEngine;
 public class SelectorNode : Node
 {
     #region CONSTRUCTOR
-    public SelectorNode(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, int priority = 0)
-    : base(entity, entityGO, "Selector", priority) { }
+    public SelectorNode(IBehaviourEntity entity, int priority = 0)
+    : base(entity, "Selector", priority) { }
     #endregion
 
     #region INHERITED METHODS

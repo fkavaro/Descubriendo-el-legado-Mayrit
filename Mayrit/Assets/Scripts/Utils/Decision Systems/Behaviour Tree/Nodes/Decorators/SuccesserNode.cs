@@ -7,8 +7,8 @@ using UnityEngine;
 public class SuccederNode : Node
 {
     #region CONSTRUCTOR
-    public SuccederNode(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, int priority = 0)
-    : base(entity, entityGO, "Successer", priority) { }
+    public SuccederNode(IBehaviourEntity entity, int priority = 0)
+    : base(entity, "Successer", priority) { }
     #endregion
 
     #region INHERITED METHODS

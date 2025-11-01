@@ -46,7 +46,7 @@ where T : ABehaviourSystem
     {
         base.Awake();
 
-        _animationController = new(this, this as IBehaviourEntity<ABehaviourSystem>, _animator);
+        _animationController = new(this, this, _animator);
 
         _agent = GetComponent<NavMeshAgent>();
         _agent.speed = _walkSpeed;

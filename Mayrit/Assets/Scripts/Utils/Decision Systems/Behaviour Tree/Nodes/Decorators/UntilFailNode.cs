@@ -13,8 +13,8 @@ public class UntilFailNode : Node
     #endregion
 
     #region CONSTRUCTOR
-    public UntilFailNode(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO, Node child, int priority = 0)
-    : base(entity, entityGO, "UntilFail", priority)
+    public UntilFailNode(IBehaviourEntity entity, Node child, int priority = 0)
+    : base(entity, "UntilFail", priority)
     {
         AddChild(child); // Use the AddChild method to set the child
         _child = child;
