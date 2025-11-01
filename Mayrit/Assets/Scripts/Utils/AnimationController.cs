@@ -8,7 +8,7 @@ using System;
 public class AnimationController
 {
     readonly MonoBehaviour _entity;
-    readonly ABehaviourSystem _decisionSystem;
+    readonly IBehaviourEntity<ABehaviourSystem> _behaviourEntity;
     readonly Animator _animator;
 
     readonly public int _idleAnim = Animator.StringToHash("Idle")
@@ -22,10 +22,10 @@ public class AnimationController
     public int _currentAnimation, _lastAnimation;
 
     // Constructor
-    public AnimationController(MonoBehaviour entity, ABehaviourSystem decisionSystem, Animator animator)
+    public AnimationController(MonoBehaviour entity, IBehaviourEntity<ABehaviourSystem> behaviourEntity, Animator animator)
     {
         _entity = entity;
-        _decisionSystem = decisionSystem;
+        _behaviourEntity = behaviourEntity;
         _animator = animator;
     }
 
@@ -93,14 +93,14 @@ public class AnimationController
 
     public IEnumerator PlayAnimationCertainTimeCoroutine(float waitTime, int animation, string animationName, Action onComplete = null, bool showtext = true)
     {
-        if (_decisionSystem.IsExecutionPaused) yield break;
-        _decisionSystem.IsExecutionPaused = true;
+        if (_behaviourEntity.IsExecutionPaused) yield break;
+        _behaviourEntity.IsExecutionPaused = true;
 
         if (showtext && waitTime >= 2f)
             ChangeAnimationTo(animation);
         yield return new WaitForSeconds(waitTime);
 
-        _decisionSystem.IsExecutionPaused = false;
+        _behaviourEntity.IsExecutionPaused = false;
         onComplete?.Invoke();
     }
     #endregion

@@ -46,7 +46,7 @@ public class PlayableCharacter : ABehaviourEntity<FiniteStateMachine>
     {
         base.Awake();
 
-        _animationController = new(this, _fsm, _animator);
+        _animationController = new(this, this as IBehaviourEntity<ABehaviourSystem>, _animator);
         _playerController = new(this, GetComponent<CharacterController>());
     }
     #endregion

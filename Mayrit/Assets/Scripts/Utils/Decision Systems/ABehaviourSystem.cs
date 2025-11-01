@@ -7,8 +7,8 @@ using System.Collections;
 public abstract class ABehaviourSystem
 {
     #region PROPERTIES
-    public IBehaviourEntity<ABehaviourSystem> _entity;
-    public GameObject _entityGO;
+    public IBehaviourEntity<ABehaviourSystem> _behaviourEntity;
+    public GameObject _behaviourEntityGO;
 
     /// <summary>
     /// Whether to show debug messages in the console or not
@@ -22,20 +22,20 @@ public abstract class ABehaviourSystem
     public bool DebugMode
     {
         get => _debugMode;
-        set => _entity.DebugMode = value;
+        set => _behaviourEntity.DebugMode = value;
     }
     public bool IsExecutionPaused
     {
         get => _isExecutionPaused;
-        set => _entity.IsExecutionPaused = value;
+        set => _behaviourEntity.IsExecutionPaused = value;
     }
     #endregion
 
     #region CONSTRUCTOR
     public ABehaviourSystem(IBehaviourEntity<ABehaviourSystem> entity, GameObject entityGO)
     {
-        _entity = entity;
-        _entityGO = entityGO;
+        _behaviourEntity = entity;
+        _behaviourEntityGO = entityGO;
     }
     #endregion
 

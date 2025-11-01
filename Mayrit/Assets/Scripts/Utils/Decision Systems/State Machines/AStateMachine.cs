@@ -41,7 +41,7 @@ where TStateMachineType : AStateMachine<TStateMachineType>
         _currentStateName = _currentState.StateName;
 
         if (DebugMode)
-            Debug.Log("[" + _entityGO.name + "]" + " is " + _currentState.StateName);
+            Debug.Log("[" + _behaviourEntityGO.name + "]" + " is " + _currentState.StateName);
     }
     #endregion
 
@@ -117,7 +117,7 @@ where TStateMachineType : AStateMachine<TStateMachineType>
     {
         if (_initialState == null)
         {
-            Debug.LogWarning(_entityGO.name + ": AStateMachine has no initial state set.");
+            Debug.LogWarning(_behaviourEntityGO.name + ": AStateMachine has no initial state set.");
             return;
         }
 
