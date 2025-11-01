@@ -32,12 +32,14 @@ public class UIManager : ASingletonBehaviourEntity<UIManager, StackFiniteStateMa
         // FINITE STATE MACHINE
         _fsm = new(this as IBehaviourEntity<ABehaviourSystem>, gameObject);
 
+        UIDocument uiDocument = GetComponent<UIDocument>();
+
         // States initialization
-        _mainMenuState = new(_fsm, GetComponent<UIDocument>());
-        _spectatorHUDState = new(_fsm, GetComponent<UIDocument>());
-        _playerHUDState = new(_fsm, GetComponent<UIDocument>());
-        _pauseState = new(_fsm, GetComponent<UIDocument>());
-        _heritageState = new(_fsm, GetComponent<UIDocument>());
+        _mainMenuState = new(_fsm, uiDocument);
+        _spectatorHUDState = new(_fsm, uiDocument);
+        _playerHUDState = new(_fsm, uiDocument);
+        _pauseState = new(_fsm, uiDocument);
+        _heritageState = new(_fsm, uiDocument);
 
         // Set initial state based on scene name
         string sceneName = SceneManager.GetActiveScene().name;

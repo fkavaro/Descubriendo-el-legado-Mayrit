@@ -1,4 +1,3 @@
-using UnityEngine;
 
 /// <summary>
 /// Interface for objects with behaviour.

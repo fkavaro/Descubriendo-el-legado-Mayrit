@@ -21,12 +21,12 @@ public abstract class ABehaviourSystem
 
     public bool DebugMode
     {
-        get => _debugMode; // TODO: _entity.DebugMode?
+        get => _debugMode;
         set => _entity.DebugMode = value;
     }
     public bool IsExecutionPaused
     {
-        get => _isExecutionPaused; // TODO: _entity.IsExecutionPaused?
+        get => _isExecutionPaused;
         set => _entity.IsExecutionPaused = value;
     }
     #endregion

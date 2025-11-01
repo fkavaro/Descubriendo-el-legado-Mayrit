@@ -3,15 +3,11 @@ using UnityEngine;
 public abstract class ABehaviourEntity<T> : MonoBehaviour, IBehaviourEntity<T>
 where T : ABehaviourSystem
 {
-    #region PROPERTIES
-    [Header("Behaviour settings")]
-    /// <summary>
-    /// Whether to show debug messages in the console or not
-    /// </summary>
+    #region EDITOR PROPERTIES
+    [Header("Behaviour System settings")]
+    [Tooltip("Whether to show debug messages in the console or not")]
     public bool _debugMode;
-    /// <summary>
-    /// Whether to update next frame of the system or not
-    /// </summary>
+    [Tooltip("Whether to pause the execution of the behaviour system or not")]
     public bool _isExecutionPaused;
     #endregion
 
