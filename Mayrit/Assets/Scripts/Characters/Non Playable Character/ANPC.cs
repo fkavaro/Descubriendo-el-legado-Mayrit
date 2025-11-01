@@ -60,7 +60,7 @@ where T : ABehaviourSystem
         base.Update();
 
         // Stop moving if execution is paused
-        if (BehaviourSystem.IsExecutionPaused)
+        if (IsExecutionPaused)
             _agent.isStopped = true;
         else
         {

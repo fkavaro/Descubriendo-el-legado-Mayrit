@@ -63,7 +63,7 @@ public class StackFiniteStateMachine : AStateMachine<StackFiniteStateMachine>
         // Empty stack
         if (_stateStack.Count == 0)
         {
-            if (DebugMode) Debug.Log("[" + _behaviourEntity.GO.name + "] state stack is empty");
+            if (_behaviourEntity.DebugMode) Debug.Log("[" + _behaviourEntity.GO.name + "] state stack is empty");
 
             return null;
         }
@@ -72,7 +72,7 @@ public class StackFiniteStateMachine : AStateMachine<StackFiniteStateMachine>
             // Get the last state from the stack without removing it
             var previousState = _stateStack.Peek();
 
-            if (DebugMode) Debug.Log("[" + _behaviourEntity.GO.name + "] Previous state: " + previousState.StateName);
+            if (_behaviourEntity.DebugMode) Debug.Log("[" + _behaviourEntity.GO.name + "] Previous state: " + previousState.StateName);
 
             return previousState;
         }
@@ -87,7 +87,7 @@ public class StackFiniteStateMachine : AStateMachine<StackFiniteStateMachine>
         // Empty stack
         if (_stateStack.Count == 0)
         {
-            if (DebugMode) Debug.Log("[" + _behaviourEntity.GO.name + "] state stack is empty");
+            if (_behaviourEntity.DebugMode) Debug.Log("[" + _behaviourEntity.GO.name + "] state stack is empty");
 
             return false;
         }

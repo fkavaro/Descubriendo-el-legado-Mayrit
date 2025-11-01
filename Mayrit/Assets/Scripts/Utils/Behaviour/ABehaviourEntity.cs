@@ -1,5 +1,9 @@
 using UnityEngine;
 
+/// <summary>
+/// Abstract behaviour entity class with a generic behaviour system.
+/// </summary>
+/// <typeparam name="T"> The type of the behaviour system.</typeparam>
 public abstract class ABehaviourEntity<T> : MonoBehaviour, IBehaviourEntityGeneric<T>
 where T : ABehaviourSystem
 {
@@ -16,15 +20,23 @@ where T : ABehaviourSystem
     public bool DebugMode
     {
         get => _debugMode;
-        set => BehaviourSystem.DebugMode = value;
+        set => _debugMode = value;
     }
     public bool IsExecutionPaused
     {
         get => _isExecutionPaused;
-        set => BehaviourSystem.IsExecutionPaused = value;
+        set => _isExecutionPaused = value;
     }
 
+    /// <summary>
+    /// The behaviour system should be initialized here.
+    /// Is executed in Monobehaviour/Awake().
+    /// </summary>
     public abstract void InitializeBehaviour();
+
+    /// <summary>
+    /// The behaviour system of the object.
+    /// </summary>
     public abstract T BehaviourSystem { get; }
     #endregion
 

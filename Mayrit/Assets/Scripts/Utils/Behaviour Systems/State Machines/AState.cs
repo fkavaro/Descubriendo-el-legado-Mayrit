@@ -64,12 +64,12 @@ public abstract class AState<TStateMachine>
     /// </summary>
     public virtual IEnumerator SwitchStateAfterCertainTime(AState<TStateMachine> nextState, float waitTime)
     {
-        _stateMachine.IsExecutionPaused = true;
+        _stateMachine._behaviourEntity.IsExecutionPaused = true;
 
         yield return new WaitForSeconds(waitTime);
 
         _stateMachine?.SwitchState(nextState);
-        _stateMachine.IsExecutionPaused = false;
+        _stateMachine._behaviourEntity.IsExecutionPaused = false;
     }
     #endregion
 

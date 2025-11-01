@@ -60,7 +60,7 @@ public class Node : ABehaviourSystem
     public override void Update()
     {
         DebugDecision();
-        if (!IsExecutionPaused)
+        if (!_behaviourEntity.IsExecutionPaused)
             _status = UpdateNode();
     }
     #endregion

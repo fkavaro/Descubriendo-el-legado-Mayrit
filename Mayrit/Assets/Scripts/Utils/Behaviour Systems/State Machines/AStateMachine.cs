@@ -40,7 +40,7 @@ where TStateMachineType : AStateMachine<TStateMachineType>
     {
         _currentStateName = _currentState.StateName;
 
-        if (DebugMode)
+        if (_behaviourEntity.DebugMode)
             Debug.Log("[" + _behaviourEntity.GO.name + "]" + " is " + _currentState.StateName);
     }
     #endregion
@@ -133,13 +133,13 @@ where TStateMachineType : AStateMachine<TStateMachineType>
 
     public override void Update()
     {
-        if (!IsExecutionPaused)
+        if (!_behaviourEntity.IsExecutionPaused)
             _currentState?.OnUpdateState();
     }
 
     public override void LateUpdate()
     {
-        if (!IsExecutionPaused)
+        if (!_behaviourEntity.IsExecutionPaused)
             _currentState?.OnLateUpdateState();
     }
 

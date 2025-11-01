@@ -8,26 +8,6 @@ public abstract class ABehaviourSystem
 {
     #region PROPERTIES
     public IBehaviourEntity _behaviourEntity;
-
-    /// <summary>
-    /// Whether to show debug messages in the console or not
-    /// </summary>
-    public bool _debugMode;
-    /// <summary>
-    /// Whether to update next frame of the system or not
-    /// </summary>
-    public bool _isExecutionPaused;
-
-    public bool DebugMode
-    {
-        get => _debugMode;
-        set => _behaviourEntity.DebugMode = value;
-    }
-    public bool IsExecutionPaused
-    {
-        get => _isExecutionPaused;
-        set => _behaviourEntity.IsExecutionPaused = value;
-    }
     #endregion
 
     #region CONSTRUCTOR
