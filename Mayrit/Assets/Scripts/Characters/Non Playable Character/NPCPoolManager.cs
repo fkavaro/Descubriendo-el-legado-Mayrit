@@ -16,14 +16,11 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
     public GameObject[] _villagerPrefabs;
     [Tooltip("Maximum number of villager at once")]
     public int _maxVillagers = 10;
-    public int _minSecondsForNewVillager = 2,
-        _maxSecondsForNewVillager = 15;
 
-    public Transform entrancePosition;
+    Transform entrancePosition; // TODO delete
     #endregion
 
     #region PRIVATE PROPERTIES
-    float _lastSpawnTime = 0f;
     #endregion
 
     #region EXECUTION METHODS
@@ -36,20 +33,15 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
             createFunc: CreateVillager,
             actionOnGet: GetVillager,
             actionOnRelease: ReleaseVillager,
-            actionOnDestroy: (villager) => Destroy(villager.gameObject),
-            maxSize: _maxVillagers
+            actionOnDestroy: (villager) => Destroy(villager.gameObject)
+            //,maxSize: _maxVillagers
         );
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Villagers keep coming if there's room for them
-        if (Time.time >= _lastSpawnTime && _villagerPool.CountActive < _maxVillagers)
-        {
-            _lastSpawnTime = Time.time + UnityEngine.Random.Range(_minSecondsForNewVillager, _maxSecondsForNewVillager);
-            _villagerPool.Get();
-        }
+
     }
     #endregion
 

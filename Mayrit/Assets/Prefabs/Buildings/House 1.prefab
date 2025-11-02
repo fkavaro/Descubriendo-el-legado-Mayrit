@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8404425909734408605}
+  - component: {fileID: 1269317408874022744}
   m_Layer: 3
   m_Name: House 1
   m_TagString: Untagged
@@ -29,11 +30,26 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 876997312670651295}
   - {fileID: 2923108163921703735}
   - {fileID: 5885958385960654618}
+  - {fileID: 876997312670651295}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1269317408874022744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1395640635926063230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bea95cad3cfb0f249a9d1610a767f734, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::House
+  entranceSpots:
+  - {fileID: 3168696735808779243}
+  _householdSize: 2
 --- !u!1 &5952331492286343235
 GameObject:
   m_ObjectHideFlags: 0
@@ -397,7 +413,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spot
   _isOccupied: 0
-  _isRotationFixed: 0
+  _isRotationFixed: 1
   _directionAngle: 0
   _gizmoLength: 2
   _gizmoThickness: 10
