@@ -46,3 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TownManager
   _dontDestroyOnLoad: 0
   _population: 0
+  _debugReassignment: 1
