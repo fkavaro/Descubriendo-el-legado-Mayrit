@@ -5,10 +5,11 @@ using UnityEngine.Pool;
 /// <summary>
 /// Pool manager for NPCs (Non-Player Characters).
 /// </summary>
-public class NPCPoolManager : MonoBehaviour
+public class NPCPoolManager : Singleton<NPCPoolManager>
 {
     #region PUBLIC PROPERTIES
     public ObjectPool<Villager> _villagerPool;
+    // TODO: soldier pool
 
     [Header("Villagers pool")]
     [Tooltip("All villager models to be spawned randomly")]
@@ -26,8 +27,10 @@ public class NPCPoolManager : MonoBehaviour
     #endregion
 
     #region EXECUTION METHODS
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         // Pool creation
         _villagerPool = new ObjectPool<Villager>(
             createFunc: CreateVillager,

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Billboard : MonoBehaviour
 {
+    #region EDITOR PROPERTIES
     [Tooltip("Wether to fully follow camera or just in Y axis")]
     [SerializeField] bool freezeXZAxis = false;
     [Tooltip("Wether to scale based on distance to camera")]
@@ -17,17 +18,25 @@ public class Billboard : MonoBehaviour
     [SerializeField] Vector2 scaleRange = new(0.5f, 3f);
     [Tooltip("Distance range: x = minimum distance, y = maximum distance. Passed max distance, object will be invisible.")]
     [SerializeField] Vector2 distanceRange = new(50f, 500f);
+    #endregion
 
+    #region INTERNAL PROPERTIES
+    Camera cam;
+    #endregion
+
+    #region MONOBEHAVIOUR
     void Update()
     {
-        var cam = Camera.main;
+        cam = Camera.main;
         if (cam == null) return;
-        ApplyRotation(cam);
-        ApplyScaling(cam);
-        CheckIfTooFar(cam);
+        ApplyRotation();
+        ApplyScaling();
+        CheckIfTooFar();
     }
+    #endregion
 
-    void ApplyRotation(Camera cam)
+    #region PRIVATE METHODS
+    void ApplyRotation()
     {
         if (freezeXZAxis)
             transform.rotation = Quaternion.Euler(0f, cam.transform.rotation.eulerAngles.y, 0f);
@@ -35,7 +44,7 @@ public class Billboard : MonoBehaviour
             transform.rotation = cam.transform.rotation;
     }
 
-    void ApplyScaling(Camera cam)
+    void ApplyScaling()
     {
         if (!dynamicScaling) return;
 
@@ -58,7 +67,7 @@ public class Billboard : MonoBehaviour
         transform.localScale = new Vector3(scaleUniform, scaleUniform, transform.localScale.z);
     }
 
-    void CheckIfTooFar(Camera cam)
+    void CheckIfTooFar()
     {
         if (!disappearWhenFar) return;
 
@@ -68,4 +77,5 @@ public class Billboard : MonoBehaviour
         // Enable or disable the GameObject based on distance
         gameObject.SetActive(distance <= maxDistance);
     }
+    #endregion
 }

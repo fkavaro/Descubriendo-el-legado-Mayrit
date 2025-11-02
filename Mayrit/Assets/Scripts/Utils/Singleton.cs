@@ -60,7 +60,8 @@ where M : MonoBehaviour
             else if (_instance != this) // If an instance already exists and it's not this one, destroy this object.
             {
                 Debug.LogWarning($"Duplicate Singleton<{typeof(M).Name}> found. Destroying...");
-                DestroyImmediate(gameObject);
+                if (Application.isPlaying) Destroy(gameObject);
+                else DestroyImmediate(gameObject);
             }
         }
     }
