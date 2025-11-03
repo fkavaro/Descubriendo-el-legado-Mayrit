@@ -53,6 +53,9 @@ where T : ABehaviourSystem
         _agent.angularSpeed = _rotationSpeed * 100f;
         _agent.stoppingDistance = _stoppingDistance;
         _agent.radius = _avoidanceRadius;
+
+        // Deactivate agent initially
+        _agent.enabled = false;
     }
 
     protected override void Update()

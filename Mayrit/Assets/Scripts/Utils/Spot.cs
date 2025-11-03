@@ -18,13 +18,11 @@ public class Spot : MonoBehaviour
     [SerializeField] float _gizmoLength = 2f;
     [SerializeField] float _gizmoThickness = 10f;
 
-    // Direction in local coordinates (unit vector in the object's local space)
     [HideInInspector] public Vector3 DirectionVector => Quaternion.Euler(0f, _directionAngle, 0f) * Vector3.forward;
+    [HideInInspector] public Vector3 DirectionWorldVector => transform.rotation * DirectionVector;
 
     [HideInInspector] public Quaternion DirectionQuaternion => Quaternion.Euler(0f, _directionAngle, 0f);
-
-    // Optionally expose the world-space direction computed from the local direction
-    //[HideInInspector] public Vector3 DirectionWorldVector => transform.rotation * DirectionVector;
+    [HideInInspector] public Quaternion DirectionWorldQuaternion => transform.rotation * DirectionQuaternion;
 
     readonly object posLock = new();
 

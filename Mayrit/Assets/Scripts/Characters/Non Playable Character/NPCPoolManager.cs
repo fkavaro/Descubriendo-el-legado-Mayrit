@@ -175,12 +175,11 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
         // Assign and place the villager in that house
         randomFreeHouse.AssignAndPlaceNewResident(villager);
 
-        // Activation and lightweight reset.
         villager.gameObject.SetActive(true);
-        // Attempt a safe behaviour reset if available
-        try { villager.BehaviourSystem?.Reset(); } catch { }
-        // Reset animations if controller available
-        try { villager._animationController.ChangeAnimationTo(villager._animationController._walkAnim); } catch { }
+        villager._agent.enabled = true;
+        villager.BehaviourSystem?.Reset();
+        villager._animationController.ChangeAnimationTo(villager._animationController._walkAnim);
+
         // Track active
         if (!_activeVillagers.Contains(villager))
             _activeVillagers.Add(villager);
@@ -198,66 +197,67 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
             _activeVillagers.Remove(villager);
 
         villager.gameObject.SetActive(false);
+        villager._agent.enabled = false;
+        #endregion
+
+        #region COROUTINES
+        // IEnumerator SpawnVillagersForHouseCoroutine(ABuilding building, int count)
+        // {
+        //     int spawned = 0;
+        //     while (spawned < count)
+        //     {
+        //         int batch = Mathf.Min(_spawnPerFrame, count - spawned);
+        //         for (int i = 0; i < batch; i++)
+        //         {
+        //             SpawnVillagerAtRandomSpot(building);
+        //             spawned++;
+        //         }
+        //         // yield a frame to spread cost
+        //         yield return null;
+        //     }
+        // }
+
+        // IEnumerator PrewarmPoolCoroutine(int amount)
+        // {
+        //     int created = 0;
+        //     while (created < amount)
+        //     {
+        //         int batch = Mathf.Min(_prewarmPerFrame, amount - created);
+        //         for (int i = 0; i < batch; i++)
+        //         {
+        //             Villager v = _villagerPool.Get();
+        //             _villagerPool.Release(v);
+        //             created++;
+        //         }
+        //         yield return null;
+        //     }
+        // }
+
+        // IEnumerator SpawnGlobalVillagersCoroutine(int amount)
+        // {
+        //     int spawned = 0;
+        //     while (spawned < amount)
+        //     {
+        //         int batch = Mathf.Min(_spawnPerFrame, amount - spawned);
+        //         for (int i = 0; i < batch; i++)
+        //         {
+        //             Villager v = _villagerPool.Get();
+        //             // Place at a random global spawn point if available
+        //             if (_globalSpawnPoints != null && _globalSpawnPoints.Length > 0)
+        //             {
+        //                 Transform s = _globalSpawnPoints[UnityEngine.Random.Range(0, _globalSpawnPoints.Length)];
+        //                 v.transform.position = s.position;
+        //                 v.ForceRotation(s.rotation);
+        //             }
+        //             else
+        //             {
+        //                 v.transform.position = transform.position;
+        //             }
+        //             spawned++;
+        //         }
+        //         yield return null;
+        //     }
+        // }
+        #endregion
     }
-    #endregion
-
-    #region COROUTINES
-    // IEnumerator SpawnVillagersForHouseCoroutine(ABuilding building, int count)
-    // {
-    //     int spawned = 0;
-    //     while (spawned < count)
-    //     {
-    //         int batch = Mathf.Min(_spawnPerFrame, count - spawned);
-    //         for (int i = 0; i < batch; i++)
-    //         {
-    //             SpawnVillagerAtRandomSpot(building);
-    //             spawned++;
-    //         }
-    //         // yield a frame to spread cost
-    //         yield return null;
-    //     }
-    // }
-
-    // IEnumerator PrewarmPoolCoroutine(int amount)
-    // {
-    //     int created = 0;
-    //     while (created < amount)
-    //     {
-    //         int batch = Mathf.Min(_prewarmPerFrame, amount - created);
-    //         for (int i = 0; i < batch; i++)
-    //         {
-    //             Villager v = _villagerPool.Get();
-    //             _villagerPool.Release(v);
-    //             created++;
-    //         }
-    //         yield return null;
-    //     }
-    // }
-
-    // IEnumerator SpawnGlobalVillagersCoroutine(int amount)
-    // {
-    //     int spawned = 0;
-    //     while (spawned < amount)
-    //     {
-    //         int batch = Mathf.Min(_spawnPerFrame, amount - spawned);
-    //         for (int i = 0; i < batch; i++)
-    //         {
-    //             Villager v = _villagerPool.Get();
-    //             // Place at a random global spawn point if available
-    //             if (_globalSpawnPoints != null && _globalSpawnPoints.Length > 0)
-    //             {
-    //                 Transform s = _globalSpawnPoints[UnityEngine.Random.Range(0, _globalSpawnPoints.Length)];
-    //                 v.transform.position = s.position;
-    //                 v.ForceRotation(s.rotation);
-    //             }
-    //             else
-    //             {
-    //                 v.transform.position = transform.position;
-    //             }
-    //             spawned++;
-    //         }
-    //         yield return null;
-    //     }
-    // }
-    #endregion
 }

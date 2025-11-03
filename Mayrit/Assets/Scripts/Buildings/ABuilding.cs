@@ -11,7 +11,7 @@ public abstract class ABuilding : MonoBehaviour
         if (entranceSpot != null)
         {
             villager.transform.position = entranceSpot.transform.position;
-            villager.ForceRotation(entranceSpot.DirectionVector);
+            villager.ForceRotation(entranceSpot.DirectionWorldQuaternion);
         }
         else
         {
