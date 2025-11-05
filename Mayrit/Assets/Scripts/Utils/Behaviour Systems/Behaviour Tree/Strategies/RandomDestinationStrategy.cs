@@ -14,8 +14,8 @@ public class RandomDestinationStrategy : RandomPatrolStrategy
 
     #region CONSTRUCTOR
     // Center point is the controller transform
-    public RandomDestinationStrategy(ANPC<Node> npc, LeafNode leafNode, int samplingIterations = 30, float areaRadious = 10f)
-    : base(npc, leafNode, npc._agent.transform, samplingIterations, areaRadious) { }
+    public RandomDestinationStrategy(INPC npc, int samplingIterations = 30, float areaRadious = 10f)
+    : base(npc, npc.GO.transform, samplingIterations, areaRadious) { }
     #endregion
 
     #region INHERITED METHODS
@@ -38,7 +38,7 @@ public class RandomDestinationStrategy : RandomPatrolStrategy
         // Is close to destination
         if (_npc.IsCloseToDestination(1f))
         {
-            if (_leafNode._behaviourEntity.DebugMode) Debug.Log(_npc.gameObject.name + " arrived at random destination");
+            if (_npc.DebugMode) Debug.Log(_npc.Name + " arrived at random destination");
             return Node.Status.Success;
         }
         else // Hasn't arrived

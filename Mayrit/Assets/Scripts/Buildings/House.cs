@@ -9,6 +9,8 @@ public class House : ABuilding
     [SerializeField] List<Villager> _residents = new();
     #endregion
 
+
+
     #region MONOBEHAVIOUR
 
     // When enabled, increase town population
@@ -41,10 +43,7 @@ public class House : ABuilding
     #endregion
 
     #region PUBLIC METHODS
-    public bool HasCapacityForNewResident()
-    {
-        return _residents.Count < _householdSize;
-    }
+    public bool HasCapacityForNewResident => _residents.Count < _householdSize;
 
     public bool AssignAndPlaceNewResident(Villager villager)
     {

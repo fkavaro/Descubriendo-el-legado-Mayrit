@@ -6,15 +6,13 @@ using UnityEngine;
 public abstract class AStrategy
 {
     #region PROPERTIES
-    protected readonly ANPC<Node> _npc;
-    protected readonly LeafNode _leafNode;
+    protected readonly INPC _npc;
     #endregion
 
     #region CONSTRUCTOR
-    public AStrategy(ANPC<Node> npc, LeafNode leafNode)
+    public AStrategy(INPC npc)
     {
         _npc = npc;
-        _leafNode = leafNode;
     }
     #endregion
 

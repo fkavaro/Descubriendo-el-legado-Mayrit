@@ -6,7 +6,7 @@ using UnityEngine.AI;
 /// Abstract base class for NPC (Non-Playable Character).
 /// </summary>
 [RequireComponent(typeof(NavMeshAgent))]
-public abstract class ANPC<T> : ABehaviourEntity<T> // TODO: INPC
+public abstract class ANPC<T> : ABehaviourEntity<T>, INPC
 where T : ABehaviourSystem
 {
     #region EDITOR PROPERTIES
@@ -82,23 +82,6 @@ where T : ABehaviourSystem
     #endregion
 
     #region PUBLIC METHODS
-    /// <summary>
-    /// Sets the target position for the NavMeshAgent to navigate to
-    /// and optionally the animation to play when arriving.
-    /// </summary>
-    public void SetDestinationSpot(Spot destinationSpot)
-    {
-        if (_destinationSpot == destinationSpot) return;
-
-        SetDestination(destinationSpot.transform.position); // Set the target position for the NavMeshAgent
-
-        _destinationSpot = destinationSpot;
-    }
-
-    /// <summary>
-    /// Sets the target position for the NavMeshAgent to navigate to
-    /// and optionally the animation to play when arriving.
-    /// </summary>
     public void SetDestination(Vector3 destinationPos)
     {
         if (_agent.destination == destinationPos) return;
@@ -116,6 +99,15 @@ where T : ABehaviourSystem
         else _animationController.ChangeAnimationTo(_animationController._walkAnim);
     }
 
+    public void SetDestinationSpot(Spot destinationSpot)
+    {
+        if (_destinationSpot == destinationSpot) return;
+
+        SetDestination(destinationSpot.transform.position); // Set the target position for the NavMeshAgent
+
+        _destinationSpot = destinationSpot;
+    }
+
     public bool DestinationSpotIsOccupied()
     {
         if (_destinationSpot == null)
@@ -124,10 +116,7 @@ where T : ABehaviourSystem
             return _destinationSpot.IsOccupied();
     }
 
-    public bool IsCloseToDestination(float checkingDistance = 2f, bool fixRotation = false)
-    {
-        return IsCloseTo(_agent.destination, checkingDistance, fixRotation);
-    }
+
 
     public bool IsCloseTo(Vector3 destination, float checkingDistance = 2f, bool fixRotation = false)
     {
@@ -145,28 +134,21 @@ where T : ABehaviourSystem
             return false;
     }
 
-    /// <summary>
-    /// Checks if the NavMeshAgent has arrived at its destination, 
-    /// and if the target is a spot, fixes its rotation if wanted.
-    /// </summary>
+    public bool IsCloseToDestination(float checkingDistance = 2f, bool fixRotation = false)
+    {
+        return IsCloseTo(_agent.destination, checkingDistance, fixRotation);
+    }
+
     public bool HasArrivedAtDestination(bool fixRotation = true, bool fixPosition = true)
     {
         return HasArrived(_agent.destination, fixRotation, fixPosition);
     }
 
-    /// <summary>
-    /// Checks if the NavMeshAgent has arrived at certain spot position
-    /// and if the target is a spot, fixes its rotation if wanted.
-    /// </summary>
     public bool HasArrived(Spot spot, bool fixRotation = true, bool fixPosition = true)
     {
         return HasArrived(spot.transform.position, fixRotation, fixPosition);
     }
 
-    /// <summary>
-    /// Checks if the NavMeshAgent has arrived at certain destination
-    /// and if the target is a spot, fixes its rotation if wanted.
-    /// </summary>
     public bool HasArrived(Vector3 destination, bool fixRotation = true, bool fixPosition = true)
     {
         if (Vector3.Distance(_agent.transform.position, destination) < _stoppingDistance)
@@ -203,10 +185,6 @@ where T : ABehaviourSystem
         _agent.transform.rotation = rotation;
     }
 
-    /// <summary>
-    /// Checks if the NavMeshAgent can move to the specified position,
-    /// taking out its nearest reachable position.
-    /// </summary>
     public bool CanReachPosition(Vector3 targetPos, out Vector3 reachablePos)
     {
         NavMeshHit hitLocation;
@@ -223,9 +201,6 @@ where T : ABehaviourSystem
         }
     }
 
-    /// <summary>
-    /// Returns true if a random point is reachable
-    /// </summary>
     public bool CalculateRandomDestination(int samplingIterations, float areaRadious, Transform centerPoint, out Vector3 destination)
     {
         // Repeat until a random position in the navmesh is found
@@ -244,9 +219,6 @@ where T : ABehaviourSystem
         return false;
     }
 
-    /// <summary>
-    /// Sets the NavMeshAgent to be stopped or not.
-    /// </summary>
     public void SetIfStopped(bool isStopped)
     {
         if (!_agent.isOnNavMesh)
@@ -263,10 +235,6 @@ where T : ABehaviourSystem
         return _agent.pathPending;
     }
 
-    /// <summary>
-    /// Gets the current target position of the NavMeshAgent.
-    /// </summary>
-    /// <returns>The target position in world coordinates.</returns>
     public Vector3 GetDestinationPos()
     {
         return _agent.destination;

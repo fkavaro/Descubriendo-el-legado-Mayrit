@@ -10,8 +10,8 @@ public class ActionStrategy : AStrategy
     #endregion
 
     #region CONSTRUCTOR
-    public ActionStrategy(ANPC<Node> npc, LeafNode leafNode, Action action)
-    : base(npc, leafNode)
+    public ActionStrategy(ANPC<Node> npc, Action action)
+    : base(npc)
     {
         _action = action;
     }

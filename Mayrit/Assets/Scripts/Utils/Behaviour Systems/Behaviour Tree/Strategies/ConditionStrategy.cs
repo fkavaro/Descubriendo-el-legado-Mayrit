@@ -10,8 +10,8 @@ public class ConditionStrategy : AStrategy
     #endregion
 
     #region CONSTRUCTOR
-    public ConditionStrategy(ANPC<Node> npc, LeafNode leafNode, Func<bool> predicate)
-    : base(npc, leafNode)
+    public ConditionStrategy(INPC npc, Func<bool> predicate)
+    : base(npc)
     {
         _predicate = predicate;
     }

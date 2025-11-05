@@ -16,8 +16,8 @@ public class WaypointPatrolStrategy : AStrategy
     #endregion
 
     #region CONSTRUCTOR
-    public WaypointPatrolStrategy(ANPC<Node> npc, LeafNode leafNode, List<Transform> patrolPoints)
-    : base(npc, leafNode)
+    public WaypointPatrolStrategy(ANPC<Node> npc, List<Transform> patrolPoints)
+    : base(npc)
     {
         _patrolPoints = patrolPoints;
     }
@@ -31,7 +31,7 @@ public class WaypointPatrolStrategy : AStrategy
 
         var target = _patrolPoints[_currentPatrolPointIndex];
         _npc.SetDestination(target.position);
-        _npc._agent.transform.LookAt(target);
+        _npc.GO.transform.LookAt(target);
 
         if (_isPathCalculated && _npc.HasArrivedAtDestination())
         {

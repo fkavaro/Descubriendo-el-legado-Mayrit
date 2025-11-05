@@ -8,6 +8,7 @@ public abstract class ABehaviourEntity<T> : MonoBehaviour, IBehaviourEntity
 where T : ABehaviourSystem
 {
     #region INTERFACE IMPLEMENTATION
+    public string Name => gameObject.name;
     public GameObject GO => gameObject;
     public bool DebugMode
     {

@@ -59,7 +59,7 @@ public class TownManager : Singleton<TownManager>
         // Check every house
         foreach (var house in _houses)
         {
-            if (house.HasCapacityForNewResident())
+            if (house.HasCapacityForNewResident)
                 housesWithFreeSlots.Add(house);
         }
 
@@ -94,7 +94,7 @@ public class TownManager : Singleton<TownManager>
         {
             var h = _houses[i];
             if (h == null || h == fromHouse) continue;
-            if (h.HasCapacityForNewResident())
+            if (h.HasCapacityForNewResident)
                 candidates.Add(h);
         }
 

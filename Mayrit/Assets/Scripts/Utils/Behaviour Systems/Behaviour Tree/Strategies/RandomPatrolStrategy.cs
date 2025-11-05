@@ -15,8 +15,8 @@ public class RandomPatrolStrategy : AStrategy
     #endregion
 
     #region CONSTRUCTOR
-    public RandomPatrolStrategy(ANPC<Node> npc, LeafNode leadNode, Transform centerPoint, int samplingIterations = 30, float areaRadious = 10f)
-    : base(npc, leadNode)
+    public RandomPatrolStrategy(INPC npc, Transform centerPoint, int samplingIterations = 30, float areaRadious = 10f)
+    : base(npc)
     {
         _centerPoint = centerPoint;
         _samplingIterations = samplingIterations;
