@@ -33,20 +33,19 @@ public class Villager : ANPC<BehaviourTree>
     AtHome_VillagerStrategy restStrategy;
     Working_VillagerStrategy workingStrategy;
     Shopping_VillagerStrategy shopSorcererStrategy;
-
-    RandomDestinationStrategy randomDestinationStrategy;
+    Praying_VillagerStrategy prayingStrategy;
     #endregion
 
     #region INHERITED
     public override BehaviourTree InitializeBehaviourSystem()
     {
         // Strategies
-        randomDestinationStrategy = new(this);
-
         isEnergyLowStrategy = new(this, IsEnergyLow);
         restStrategy = new(this);
         workingStrategy = new(this);
         shopSorcererStrategy = new(this);
+        prayingStrategy = new(this);
+
         // canAnnoyAlchemistStrategy = new(this, CanAnnoyAlchemist);
         // canAnnoySorcererStrategy = new(this, CanAnnoySorcerer);
 
@@ -78,7 +77,7 @@ public class Villager : ANPC<BehaviourTree>
         // successerAnnoyWorker.AddChild(annoyWorkerSelector);
 
         // Walk around
-        walkAroundLeaf = new(this, "Walking around", randomDestinationStrategy);
+        // walkAroundLeaf = new(this, "Walking around", randomDestinationStrategy);
 
         // Rest sequence
         isEnergyLowConditionLeaf = new(this, "IsEnergyLow", isEnergyLowStrategy);
