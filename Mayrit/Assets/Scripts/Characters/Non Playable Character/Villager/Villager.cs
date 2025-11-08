@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -8,91 +9,77 @@ public class Villager : ANPC<BehaviourTree>
     public House _home;
     #endregion
 
-    #region NODES
+    #region PROPERTIES
     BehaviourTree _villagerBT;
-    InfiniteLoopNode infiniteLoop;
-    SequenceNode behaviourSequence,
-        annoyAlchemistSequence,
-        annoySorcererSequence,
-        restSequence;
-    SelectorNode annoyWorkerSelector;
-    LeafNode isAlchemistNearLeaf,
-        annoyAlchemistLeaf,
-        isSorcererNearLeaf,
-        annoySorcererLeaf,
-        walkAroundLeaf,
-        isEnergyLowConditionLeaf,
-        restLeaf,
-        canAnnoyAlchemistLeaf,
-        canAnnoySorcererLeaf;
-    SuccederNode successerAnnoyWorker;
-    #endregion
-
-    #region STRATEGIES
-    ConditionStrategy isEnergyLowStrategy;
-    AtHome_VillagerStrategy restStrategy;
-    Working_VillagerStrategy workingStrategy;
-    Shopping_VillagerStrategy shopSorcererStrategy;
-    Praying_VillagerStrategy prayingStrategy;
     #endregion
 
     #region INHERITED
     public override BehaviourTree InitializeBehaviourSystem()
     {
-        // Strategies
-        isEnergyLowStrategy = new(this, IsEnergyLow);
-        restStrategy = new(this);
-        workingStrategy = new(this);
-        shopSorcererStrategy = new(this);
-        prayingStrategy = new(this);
+        // Interact strategies
+        ConditionStrategy isInStreet = new(this, IsInStreet);
+        ConditionStrategy isOtherNearby = new(this, IsOtherNearby);
+        ConditionStrategy isEnoughSinceLastInteraction = new(this, IsEnoughTimeSinceLastInteraction);
+        InteractStrategy interactStrategy = new(this);
 
-        // canAnnoyAlchemistStrategy = new(this, CanAnnoyAlchemist);
-        // canAnnoySorcererStrategy = new(this, CanAnnoySorcerer);
+        // Routine strategies
+        GoToDestinationStrategy goToMosque = new(this);
+        Praying_VillagerStrategy prayingStrategy = new(this);
+        GoToDestinationStrategy goToWork = new(this);
+        Working_VillagerStrategy workingStrategy = new(this);
+        GoToDestinationStrategy goToShop = new(this);
+        Shopping_VillagerStrategy shoppingStrategy = new(this);
+        GoToDestinationStrategy goHome = new(this);
+        AtHome_VillagerStrategy restStrategy = new(this);
 
-        // Annoy alchemist sequence
-        // canAnnoyAlchemistLeaf = new(this, "CanAnnoyAlchemist", canAnnoyAlchemistStrategy);
-        // isAlchemistNearLeaf = new(this, "IsAlchemistNear", isAlchemistNearStrategy);
-        // annoyAlchemistLeaf = new(this, "Annoying Alchemist", annoyingAlchemistStrategy);
-        // annoyAlchemistSequence = new(this);
-        // annoyAlchemistSequence.AddChild(isAlchemistNearLeaf);
-        // annoyAlchemistSequence.AddChild(canAnnoyAlchemistLeaf);
-        // annoyAlchemistSequence.AddChild(annoyAlchemistLeaf);
+        // Interact sequence
+        SequenceNode interactSequence = new(this);
 
-        // Annoy sorcerer sequence
-        // canAnnoySorcererLeaf = new(this, "CanAnnoySorcerer", canAnnoySorcererStrategy);
-        // isSorcererNearLeaf = new(this, "IsSorcererNear", isSorcererNearStrategy);
-        // annoySorcererLeaf = new(this, "Annoying Sorcerer", annoyingSorcererStrategy);
-        // annoySorcererSequence = new(this);
-        // annoySorcererSequence.AddChild(isSorcererNearLeaf);
-        // annoySorcererSequence.AddChild(canAnnoySorcererLeaf);
-        // annoySorcererSequence.AddChild(annoySorcererLeaf);
+        LeafNode isInStreetLeaf = new(this, "IsInStreet", isInStreet);
+        LeafNode isOtherNearbyLeaf = new(this, "IsOtherNearby", isOtherNearby);
+        LeafNode isEnoughSinceLastInteractionLeaf = new(this, "IsEnoughSinceLastInteraction", isEnoughSinceLastInteraction);
+        LeafNode talkLeaf = new(this, "Talking", interactStrategy);
 
-        // Annoy worker selector
-        // annoyWorkerSelector = new(this);
-        // annoyWorkerSelector.AddChild(annoyAlchemistSequence);
-        // annoyWorkerSelector.AddChild(annoySorcererSequence);
+        interactSequence.AddChild(isInStreetLeaf);
+        interactSequence.AddChild(isOtherNearbyLeaf);
+        interactSequence.AddChild(isEnoughSinceLastInteractionLeaf);
+        interactSequence.AddChild(talkLeaf);
 
-        // Selector succeder
-        // successerAnnoyWorker = new(this);
-        // successerAnnoyWorker.AddChild(annoyWorkerSelector);
+        // Routine sequence
+        SequenceNode routineSequence = new(this);
+        SequenceNode prayingSequence = new(this);
+        SequenceNode workingSequence = new(this);
+        SequenceNode shoppingSequence = new(this);
+        SequenceNode atHomeSequence = new(this);
 
-        // Walk around
-        // walkAroundLeaf = new(this, "Walking around", randomDestinationStrategy);
+        LeafNode goToMosqueLeaf = new(this, "GoingToMosque", goToMosque);
+        LeafNode prayLeaf = new(this, "Praying", prayingStrategy);
+        prayingSequence.AddChild(goToMosqueLeaf);
+        prayingSequence.AddChild(prayLeaf);
+        LeafNode goToWorkLeaf = new(this, "GoingToWork", goToWork);
+        LeafNode workLeaf = new(this, "Working", workingStrategy);
+        workingSequence.AddChild(goToWorkLeaf);
+        workingSequence.AddChild(workLeaf);
+        LeafNode goToShopLeaf = new(this, "GoingToShop", goToShop);
+        LeafNode shopLeaf = new(this, "Shopping", shoppingStrategy);
+        shoppingSequence.AddChild(goToShopLeaf);
+        shoppingSequence.AddChild(shopLeaf);
+        LeafNode goHomeLeaf = new(this, "GoingHome", goHome);
+        LeafNode restLeaf = new(this, "Resting", restStrategy);
+        atHomeSequence.AddChild(goHomeLeaf);
+        atHomeSequence.AddChild(restLeaf);
 
-        // Rest sequence
-        isEnergyLowConditionLeaf = new(this, "IsEnergyLow", isEnergyLowStrategy);
-        restLeaf = new(this, "Resting", restStrategy);
-        restSequence = new(this);
-        restSequence.AddChild(isEnergyLowConditionLeaf);
-        restSequence.AddChild(restLeaf);
+        routineSequence.AddChild(prayingSequence);
+        routineSequence.AddChild(workingSequence);
+        routineSequence.AddChild(shoppingSequence);
+        routineSequence.AddChild(atHomeSequence);
 
         // Behaviour sequence
-        behaviourSequence = new(this);
-        behaviourSequence.AddChild(successerAnnoyWorker);
-        behaviourSequence.AddChild(walkAroundLeaf);
-        behaviourSequence.AddChild(restSequence);
+        SelectorNode behaviourSelector = new(this);
+        behaviourSelector.AddChild(interactSequence);
+        behaviourSelector.AddChild(routineSequence);
 
-        infiniteLoop = new(this, behaviourSequence);
+        InfiniteLoopNode infiniteLoop = new(this, behaviourSelector);
         _villagerBT = new(this, infiniteLoop);
 
         return _villagerBT;
@@ -110,27 +97,22 @@ public class Villager : ANPC<BehaviourTree>
         _home.RemoveResident(this);
         _home = null;
     }
+    #endregion
 
-    public void ReturnHomeAndRelease()
+    #region PRIVATE METHODS
+    private bool IsEnoughTimeSinceLastInteraction()
     {
-        // // Optionally move to a home entrance spot before release
-        // if (_house != null)
-        // {
-        //     Spot spawnSpot = _house.GetRandomEntranceSpot();
-        //     if (spawnSpot != null)
-        //     {
-        //         transform.position = spawnSpot.transform.position;
-        //         if (spawnSpot._isRotationFixed)
-        //             ForceRotation(spawnSpot.DirectionVector);
-        //     }
-        //     else
-        //     {
-        //         transform.position = _house.transform.position;
-        //     }
-        // }
+        throw new NotImplementedException();
+    }
 
-        // Return to pool
-        NPCPoolManager.Instance.ReturnVillagerToPool(this);
+    private bool IsOtherNearby()
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool IsInStreet()
+    {
+        throw new NotImplementedException();
     }
     #endregion
 }
