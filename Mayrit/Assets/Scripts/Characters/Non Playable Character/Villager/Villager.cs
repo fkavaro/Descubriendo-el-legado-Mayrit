@@ -7,6 +7,7 @@ public class Villager : ANPC<BehaviourTree>
     #region EDIROR PROPERTIES
     [Header("Villager Properties")]
     public House _home;
+    public Building _workplace;
     #endregion
 
     #region PROPERTIES
@@ -23,14 +24,22 @@ public class Villager : ANPC<BehaviourTree>
         InteractStrategy interactStrategy = new(this);
 
         // Routine strategies
-        GoToDestinationStrategy goToMosque = new(this);
-        Praying_VillagerStrategy prayingStrategy = new(this);
-        GoToDestinationStrategy goToWork = new(this);
-        Working_VillagerStrategy workingStrategy = new(this);
-        GoToDestinationStrategy goToShop = new(this);
-        Shopping_VillagerStrategy shoppingStrategy = new(this);
-        GoToDestinationStrategy goHome = new(this);
-        AtHome_VillagerStrategy restStrategy = new(this);
+        DeactivateModelStrategy deactivateModelStrategy = new(this, GO.transform.GetChild(0).gameObject);
+        Spot mosqueEntrance = TownManager.Instance.GetMosqueEntranceSpot();
+        GoToDestinationStrategy goToMosque = new(this, mosqueEntrance);
+        //Praying_VillagerStrategy prayingStrategy = new(this);
+
+        Spot workplaceEntrance = _workplace.GetRandomEntranceSpot();
+        GoToDestinationStrategy goToWork = new(this, workplaceEntrance);
+        //Working_VillagerStrategy workingStrategy = new(this);
+
+        Spot marketEntrance = TownManager.Instance.GetMarketSpot();
+        GoToDestinationStrategy goToShop = new(this, marketEntrance);
+        //Shopping_VillagerStrategy shoppingStrategy = new(this);
+
+        Spot homeEntrance = _home.GetRandomEntranceSpot();
+        GoToDestinationStrategy goHome = new(this, homeEntrance);
+        //AtHome_VillagerStrategy restStrategy = new(this);
 
         // Interact sequence
         SequenceNode interactSequence = new(this);
@@ -53,19 +62,19 @@ public class Villager : ANPC<BehaviourTree>
         SequenceNode atHomeSequence = new(this);
 
         LeafNode goToMosqueLeaf = new(this, "GoingToMosque", goToMosque);
-        LeafNode prayLeaf = new(this, "Praying", prayingStrategy);
+        LeafNode prayLeaf = new(this, "Praying", deactivateModelStrategy);
         prayingSequence.AddChild(goToMosqueLeaf);
         prayingSequence.AddChild(prayLeaf);
         LeafNode goToWorkLeaf = new(this, "GoingToWork", goToWork);
-        LeafNode workLeaf = new(this, "Working", workingStrategy);
+        LeafNode workLeaf = new(this, "Working", deactivateModelStrategy);
         workingSequence.AddChild(goToWorkLeaf);
         workingSequence.AddChild(workLeaf);
         LeafNode goToShopLeaf = new(this, "GoingToShop", goToShop);
-        LeafNode shopLeaf = new(this, "Shopping", shoppingStrategy);
+        LeafNode shopLeaf = new(this, "Shopping", deactivateModelStrategy);
         shoppingSequence.AddChild(goToShopLeaf);
         shoppingSequence.AddChild(shopLeaf);
         LeafNode goHomeLeaf = new(this, "GoingHome", goHome);
-        LeafNode restLeaf = new(this, "Resting", restStrategy);
+        LeafNode restLeaf = new(this, "Resting", deactivateModelStrategy);
         atHomeSequence.AddChild(goHomeLeaf);
         atHomeSequence.AddChild(restLeaf);
 
@@ -102,17 +111,20 @@ public class Villager : ANPC<BehaviourTree>
     #region PRIVATE METHODS
     private bool IsEnoughTimeSinceLastInteraction()
     {
-        throw new NotImplementedException();
+        // TODO
+        return false;
     }
 
     private bool IsOtherNearby()
     {
-        throw new NotImplementedException();
+        // TODO
+        return false;
     }
 
     private bool IsInStreet()
     {
-        throw new NotImplementedException();
+        // TODO
+        return false;
     }
     #endregion
 }

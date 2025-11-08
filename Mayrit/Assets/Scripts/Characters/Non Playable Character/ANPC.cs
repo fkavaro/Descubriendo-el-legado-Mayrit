@@ -39,6 +39,7 @@ where T : ABehaviourSystem
     [HideInInspector] public NavMeshAgent _agent;
     public AnimationController _animationController;
     Spot _destinationSpot = null;
+
     #endregion
 
     #region MONOBEHAVIOUR

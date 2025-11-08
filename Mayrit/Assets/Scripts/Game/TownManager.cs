@@ -8,6 +8,10 @@ public class TownManager : Singleton<TownManager>
     #region EDITOR PROPERTIES
     [Header("Town Stats")]
     public int _population;
+
+    [Header("Sites")]
+    public Building aljamaMosque;
+    public Building market;
     #endregion
 
     #region INTERNAL PROPERTIES    
@@ -70,6 +74,19 @@ public class TownManager : Singleton<TownManager>
         // Return a random house from the candidates
         return housesWithFreeSlots[UnityEngine.Random.Range(0, housesWithFreeSlots.Count)];
     }
+
+    public Spot GetMosqueEntranceSpot()
+    {
+        // TODO
+        return aljamaMosque.GetRandomEntranceSpot();
+    }
+
+    internal Spot GetMarketSpot()
+    {
+        // TODO
+        return market.GetRandomEntranceSpot();
+    }
+    #endregion
 
     #region PRIVATE METHODS
     void UpdatePopulation(int householdSize)
@@ -172,6 +189,8 @@ public class TownManager : Singleton<TownManager>
             UpdatePopulation(-releasedCount);
     }
 
+
+
     // /// <summary>
     // /// Returns a random registered house excluding the given one (or null if none available).
     // /// </summary>
@@ -217,5 +236,5 @@ public class TownManager : Singleton<TownManager>
 
     //     return candidates[UnityEngine.Random.Range(0, candidates.Count)];
     // }
-    #endregion
+
 }

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class House : ABuilding
+public class House : Building
 {
     #region EDITOR PROPERTIES
     public int _householdSize = 1;
