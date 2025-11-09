@@ -18,6 +18,7 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
     public GameObject[] _villagerPrefabs;
     [Tooltip("Maximum number of villager at once")]
     public int _maxActiveVillagers = 10;
+    public List<Villager> _activeVillagers = new();
 
     // [Tooltip("How many villager spawns to perform per frame when batching")]
     // public int _spawnPerFrame = 3;
@@ -28,11 +29,7 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
     #endregion
 
     #region PRIVATE PROPERTIES
-    /// <summary>
-    /// Get method for villagers pool: resets villager position and behaviour.
-    /// </summary>>
-    // Active villagers bookkeeping
-    readonly List<Villager> _activeVillagers = new();
+
     #endregion
 
     #region MONOBEHAVIOUR
@@ -49,7 +46,6 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
             _villagerPool.Get();
         }
     }
-
 
     void OnEnable()
     {
@@ -170,28 +166,25 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
 
     void GetVillager(Villager villager)
     {
-        // Find a random house with space for a new resident (use ExistingInstance to avoid creating TownManager during teardown)
-        var tm = TownManager.ExistingInstance;
-        if (tm == null)
-        {
-            // No town manager available - return villager to pool to avoid creating objects during teardown
-            villager.gameObject.SetActive(false);
-            return;
-        }
-
-        House randomFreeHouse = tm.GetRandomHouseWithFreeSpace();
-
-        // Assign and place the villager in that house
-        randomFreeHouse.AssignAndPlaceNewResident(villager);
-
-        villager.gameObject.SetActive(true);
-        villager._agent.enabled = true;
-        villager.BehaviourSystem?.Reset();
-        villager._animationController.ChangeAnimationTo(villager._animationController._walkAnim);
-
         // Track active
         if (!_activeVillagers.Contains(villager))
             _activeVillagers.Add(villager);
+
+        // Use ExistingInstance so a TownManager is not created during teardown
+        House randomFreeHouse = TownManager.ExistingInstance.GetRandomHouseWithFreeSpace();
+        Building randomWorkplace = TownManager.ExistingInstance.GetRandomWorkplaceBuilding();
+
+        // Assign home and workplace
+        villager.AssignHome(randomFreeHouse);
+        randomFreeHouse.AssignNewResident(villager);
+        villager.AssignWorkplace(randomWorkplace);
+
+        // Activate and reset components
+        villager.gameObject.SetActive(true);
+        villager.BehaviourSystem.Reset(); // TODO this won't reset work place. InitializeBehaviourSystem should be executed again to do that
+        villager._animationController.ChangeAnimationTo(villager._animationController._walkAnim);
+        randomFreeHouse.PlaceAtRandomEntrance(villager);
+        villager._agent.enabled = true; // Activated once its placed
     }
 
     /// <summary>

@@ -47,52 +47,52 @@ where T : ABehaviourSystem
     protected virtual void Awake()
     {
         BehaviourSystem = InitializeBehaviourSystem();
-        BehaviourSystem.Awake();
+        BehaviourSystem?.Awake();
     }
 
     protected virtual void Start()
     {
-        BehaviourSystem.Start();
+        BehaviourSystem?.Start();
     }
 
     protected virtual void Update()
     {
-        BehaviourSystem.Update();
+        BehaviourSystem?.Update();
     }
 
     protected virtual void LateUpdate()
     {
-        BehaviourSystem.LateUpdate();
+        BehaviourSystem?.LateUpdate();
     }
 
     protected virtual void OnCollisionEnter(Collision collision)
     {
-        BehaviourSystem.OnCollisionEnter(collision);
+        BehaviourSystem?.OnCollisionEnter(collision);
     }
 
     protected virtual void OnCollisionStay(Collision collision)
     {
-        BehaviourSystem.OnCollisionStay(collision);
+        BehaviourSystem?.OnCollisionStay(collision);
     }
 
     protected virtual void OnCollisionExit(Collision collision)
     {
-        BehaviourSystem.OnCollisionExit(collision);
+        BehaviourSystem?.OnCollisionExit(collision);
     }
 
     protected virtual void OnTriggerEnter(Collider other)
     {
-        BehaviourSystem.OnTriggerEnter(other);
+        BehaviourSystem?.OnTriggerEnter(other);
     }
 
     protected virtual void OnTriggerStay(Collider other)
     {
-        BehaviourSystem.OnTriggerStay(other);
+        BehaviourSystem?.OnTriggerStay(other);
     }
 
     protected virtual void OnTriggerExit(Collider other)
     {
-        BehaviourSystem.OnTriggerExit(other);
+        BehaviourSystem?.OnTriggerExit(other);
     }
     #endregion
 }

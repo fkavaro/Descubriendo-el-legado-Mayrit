@@ -31,6 +31,5 @@ public class DeactivateModelStrategy : AStrategy
             return Node.Status.Success;
         }
         return Node.Status.Running;
-
     }
 }

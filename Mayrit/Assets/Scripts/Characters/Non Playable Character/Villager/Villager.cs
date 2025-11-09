@@ -25,9 +25,15 @@ public class Villager : ANPC<BehaviourTree>
 
         // Routine strategies
         DeactivateModelStrategy deactivateModelStrategy = new(this, GO.transform.GetChild(0).gameObject);
+
         Spot mosqueEntrance = TownManager.Instance.GetMosqueEntranceSpot();
         GoToDestinationStrategy goToMosque = new(this, mosqueEntrance);
         //Praying_VillagerStrategy prayingStrategy = new(this);
+
+        if (_workplace == null)
+        {
+            Debug.LogWarning($"{gameObject.name} has no workplace assigned.");
+        }
 
         Spot workplaceEntrance = _workplace.GetRandomEntranceSpot();
         GoToDestinationStrategy goToWork = new(this, workplaceEntrance);
@@ -99,6 +105,14 @@ public class Villager : ANPC<BehaviourTree>
     public void AssignHome(House home)
     {
         _home = home;
+
+        // Add to its residents
+        home.AssignNewResident(this);
+    }
+
+    public void AssignWorkplace(Building workPlace)
+    {
+        _workplace = workPlace;
     }
 
     public void OnReleasedFromPool()
@@ -126,5 +140,7 @@ public class Villager : ANPC<BehaviourTree>
         // TODO
         return false;
     }
+
+
     #endregion
 }

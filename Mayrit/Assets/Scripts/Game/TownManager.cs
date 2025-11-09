@@ -75,6 +75,12 @@ public class TownManager : Singleton<TownManager>
         return housesWithFreeSlots[UnityEngine.Random.Range(0, housesWithFreeSlots.Count)];
     }
 
+    public Building GetRandomWorkplaceBuilding()
+    {
+        // TODO
+        return _houses[UnityEngine.Random.Range(0, _houses.Count)];
+    }
+
     public Spot GetMosqueEntranceSpot()
     {
         // TODO
@@ -188,6 +194,8 @@ public class TownManager : Singleton<TownManager>
         if (releasedCount > 0)
             UpdatePopulation(-releasedCount);
     }
+
+
 
 
 

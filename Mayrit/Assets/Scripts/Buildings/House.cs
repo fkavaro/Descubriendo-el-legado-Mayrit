@@ -45,14 +45,6 @@ public class House : Building
     #region PUBLIC METHODS
     public bool HasCapacityForNewResident => _residents.Count < _householdSize;
 
-    public bool AssignAndPlaceNewResident(Villager villager)
-    {
-        if (AssignNewResident(villager))
-            PlaceAtRandomEntrance(villager);
-
-        return AssignNewResident(villager);
-    }
-
     public bool AssignNewResident(Villager villager)
     {
         // Max residents reached or already assigned
@@ -60,7 +52,6 @@ public class House : Building
             return false;
 
         _residents.Add(villager);
-        villager.AssignHome(this);
         return true;
     }
 

@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5053474982296870191
 Transform:
   m_ObjectHideFlags: 0
@@ -81,7 +81,8 @@ MonoBehaviour:
   _energy: 100
   _animator: {fileID: 8442105521708024458}
   _agent: {fileID: 0}
-  _house: {fileID: 0}
+  _home: {fileID: 0}
+  _workplace: {fileID: 0}
 --- !u!1001 &2545030637896681716
 PrefabInstance:
   m_ObjectHideFlags: 0
