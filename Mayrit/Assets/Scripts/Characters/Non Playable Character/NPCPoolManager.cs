@@ -59,13 +59,19 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
         );
 
         // Subscribe to town population changes
-        //TownManager.Instance.OnPopulationChanged += OnTownPopulationChanged;
+        TownManager.Instance.OnPopulationChanged += OnTownPopulationChanged;
+    }
+
+    private void OnTownPopulationChanged(int population)
+    {
+        // Max active players is a third of population
+        _maxActiveVillagers = population / 3; // TODO revisit
     }
 
     void OnDestroy()
     {
         // Unsubscribe from town population changes
-        //TownManager.Instance.OnPopulationChanged -= OnTownPopulationChanged;
+        TownManager.Instance.OnPopulationChanged -= OnTownPopulationChanged;
     }
     #endregion
 
