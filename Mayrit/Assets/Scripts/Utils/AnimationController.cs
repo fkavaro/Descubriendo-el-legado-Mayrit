@@ -11,7 +11,7 @@ public class AnimationController
     readonly IBehaviourEntity _behaviourEntity;
     readonly Animator _animator;
 
-    readonly public int _idleAnim = Animator.StringToHash("Idle")
+    readonly int _idleAnim = Animator.StringToHash("Idle")
         , _walkAnim = Animator.StringToHash("Walk")
         , _runAnim = Animator.StringToHash("Run")
         , _preJumpAnim = Animator.StringToHash("PreJump")
@@ -19,7 +19,7 @@ public class AnimationController
         , _afterJumpAnim = Animator.StringToHash("AfterJump")
         ;
 
-    public int _currentAnimation, _lastAnimation;
+    int _currentAnimation, _lastAnimation;
 
     // Constructor
     public AnimationController(MonoBehaviour entity, IBehaviourEntity behaviourEntity, Animator animator)
@@ -102,6 +102,66 @@ public class AnimationController
 
         _behaviourEntity.IsExecutionPaused = false;
         onComplete?.Invoke();
+    }
+
+    public void ChangeToIdle()
+    {
+        ChangeAnimationTo(_idleAnim);
+    }
+
+    public void ChangeToWalk()
+    {
+        ChangeAnimationTo(_walkAnim);
+    }
+
+    public void ChangeToRun()
+    {
+        ChangeAnimationTo(_runAnim);
+    }
+
+    public void ChangeToPreJump()
+    {
+        ChangeAnimationTo(_preJumpAnim);
+    }
+
+    public void ChangeToJump()
+    {
+        ChangeAnimationTo(_jumpAnim);
+    }
+
+    public void ChangeToAfterJump()
+    {
+        ChangeAnimationTo(_afterJumpAnim);
+    }
+
+    public bool IsIdleAnimationFinished()
+    {
+        return IsAnimationFinished(_idleAnim);
+    }
+
+    public bool IsWalkAnimationFinished()
+    {
+        return IsAnimationFinished(_walkAnim);
+    }
+
+    public bool IsRunAnimationFinished()
+    {
+        return IsAnimationFinished(_runAnim);
+    }
+
+    public bool IsPreJumpAnimationFinished()
+    {
+        return IsAnimationFinished(_preJumpAnim);
+    }
+
+    public bool IsJumpAnimationFinished()
+    {
+        return IsAnimationFinished(_jumpAnim);
+    }
+
+    public bool IsAfterJumpAnimationFinished()
+    {
+        return IsAnimationFinished(_afterJumpAnim);
     }
     #endregion
 }

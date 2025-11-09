@@ -97,7 +97,7 @@ where T : ABehaviourSystem
         _agent.SetDestination(destinationPos);
 
         if (HasArrivedAtDestination()) return;
-        else _animationController.ChangeAnimationTo(_animationController._walkAnim);
+        else _animationController.ChangeToWalk();
     }
 
     public void SetDestinationSpot(Spot destinationSpot)
