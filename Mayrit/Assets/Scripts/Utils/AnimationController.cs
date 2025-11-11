@@ -38,12 +38,13 @@ public class AnimationController
         // Not same as current
         if (_currentAnimation != newAnimation)
         {
+            // Update last animation
             _lastAnimation = _currentAnimation;
             _currentAnimation = newAnimation;
-
-            // Interpolate transition to new animation
-            _animator.CrossFade(newAnimation, duration);
         }
+
+        // Interpolate transition to new animation
+        _animator.CrossFade(newAnimation, duration);
     }
 
     /// <summary>
@@ -80,23 +81,23 @@ public class AnimationController
             return false;
     }
 
-    public void PlayAnimationCertainTime(float waitTime, int animation, string animationName, Action onComplete = null, bool showtext = true)
+    public void PlayAnimationCertainTime(float waitTime, int animation, string animationName, Action onComplete = null)
     {
-        _entity.StartCoroutine(PlayAnimationCertainTimeCoroutine(waitTime, animation, animationName, onComplete, showtext));
+        _entity.StartCoroutine(PlayAnimationCertainTimeCoroutine(waitTime, animation, animationName, onComplete));
     }
 
-    public void PlayAnimationRandomTime(int animation, string animationName, Action onComplete = null, bool showtext = true)
+    public void PlayAnimationRandomTime(int animation, string animationName, Action onComplete = null)
     {
         int waitTime = UnityEngine.Random.Range(5, 21);
-        _entity.StartCoroutine(PlayAnimationCertainTimeCoroutine(waitTime, animation, animationName, onComplete, showtext));
+        _entity.StartCoroutine(PlayAnimationCertainTimeCoroutine(waitTime, animation, animationName, onComplete));
     }
 
-    public IEnumerator PlayAnimationCertainTimeCoroutine(float waitTime, int animation, string animationName, Action onComplete = null, bool showtext = true)
+    public IEnumerator PlayAnimationCertainTimeCoroutine(float waitTime, int animation, string animationName, Action onComplete = null)
     {
         if (_behaviourEntity.IsExecutionPaused) yield break;
         _behaviourEntity.IsExecutionPaused = true;
 
-        if (showtext && waitTime >= 2f)
+        if (waitTime >= 2f)
             ChangeAnimationTo(animation);
         yield return new WaitForSeconds(waitTime);
 

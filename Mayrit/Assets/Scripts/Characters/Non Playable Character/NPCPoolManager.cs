@@ -58,8 +58,10 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
             //,maxSize: _maxActiveVillagers
         );
 
-        // Subscribe to town population changes
-        TownManager.Instance.OnPopulationChanged += OnTownPopulationChanged;
+        // Subscribe to town population changes if TownManager already exists. Use ExistingInstance to avoid creating it here.
+        var tm = TownManager.ExistingInstance;
+        if (tm != null)
+            tm.OnPopulationChanged += OnTownPopulationChanged;
     }
 
     private void OnTownPopulationChanged(int population)
@@ -70,8 +72,10 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
 
     void OnDestroy()
     {
-        // Unsubscribe from town population changes
-        TownManager.Instance.OnPopulationChanged -= OnTownPopulationChanged;
+        // Unsubscribe from town population changes if TownManager still exists
+        var tm = TownManager.ExistingInstance;
+        if (tm != null)
+            tm.OnPopulationChanged -= OnTownPopulationChanged;
     }
     #endregion
 
@@ -79,7 +83,6 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
     // public void SpawnAndAssignNewResident(House house)
     // {
     //     Villager newVillager = SpawnVillagerAtRandomSpot(house);
-
     // }
 
     // /// <summary>

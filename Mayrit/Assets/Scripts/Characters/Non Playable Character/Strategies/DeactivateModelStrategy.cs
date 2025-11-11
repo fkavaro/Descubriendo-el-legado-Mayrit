@@ -6,10 +6,10 @@ public class DeactivateModelStrategy : AStrategy
     readonly float _duration;
     float _elapsedTime = 0f;
 
-    public DeactivateModelStrategy(INPC npc, GameObject model, float duration = 30)
+    public DeactivateModelStrategy(INPC npc, GameObject model, float min = 20, float max = 40)
     : base(npc)
     {
-        _duration = duration;
+        _duration = Random.Range(min, max);
         _elapsedTime = 0f;
         _model = model;
     }
@@ -23,7 +23,7 @@ public class DeactivateModelStrategy : AStrategy
         // Update elapsed time
         _elapsedTime += Time.deltaTime;
 
-        // Check if praying duration is completed
+        // Check if duration is completed
         if (_elapsedTime >= _duration)
         {
             // Reactivate NPC GameObject

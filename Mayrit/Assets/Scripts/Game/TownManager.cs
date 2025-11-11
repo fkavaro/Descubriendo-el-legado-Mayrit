@@ -180,11 +180,11 @@ public class TownManager : Singleton<TownManager>
                 // if (best._residents.Count >= best._householdSize)
                 //     candidates.RemoveAt(idx);
             }
-            catch (Exception ex)
+            catch
             {
                 // Log the error for diagnostics and make a best-effort attempt to release the villager
                 // so we don't leak a simulation entity into an invalid state.
-                Debug.LogError($"ReassignResidents: exception while reassigning {v?.name}: {ex}");
+                //Debug.LogError($"ReassignResidents: exception while reassigning {v?.name}: {ex}");
                 try { pool?.ReturnVillagerToPool(v); } catch { /* swallow secondary errors */ }
                 releasedCount++;
             }

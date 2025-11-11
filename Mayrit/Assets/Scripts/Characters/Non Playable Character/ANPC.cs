@@ -1,4 +1,5 @@
 using System;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -26,6 +27,12 @@ where T : ABehaviourSystem
     [Tooltip("Distance to which it's close to the destination")]
     public float _nearDistance = 2f;
     public bool _isStopped = false;
+
+    [Header("Avoidance")]
+    [Tooltip("Base avoidance priority (0 = most important, 99 = least)")]
+    public int _baseAvoidancePriority = 50;
+    [Tooltip("Random +/- variance applied to base avoidance priority")]
+    public int _avoidancePriorityVariance = 10;
 
     [Header("Energy Properties")]
     [Tooltip("Energy value"), Range(0, 100)]
@@ -55,6 +62,11 @@ where T : ABehaviourSystem
         _agent.angularSpeed = _rotationSpeed * 100f;
         _agent.stoppingDistance = _stoppingDistance;
         _agent.radius = _avoidanceRadius;
+
+        // Assign a randomized avoidance priority to reduce symmetric deadlocks between agents
+        int offset = UnityEngine.Random.Range(-_avoidancePriorityVariance, _avoidancePriorityVariance + 1);
+        _agent.avoidancePriority = Mathf.Clamp(_baseAvoidancePriority + offset, 0, 99);
+
 
         // Deactivate agent initially
         _agent.enabled = false;
@@ -118,8 +130,6 @@ where T : ABehaviourSystem
             return _destinationSpot.IsOccupied();
     }
 
-
-
     public bool IsCloseTo(Vector3 destination, float checkingDistance = 2f, bool fixRotation = false)
     {
         if (checkingDistance <= _nearDistance)
@@ -136,6 +146,11 @@ where T : ABehaviourSystem
             return false;
     }
 
+    public bool IsCloseTo(Spot spot, float checkingDistance = 2f, bool lookAtDestination = false)
+    {
+        return IsCloseTo(spot.transform.position, checkingDistance, lookAtDestination);
+    }
+
     public bool IsCloseToDestination(float checkingDistance = 2f, bool fixRotation = false)
     {
         return IsCloseTo(_agent.destination, checkingDistance, fixRotation);
@@ -143,15 +158,15 @@ where T : ABehaviourSystem
 
     public bool HasArrivedAtDestination(bool fixRotation = true, bool fixPosition = true)
     {
-        return HasArrived(_agent.destination, fixRotation, fixPosition);
+        return HasArrivedAt(_agent.destination, fixRotation, fixPosition);
     }
 
-    public bool HasArrived(Spot spot, bool fixRotation = true, bool fixPosition = true)
+    public bool HasArrivedAt(Spot spot, bool fixRotation = true, bool fixPosition = true)
     {
-        return HasArrived(spot.transform.position, fixRotation, fixPosition);
+        return HasArrivedAt(spot.transform.position, fixRotation, fixPosition);
     }
 
-    public bool HasArrived(Vector3 destination, bool fixRotation = true, bool fixPosition = true)
+    public bool HasArrivedAt(Vector3 destination, bool fixRotation = true, bool fixPosition = true)
     {
         if (Vector3.Distance(_agent.transform.position, destination) < _stoppingDistance)
         {
@@ -240,6 +255,55 @@ where T : ABehaviourSystem
     public Vector3 GetDestinationPos()
     {
         return _agent.destination;
+    }
+
+    public Spot GetDestinationSpot()
+    {
+        return _destinationSpot;
+    }
+
+    public bool IsDestination(Vector3 position)
+    {
+        return _agent.destination == position;
+    }
+
+    public bool IsDestination(Spot spot)
+    {
+        if (spot == null) return false;
+        return _destinationSpot == spot;
+    }
+
+    public void PlaceAt(Spot spot)
+    {
+        if (spot == null)
+        {
+            Debug.LogError("PlaceAt(): destinationSpot is null.");
+            return;
+        }
+
+        PlaceAt(spot.transform.position);
+
+        // Set spot as occupied
+        spot.SetOccupied(true);
+        _destinationSpot = spot;
+    }
+
+    public void PlaceAt(Vector3 position)
+    {
+        // Place at position
+        _agent.transform.position = position;
+
+        // Leave free current target spot
+        if (_destinationSpot != null)
+        {
+            _destinationSpot.SetOccupied(false);
+            _destinationSpot = null;
+        }
+    }
+
+    public void PlaceAtDestination()
+    {
+        PlaceAt(_agent.destination);
     }
     #endregion
 

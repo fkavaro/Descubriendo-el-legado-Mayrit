@@ -2,22 +2,22 @@ using UnityEngine;
 
 public class GoToDestinationStrategy : AStrategy
 {
-    readonly Spot _destination;
+    readonly Spot _destinationSpot;
 
-    public GoToDestinationStrategy(INPC npc, Spot destination)
+    public GoToDestinationStrategy(INPC npc, Spot destinationSpot)
     : base(npc)
     {
-        _destination = destination;
+        _destinationSpot = destinationSpot;
     }
 
     public override Node.Status Update()
     {
         // Set destination if not already set
-        if (_npc.GetDestinationPos() != _destination.transform.position)
-            _npc.SetDestinationSpot(_destination);
+        if (!_npc.IsDestination(_destinationSpot))
+            _npc.SetDestinationSpot(_destinationSpot);
 
         // Success if arrived at destination
-        if (_npc.HasArrivedAtDestination())
+        if (_npc.HasArrivedAt(_destinationSpot))
             return Node.Status.Success;
         // Continue if not
         else

@@ -25,6 +25,11 @@ public interface INPC : IBehaviourEntity
     /// </summary>
     public bool IsCloseTo(Vector3 destination, float checkingDistance = 2f, bool lookAtDestination = false);
     /// <summary>
+    /// Checks if the NavMeshAgent is close to a certain spot
+    /// and makes it look at it when arriving, if wanted.
+    /// </summary>
+    public bool IsCloseTo(Spot spot, float checkingDistance = 2f, bool lookAtDestination = false);
+    /// <summary>
     /// Checks if the NavMeshAgent is close to its destination
     /// and makes it look at it when arriving, if wanted.
     /// </summary>
@@ -39,12 +44,12 @@ public interface INPC : IBehaviourEntity
     /// Checks if the NavMeshAgent has arrived at certain spot position
     /// and if the target is a spot, fixes its rotation if wanted.
     /// </summary>
-    public bool HasArrived(Spot spot, bool fixRotation = true, bool fixPosition = true);
+    public bool HasArrivedAt(Spot spot, bool fixRotation = true, bool fixPosition = true);
     /// <summary>
     /// Checks if the NavMeshAgent has arrived at certain destination
     /// and if the target is a spot, fixes its rotation if wanted.
     /// </summary>
-    public bool HasArrived(Vector3 destination, bool fixRotation = true, bool fixPosition = true);
+    public bool HasArrivedAt(Vector3 destination, bool fixRotation = true, bool fixPosition = true);
 
     public void ForceRotation(Vector3 lookDirection);
     public void ForceRotation(Quaternion rotation);
@@ -68,8 +73,13 @@ public interface INPC : IBehaviourEntity
     /// <returns>If the NavMeshAgent is calculating a path to its destination.</returns>
     public bool IsPathPending();
 
-    /// <returns>The target position in world coordinates.</returns>
     public Vector3 GetDestinationPos();
+    public Spot GetDestinationSpot();
+    public bool IsDestination(Vector3 position);
+    public bool IsDestination(Spot spot);
+    void PlaceAt(Spot destinationSpot);
+    void PlaceAt(Vector3 position);
+    void PlaceAtDestination();
     #endregion
 
     #region ENERGY METHODS
@@ -77,5 +87,6 @@ public interface INPC : IBehaviourEntity
     public void IncreaseEnergy(float amount);
     public bool IsEnergyLow();
     public bool IsEnergyAtMax();
+
     #endregion
 }
