@@ -9,7 +9,7 @@ public class TownManager : Singleton<TownManager>
     [Header("Town Stats")]
     public int _population;
 
-    [Header("Sites")]
+    [Header("Places of Interest")]
     public Building aljamaMosque;
     public Building market;
     #endregion
@@ -20,6 +20,21 @@ public class TownManager : Singleton<TownManager>
     /// </summary>
     public event Action<int> OnPopulationChanged;
     readonly List<House> _houses = new();
+    #endregion
+
+    #region MONOBEHAVIOUR
+    void Start()
+    {
+        // Subscribe to milestone changes to update population accordingly
+        ProgressManager.Instance.OnMilestoneChanged += OnMilestoneChanged;
+    }
+    void OnDestroy()
+    {
+        // Unsubscribe from milestone changes if ProgressManager still exists
+        var pm = ProgressManager.ExistingInstance;
+        if (pm != null)
+            pm.OnMilestoneChanged -= OnMilestoneChanged;
+    }
     #endregion
 
     #region PUBLIC METHODS  
@@ -50,7 +65,6 @@ public class TownManager : Singleton<TownManager>
             UpdatePopulation(-house._householdSize);
         }
     }
-
 
     /// <returns>Random registered house with capacity for a new resident.</returns>
     public House GetRandomHouseWithFreeSpace()
@@ -98,6 +112,10 @@ public class TownManager : Singleton<TownManager>
     void UpdatePopulation(int householdSize)
     {
         _population += householdSize;
+    }
+
+    void OnMilestoneChanged(ProgressManager.Milestone milestone)
+    {
         OnPopulationChanged?.Invoke(_population);
     }
     #endregion
@@ -108,91 +126,93 @@ public class TownManager : Singleton<TownManager>
     /// </summary>
     public void ReassignResidents(House fromHouse, List<Villager> residents)
     {
-        if (residents == null || residents.Count == 0) return;
+        // TODO: implement reassignment logic
 
-        // Build candidate list: all registered houses that have at least one free slot.
-        // Exclude the source (destroyed) house so we don't reassign back to it.
-        var candidates = new List<House>();
-        for (int i = 0; i < _houses.Count; i++)
-        {
-            var h = _houses[i];
-            if (h == null || h == fromHouse) continue;
-            if (h.HasCapacityForNewResident)
-                candidates.Add(h);
-        }
+        // if (residents == null || residents.Count == 0) return;
 
-        int releasedCount = 0;
+        // // Build candidate list: all registered houses that have at least one free slot.
+        // // Exclude the source (destroyed) house so we don't reassign back to it.
+        // var candidates = new List<House>();
+        // for (int i = 0; i < _houses.Count; i++)
+        // {
+        //     var h = _houses[i];
+        //     if (h == null || h == fromHouse) continue;
+        //     if (h.HasCapacityForNewResident)
+        //         candidates.Add(h);
+        // }
 
-        // Shortcut to the NPC pool manager to return villagers we cannot place.
-        var pool = NPCPoolManager.Instance;
+        // int releasedCount = 0;
 
-        // Process each villager independently. We handle exceptions per-villager so a single
-        // failure does not abort reassignment of others.
-        for (int i = 0; i < residents.Count; i++)
-        {
-            var v = residents[i];
-            if (v == null) continue;
+        // // Shortcut to the NPC pool manager to return villagers we cannot place.
+        // var pool = NPCPoolManager.Instance;
 
-            try
-            {
-                // If there are no candidate houses left, we must release the villager back to the pool.
-                // This decrements town population later (below) for all released villagers.
-                if (candidates.Count == 0)
-                {
-                    pool?.ReturnVillagerToPool(v);
-                    releasedCount++;
-                }
+        // // Process each villager independently. We handle exceptions per-villager so a single
+        // // failure does not abort reassignment of others.
+        // for (int i = 0; i < residents.Count; i++)
+        // {
+        //     var v = residents[i];
+        //     if (v == null) continue;
 
-                // Choose a candidate at random to distribute load across houses.
-                int idx = UnityEngine.Random.Range(0, candidates.Count);
-                var best = candidates[idx];
+        //     try
+        //     {
+        //         // If there are no candidate houses left, we must release the villager back to the pool.
+        //         // This decrements town population later (below) for all released villagers.
+        //         if (candidates.Count == 0)
+        //         {
+        //             pool?.ReturnVillagerToPool(v);
+        //             releasedCount++;
+        //         }
 
-                // Defensive check: if the selected house is unexpectedly null, release the villager.
-                if (best == null)
-                {
-                    pool?.ReturnVillagerToPool(v);
-                    releasedCount++;
-                }
+        //         // Choose a candidate at random to distribute load across houses.
+        //         int idx = UnityEngine.Random.Range(0, candidates.Count);
+        //         var best = candidates[idx];
 
-                // Perform the reassignment:
-                // - Update the villager's home reference so house/resident lists stay consistent.
-                // - Move the villager to an entrance/spawn spot if available (for visual correctness).
-                // - Optionally fix rotation if the spawn spot requires it.
-                v.AssignHome(best);
+        //         // Defensive check: if the selected house is unexpectedly null, release the villager.
+        //         if (best == null)
+        //         {
+        //             pool?.ReturnVillagerToPool(v);
+        //             releasedCount++;
+        //         }
 
-                // var spawnSpot = best.GetRandomEntranceSpot();
-                // if (spawnSpot != null)
-                // {
-                //     // Place the villager at the spawn spot and apply rotation if the spot enforces it.
-                //     v.transform.position = spawnSpot.transform.position;
-                //     if (spawnSpot._isRotationFixed)
-                //         v.ForceRotation(spawnSpot.DirectionVector);
-                // }
-                // else
-                // {
-                //     // Fallback: place at the house origin if no spawn spot exists.
-                //     v.transform.position = best.transform.position;
-                // }
+        //         // Perform the reassignment:
+        //         // - Update the villager's home reference so house/resident lists stay consistent.
+        //         // - Move the villager to an entrance/spawn spot if available (for visual correctness).
+        //         // - Optionally fix rotation if the spawn spot requires it.
+        //         v.AssignHome(best);
+
+        //         // var spawnSpot = best.GetRandomEntranceSpot();
+        //         // if (spawnSpot != null)
+        //         // {
+        //         //     // Place the villager at the spawn spot and apply rotation if the spot enforces it.
+        //         //     v.transform.position = spawnSpot.transform.position;
+        //         //     if (spawnSpot._isRotationFixed)
+        //         //         v.ForceRotation(spawnSpot.DirectionVector);
+        //         // }
+        //         // else
+        //         // {
+        //         //     // Fallback: place at the house origin if no spawn spot exists.
+        //         //     v.transform.position = best.transform.position;
+        //         // }
 
 
-                // // If this house reached capacity after the assignment, remove it from the candidate pool
-                // // so subsequent villagers aren't assigned to an already-full house.
-                // if (best._residents.Count >= best._householdSize)
-                //     candidates.RemoveAt(idx);
-            }
-            catch
-            {
-                // Log the error for diagnostics and make a best-effort attempt to release the villager
-                // so we don't leak a simulation entity into an invalid state.
-                //Debug.LogError($"ReassignResidents: exception while reassigning {v?.name}: {ex}");
-                try { pool?.ReturnVillagerToPool(v); } catch { /* swallow secondary errors */ }
-                releasedCount++;
-            }
-        }
+        //         // // If this house reached capacity after the assignment, remove it from the candidate pool
+        //         // // so subsequent villagers aren't assigned to an already-full house.
+        //         // if (best._residents.Count >= best._householdSize)
+        //         //     candidates.RemoveAt(idx);
+        //     }
+        //     catch
+        //     {
+        //         // Log the error for diagnostics and make a best-effort attempt to release the villager
+        //         // so we don't leak a simulation entity into an invalid state.
+        //         //Debug.LogError($"ReassignResidents: exception while reassigning {v?.name}: {ex}");
+        //         try { pool?.ReturnVillagerToPool(v); } catch { /* swallow secondary errors */ }
+        //         releasedCount++;
+        //     }
+        // }
 
-        // If any villagers were released to the pool (i.e., lost homes), decrement the town population.
-        if (releasedCount > 0)
-            UpdatePopulation(-releasedCount);
+        // // If any villagers were released to the pool (i.e., lost homes), decrement the town population.
+        // if (releasedCount > 0)
+        //     UpdatePopulation(-releasedCount);
     }
 
 

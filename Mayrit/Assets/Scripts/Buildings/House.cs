@@ -31,7 +31,6 @@ public class House : Building
             // Ask TownManager to reassign residents centrally
             // (it will release those that cannot be reassigned and adjust population)
             List<Villager> residentsCopy = new(_residents);
-            //TownManager.Instance.ReassignResidents(this, residentsCopy);
             if (tm != null) tm.ReassignResidents(this, residentsCopy);
 
             // Clear this house's residents list

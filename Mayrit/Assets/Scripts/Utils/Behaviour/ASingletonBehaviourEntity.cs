@@ -30,43 +30,40 @@ where M : MonoBehaviour
     {
         get
         {
-            lock (_instanceLock) // Ensures that only one thread at a time can execute this block.
+            lock (_instanceLock)
             {
-                if (_instance == null)// If no instance exists, try to find one.
-                {
-                    _instance = FindFirstObjectByType<M>(); // Searches for an existing instance in the scene.
+                // Attempt to find an existing instance in the scene but do NOT create one here.
+                if (_instance == null)
+                    _instance = FindAnyObjectByType<M>();
 
-                    if (_instance == null) // If still null, create a new instance.
-                    {
-                        GameObject singletonObj = new(typeof(M).Name); // Creates a new GameObject named after the type.
-                        _instance = singletonObj.AddComponent<M>(); // Adds the singleton component to the new GameObject.
-                    }
-                }
                 return _instance;
             }
         }
     }
+
+    /// <summary>
+    /// Returns the existing instance if one exists, without creating a new GameObject.
+    /// Use this when you want to safely query for a singleton during teardown or editor callbacks
+    /// and avoid creating a new GameObject.
+    /// </summary>
+    public static M ExistingInstance => _instance;
     #endregion
 
     #region MONOBEHAVIOUR
     protected override void Awake()
     {
-        // Enforce singleton instance for this closed generic type
-        lock (_instanceLock)
+        lock (_instanceLock) // Ensures thread safety when setting the instance.
         {
             if (_instance == null) // If no instance exists, set this as the instance.
             {
                 _instance = this as M;
-                if (_instance == null)
-                    Debug.LogWarning($"ASingletonBehaviourEntity: Awake couldn't cast 'this' to {typeof(M).Name}.");
-
                 if (_dontDestroyOnLoad) DontDestroyOnLoad(gameObject); // Prevents the instance from being destroyed when loading new scenes.
             }
             else if (_instance != this) // If an instance already exists and it's not this one, destroy this object.
             {
-                Debug.LogWarning($"Duplicate singleton of {typeof(M).Name} detected. Destroying duplicate.");
-                DestroyImmediate(gameObject);
-                return;
+                Debug.LogWarning($"Duplicate Singleton<{typeof(M).Name}> found. Destroying...");
+                if (Application.isPlaying) Destroy(gameObject);
+                else DestroyImmediate(gameObject);
             }
         }
 

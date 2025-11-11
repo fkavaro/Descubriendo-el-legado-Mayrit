@@ -11,7 +11,7 @@ where M : MonoBehaviour
     #region PROPERTIES
     [Header("Singleton")]
     [Tooltip("Wether to destroy the instance when loading a new scene")]
-    [SerializeField] protected bool _dontDestroyOnLoad = false;
+    public bool _dontDestroyOnLoad = false;
 
     /// <summary>
     /// Static instance and lock for thread-safe singleton access per closed generic type.

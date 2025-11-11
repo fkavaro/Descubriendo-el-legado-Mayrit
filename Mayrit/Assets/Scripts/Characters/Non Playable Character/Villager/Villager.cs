@@ -8,6 +8,7 @@ public class Villager : ANPC<BehaviourTree>
     [Header("Villager Properties")]
     public House _home;
     public Building _workplace;
+    public Building _sanctuary;
     #endregion
 
     #region PROPERTIES
@@ -108,6 +109,11 @@ public class Villager : ANPC<BehaviourTree>
     public void AssignWorkplace(Building workPlace)
     {
         _workplace = workPlace;
+    }
+
+    public void AssignSanctuary(Building sanctuary)
+    {
+        _sanctuary = sanctuary;
     }
 
     public void OnReleasedFromPool()
