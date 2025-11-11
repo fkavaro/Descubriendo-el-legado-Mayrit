@@ -21,17 +21,15 @@ public class House : Building
     // When disabled, decrease town population
     public void OnDisable()
     {
-        // Unregister this house and decrease town population (use ExistingInstance to avoid creating TownManager during teardown)
-        var tm = TownManager.ExistingInstance;
-        if (tm != null) tm.UnregisterHouse(this);
+        // Unregister this house and decrease town population
+        TownManager.ExistingInstance.UnregisterHouse(this);
 
-        // There are still residents assigned to this house
+        // There are residents assigned to this house
         if (_residents.Count > 0)
         {
-            // Ask TownManager to reassign residents centrally
-            // (it will release those that cannot be reassigned and adjust population)
+            // Ask TownManager to reassign them
             List<Villager> residentsCopy = new(_residents);
-            if (tm != null) tm.ReassignResidents(this, residentsCopy);
+            TownManager.Instance.ReassignResidents(this, residentsCopy);
 
             // Clear this house's residents list
             _residents.Clear();
@@ -40,7 +38,7 @@ public class House : Building
     #endregion
 
     #region PUBLIC METHODS
-    public bool HasCapacityForNewResident => _residents.Count < _householdSize;
+    public bool AtMaxCapacity => _residents.Count >= _householdSize;
 
     public bool AssignNewResident(Villager villager)
     {

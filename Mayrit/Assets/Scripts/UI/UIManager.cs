@@ -127,7 +127,7 @@ public class UIManager : ASingletonBehaviourEntity<UIManager, StackFiniteStateMa
             GUILayout.Label("TimeManager: <null>");
 
         // Town Manager (use ExistingInstance to avoid creating objects during scene teardown)
-        var town = TownManager.ExistingInstance;
+        var town = TownManager.Instance;
         if (town != null)
             GUILayout.Label($"TownManager population: {town._population}");
         else

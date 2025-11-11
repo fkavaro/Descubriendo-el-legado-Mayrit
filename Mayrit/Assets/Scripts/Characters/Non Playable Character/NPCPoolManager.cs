@@ -36,19 +36,14 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
             actionOnDestroy: (villager) => Destroy(villager.gameObject)
         );
 
-        // Subscribe to town population changes if TownManager already exists. 
-        // Use ExistingInstance to avoid creating it here.
-        var tm = TownManager.ExistingInstance;
-        if (tm != null)
-            tm.OnPopulationChanged += OnTownPopulationChanged;
+        // Subscribe to town population changes
+        TownManager.Instance.OnPopulationChanged += OnTownPopulationChanged;
     }
 
     void OnDestroy()
     {
-        // Unsubscribe from town population changes if TownManager still exists
-        var tm = TownManager.ExistingInstance;
-        if (tm != null)
-            tm.OnPopulationChanged -= OnTownPopulationChanged;
+        // Unsubscribe from town population changes
+        TownManager.ExistingInstance.OnPopulationChanged -= OnTownPopulationChanged;
     }
     #endregion
 
@@ -125,9 +120,8 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
         if (!_activeVillagers.Contains(villager))
             _activeVillagers.Add(villager);
 
-        // Use ExistingInstance so a TownManager is not created during teardown
-        House randomFreeHouse = TownManager.ExistingInstance.GetRandomHouseWithFreeSpace();
-        Building randomWorkplace = TownManager.ExistingInstance.GetRandomWorkplaceBuilding();
+        House randomFreeHouse = TownManager.Instance.GetRandomHouseWithFreeSpace();
+        Building randomWorkplace = TownManager.Instance.GetRandomWorkplaceBuilding();
 
         // Assign home and workplace
         villager.AssignHome(randomFreeHouse);
@@ -136,7 +130,7 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
 
         // Activate and reset components
         villager.gameObject.SetActive(true);
-        villager.BehaviourSystem.Reset(); // TODO this won't reset work place. InitializeBehaviourSystem should be executed again to do that
+        villager.BehaviourSystem.Reset(); // TODO this won't reset workplace. InitializeBehaviourSystem should be executed again to do that
         villager._animationController.ChangeToWalk();
         randomFreeHouse.PlaceAtRandomEntrance(villager);
         villager.Agent.enabled = true; // Activated once its placed
