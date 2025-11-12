@@ -47,7 +47,7 @@ MonoBehaviour:
   _debugMode: 0
   _isExecutionPaused: 0
   _dontDestroyOnLoad: 0
-  _updateInInspector: 1
+  _updateInInspector: 0
   _currentMilestone: 0
   _visionInformation: {fileID: 11400000, guid: c2541da2a3af8a246b55a5e4b79c1812, type: 2}
   _foundationInformation: {fileID: 11400000, guid: 9276c034d53293a459586c7287b06553, type: 2}
