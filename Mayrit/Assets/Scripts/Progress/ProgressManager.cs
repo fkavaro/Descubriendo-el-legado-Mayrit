@@ -76,10 +76,10 @@ public class ProgressManager : ASingletonBehaviourEntity<ProgressManager, Finite
     // Called when the script is loaded or a value is changed in the inspector
     void OnValidate()
     {
+#if UNITY_EDITOR
         if (Application.isPlaying)
             return;
 
-#if UNITY_EDITOR
         // Invoke milestone changed event when _currentMilestone is changed in inspector
         // and _updateInInspector is true
         if (_lastValidatedMilestone != _currentMilestone)
@@ -88,7 +88,7 @@ public class ProgressManager : ASingletonBehaviourEntity<ProgressManager, Finite
 
             if (_updateInInspector)
             {
-                var milestone = _currentMilestone;
+                Milestone milestone = _currentMilestone;
 
                 // To avoid issues with re-entrancy
                 UnityEditor.EditorApplication.delayCall += () => OnMilestoneChanged?.Invoke(milestone);
@@ -99,7 +99,8 @@ public class ProgressManager : ASingletonBehaviourEntity<ProgressManager, Finite
         if (_lastUpdateInInspector != _updateInInspector)
         {
             _lastUpdateInInspector = _updateInInspector;
-            var update = _updateInInspector;
+            bool update = _updateInInspector;
+
             UnityEditor.EditorApplication.delayCall += () => OnEditorUpdateChanged?.Invoke(update);
         }
 #endif
