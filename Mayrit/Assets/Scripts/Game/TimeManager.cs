@@ -64,7 +64,8 @@ public class TimeManager : Singleton<TimeManager>
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // TODO: time at start must be current milestone and sun position too, without transition
+        _currentTime = ProgressManager.Instance.GetCurrentMilestoneInfo().WantedTime;
+        UpdateLighting();
     }
 
     // Update is called once per frame
