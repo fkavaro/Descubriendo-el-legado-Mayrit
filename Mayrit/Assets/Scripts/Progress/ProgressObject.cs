@@ -9,18 +9,35 @@ public class ProgressObject : MonoBehaviour
     void Awake()
     {
         ProgressManager.Instance.OnMilestoneChanged += OnMilestoneChanged;
-        //SetChildrenActive(milestonesActivated.Contains(ProgressManager.Instance._currentMilestone));
     }
 
     void OnValidate()
     {
         ProgressManager.Instance.OnMilestoneChanged += OnMilestoneChanged;
-        //SetChildrenActive(milestonesActivated.Contains(ProgressManager.Instance._currentMilestone));
     }
 
     void OnMilestoneChanged(ProgressManager.Milestone entry)
     {
-        SetChildrenActive(milestonesActivated.Contains(entry));
+#if UNITY_EDITOR
+        // Playing
+        if (Application.isPlaying)
+            // Active if entry milestone is in the list
+            SetChildrenActive(milestonesActivated != null && milestonesActivated.Contains(entry));
+        // Not playing
+        else
+        {
+            // React to changes in editor
+            if (ProgressManager.Instance._updateInInspector)
+                // Active if entry milestone is in the list
+                SetChildrenActive(milestonesActivated != null && milestonesActivated.Contains(entry));
+            // Active if not updating in inspector
+            else
+                SetChildrenActive(true);
+        }
+#else
+        // Active if entry milestone is in the list
+        SetChildrenActive(milestonesActivated != null && milestonesActivated.Contains(entry));
+#endif
     }
 
     void SetChildrenActive(bool isActive)
