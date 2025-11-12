@@ -287,6 +287,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dontDestroyOnLoad: 0
+  _gameSimulationSpeed: 1
   _isDynamic: 0
   _wantedTime: 10
   _currentTime: 10

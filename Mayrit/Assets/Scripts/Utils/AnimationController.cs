@@ -35,13 +35,24 @@ public class AnimationController
     /// </summary>
     public virtual void ChangeAnimationTo(int newAnimation, float duration = 0.2f)
     {
-        // Not same as current
-        if (_currentAnimation != newAnimation)
+        // Safely get the current animation from the Animator to avoid desync
+        if (_animator == null)
         {
-            // Update last animation
             _lastAnimation = _currentAnimation;
             _currentAnimation = newAnimation;
+            return;
         }
+
+        AnimatorStateInfo currentState = _animator.GetCurrentAnimatorStateInfo(0);
+        int currentHash = currentState.shortNameHash;
+
+        // If the requested animation is already playing (by hash), skip the transition
+        if (currentHash == newAnimation)
+            return;
+
+        // Update bookkeeping
+        _lastAnimation = _currentAnimation;
+        _currentAnimation = newAnimation;
 
         // Interpolate transition to new animation
         _animator.CrossFade(newAnimation, duration);
