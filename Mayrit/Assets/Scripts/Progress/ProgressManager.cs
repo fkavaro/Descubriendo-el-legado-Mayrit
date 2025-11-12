@@ -20,6 +20,7 @@ public class ProgressManager : ASingletonBehaviourEntity<ProgressManager, Finite
 
     #region EDITOR PROPERTIES
     [Header("Milestones")]
+    public bool _updateInInspector = true;
     public Milestone _currentMilestone;
     [Space]
     public Milestone_InformationSO _visionInformation;
@@ -67,6 +68,26 @@ public class ProgressManager : ASingletonBehaviourEntity<ProgressManager, Finite
         return _fsm;
     }
     #endregion
+
+    // Called when the script is loaded or a value is changed in the inspector
+    void OnValidate()
+    {
+        // Invoke milestone changed event to update any listeners when _currentMilestone is changed in inspector
+        // Use a simple previous-value check to avoid spamming the event when Unity reserializes.
+        if (!Application.isPlaying && _updateInInspector)
+        {
+            // Keep a cached value to detect changes in the inspector
+            if (_lastValidatedMilestone != _currentMilestone)
+            {
+                _lastValidatedMilestone = _currentMilestone;
+                OnMilestoneChanged?.Invoke(_currentMilestone);
+            }
+        }
+    }
+
+    // Cache used by OnValidate to detect inspector changes
+    [NonSerialized]
+    Milestone _lastValidatedMilestone;
 
     #region PUBLIC METHODS
     public void SwitchToNextMilestone()

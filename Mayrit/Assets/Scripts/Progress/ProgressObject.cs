@@ -9,7 +9,13 @@ public class ProgressObject : MonoBehaviour
     void Awake()
     {
         ProgressManager.Instance.OnMilestoneChanged += OnMilestoneChanged;
-        SetChildrenActive(milestonesActivated.Contains(ProgressManager.Instance._currentMilestone));
+        //SetChildrenActive(milestonesActivated.Contains(ProgressManager.Instance._currentMilestone));
+    }
+
+    void OnValidate()
+    {
+        ProgressManager.Instance.OnMilestoneChanged += OnMilestoneChanged;
+        //SetChildrenActive(milestonesActivated.Contains(ProgressManager.Instance._currentMilestone));
     }
 
     void OnMilestoneChanged(ProgressManager.Milestone entry)

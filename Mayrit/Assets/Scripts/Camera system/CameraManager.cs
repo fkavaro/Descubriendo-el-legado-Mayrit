@@ -40,7 +40,7 @@ public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStat
 
     [Header("Orbital camera")]
     [Range(0.1f, 5f)]
-    public float _orbitalSimSpeed = 3f;
+    public float _orbitalSimSpeed = 1f;
     public CinemachineCamera _orbitalCamera;
     public float _orbitalBuildingOrbitSpeed = 30f;
     public float _orbitalBuildingZoom;

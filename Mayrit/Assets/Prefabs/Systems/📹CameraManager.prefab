@@ -644,9 +644,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adfbd7936fe3a914fac41aa4836aeddd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dontDestroyOnLoad: 0
   _debugMode: 0
   _isExecutionPaused: 0
+  _dontDestroyOnLoad: 0
+  _spectatorSimSpeed: 3
   _spectatorCamera: {fileID: 5488014350122742170}
   _edgeScrolling: 0
   _edgeScrollingMargin: 30
@@ -689,6 +690,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   _spectatorTargetFixingSpeed: 50
+  _orbitalSimSpeed: 1
   _orbitalCamera: {fileID: 1263816906637668818}
   _orbitalBuildingOrbitSpeed: 30
   _orbitalBuildingZoom: 70
@@ -696,6 +698,7 @@ MonoBehaviour:
   _orbitalCharacterOrbitSpeed: 15
   _orbitalCharacterZoom: 7
   _orbitalCharacterOffset: 2
+  _thirdPersonSimSpeed: 1
   _thirdPersonCamera: {fileID: 412980351691204597}
   _3rdPersonCameraOrbitSpeed: 3
   _3rdPersonCameraFollowSpeed: 3
