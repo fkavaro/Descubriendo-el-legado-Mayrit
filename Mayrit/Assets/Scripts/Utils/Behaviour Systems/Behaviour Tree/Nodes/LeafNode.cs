@@ -30,5 +30,10 @@ public class LeafNode : Node
     {
         _strategy.Reset();
     }
+
+    protected override void DebugDecision()
+    {
+        _behaviourEntity.CurrentActionInfo = _nodeName;
+    }
     #endregion
 }

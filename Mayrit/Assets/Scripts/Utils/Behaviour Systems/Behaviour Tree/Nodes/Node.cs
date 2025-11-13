@@ -52,7 +52,7 @@ public class Node : ABehaviourSystem
     protected override void DebugDecision()
     {
         if (_currentChildId < _children.Count)
-            _behaviourEntity.CurrentActionInfo = _children[_currentChildId]._nodeName;
+            _children[_currentChildId].DebugDecision();
     }
     #endregion
 
