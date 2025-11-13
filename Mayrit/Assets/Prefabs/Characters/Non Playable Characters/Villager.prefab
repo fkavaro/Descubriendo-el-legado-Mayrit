@@ -70,6 +70,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Villager
   _debugMode: 1
   _isExecutionPaused: 0
+  _currentActionInfo: 
   _walkSpeed: 2
   _sprintSpeed: 3
   _rotationSpeed: 3
@@ -78,11 +79,14 @@ MonoBehaviour:
   _stoppingDistance: 0.3
   _nearDistance: 2
   _isStopped: 0
+  _baseAvoidancePriority: 50
+  _avoidancePriorityVariance: 10
   _energy: 100
   _animator: {fileID: 8442105521708024458}
-  _agent: {fileID: 0}
+  _model: {fileID: 2919351008931398218}
   _home: {fileID: 0}
   _workplace: {fileID: 0}
+  _sanctuary: {fileID: 0}
 --- !u!1001 &2545030637896681716
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -143,6 +147,11 @@ PrefabInstance:
 --- !u!4 &2578397557570443504 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 43220751547486212, guid: f7453fa73fb665b4ab3a6ff469bbd729, type: 3}
+  m_PrefabInstance: {fileID: 2545030637896681716}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2919351008931398218 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 851846255601093310, guid: f7453fa73fb665b4ab3a6ff469bbd729, type: 3}
   m_PrefabInstance: {fileID: 2545030637896681716}
   m_PrefabAsset: {fileID: 0}
 --- !u!95 &8442105521708024458 stripped

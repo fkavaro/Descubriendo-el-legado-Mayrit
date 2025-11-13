@@ -10,10 +10,8 @@ public class TownManager : Singleton<TownManager>
     public int _population;
 
     [Header("Places of Interest")]
-    public Building aljamaMosque;
-    public Building market;
-
-    public List<Building> sanctuaries;
+    public List<Building> _sanctuaries;
+    public List<Market> _markets;
     #endregion
 
     #region INTERNAL PROPERTIES    
@@ -22,6 +20,7 @@ public class TownManager : Singleton<TownManager>
     /// </summary>
     public event Action<int> OnPopulationChanged;
     readonly List<House> _houses = new();
+    readonly List<Workplace> _workplaces = new();
     #endregion
 
     #region MONOBEHAVIOUR
@@ -48,7 +47,7 @@ public class TownManager : Singleton<TownManager>
         if (!_houses.Contains(house))
         {
             _houses.Add(house);
-            UpdatePopulation(house._householdSize);
+            UpdatePopulation(house._capacity);
         }
     }
 
@@ -62,18 +61,44 @@ public class TownManager : Singleton<TownManager>
         if (_houses.Contains(house))
         {
             _houses.Remove(house);
-            UpdatePopulation(-house._householdSize);
+            UpdatePopulation(-house._capacity);
+        }
+    }
+
+    /// <summary>
+    /// Registers a workplace in the town.
+    /// </summary>
+    public void RegisterWorkplace(Workplace workplace)
+    {
+        if (workplace == null) return;
+
+        if (!_workplaces.Contains(workplace))
+        {
+            _workplaces.Add(workplace);
+        }
+    }
+
+    /// <summary>   
+    /// Unregisters a workplace from the town.
+    /// </summary>
+    public void UnregisterWorkplace(Workplace workplace)
+    {
+        if (workplace == null) return;
+
+        if (_workplaces.Contains(workplace))
+        {
+            _workplaces.Remove(workplace);
         }
     }
 
     /// <returns>Random registered house with capacity for a new resident.</returns>
     public House GetRandomHouseWithFreeSpace()
     {
-        return GetRandomHouseWithFreeSpace(null);
+        return GetRandomHouseWithFreeCapacity(null);
     }
 
     /// <returns>Random registered house with capacity for a new resident. Excluding given house.</returns>
-    public House GetRandomHouseWithFreeSpace(House excludedHouse)
+    public House GetRandomHouseWithFreeCapacity(House excludedHouse)
     {
         if (_houses == null || _houses.Count == 0)
             return null;
@@ -97,22 +122,40 @@ public class TownManager : Singleton<TownManager>
         return housesWithFreeSlots[UnityEngine.Random.Range(0, housesWithFreeSlots.Count)];
     }
 
+    private Workplace GetRandomWorkplaceWithFreeCapacity(Workplace excludedWorkplace)
+    {
+        if (_workplaces == null || _workplaces.Count == 0)
+            return null;
+
+        // Build a list of candidate houses with available slots
+        List<Workplace> workPlacesWithCapacity = new();
+
+        // Check every house
+        foreach (var workplace in _workplaces)
+        {
+            if (workplace == excludedWorkplace) continue;
+            if (!workplace.AtMaxCapacity)
+                workPlacesWithCapacity.Add(workplace);
+        }
+
+        // No houses with free slots found
+        if (workPlacesWithCapacity.Count == 0)
+            return null;
+
+        // Return a random house from the candidates
+        return workPlacesWithCapacity[UnityEngine.Random.Range(0, workPlacesWithCapacity.Count)];
+    }
+
     public Building GetRandomWorkplaceBuilding()
     {
         // TODO
-        return _houses[UnityEngine.Random.Range(0, _houses.Count)];
+        return _workplaces[UnityEngine.Random.Range(0, _houses.Count)];
     }
 
-    public Spot GetMosqueEntranceSpot()
+    public Spot GetMarketSpot()
     {
         // TODO
-        return aljamaMosque.GetRandomEntranceSpot();
-    }
-
-    internal Spot GetMarketSpot()
-    {
-        // TODO
-        return market.GetRandomEntranceSpot();
+        return _markets[UnityEngine.Random.Range(0, _markets.Count)].GetRandomEntranceSpot();
     }
     #endregion
 
@@ -132,7 +175,7 @@ public class TownManager : Singleton<TownManager>
     /// Attempts to reassign residents from a destroyed house to other houses with free capacity.
     /// If a resident cannot be reassigned, it will be returned to the NPC pool and population decremented.
     /// </summary>
-    public void ReassignResidents(House fromHouse, List<Villager> residents)
+    public void ReassignResidents(House previousHouse, List<Villager> residents)
     {
         if (residents == null || residents.Count == 0) return;
 
@@ -143,7 +186,7 @@ public class TownManager : Singleton<TownManager>
 
             try
             {
-                House randomHouse = GetRandomHouseWithFreeSpace(fromHouse);
+                House randomHouse = GetRandomHouseWithFreeCapacity(previousHouse);
 
                 // A different house with free capacity was found
                 if (randomHouse != null)
@@ -151,6 +194,40 @@ public class TownManager : Singleton<TownManager>
                     // Reassign
                     villager.AssignHome(randomHouse);
                     randomHouse.AssignNewResident(villager);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"ReassignResidents: exception while reassigning {villager.name}: {ex}");
+
+                try
+                {
+                    NPCPoolManager.Instance.ReturnVillagerToPool(villager);
+                }
+                catch { }
+            }
+        }
+    }
+
+    public void ReassignEmployees(Workplace previousWorkplace, List<Villager> employees)
+    {
+        if (employees == null || employees.Count == 0) return;
+
+        // Process each villager independently
+        foreach (var villager in employees)
+        {
+            if (villager == null) continue;
+
+            try
+            {
+                Workplace randomWorkplace = GetRandomWorkplaceWithFreeCapacity(previousWorkplace);
+
+                // A different workplace with free capacity was found
+                if (randomWorkplace != null)
+                {
+                    // Reassign
+                    villager.AssignWorkplace(randomWorkplace);
+                    randomWorkplace.AssignNewEmployee(villager);
                 }
             }
             catch (Exception ex)
@@ -174,14 +251,14 @@ public class TownManager : Singleton<TownManager>
     public Building GetNearestSanctuary(House home)
     {
         // Validate inputs: no sanctuaries configured or invalid home -> nothing to do
-        if (sanctuaries == null || sanctuaries.Count == 0 || home == null)
+        if (_sanctuaries == null || _sanctuaries.Count == 0 || home == null)
             return null;
 
         Building nearestSanctuary = null;
         float nearestDistanceSqr = float.MaxValue;
         Vector3 homePosition = home.transform.position;
 
-        foreach (var sanctuary in sanctuaries)
+        foreach (var sanctuary in _sanctuaries)
         {
             if (sanctuary == null)
                 continue; // skip null entries in the list
@@ -197,4 +274,6 @@ public class TownManager : Singleton<TownManager>
 
         return nearestSanctuary;
     }
+
+
 }

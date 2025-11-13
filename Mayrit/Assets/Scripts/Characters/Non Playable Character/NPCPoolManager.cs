@@ -131,7 +131,7 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
 
         // Activate and reset components
         villager.gameObject.SetActive(true);
-        villager.BehaviourSystem.Reset(); // TODO this won't reset workplace. InitializeBehaviourSystem should be executed again to do that
+        villager.InitializeBehaviourSystem(); // Again
         villager._animationController.ChangeToWalk();
         randomFreeHouse.PlaceAtRandomEntrance(villager);
         villager.Agent.enabled = true; // Activated once its placed

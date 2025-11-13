@@ -87,6 +87,5 @@ public interface INPC : IBehaviourEntity
     public void IncreaseEnergy(float amount);
     public bool IsEnergyLow();
     public bool IsEnergyAtMax();
-
     #endregion
 }

@@ -4,7 +4,7 @@ public class DeactivateModelStrategy : AStrategy
 {
     readonly GameObject _model;
     readonly float _duration;
-    float _elapsedTime = 0f;
+    float _elapsedTime;
 
     public DeactivateModelStrategy(INPC npc, GameObject model, float min = 20, float max = 40)
     : base(npc)

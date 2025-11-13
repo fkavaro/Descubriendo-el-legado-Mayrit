@@ -7,6 +7,7 @@ public class Villager : ANPC<BehaviourTree>
 {
     #region EDIROR PROPERTIES
     [Header("Villager Properties")]
+    public GameObject _model;
     public House _home;
     public Building _workplace;
     [SerializeField] Building _sanctuary;
@@ -35,7 +36,7 @@ public class Villager : ANPC<BehaviourTree>
         InteractStrategy interactStrategy = new(this);
 
         // Routine strategies
-        DeactivateModelStrategy deactivateModelStrategy = new(this, GO.transform.GetChild(0).gameObject);
+        DeactivateModelStrategy deactivateModelStrategy = new(this, _model);
 
         Spot sanctuaryEntrance = Sanctuary.GetRandomEntranceSpot();
         GoToDestinationStrategy goToSanctuary = new(this, sanctuaryEntrance);
@@ -47,7 +48,7 @@ public class Villager : ANPC<BehaviourTree>
 
         Spot marketEntrance = TownManager.Instance.GetMarketSpot();
         GoToDestinationStrategy goToShop = new(this, marketEntrance);
-        //Shopping_VillagerStrategy shoppingStrategy = new(this);
+        Shopping_VillagerStrategy shoppingStrategy = new(this);
 
         Spot homeEntrance = _home.GetRandomEntranceSpot();
         GoToDestinationStrategy goHome = new(this, homeEntrance);
@@ -82,7 +83,7 @@ public class Villager : ANPC<BehaviourTree>
         workingSequence.AddChild(goToWorkLeaf);
         workingSequence.AddChild(workLeaf);
         LeafNode goToShopLeaf = new(this, "GoingToShop", goToShop);
-        LeafNode shopLeaf = new(this, "Shopping", deactivateModelStrategy);
+        LeafNode shopLeaf = new(this, "Shopping", shoppingStrategy);
         shoppingSequence.AddChild(goToShopLeaf);
         shoppingSequence.AddChild(shopLeaf);
         LeafNode goHomeLeaf = new(this, "GoingHome", goHome);

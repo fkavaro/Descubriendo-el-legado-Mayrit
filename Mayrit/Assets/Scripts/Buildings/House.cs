@@ -5,12 +5,12 @@ using UnityEngine;
 public class House : Building
 {
     #region EDITOR PROPERTIES
-    public int _householdSize = 1;
+    public int _capacity = 1;
     [SerializeField] List<Villager> _residents = new();
+    public bool AtMaxCapacity => _residents.Count >= _capacity;
     #endregion
 
     #region MONOBEHAVIOUR
-
     // When enabled, increase town population
     public void OnEnable()
     {
@@ -67,12 +67,10 @@ public class House : Building
     #endregion
 
     #region PUBLIC METHODS
-    public bool AtMaxCapacity => _residents.Count >= _householdSize;
-
     public bool AssignNewResident(Villager villager)
     {
         // Max residents reached or already assigned
-        if (_residents.Count >= _householdSize || _residents.Contains(villager))
+        if (_residents.Count >= _capacity || _residents.Contains(villager))
             return false;
 
         _residents.Add(villager);
