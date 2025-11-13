@@ -56,9 +56,9 @@ public class Villager : ANPC<BehaviourTree>
         // Interact sequence
         SequenceNode interactSequence = new(this);
 
-        LeafNode isInStreetLeaf = new(this, "IsInStreet", isInStreet);
-        LeafNode isOtherNearbyLeaf = new(this, "IsOtherNearby", isOtherNearby);
-        LeafNode isEnoughSinceLastInteractionLeaf = new(this, "IsEnoughSinceLastInteraction", isEnoughSinceLastInteraction);
+        LeafNode isInStreetLeaf = new(this, "IsInStreet?", isInStreet);
+        LeafNode isOtherNearbyLeaf = new(this, "IsOtherNearby?", isOtherNearby);
+        LeafNode isEnoughSinceLastInteractionLeaf = new(this, "IsEnoughSinceLastInteraction?", isEnoughSinceLastInteraction);
         LeafNode talkLeaf = new(this, "Talking", interactStrategy);
 
         interactSequence.AddChild(isInStreetLeaf);

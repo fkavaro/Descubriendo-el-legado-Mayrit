@@ -10,7 +10,6 @@ where TStateMachineType : AStateMachine<TStateMachineType>
 {
     #region PROPERTIES
     public AState<TStateMachineType> CurrentState => _currentState;
-    public string _currentStateName = "None";
     protected AState<TStateMachineType> _currentState, _initialState;
     protected List<AState<TStateMachineType>> _statesSequence = new();
     #endregion
@@ -38,10 +37,7 @@ where TStateMachineType : AStateMachine<TStateMachineType>
     /// </summary>
     protected override void DebugDecision()
     {
-        _currentStateName = _currentState.StateName;
-
-        if (_behaviourEntity.DebugMode)
-            Debug.Log("[" + _behaviourEntity.GO.name + "]" + " is " + _currentState.StateName);
+        _behaviourEntity.CurrentActionInfo = _currentState.StateName;
     }
     #endregion
 

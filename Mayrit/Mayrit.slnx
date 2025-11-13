@@ -72,6 +72,7 @@
   <Project Path="sc.terrain.painter.editor.csproj" />
   <Project Path="Unity.Animation.Rigging.DocCodeExamples.csproj" />
   <Project Path="Unity.EditorCoroutines.Editor.csproj" />
+  <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="Unity.TerrainTools.csproj" />
   <Project Path="Unity.RenderPipeline.Universal.ShaderLibrary.csproj" />
   <Project Path="Unity.Rendering.LightTransport.Editor.csproj" />

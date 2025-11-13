@@ -28,7 +28,6 @@ public class StackFiniteStateMachine : AStateMachine<StackFiniteStateMachine>
         _currentState?.OnExitState();
         _currentState = newState;
         DebugDecision();
-        _currentStateName = _currentState.StateName;
         _currentState?.StartState();
     }
 
@@ -46,36 +45,16 @@ public class StackFiniteStateMachine : AStateMachine<StackFiniteStateMachine>
 
     #region PUBLIC METHODS
     /// <summary>
-    /// Pushes the current state onto the stack,
-    /// allowing to return to it later.
-    /// </summary>
-    public void PushCurrentState()
-    {
-        if (_currentState != null)
-            _stateStack.Push(_currentState);
-    }
-
-    /// <summary>
     /// Returns previous state (top of the stack).
     /// </summary>
     public AState<StackFiniteStateMachine> GetPreviousState()
     {
         // Empty stack
         if (_stateStack.Count == 0)
-        {
-            if (_behaviourEntity.DebugMode) Debug.Log("[" + _behaviourEntity.GO.name + "] state stack is empty");
-
             return null;
-        }
         else // Not empty
-        {
             // Get the last state from the stack without removing it
-            var previousState = _stateStack.Peek();
-
-            if (_behaviourEntity.DebugMode) Debug.Log("[" + _behaviourEntity.GO.name + "] Previous state: " + previousState.StateName);
-
-            return previousState;
-        }
+            return _stateStack.Peek();
     }
 
     /// <summary>
@@ -86,15 +65,23 @@ public class StackFiniteStateMachine : AStateMachine<StackFiniteStateMachine>
     {
         // Empty stack
         if (_stateStack.Count == 0)
-        {
-            if (_behaviourEntity.DebugMode) Debug.Log("[" + _behaviourEntity.GO.name + "] state stack is empty");
-
             return false;
-        }
 
         // Not empty stack
         SwitchState(_stateStack.Pop());
         return true;
+    }
+    #endregion
+
+    #region PRIVATE METHODS
+    /// <summary>
+    /// Pushes the current state onto the stack,
+    /// allowing to return to it later.
+    /// </summary>
+    void PushCurrentState()
+    {
+        if (_currentState != null)
+            _stateStack.Push(_currentState);
     }
     #endregion
 }

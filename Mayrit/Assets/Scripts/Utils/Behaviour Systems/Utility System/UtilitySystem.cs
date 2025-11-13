@@ -37,8 +37,7 @@ public class UtilitySystem : ABehaviourSystem
     /// </summary>
     protected override void DebugDecision()
     {
-        if (_behaviourEntity.DebugMode)
-            _currentAction.DebugDecision();
+        _behaviourEntity.CurrentActionInfo = _currentAction.DebugAction();
     }
     #endregion
 
@@ -82,16 +81,9 @@ public class UtilitySystem : ABehaviourSystem
     /// </summary>
     void CalculateActionsUtilities()
     {
-        if (_behaviourEntity.DebugMode) Debug.Log(_behaviourEntity.GO.name + " making decision...");
-
         // Calculate the utility of each available action
         foreach (var action in _actions)
-        {
-            if (_behaviourEntity.DebugMode)
-                Debug.Log($"    {_behaviourEntity.GO.name}: {action.ActionName} has utility of {action.Utility}");
-
             _actionUtilities.Add(action, action.Utility);
-        }
 
 
         // Find the action with the highest utility
@@ -99,12 +91,7 @@ public class UtilitySystem : ABehaviourSystem
 
         // If the best action has negative utility, continue with current action
         if (_actionUtilities[bestAction] < 0f || bestAction == null)
-        {
-            if (_behaviourEntity.DebugMode)
-                Debug.LogError($"   {_behaviourEntity.GO.name}: best action is null or has negative utility, continuing with current action: {_currentAction.ActionName}");
-
             bestAction = _currentAction;
-        }
 
         // // Only start the best action if it's different from the current one
         // if (!IsCurrentAction(bestAction))
@@ -116,10 +103,6 @@ public class UtilitySystem : ABehaviourSystem
 
         _currentAction = bestAction; // Update current action
         _currentAction.StartAction();
-
-        // Debug the decision made
-        if (_behaviourEntity.DebugMode)
-            Debug.Log($"{_behaviourEntity.GO.name} is {_currentAction.ActionName}");
 
         DebugDecision();
 

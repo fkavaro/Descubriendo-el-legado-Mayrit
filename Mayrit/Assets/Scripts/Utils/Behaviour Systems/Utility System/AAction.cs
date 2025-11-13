@@ -34,7 +34,7 @@ public abstract class AAction<TFactor> : IAction
     public abstract bool IsFinished();
     public virtual void Reset() { }
 
-    public virtual string DebugDecision()
+    public virtual string DebugAction()
     {
         return ActionName;
     }

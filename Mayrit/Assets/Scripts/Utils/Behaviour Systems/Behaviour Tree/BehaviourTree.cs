@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BehaviourTree : Node
 {
-    #region CONSTRUCTORs
+    #region CONSTRUCTORS
     public BehaviourTree(IBehaviourEntity entity, string name = "BehaviourTree")
     : base(entity, name) { }
 

@@ -52,16 +52,23 @@ public class Node : ABehaviourSystem
     protected override void DebugDecision()
     {
         if (_currentChildId < _children.Count)
-            _children[_currentChildId].DebugDecision();
+            _behaviourEntity.CurrentActionInfo = _children[_currentChildId]._nodeName;
     }
     #endregion
 
     #region MONOBEHAVIOUR
     public override void Update()
     {
-        DebugDecision();
+
         if (!_behaviourEntity.IsExecutionPaused)
+        {
             _status = UpdateNode();
+
+            if (_status == Status.Running)
+            {
+                DebugDecision();
+            }
+        }
     }
     #endregion
 

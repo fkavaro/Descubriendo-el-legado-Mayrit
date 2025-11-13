@@ -38,7 +38,6 @@ public class RandomDestinationStrategy : RandomPatrolStrategy
         // Is close to destination
         if (_npc.IsCloseToDestination(1f))
         {
-            if (_npc.DebugMode) Debug.Log(_npc.Name + " arrived at random destination");
             return Node.Status.Success;
         }
         else // Hasn't arrived

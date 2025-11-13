@@ -20,6 +20,12 @@ where T : ABehaviourSystem
         get => _isExecutionPaused;
         set => _isExecutionPaused = value;
     }
+
+    public string CurrentActionInfo
+    {
+        get => _currentActionInfo;
+        set => _currentActionInfo = value;
+    }
     #endregion
 
     #region EDITOR PROPERTIES
@@ -28,6 +34,8 @@ where T : ABehaviourSystem
     public bool _debugMode;
     [Tooltip("Whether to pause the execution of the behaviour system or not")]
     public bool _isExecutionPaused;
+    [SerializeField, ReadOnly]
+    protected string _currentActionInfo = "";
     #endregion
 
     #region TO BE IMPLEMENTED METHODS
