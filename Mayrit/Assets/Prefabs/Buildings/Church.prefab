@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4425852744896267917}
+  - component: {fileID: 7835166818190488247}
   m_Layer: 0
   m_Name: Placeholder
   m_TagString: Untagged
@@ -33,6 +34,26 @@ Transform:
   - {fileID: 6797427950108884197}
   m_Father: {fileID: 6547628267696245721}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7835166818190488247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 630756633635940004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifier
+  m_SerializedVersion: 0
+  m_OverrideArea: 1
+  m_Area: 1
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
 --- !u!1 &3039325321374126541
 GameObject:
   m_ObjectHideFlags: 0
@@ -47,7 +68,7 @@ GameObject:
   - component: {fileID: 2427701782360468666}
   - component: {fileID: 8935915137263585487}
   - component: {fileID: 7008817821526829667}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Prism (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -365,7 +386,7 @@ GameObject:
   - component: {fileID: 5123448351985317024}
   - component: {fileID: 3445802073280260931}
   - component: {fileID: 258956161910509166}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -721,7 +742,7 @@ GameObject:
   - component: {fileID: 5086668089215603764}
   - component: {fileID: 1520529001299497079}
   - component: {fileID: 6456974277123133022}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1077,7 +1098,7 @@ GameObject:
   - component: {fileID: 549770523091041071}
   - component: {fileID: 6769272046679321897}
   - component: {fileID: 655205740057169633}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Prism
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1462,7 +1483,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6547628267696245721}
   - component: {fileID: 3294773380141302466}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Church
   m_TagString: Untagged
   m_Icon: {fileID: 0}

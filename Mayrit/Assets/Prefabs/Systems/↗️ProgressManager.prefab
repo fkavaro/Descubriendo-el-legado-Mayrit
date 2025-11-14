@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _debugMode: 0
   _isExecutionPaused: 0
+  _currentActionInfo: 
   _dontDestroyOnLoad: 0
   _updateInInspector: 0
   _currentMilestone: 0
