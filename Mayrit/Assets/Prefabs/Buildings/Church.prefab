@@ -1461,7 +1461,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6547628267696245721}
-  - component: {fileID: 4585400879663020922}
+  - component: {fileID: 3294773380141302466}
   m_Layer: 3
   m_Name: Church
   m_TagString: Untagged
@@ -1486,7 +1486,7 @@ Transform:
   - {fileID: 4425852744896267917}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4585400879663020922
+--- !u!114 &3294773380141302466
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1495,9 +1495,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8490685972417487510}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a03580ecfa5969c4e8c058657bbcd942, type: 3}
+  m_Script: {fileID: 11500000, guid: 0df8593a92c81af4eb736c0c56edca69, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Building
+  m_EditorClassIdentifier: Assembly-CSharp::Sanctuary
   _entranceSpots:
   - {fileID: 7939598496968618665}
 --- !u!1001 &2189283130113966664

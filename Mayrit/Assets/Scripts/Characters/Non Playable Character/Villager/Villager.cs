@@ -9,17 +9,8 @@ public class Villager : ANPC<BehaviourTree>
     [Header("Villager Properties")]
     public GameObject _model;
     public House _home;
-    public Building _workplace;
-    [SerializeField] Building _sanctuary;
-    public Building Sanctuary
-    {
-        get
-        {
-            // Find nearest sanctuary to this villager's home and cache it
-            _sanctuary = TownManager.Instance.GetNearestSanctuary(_home);
-            return _sanctuary;
-        }
-    }
+    public Workplace _workplace;
+    public Sanctuary _sanctuary;
     #endregion
 
     #region PROPERTIES
@@ -29,6 +20,23 @@ public class Villager : ANPC<BehaviourTree>
     #region INHERITED
     public override BehaviourTree InitializeBehaviourSystem()
     {
+        // Get entrance spots
+        Spot homeEntrance = null;
+        if (_home != null)
+            homeEntrance = _home.GetRandomEntranceSpot();
+
+        Spot sanctuaryEntrance = null;
+        if (_sanctuary != null)
+            sanctuaryEntrance = _sanctuary.GetRandomEntranceSpot();
+
+        Spot workplaceEntrance = null;
+        if (_workplace != null)
+            workplaceEntrance = _workplace.GetRandomWorkingSpot();
+
+        Spot marketEntrance = null;
+        if (TownManager.ExistingInstance != null)
+            marketEntrance = TownManager.ExistingInstance.GetMarketSpot();
+
         // Interact strategies
         ConditionStrategy isInStreet = new(this, IsInStreet);
         ConditionStrategy isOtherNearby = new(this, IsOtherNearby);
@@ -38,20 +46,18 @@ public class Villager : ANPC<BehaviourTree>
         // Routine strategies
         DeactivateModelStrategy deactivateModelStrategy = new(this, _model);
 
-        Spot sanctuaryEntrance = Sanctuary.GetRandomEntranceSpot();
-        GoToDestinationStrategy goToSanctuary = new(this, sanctuaryEntrance);
-        //Praying_VillagerStrategy prayingStrategy = new(this);
-
-        Spot workplaceEntrance = _workplace.GetRandomEntranceSpot();
-        GoToDestinationStrategy goToWork = new(this, workplaceEntrance);
-        //Working_VillagerStrategy workingStrategy = new(this);
-
-        Spot marketEntrance = TownManager.Instance.GetMarketSpot();
-        GoToDestinationStrategy goToShop = new(this, marketEntrance);
-        Shopping_VillagerStrategy shoppingStrategy = new(this);
-
-        Spot homeEntrance = _home.GetRandomEntranceSpot();
-        GoToDestinationStrategy goHome = new(this, homeEntrance);
+        GoToDestinationStrategy goToSanctuaryStrategy = sanctuaryEntrance != null ?
+            new(this, sanctuaryEntrance) :
+            null;
+        GoToDestinationStrategy goToWorkStrategy = workplaceEntrance != null ?
+            new(this, workplaceEntrance) :
+            null;
+        GoToDestinationStrategy goToMarketStrategy = marketEntrance != null ?
+            new(this, marketEntrance) :
+            null;
+        GoToDestinationStrategy goHomeStrategy = homeEntrance != null ?
+            new(this, homeEntrance) :
+            null;
         AtHome_VillagerStrategy atHomeStrategy = new(this, this);
 
         // Interact sequence
@@ -69,32 +75,44 @@ public class Villager : ANPC<BehaviourTree>
 
         // Routine sequence
         SequenceNode routineSequence = new(this);
-        SequenceNode prayingSequence = new(this);
-        SequenceNode workingSequence = new(this);
-        SequenceNode shoppingSequence = new(this);
-        SequenceNode atHomeSequence = new(this);
 
-        LeafNode goToSanctuaryLeaf = new(this, "GoingToSanctuary", goToSanctuary);
-        LeafNode prayLeaf = new(this, "Praying", deactivateModelStrategy);
-        prayingSequence.AddChild(goToSanctuaryLeaf);
-        prayingSequence.AddChild(prayLeaf);
-        LeafNode goToWorkLeaf = new(this, "GoingToWork", goToWork);
-        LeafNode workLeaf = new(this, "Working", deactivateModelStrategy);
-        workingSequence.AddChild(goToWorkLeaf);
-        workingSequence.AddChild(workLeaf);
-        LeafNode goToShopLeaf = new(this, "GoingToShop", goToShop);
-        LeafNode shopLeaf = new(this, "Shopping", shoppingStrategy);
-        shoppingSequence.AddChild(goToShopLeaf);
-        shoppingSequence.AddChild(shopLeaf);
-        LeafNode goHomeLeaf = new(this, "GoingHome", goHome);
-        LeafNode restLeaf = new(this, "Resting", atHomeStrategy);
-        atHomeSequence.AddChild(goHomeLeaf);
-        atHomeSequence.AddChild(restLeaf);
-
-        routineSequence.AddChild(prayingSequence);
-        routineSequence.AddChild(workingSequence);
-        routineSequence.AddChild(shoppingSequence);
-        routineSequence.AddChild(atHomeSequence);
+        if (goToSanctuaryStrategy != null)
+        {
+            SequenceNode prayingSequence = new(this);
+            LeafNode goToSanctuaryLeaf = new(this, "GoingToSanctuary", goToSanctuaryStrategy);
+            LeafNode prayLeaf = new(this, "Praying", deactivateModelStrategy);
+            prayingSequence.AddChild(goToSanctuaryLeaf);
+            prayingSequence.AddChild(prayLeaf);
+            routineSequence.AddChild(prayingSequence);
+        }
+        if (goToWorkStrategy != null)
+        {
+            SequenceNode workingSequence = new(this);
+            LeafNode goToWorkLeaf = new(this, "GoingToWork", goToWorkStrategy);
+            LeafNode workLeaf = new(this, "Working", deactivateModelStrategy);
+            workingSequence.AddChild(goToWorkLeaf);
+            workingSequence.AddChild(workLeaf);
+            routineSequence.AddChild(workingSequence);
+        }
+        if (goToMarketStrategy != null)
+        {
+            SequenceNode shoppingSequence = new(this);
+            Shopping_VillagerStrategy shoppingStrategy = new(this);
+            LeafNode goToShopLeaf = new(this, "GoingToShop", goToMarketStrategy);
+            LeafNode shopLeaf = new(this, "Shopping", shoppingStrategy);
+            shoppingSequence.AddChild(goToShopLeaf);
+            shoppingSequence.AddChild(shopLeaf);
+            routineSequence.AddChild(shoppingSequence);
+        }
+        if (goHomeStrategy != null)
+        {
+            SequenceNode atHomeSequence = new(this);
+            LeafNode goHomeLeaf = new(this, "GoingHome", goHomeStrategy);
+            LeafNode restLeaf = new(this, "Resting", atHomeStrategy);
+            atHomeSequence.AddChild(goHomeLeaf);
+            atHomeSequence.AddChild(restLeaf);
+            routineSequence.AddChild(atHomeSequence);
+        }
 
         // Behaviour sequence
         SelectorNode behaviourSelector = new(this);
@@ -111,20 +129,41 @@ public class Villager : ANPC<BehaviourTree>
     #region PUBLIC METHODS
     public void AssignHome(House home)
     {
+        if (home == null)
+        {
+            Debug.LogWarning("Trying to assign null Home to " + name);
+            return;
+        }
+
         _home = home;
 
         // Add to its residents
-        home.AssignNewResident(this);
+        home.AddNewAssigned(this);
     }
 
-    public void AssignWorkplace(Building workPlace)
+    public void AssignWorkplace(Workplace workPlace)
     {
+        if (workPlace == null)
+        {
+            Debug.LogWarning("Not enough worplaces for " + name);
+            return;
+        }
+
         _workplace = workPlace;
+
+        // Add to its employees
+        workPlace.AddNewAssigned(this);
     }
 
-    public void AssignSanctuary(House home)
+    public void AssignSanctuary(Sanctuary sanctuary)
     {
-        _sanctuary = TownManager.Instance.GetNearestSanctuary(home);
+        if (sanctuary == null)
+        {
+            Debug.LogWarning("Trying to assign null Sanctuary to " + name);
+            return;
+        }
+
+        _sanctuary = sanctuary;
     }
 
     public void OnReleasedFromPool()
@@ -133,7 +172,7 @@ public class Villager : ANPC<BehaviourTree>
         Agent.enabled = false;
 
         if (_home != null)
-            _home.RemoveResident(this);
+            _home.RemoveAssigned(this);
 
         _home = null;
     }
