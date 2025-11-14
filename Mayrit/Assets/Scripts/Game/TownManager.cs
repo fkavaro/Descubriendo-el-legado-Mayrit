@@ -157,8 +157,9 @@ public class TownManager : Singleton<TownManager>
 
         foreach (var sanctuary in _sanctuaries)
         {
-            if (sanctuary == null)
-                continue; // skip null entries in the list
+            // Skip null or deactivated entries
+            if (sanctuary == null || !sanctuary.gameObject.activeSelf)
+                continue;
 
             // Use squared magnitude to avoid the cost of sqrt when comparing distances
             float distanceSqr = (sanctuary.transform.position - homePosition).sqrMagnitude;

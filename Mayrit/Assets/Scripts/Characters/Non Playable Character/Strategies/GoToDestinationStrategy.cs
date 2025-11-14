@@ -18,7 +18,10 @@ public class GoToDestinationStrategy : AStrategy
 
         // Success if arrived at destination
         if (_npc.HasArrivedAt(_destinationSpot))
+        {
+            _npc.AnimationController.ChangeToIdle();
             return Node.Status.Success;
+        }
         // Continue if not
         else
             return Node.Status.Running;

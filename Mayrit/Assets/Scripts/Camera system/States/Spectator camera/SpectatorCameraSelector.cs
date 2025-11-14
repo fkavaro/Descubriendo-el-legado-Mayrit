@@ -81,7 +81,7 @@ public class SpectatorCameraSelector
 
                 if (!hit.collider.gameObject.TryGetComponent<SelectableObject>(out var selectableObject))
                 {
-                    Debug.LogWarning(hit.collider.gameObject.name + ": selectable component not found");
+                    //Debug.LogWarning(hit.collider.gameObject.name + ": selectable component not found");
                     return;
                 }
 

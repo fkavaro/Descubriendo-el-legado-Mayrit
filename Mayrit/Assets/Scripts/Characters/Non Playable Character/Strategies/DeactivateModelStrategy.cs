@@ -16,9 +16,12 @@ public class DeactivateModelStrategy : AStrategy
 
     public override Node.Status Update()
     {
-        // Deactivated but not returned to pool
-        _model.SetActive(false);
-        _npc.Agent.enabled = false;
+        if (_model.activeSelf)
+        {
+            // Deactivated but not returned to pool
+            _model.SetActive(false);
+            _npc.Agent.enabled = false;
+        }
 
         // Update elapsed time
         _elapsedTime += Time.deltaTime;

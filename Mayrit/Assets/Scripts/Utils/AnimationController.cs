@@ -19,7 +19,7 @@ public class AnimationController
         , _afterJumpAnim = Animator.StringToHash("AfterJump")
         ;
 
-    int _currentAnimation, _lastAnimation;
+    int _lastPlayedAnimation, _lastRequestedAnimation;
 
     // Constructor
     public AnimationController(MonoBehaviour entity, IBehaviourEntity behaviourEntity, Animator animator)
@@ -33,29 +33,32 @@ public class AnimationController
     /// <summary>
     /// Crossfade to new animation.
     /// </summary>
-    public virtual void ChangeAnimationTo(int newAnimation, float duration = 0.2f)
+    public virtual void ChangeAnimationTo(int requestedAnimation, float duration = 0.2f)
     {
         // Safely get the current animation from the Animator to avoid desync
         if (_animator == null)
         {
-            _lastAnimation = _currentAnimation;
-            _currentAnimation = newAnimation;
+            Debug.LogWarning($"AnimationController.ChangeAnimationTo: Animator is null for {_behaviourEntity.Name}.");
             return;
         }
 
         AnimatorStateInfo currentState = _animator.GetCurrentAnimatorStateInfo(0);
-        int currentHash = currentState.shortNameHash;
+        int currentAnimation = currentState.shortNameHash;
 
-        // If the requested animation is already playing (by hash), skip the transition
-        if (currentHash == newAnimation)
+        // Return if requested animation was already requested
+        if (_lastRequestedAnimation == requestedAnimation)
             return;
 
-        // Update bookkeeping
-        _lastAnimation = _currentAnimation;
-        _currentAnimation = newAnimation;
+        // Change to requested animation if is not already playing
+        if (currentAnimation != requestedAnimation)
+        {
+            // Update bookkeeping
+            _lastPlayedAnimation = currentAnimation;
+            _lastRequestedAnimation = requestedAnimation;
 
-        // Interpolate transition to new animation
-        _animator.CrossFade(newAnimation, duration);
+            // Interpolate transition to new animation
+            _animator.CrossFade(requestedAnimation, duration);
+        }
     }
 
     /// <summary>
@@ -63,7 +66,7 @@ public class AnimationController
     /// </summary>
     public virtual void ChangeToPreviousAnimation(float duration = 0.2f)
     {
-        ChangeAnimationTo(_lastAnimation, duration);
+        ChangeAnimationTo(_lastPlayedAnimation, duration);
     }
 
     /// <returns> True if the current animation is finished, false otherwise.</returns>
