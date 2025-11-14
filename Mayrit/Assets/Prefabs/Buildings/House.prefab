@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bea95cad3cfb0f249a9d1610a767f734, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::House
-  _entranceSpots:
+  _accessSpots:
   - {fileID: 9210830510331309233}
   _capacity: 1
   _assignedVillagers: []

@@ -17,7 +17,14 @@ public abstract class AStrategy
     #endregion
 
     #region TO BE IMPLEMENTED METHODS
-    public abstract Node.Status Update();
+    public virtual Node.Status Start()
+    {
+        return Node.Status.Success; // Default implementation returns Success
+    }
+    public virtual Node.Status Update()
+    {
+        return Node.Status.Success;
+    }
     public virtual void Reset() { }
     #endregion
 }

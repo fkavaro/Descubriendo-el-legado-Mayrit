@@ -5,7 +5,7 @@ public abstract class ABuilding : MonoBehaviour
 {
     #region EDITOR PROPERTIES
     [Header("Building Properties")]
-    [SerializeField] List<Spot> _entranceSpots;
+    [SerializeField] List<Spot> _accessSpots;
     #endregion
 
     #region PUBLIC METHODS
@@ -17,7 +17,7 @@ public abstract class ABuilding : MonoBehaviour
             return;
         }
 
-        Spot entranceSpot = GetRandomEntranceSpot();
+        Spot entranceSpot = GetRandomAccessSpot();
         if (entranceSpot != null)
         {
             npc.Agent.transform.position = entranceSpot.transform.position;
@@ -30,11 +30,11 @@ public abstract class ABuilding : MonoBehaviour
         }
     }
 
-    public Spot GetRandomEntranceSpot()
+    public Spot GetRandomAccessSpot()
     {
-        if (_entranceSpots == null || _entranceSpots.Count == 0) return null;
-        int randomIndex = Random.Range(0, _entranceSpots.Count);
-        return _entranceSpots[randomIndex];
+        if (_accessSpots == null || _accessSpots.Count == 0) return null;
+        int randomIndex = Random.Range(0, _accessSpots.Count);
+        return _accessSpots[randomIndex];
     }
     #endregion
 }

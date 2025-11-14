@@ -137,7 +137,7 @@ public class TownManager : Singleton<TownManager>
     public Spot GetMarketSpot()
     {
         // TODO
-        return _markets[UnityEngine.Random.Range(0, _markets.Count)].GetRandomEntranceSpot();
+        return _markets[UnityEngine.Random.Range(0, _markets.Count)].GetRandomAccessSpot();
     }
 
     /// <summary>
@@ -246,6 +246,14 @@ public class TownManager : Singleton<TownManager>
                 try { NPCPoolManager.Instance.ReturnVillagerToPool(villager); } catch { }
             }
         }
+    }
+
+    public Spot GetRandomMarketStallSpot()
+    {
+        // Take random market
+        Market market = _markets[UnityEngine.Random.Range(0, _markets.Count)];
+        // Take random stall from market
+        return market.GetRandomStall().GetRandomAccessSpot();
     }
     #endregion
 }

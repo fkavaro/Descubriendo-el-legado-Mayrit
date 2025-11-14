@@ -1,12 +1,13 @@
 using UnityEngine;
 
-public class Working_VillagerStrategy : AStrategy
+public class Working_VillagerStrategy : ATimerStrategy
 {
-    public Working_VillagerStrategy(INPC npc)
-    : base(npc) { }
+    public Working_VillagerStrategy(INPC npc, float min = 20, float max = 40)
+    : base(npc, min, max)
+    { }
 
-    public override Node.Status Update()
-    {
-        throw new System.NotImplementedException();
-    }
+    // Start
+
+
+    // Update
 }

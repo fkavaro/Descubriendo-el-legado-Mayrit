@@ -21,11 +21,11 @@ public class Villager : ANPC<BehaviourTree>
         // Get entrance spots
         Spot homeEntrance = null;
         if (_home != null)
-            homeEntrance = _home.GetRandomEntranceSpot();
+            homeEntrance = _home.GetRandomAccessSpot();
 
         Spot sanctuaryEntrance = null;
         if (_sanctuary != null)
-            sanctuaryEntrance = _sanctuary.GetRandomEntranceSpot();
+            sanctuaryEntrance = _sanctuary.GetRandomAccessSpot();
 
         Spot workplaceEntrance = null;
         if (_workplace != null)
@@ -33,7 +33,7 @@ public class Villager : ANPC<BehaviourTree>
 
         Spot marketEntrance = null;
         if (TownManager.ExistingInstance != null)
-            marketEntrance = TownManager.ExistingInstance.GetMarketSpot();
+            marketEntrance = TownManager.ExistingInstance.GetRandomMarketStallSpot();
 
         // Interact strategies
         ConditionStrategy isInStreet = new(this, IsInStreet);
@@ -42,21 +42,18 @@ public class Villager : ANPC<BehaviourTree>
         InteractStrategy interactStrategy = new(this);
 
         // Routine strategies
-        DeactivateModelStrategy deactivateModelStrategy = new(this, _model);
-
         GoToDestinationStrategy goToSanctuaryStrategy = sanctuaryEntrance != null ?
             new(this, sanctuaryEntrance) :
             null;
         GoToDestinationStrategy goToWorkStrategy = workplaceEntrance != null ?
-            new(this, workplaceEntrance) :
+            new(this, workplaceEntrance, true) :
             null;
         GoToDestinationStrategy goToMarketStrategy = marketEntrance != null ?
-            new(this, marketEntrance) :
+            new(this, marketEntrance, true) :
             null;
         GoToDestinationStrategy goHomeStrategy = homeEntrance != null ?
             new(this, homeEntrance) :
             null;
-        AtHome_VillagerStrategy atHomeStrategy = new(this, this);
 
         // Interact sequence
         SequenceNode interactSequence = new(this);
@@ -76,27 +73,32 @@ public class Villager : ANPC<BehaviourTree>
 
         if (goToSanctuaryStrategy != null)
         {
+            InInteriorStrategy prayingStrategy = new(this, _model);
+
             SequenceNode prayingSequence = new(this);
             LeafNode goToSanctuaryLeaf = new(this, "GoingToSanctuary", goToSanctuaryStrategy);
-            LeafNode prayLeaf = new(this, "Praying", deactivateModelStrategy);
+            LeafNode prayLeaf = new(this, "Praying", prayingStrategy);
             prayingSequence.AddChild(goToSanctuaryLeaf);
             prayingSequence.AddChild(prayLeaf);
             routineSequence.AddChild(prayingSequence);
         }
         if (goToWorkStrategy != null)
         {
+            Working_VillagerStrategy workingStrategy = new(this);
+
             SequenceNode workingSequence = new(this);
             LeafNode goToWorkLeaf = new(this, "GoingToWork", goToWorkStrategy);
-            LeafNode workLeaf = new(this, "Working", deactivateModelStrategy);
+            LeafNode workLeaf = new(this, "Working", workingStrategy);
             workingSequence.AddChild(goToWorkLeaf);
             workingSequence.AddChild(workLeaf);
             routineSequence.AddChild(workingSequence);
         }
         if (goToMarketStrategy != null)
         {
-            SequenceNode shoppingSequence = new(this);
             Shopping_VillagerStrategy shoppingStrategy = new(this);
-            LeafNode goToShopLeaf = new(this, "GoingToShop", goToMarketStrategy);
+
+            SequenceNode shoppingSequence = new(this);
+            LeafNode goToShopLeaf = new(this, "GoingToMarket", goToMarketStrategy);
             LeafNode shopLeaf = new(this, "Shopping", shoppingStrategy);
             shoppingSequence.AddChild(goToShopLeaf);
             shoppingSequence.AddChild(shopLeaf);
@@ -104,6 +106,8 @@ public class Villager : ANPC<BehaviourTree>
         }
         if (goHomeStrategy != null)
         {
+            AtHome_VillagerStrategy atHomeStrategy = new(this);
+
             SequenceNode atHomeSequence = new(this);
             LeafNode goHomeLeaf = new(this, "GoingHome", goHomeStrategy);
             LeafNode restLeaf = new(this, "Resting", atHomeStrategy);

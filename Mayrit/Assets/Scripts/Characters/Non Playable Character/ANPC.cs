@@ -157,17 +157,17 @@ where T : ABehaviourSystem
         return IsCloseTo(_agent.destination, checkingDistance, fixRotation);
     }
 
-    public bool HasArrivedAtDestination(bool fixRotation = true, bool fixPosition = true)
+    public bool HasArrivedAtDestination(bool fixRotation = false, bool fixPosition = false)
     {
         return HasArrivedAt(_agent.destination, fixRotation, fixPosition);
     }
 
-    public bool HasArrivedAt(Spot spot, bool fixRotation = true, bool fixPosition = true)
+    public bool HasArrivedAt(Spot spot, bool fixRotation = false, bool fixPosition = false)
     {
         return HasArrivedAt(spot.transform.position, fixRotation, fixPosition);
     }
 
-    public bool HasArrivedAt(Vector3 destination, bool fixRotation = true, bool fixPosition = true)
+    public bool HasArrivedAt(Vector3 destination, bool fixRotation = false, bool fixPosition = false)
     {
         // Compare horizontal (XZ) distance and allow a bigger vertical margin.
         Vector3 agentPos = _agent.transform.position;

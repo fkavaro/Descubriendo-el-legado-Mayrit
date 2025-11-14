@@ -22,5 +22,12 @@ public class Market : ABuilding
         if (_stalls.Contains(stall))
             _stalls.Remove(stall);
     }
+
+    public Stall GetRandomStall()
+    {
+        if (_stalls == null || _stalls.Count == 0) return null;
+        int randomIndex = UnityEngine.Random.Range(0, _stalls.Count);
+        return _stalls[randomIndex];
+    }
     #endregion
 }
