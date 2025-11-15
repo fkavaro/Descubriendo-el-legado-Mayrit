@@ -148,6 +148,16 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
         // Track active
         if (_activeVillagers.Contains(villager))
             _activeVillagers.Remove(villager);
+
+        // Spawn a replacement if active villagers are below max
+        try
+        {
+            if (_villagerPool != null && _activeVillagers.Count < _maxActiveVillagers)
+            {
+                _villagerPool.Get();
+            }
+        }
+        catch { }
     }
     #endregion
 }
