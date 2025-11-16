@@ -7,6 +7,7 @@ public class Workplace : AAssignedBuilding
     #region EDITOR PROPERTIES
     [Header("Workplace Properties")]
     [SerializeField] List<Spot> _workSpots;
+    [SerializeField] bool _isOpen = false;
     #endregion
 
     #region INHERITED METHODS
@@ -35,6 +36,21 @@ public class Workplace : AAssignedBuilding
         if (_workSpots == null || _workSpots.Count == 0) return null;
         int randomIndex = UnityEngine.Random.Range(0, _workSpots.Count);
         return _workSpots[randomIndex];
+    }
+
+    public void OpenWorkplace()
+    {
+        _isOpen = true;
+    }
+
+    public void CloseWorkplace()
+    {
+        _isOpen = false;
+    }
+
+    public bool IsOpen()
+    {
+        return _isOpen;
     }
     #endregion
 }

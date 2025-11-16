@@ -30,11 +30,40 @@ public class Market : ABuilding
         return _stalls[randomIndex];
     }
 
-    public Spot GetRandomStallSpot()
+
+    /// <returns>A random opened stall from the market</returns>
+    public Stall GetRandomOpenedStall()
     {
-        Stall stall = GetRandomStall();
-        if (stall == null) return null;
-        return stall.GetRandomAccessSpot();
+        if (_stalls == null || _stalls.Count == 0) return null;
+
+        List<Stall> openedStalls = new();
+
+        foreach (var stall in _stalls)
+        {
+            if (stall.IsOpen())
+                openedStalls.Add(stall);
+        }
+
+        if (openedStalls.Count == 0) return null;
+
+        int randomIndex = UnityEngine.Random.Range(0, openedStalls.Count);
+        return openedStalls[randomIndex];
+    }
+
+    /// <returns>The access spot of a random opened stall in the market
+    public Spot GetOpenStallSpot()
+    {
+        Spot spot = null;
+
+        do
+        {
+            Stall stall = GetRandomOpenedStall();
+            if (stall != null)
+                spot = stall.GetRandomAccessSpot();
+        }
+        while (spot == null); // Not found
+
+        return spot;
     }
     #endregion
 }

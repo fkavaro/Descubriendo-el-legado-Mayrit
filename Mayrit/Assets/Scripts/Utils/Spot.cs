@@ -9,10 +9,10 @@ using UnityEditor;
 
 public class Spot : MonoBehaviour
 {
-    public bool _isOccupied = false;
-    public bool _isRotationFixed = false;
+    [SerializeField] bool _isOccupied = false;
+    [SerializeField] bool _isRotationFixed = false;
     [Tooltip("Direction angle in degrees (Y axis rotation)")]
-    public int _directionAngle = 0;
+    [SerializeField] int _directionAngle = 0;
 
     [Header("Debug direction gizmo")]
     [SerializeField] float _gizmoLength = 2f;

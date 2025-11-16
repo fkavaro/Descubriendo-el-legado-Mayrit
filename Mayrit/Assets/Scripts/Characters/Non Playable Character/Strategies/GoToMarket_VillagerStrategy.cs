@@ -1,11 +1,11 @@
 using UnityEngine;
 
-public class GoToMarketStrategy : AStrategy
+public class GoToMarket_VillagerStrategy : AStrategy
 {
     readonly Market _market;
     Spot _marketStallSpot;
 
-    public GoToMarketStrategy(INPC npc, Market market)
+    public GoToMarket_VillagerStrategy(INPC npc, Market market)
     : base(npc)
     {
         _market = market;
@@ -13,7 +13,7 @@ public class GoToMarketStrategy : AStrategy
 
     public override Node.Status Start()
     {
-        _marketStallSpot = _market.GetRandomStallSpot();
+        _marketStallSpot = _market.GetOpenStallSpot();
 
         if (_marketStallSpot == null)
             return Node.Status.Failure;
@@ -36,6 +36,23 @@ public class GoToMarketStrategy : AStrategy
         }
         // Continue if not
         else
+        {
+            // TODO: check if this work
+            // Stop and idle if its near and destination spot is occupied
+            if (_npc.IsCloseTo(_marketStallSpot, 2f, true))
+            {
+                if (_marketStallSpot.IsOccupied())
+                {
+                    Debug.Log($"{_npc.Name} is near market stall spot but it's occupied. Stopping.");
+                    _npc.SetIfStopped(true);
+                }
+                else
+                {
+                    _npc.SetIfStopped(false);
+                }
+            }
+
             return Node.Status.Running;
+        }
     }
 }

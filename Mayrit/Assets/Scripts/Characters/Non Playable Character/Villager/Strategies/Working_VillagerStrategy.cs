@@ -2,12 +2,25 @@ using UnityEngine;
 
 public class Working_VillagerStrategy : ATimerStrategy
 {
-    public Working_VillagerStrategy(INPC npc, float min = 30, float max = 120)
-    : base(npc, min, max)
-    { }
+    readonly Workplace _workplace;
+
+    public Working_VillagerStrategy(Villager villager, float min = 30, float max = 120)
+    : base(villager, min, max)
+    {
+        _workplace = villager._workplace;
+    }
 
     // Start
+    public override Node.Status Start()
+    {
+        _npc.AnimationController.ChangeToIdle();
+        _workplace.OpenWorkplace();
 
+        return Node.Status.Success;
+    }
 
-    // Update
+    public override void OnTimerComplete()
+    {
+        _workplace.CloseWorkplace();
+    }
 }

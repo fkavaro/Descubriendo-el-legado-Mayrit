@@ -73,7 +73,7 @@ public class Villager : ANPC<BehaviourTree>
         if (workplaceEntrance != null)
         {
             GoToDestinationStrategy goToWorkStrategy = new(this, workplaceEntrance, true);
-            Working_VillagerStrategy workingStrategy = new(this);
+            Working_VillagerStrategy workingStrategy = new(this, 60, 180);
 
             SequenceNode workingSequence = new(this);
             LeafNode goToWorkLeaf = new(this, "GoingToWork", goToWorkStrategy);
@@ -88,8 +88,8 @@ public class Villager : ANPC<BehaviourTree>
 
         if (market != null)
         {
-            GoToMarketStrategy goToMarketStrategy = new(this, market);
-            Shopping_VillagerStrategy shoppingStrategy = new(this);
+            GoToMarket_VillagerStrategy goToMarketStrategy = new(this, market);
+            Shopping_VillagerStrategy shoppingStrategy = new(this, 15, 45);
 
             SequenceNode shoppingSequence = new(this);
             LeafNode goToMarketStallLeaf = new(this, "GoingToMarket", goToMarketStrategy);

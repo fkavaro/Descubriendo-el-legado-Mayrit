@@ -257,6 +257,12 @@ where T : ABehaviourSystem
         }
 
         _agent.isStopped = isStopped;
+
+        // Change animation accordingly
+        if (isStopped)
+            _animationController.ChangeToIdle();
+        else
+            _animationController.ChangeToWalk();
     }
 
     public bool IsPathPending()
