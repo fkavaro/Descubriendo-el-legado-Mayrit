@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2883b67343ded7c4096daba8a603fb63, type: 3}
-  m_Name: Leganitos_InformationSO
+  m_Name: LeganitosCreek_InformationSO
   m_EditorClassIdentifier: Assembly-CSharp::Building_InformationSO
-  _header: Arroyo de Arenales
-  _subHeader: Actual calle Arenales
+  _header: Arroyo de Leganitos
+  _subHeader: 
   _description: 
   _icon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
   _image: {fileID: 0}
