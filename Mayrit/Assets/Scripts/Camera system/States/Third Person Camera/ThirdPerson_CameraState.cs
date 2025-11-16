@@ -6,9 +6,8 @@ public class ThirdPerson_CameraState : ACameraState
 {
     ThirdPersonCameraController _cameraController;
 
-    public ThirdPerson_CameraState(FiniteStateMachine stateMachine,
-        CinemachineCamera camera)
-    : base("Third person camera", stateMachine, camera) { }
+    public ThirdPerson_CameraState(FiniteStateMachine stateMachine, CinemachineCamera camera, float simulationSpeed)
+    : base("Third person camera", stateMachine, camera, simulationSpeed) { }
 
     public override void StartState()
     {
@@ -19,7 +18,10 @@ public class ThirdPerson_CameraState : ACameraState
         _camera.gameObject.SetActive(true);
 
         // Change HUD
-        UIManager.Instance._fsm.SwitchState(UIManager.Instance._playerHUDState);
+        UIManager.Instance.BehaviourSystem.SwitchState(UIManager.Instance._playerHUDState);
+
+        // Adjust simulation speed
+        TimeManager.Instance.SetSimulationSpeed(_simulationSpeed);
 
         _cameraController = new(_camera);
     }

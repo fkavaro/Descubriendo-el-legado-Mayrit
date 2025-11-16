@@ -13,12 +13,11 @@ public class PlayerHUD_UIState : AUIState
     #endregion
 
     #region INHERITED
-    public PlayerHUD_UIState(StackFiniteStateMachine stateMachine)
-    : base("PlayerHUD", stateMachine) { }
+    public PlayerHUD_UIState(StackFiniteStateMachine stateMachine, UIDocument uiDocument)
+    : base("PlayerHUD", stateMachine, uiDocument) { }
 
-    public override void AwakeState()
+    public override void StartState()
     {
-        _UIDocument = UIManager.Instance._UIDocument;
         _screen = _UIDocument.rootVisualElement.Q<VisualElement>("PlayerHUD");
 
         _pauseButton = _screen.Q<Button>("PauseButton");
@@ -30,10 +29,7 @@ public class PlayerHUD_UIState : AUIState
             Debug.LogWarning("_activityArea not found");
 
         _pauseButton.RegisterCallback<ClickEvent>(SwitchToPauseState);
-    }
 
-    public override void StartState()
-    {
         _screen.style.display = DisplayStyle.Flex; // Show HUD
     }
 

@@ -2,18 +2,19 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 /// <summary>
 /// Manages the game states and data. Singleton.
 /// </summary>
-public class GameManager : ASingletonBehaviourControllable<GameManager>
+public class GameManager : ASingletonBehaviourEntity<GameManager, FiniteStateMachine>
 {
     #region EDITOR PROPERTIES
     [Header("Player")]
     public PlayableCharacter _currentPlayableCharacter;
     #endregion
 
-    #region PROPERTIES
-    public FiniteStateMachine _fsm;
+    #region INTERNAL PROPERTIES
+    FiniteStateMachine _fsm;
     public MainMenu_GameState _mainMenuState;
     public GamePlay_GameState _gamePlayState;
     public Pause_GameState _pauseState;
@@ -21,16 +22,12 @@ public class GameManager : ASingletonBehaviourControllable<GameManager>
     public GameInputActions _inputActions;
     #endregion
 
-    #region MONOBEHAVIOUR
-    protected override void Awake()
+    #region INHERITED
+    public override FiniteStateMachine InitializeBehaviourSystem()
     {
-        // Singleton
-        base.Awake();
-
-        _inputActions = new();
-
         _fsm = new(this);
 
+        // States initialization
         _mainMenuState = new(_fsm);
         _gamePlayState = new(_fsm);
         _pauseState = new(_fsm);
@@ -41,37 +38,36 @@ public class GameManager : ASingletonBehaviourControllable<GameManager>
             _fsm.SetInitialState(_gamePlayState);
         else
             _fsm.SetInitialState(_mainMenuState);
+
+        return _fsm;
     }
+    #endregion
 
-    void Start()
+    #region MONOBEHAVIOUR
+    protected override void Awake()
     {
+        base.Awake();
 
-    }
+        _inputActions = new();
 
-    void Update()
-    {
+        // Subscribe to milestone change event
+        ProgressManager.Instance.OnMilestoneChanged += UpdatePlayableCharacter;
 
+        // Find the playable character
+        _currentPlayableCharacter = FindFirstObjectByType<PlayableCharacter>();
     }
 
     private void OnDestroy()
     {
         _inputActions?.Disable(); // Disables all action maps. To avoid errors
     }
-
-    public PlayableCharacter GetCurrentPlayableCharacter()
-    {
-        // Find the player character
-        _currentPlayableCharacter = FindFirstObjectByType<PlayableCharacter>();
-
-        return _currentPlayableCharacter;
-    }
-    #endregion
-
-    #region PUBLIC METHODS
-
     #endregion
 
     #region PRIVATE METHODS
-
+    void UpdatePlayableCharacter(ProgressManager.Milestone milestone)
+    {
+        // Find the playable character
+        _currentPlayableCharacter = FindFirstObjectByType<PlayableCharacter>();
+    }
     #endregion
 }

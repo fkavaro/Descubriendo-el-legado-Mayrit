@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class PlayerController
+public class PlayerController // TODO: inherit from AnimationController?
 {
     #region PRIVATE PROPERTIES
     readonly PlayableCharacter _player;
@@ -69,7 +69,7 @@ public class PlayerController
         if (_playerCharacterController.isGrounded)
         {
             // Only apply jump force after pre-jump animation is finished
-            if (_isJumping && _player._animationController.IsAnimationFinished(_player._animationController._preJumpAnim))
+            if (_isJumping && _player._animationController.IsPreJumpAnimationFinished())
                 _verticalVelocity = _player._jumpForce; // Jump
             else
                 _verticalVelocity = -1f; // Small gravity to keep grounded
@@ -96,27 +96,27 @@ public class PlayerController
             // Handle jump sequence
             if (_isJumping)
             {
-                if (_player._animationController.IsAnimationFinished(_player._animationController._preJumpAnim))
+                if (_player._animationController.IsPreJumpAnimationFinished())
                 {
-                    _player._animationController.ChangeAnimationTo(_player._animationController._jumpAnim, 0f);
+                    _player._animationController.ChangeToJump();
                 }
-                else if (_player._animationController.IsAnimationFinished(_player._animationController._jumpAnim))
+                else if (_player._animationController.IsJumpAnimationFinished())
                 {
-                    _player._animationController.ChangeAnimationTo(_player._animationController._afterJumpAnim, 0f);
+                    _player._animationController.ChangeToAfterJump();
                     _isJumping = false; // Reset jumping state after jump animation
                 }
             }
             else if (_isJumpPressed)
             {
-                _player._animationController.ChangeAnimationTo(_player._animationController._preJumpAnim, 0f);
+                _player._animationController.ChangeToPreJump();
                 _isJumping = true;
             }
             else if (_movementInput == Vector2.zero)
-                _player._animationController.ChangeAnimationTo(_player._animationController._idleAnim);
+                _player._animationController.ChangeToIdle();
             else if (_isRunPressed)
-                _player._animationController.ChangeAnimationTo(_player._animationController._runAnim);
+                _player._animationController.ChangeToRun();
             else
-                _player._animationController.ChangeAnimationTo(_player._animationController._walkAnim);
+                _player._animationController.ChangeToWalk();
         }
         else // In air
         {

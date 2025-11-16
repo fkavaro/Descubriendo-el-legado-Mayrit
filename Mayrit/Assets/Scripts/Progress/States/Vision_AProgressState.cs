@@ -7,14 +7,4 @@ public class Vision_AProgressState : AProgressState
     Milestone_InformationSO milestoneInfoSO,
     FiniteStateMachine stateMachine)
     : base("Vision", milestone, milestoneInfoSO, stateMachine) { }
-
-    public override void StartState()
-    {
-
-    }
-
-    public override void UpdateState()
-    {
-
-    }
 }

@@ -12,13 +12,12 @@ public class PauseMenu_UIState : AUIState
     #endregion
 
     // Constructor
-    public PauseMenu_UIState(StackFiniteStateMachine stateMachine)
-    : base("PauseMenu", stateMachine) { }
+    public PauseMenu_UIState(StackFiniteStateMachine stateMachine, UIDocument uiDocument)
+    : base("PauseMenu", stateMachine, uiDocument) { }
 
     #region INHERITED
-    public override void AwakeState()
+    public override void StartState()
     {
-        _UIDocument = UIManager.Instance._UIDocument;
         _screen = _UIDocument.rootVisualElement.Q<VisualElement>("PauseMenu");
         _playButton = _screen.Q<Button>("PlayButton");
         _mainMenuButton = _screen.Q<Button>("MainMenuButton");
@@ -27,19 +26,11 @@ public class PauseMenu_UIState : AUIState
         _playButton.RegisterCallback<ClickEvent>(SwitchToHUDState);
         _mainMenuButton.RegisterCallback<ClickEvent>(SwitchToMainMenuState);
         _quitButton.RegisterCallback<ClickEvent>(QuitGame);
-    }
 
-    public override void StartState()
-    {
         _screen.style.display = DisplayStyle.Flex; // Show pause menu
 
         // Game pause state
-        GameManager.Instance._fsm.SwitchState(GameManager.Instance._pauseState);
-    }
-
-    public override void UpdateState()
-    {
-
+        GameManager.Instance.BehaviourSystem.SwitchState(GameManager.Instance._pauseState);
     }
 
     public override void ExitState()
@@ -56,13 +47,13 @@ public class PauseMenu_UIState : AUIState
     void SwitchToHUDState(ClickEvent evt)
     {
         _stateMachine.SwitchToPreviousStateInStack(); // Switch to previous state: player or spectator HUD
-        GameManager.Instance._fsm.SwitchState(GameManager.Instance._gamePlayState);
+        GameManager.Instance.BehaviourSystem.SwitchState(GameManager.Instance._gamePlayState);
     }
 
     void SwitchToMainMenuState(ClickEvent evt)
     {
         //_stateMachine.SwitchState(UIManager.Instance._mainMenuState); // Switch to Main Menu state
-        GameManager.Instance._fsm.SwitchState(GameManager.Instance._mainMenuState);
+        GameManager.Instance.BehaviourSystem.SwitchState(GameManager.Instance._mainMenuState);
     }
 
     void QuitGame(ClickEvent evt)

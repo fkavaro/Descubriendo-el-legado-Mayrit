@@ -25,13 +25,12 @@ public class SpectatorHUD_UIState : AUIState
     Vector2 _cursorScreenPos;
     #endregion
 
-    #region INHERITED
-    public SpectatorHUD_UIState(StackFiniteStateMachine stateMachine)
-    : base("SpectatorHUD", stateMachine) { }
+    public SpectatorHUD_UIState(StackFiniteStateMachine stateMachine, UIDocument uiDocument)
+    : base("SpectatorHUD", stateMachine, uiDocument) { }
 
-    public override void AwakeState()
+    #region INHERITED
+    public override void StartState()
     {
-        _UIDocument = UIManager.Instance._UIDocument;
         _screen = _UIDocument.rootVisualElement.Q<VisualElement>("SpectatorHUD");
 
         _pauseButton = _screen.Q<Button>("PauseButton");
@@ -76,10 +75,7 @@ public class SpectatorHUD_UIState : AUIState
         _nextMilestoneButton.RegisterCallback<ClickEvent>(SwitchToNextMilestone);
         _previousMilestoneButton.RegisterCallback<ClickEvent>(SwitchToPreviousMilestone);
         _modernSuperpositionButton.RegisterCallback<ClickEvent>(evt => OnModernSuperpositionToggled?.Invoke());
-    }
 
-    public override void StartState()
-    {
         _screen.style.display = DisplayStyle.Flex; // Show HUD
 
         CheckMilestoneButtonsActivation();
@@ -151,7 +147,7 @@ public class SpectatorHUD_UIState : AUIState
         _milestoneArea.style.display = DisplayStyle.Flex;
 
         // Switch to spectator camera state if it's not current state
-        if (CameraManager.Instance._fsm.IsCurrentState(CameraManager.Instance._orbitalState))
+        if (CameraManager.Instance.BehaviourSystem.IsCurrentState(CameraManager.Instance._orbitalState))
             CameraManager.Instance.SwitchToSpectatorCamera();
     }
     #endregion
@@ -161,14 +157,14 @@ public class SpectatorHUD_UIState : AUIState
     {
         _milestoneArea.style.display = DisplayStyle.None;
 
-        AProgressState currentProgressState = (AProgressState)ProgressManager.Instance._fsm.CurrentState;
+        AProgressState currentProgressState = (AProgressState)ProgressManager.Instance.BehaviourSystem.CurrentState;
 
         _contextualPanel.ShowInfo(currentProgressState._informationSO);
     }
 
     void OverwriteMilestoneArea()
     {
-        AProgressState currentProgressState = (AProgressState)ProgressManager.Instance._fsm.CurrentState;
+        AProgressState currentProgressState = (AProgressState)ProgressManager.Instance.BehaviourSystem.CurrentState;
 
         if (currentProgressState == null || currentProgressState._informationSO == null)
         {
@@ -231,38 +227,5 @@ public class SpectatorHUD_UIState : AUIState
         CheckMilestoneButtonsActivation();
         ShowMilestoneInfo();
     }
-
-    //! DEPRECATED BECAUSE UGUI SOLUTION IS MORE FRAME-RESPONSIVE
-    // void SwitchToPlayerHUDState(ClickEvent evt)
-    // {
-    //     if (_playerButton == null) return;
-
-    //     //_playerButton.style.display = DisplayStyle.None;
-    //     _stateMachine.SwitchState(UIManager.Instance._playerHUDState);
-    //     CameraManager.Instance.ToggleCameraState();
-    // }
-
-    // void UpdatePlayerButton()
-    // {
-    //     if (_playerButton == null) return;
-
-    //     // Get the player's world position and an offset above the head
-    //     Vector3 playerWorldPos = GameObject.FindGameObjectWithTag("Player").transform.position + Vector3.up * 2.0f;
-
-    //     // Convert world position to screen position
-    //     Vector3 playerScreenPos = Camera.main.WorldToScreenPoint(playerWorldPos);
-
-    //     // Convert screen position to UI Toolkit coordinates
-    //     // UI Toolkit's y=0 is at the top, but ScreenPoint's y=0 is at the bottom, so invert y
-    //     _playerButton.style.left = playerScreenPos.x + UIManager.Instance._playerButtonOffset.x;
-    //     _playerButton.style.top = Screen.height - playerScreenPos.y + UIManager.Instance._playerButtonOffset.y;
-
-    //     //Hide the button if the player is off - screen
-    //     _playerButton.style.display = (playerScreenPos.z > 0 &&
-    //                                     playerScreenPos.x >= 0 && playerScreenPos.x <= Screen.width &&
-    //                                     playerScreenPos.y >= 0 && playerScreenPos.y <= Screen.height)
-    //                                     ? DisplayStyle.Flex
-    //                                     : DisplayStyle.None;
-    // }
     #endregion
 }

@@ -10,19 +10,9 @@ public class MainMenu_GameState : AState<FiniteStateMachine>
     public MainMenu_GameState(FiniteStateMachine stateMachine)
     : base("Main menu", stateMachine) { }
 
-    public override void AwakeState()
+    public override void StartState()
     {
         if (SceneManager.GetActiveScene().name != "MainMenuScene")
             SceneManager.LoadScene("MainMenuScene");
-    }
-
-    public override void StartState()
-    {
-
-    }
-
-    public override void UpdateState()
-    {
-
     }
 }

@@ -1,12 +1,8 @@
 using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-/// <summary>
-/// Manages the player states and data. Singleton.
-/// </summary>
 [RequireComponent(typeof(CharacterController))]
-public class PlayableCharacter : ABehaviourControllable
+public class PlayableCharacter : ABehaviourEntity<FiniteStateMachine>
 {
     #region EDITOR PROPERTIES
     [Header("Character Information")]
@@ -23,41 +19,34 @@ public class PlayableCharacter : ABehaviourControllable
     public Animator _animator;
     #endregion
 
-    #region PROPERTIES
-    public AAnimationController _animationController;
+    #region INTERNAL PROPERTIES
+    public AnimationController _animationController;
     public PlayerController _playerController;
-    public FiniteStateMachine _fsm;
+
+    FiniteStateMachine _fsm;
     public FreeRoam_PlayableCharacterState _freeRoamState;
+    #endregion
+
+    #region INHERITED
+    public override FiniteStateMachine InitializeBehaviourSystem()
+    {
+        _fsm = new(this);
+
+        _freeRoamState = new(_fsm, this);
+
+        _fsm.SetInitialState(_freeRoamState);
+
+        return _fsm;
+    }
     #endregion
 
     #region MONOBEHAVIOUR
     protected override void Awake()
     {
-        // ABehaviourControllable
         base.Awake();
 
-        _animationController = new(this, _animator);
+        _animationController = new(this, this, _animator);
         _playerController = new(this, GetComponent<CharacterController>());
-
-        _fsm = new(this);
-        _freeRoamState = new(_fsm, this);
-        _fsm.SetInitialState(_freeRoamState);
     }
-
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-
-    }
-    #endregion
-
-    #region PUBLIC METHODS
-    #endregion
-
-    #region PRIVATE METHODS
     #endregion
 }

@@ -4,63 +4,68 @@ using UnityEngine;
 /// Generic Singleton class for MonoBehaviours.
 /// Ensures only one instance exists and destroys duplicates.
 /// </summary>
-/// <typeparam name="T">The type that extends Singleton.</typeparam>
-public abstract class Singleton<T> : MonoBehaviour
-where T : MonoBehaviour
+/// <typeparam name="M">The type that extends Singleton.</typeparam>
+public abstract class Singleton<M> : MonoBehaviour
+where M : MonoBehaviour
 {
+    #region PROPERTIES
     [Header("Singleton")]
     [Tooltip("Wether to destroy the instance when loading a new scene")]
-    [SerializeField] protected bool dontDestroyOnLoad = false;
-
-    // Static reference to the single instance of this class.
-    static T _instance;
-
-    // Lock object to ensure thread safety when creating the instance.
-    static readonly object _lock = new();
+    public bool _dontDestroyOnLoad = false;
 
     /// <summary>
-    /// Public property to access the singleton instance.
-    /// Ensures that only one instance exists.
+    /// Static instance and lock for thread-safe singleton access per closed generic type.
     /// </summary>
-    public static T Instance
+    static M _instance;
+
+    /// <summary>
+    /// Lock object to ensure thread safety when creating the instance.
+    /// </summary>
+    static readonly object _instanceLock = new();
+
+    /// <summary>
+    /// Accessor for the singleton instance. Finds an instance if none exists.
+    /// </summary>
+    public static M Instance
     {
         get
         {
-            lock (_lock) // Ensures that only one thread at a time can execute this block.
+            lock (_instanceLock)
             {
-                if (_instance == null) // If no instance exists, try to find one.
-                {
-                    _instance = FindAnyObjectByType<T>(); // Searches for an existing instance in the scene.
+                // Attempt to find an existing instance in the scene but do NOT create one here.
+                if (_instance == null)
+                    _instance = FindAnyObjectByType<M>();
 
-                    if (_instance == null) // If still null, create a new instance.
-                    {
-                        GameObject singletonObj = new(typeof(T).Name); // Creates a new GameObject named after the type.
-                        _instance = singletonObj.AddComponent<T>(); // Adds the singleton component to the new GameObject.
-                    }
-                }
-                return _instance; // Returns the instance.
+                return _instance;
             }
         }
     }
 
     /// <summary>
-    /// Ensures only one instance exists in the scene.
-    /// Destroys any duplicate instances.
+    /// Returns the existing instance if one exists, without creating a new GameObject.
+    /// Use this when you want to safely query for a singleton during teardown or editor callbacks
+    /// and avoid creating a new GameObject.
     /// </summary>
+    public static M ExistingInstance => _instance;
+    #endregion
+
+    #region MONOBEHAVIOUR
     protected virtual void Awake()
     {
-        lock (_lock) // Ensures thread safety when setting the instance.
+        lock (_instanceLock) // Ensures thread safety when setting the instance.
         {
             if (_instance == null) // If no instance exists, set this as the instance.
             {
-                _instance = this as T;
-                if (dontDestroyOnLoad) DontDestroyOnLoad(gameObject); // Prevents the instance from being destroyed when loading new scenes.
+                _instance = this as M;
+                if (_dontDestroyOnLoad) DontDestroyOnLoad(gameObject); // Prevents the instance from being destroyed when loading new scenes.
             }
             else if (_instance != this) // If an instance already exists and it's not this one, destroy this object.
             {
-                Debug.LogWarning($"Duplicate Singleton<{typeof(T).Name}> found. Destroying...");
-                DestroyImmediate(gameObject);
+                Debug.LogWarning($"Duplicate Singleton<{typeof(M).Name}> found. Destroying...");
+                if (Application.isPlaying) Destroy(gameObject);
+                else DestroyImmediate(gameObject);
             }
         }
     }
+    #endregion
 }
