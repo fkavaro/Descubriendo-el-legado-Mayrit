@@ -13,6 +13,7 @@ public class Spot : MonoBehaviour
     [SerializeField] bool _isRotationFixed = false;
 
     [Header("Debug direction gizmo")]
+    [SerializeField] bool _showGizmo = true;
     [SerializeField] float _gizmoLength = 0.5f;
     [SerializeField] float _gizmoThickness = 20f;
     [SerializeField] Color _gizmoColor = Color.yellow;
@@ -41,7 +42,7 @@ public class Spot : MonoBehaviour
 #if UNITY_EDITOR
     void OnDrawGizmos()
     {
-        if (!_isRotationFixed)
+        if (!_isRotationFixed || !_showGizmo)
             return;
 
         Vector3 pos = transform.position;
@@ -73,11 +74,13 @@ class SpotEditor : UnityEditor.Editor
     UnityEditor.SerializedProperty debugArrowLengthProp;
     UnityEditor.SerializedProperty debugArrowThicknessProp;
     UnityEditor.SerializedProperty debugArrowColorProp;
+    UnityEditor.SerializedProperty showGizmoProp;
 
     void OnEnable()
     {
         isRotationFixedProp = serializedObject.FindProperty("_isRotationFixed");
         isOccupiedProp = serializedObject.FindProperty("_isOccupied");
+        showGizmoProp = serializedObject.FindProperty("_showGizmo");
         debugArrowLengthProp = serializedObject.FindProperty("_gizmoLength");
         debugArrowThicknessProp = serializedObject.FindProperty("_gizmoThickness");
         debugArrowColorProp = serializedObject.FindProperty("_gizmoColor");
@@ -89,8 +92,9 @@ class SpotEditor : UnityEditor.Editor
 
         UnityEditor.EditorGUILayout.PropertyField(isOccupiedProp);
         UnityEditor.EditorGUILayout.PropertyField(isRotationFixedProp);
+        UnityEditor.EditorGUILayout.PropertyField(showGizmoProp);
 
-        if (isRotationFixedProp.boolValue)
+        if (isRotationFixedProp.boolValue && showGizmoProp.boolValue)
         {
             UnityEditor.EditorGUILayout.PropertyField(debugArrowLengthProp);
             UnityEditor.EditorGUILayout.PropertyField(debugArrowThicknessProp);

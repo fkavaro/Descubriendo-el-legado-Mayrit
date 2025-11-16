@@ -646,6 +646,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _debugMode: 0
   _isExecutionPaused: 0
+  _currentActionInfo: 
   _dontDestroyOnLoad: 0
   _spectatorSimSpeed: 3
   _spectatorCamera: {fileID: 5488014350122742170}
@@ -692,10 +693,10 @@ MonoBehaviour:
   _spectatorTargetFixingSpeed: 50
   _orbitalSimSpeed: 1
   _orbitalCamera: {fileID: 1263816906637668818}
-  _orbitalBuildingOrbitSpeed: 30
+  _orbitalBuildingOrbitSpeed: 10
   _orbitalBuildingZoom: 70
   _orbitalBuildingOffset: 20
-  _orbitalCharacterOrbitSpeed: 15
+  _orbitalCharacterOrbitSpeed: 5
   _orbitalCharacterZoom: 7
   _orbitalCharacterOffset: 2
   _thirdPersonSimSpeed: 1

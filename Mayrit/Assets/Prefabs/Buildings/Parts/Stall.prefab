@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Spot
   _isOccupied: 0
   _isRotationFixed: 1
+  _showGizmo: 0
   _gizmoLength: 0.5
   _gizmoThickness: 20
   _gizmoColor: {r: 0.015686274, g: 0.74706334, b: 1, a: 1}
@@ -1363,6 +1364,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Spot
   _isOccupied: 0
   _isRotationFixed: 1
+  _showGizmo: 0
   _gizmoLength: 0.5
   _gizmoThickness: 20
   _gizmoColor: {r: 1, g: 0.13700199, b: 0.015686274, a: 1}
