@@ -14,7 +14,7 @@ GameObject:
   m_Layer: 0
   m_Name: Male Villager
   m_TagString: Untagged
-  m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 8418204508859773708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
@@ -81,7 +81,7 @@ MonoBehaviour:
   _isStopped: 0
   _baseAvoidancePriority: 50
   _avoidancePriorityVariance: 10
-  _animator: {fileID: 0}
+  _animator: {fileID: 6016149073480954882}
   _model: {fileID: 1069142897698092226}
   _givenName: 
   _familyName: 
@@ -159,5 +159,10 @@ Transform:
 --- !u!1 &1069142897698092226 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 851846255601093310, guid: 5d11c86bfee36fe45ad73ed3345abb4b, type: 3}
+  m_PrefabInstance: {fileID: 361420926647320188}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &6016149073480954882 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 6231189542411700862, guid: 5d11c86bfee36fe45ad73ed3345abb4b, type: 3}
   m_PrefabInstance: {fileID: 361420926647320188}
   m_PrefabAsset: {fileID: 0}
