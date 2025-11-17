@@ -125,7 +125,11 @@ public class TownManager : Singleton<TownManager>
     /// </summary>
     public void ReassignResidents(House previousHouse, List<Villager> residents)
     {
+        // Avoid running reassignment during editor teardown / when not playing
+        if (!Application.isPlaying) return;
+
         if (residents == null || residents.Count == 0) return;
+
         Reassign(previousHouse, residents, _houses, (villager, house) =>
         {
             villager.AssignHome(house);
