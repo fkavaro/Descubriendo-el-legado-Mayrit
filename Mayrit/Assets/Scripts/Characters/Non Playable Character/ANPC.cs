@@ -39,6 +39,7 @@ where T : ABehaviourSystem
     public Animator _animator;
 
     [Header("Identity")]
+    public GameObject _model;
     [SerializeField] string _givenName = "";
     [SerializeField] string _familyName = "";
     [SerializeField] INPC.NPCGender _gender = INPC.NPCGender.Male;
@@ -113,17 +114,9 @@ where T : ABehaviourSystem
     #region IDENTITY METHODS
     public void SetName(string given, string family)
     {
-        _givenName = given ?? string.Empty;
-        _familyName = family ?? string.Empty;
+        _givenName = given;
+        _familyName = family;
         try { gameObject.name = FullName; } catch { }
-    }
-
-    public void ResolveGender(bool isFemale)
-    {
-        if (isFemale)
-            _gender = INPC.NPCGender.Female;
-        else
-            _gender = INPC.NPCGender.Male;
     }
     #endregion
 

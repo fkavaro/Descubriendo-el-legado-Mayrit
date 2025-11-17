@@ -5,7 +5,6 @@ public class Villager : ANPC<BehaviourTree>
 {
     #region EDIROR PROPERTIES
     [Header("Villager Properties")]
-    public GameObject _model;
     public House _home;
     public Workplace _workplace;
     public Sanctuary _sanctuary;

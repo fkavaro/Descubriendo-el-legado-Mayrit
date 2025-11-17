@@ -25,11 +25,6 @@ public interface INPC : IBehaviourEntity
     public void SetName(string given, string family);
 
     /// <summary>
-    /// Resolves the NPC's gender
-    /// </summary>
-    public void ResolveGender(bool isFemale);
-
-    /// <summary>
     /// Sets the destination position for the NavMeshAgent to navigate to
     /// </summary>
     public void SetDestination(Vector3 destinationPos);

@@ -45,9 +45,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCPool
   _dontDestroyOnLoad: 0
-  _villagerPrefabs:
+  _namesDatabase: {fileID: 11400000, guid: af6943466f74fe945ba6cdf9206e5a26, type: 2}
+  _femaleVillagerPrefabs:
   - {fileID: 3715606356981372341, guid: 803e6ba6af4ae8243afaff1d48541509, type: 3}
-  _maxVillagers: 10
-  _spawnPerFrame: 3
-  _prewarmPerFrame: 5
-  _globalSpawnPoints: []
+  _maleVillagerPrefabs:
+  - {fileID: 3715606356981372341, guid: 8f131c4c97429e142b7bae12e6146662, type: 3}
+  _femaleRatio: 0.5
+  _activeVillagersRatio: 0.3
+  _maxActiveVillagers: 0
+  _activeVillagers: []

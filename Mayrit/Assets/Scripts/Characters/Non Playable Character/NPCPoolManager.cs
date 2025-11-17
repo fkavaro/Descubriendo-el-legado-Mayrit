@@ -14,20 +14,17 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
     // TODO: soldier pool
 
     [Header("Villagers pool")]
-    [Tooltip("All villager models to be spawned randomly")]
-    public GameObject[] _villagerPrefabs;
+    [Tooltip("Names database (ScriptableObject)")]
+    public NamesDatabase _namesDatabase;
+    public GameObject[] _femaleVillagerPrefabs;
+    public GameObject[] _maleVillagerPrefabs;
+    [Tooltip("Proportion of villagers that should be female (0..1)"), Range(0f, 1f)]
+    public float _femaleRatio = 0.5f;
     [Tooltip("Ratio of active villagers to total population"), Range(0f, 1f)]
     public float _activeVillagersRatio = 0.3f;
     [Tooltip("Maximum number of villager at once")]
     public int _maxActiveVillagers;
     public List<Villager> _activeVillagers = new();
-
-    [Header("Identities")]
-    [Tooltip("Names database (ScriptableObject)")]
-    public NamesDatabase _namesDatabase;
-    [Tooltip("Proportion of villagers that should be female (0..1)")]
-    [Range(0f, 1f)]
-    public float _femaleRatio = 0.5f;
     #endregion
 
     #region PRIVATE PROPERTIES
@@ -121,7 +118,14 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
     /// <returns>Instantiated villager.</returns>
     Villager CreateVillager()
     {
-        GameObject prefab = _villagerPrefabs[UnityEngine.Random.Range(0, _villagerPrefabs.Length)];
+        // Decide gender for this spawn to pick the correct prefab list
+        bool isFemale = UnityEngine.Random.value < _femaleRatio;
+
+        GameObject[] sourceArray = isFemale ?
+            _femaleVillagerPrefabs :
+            _maleVillagerPrefabs;
+
+        GameObject prefab = sourceArray[UnityEngine.Random.Range(0, sourceArray.Length)];
 
         Villager villager = Instantiate(
             prefab,
@@ -141,13 +145,10 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
         if (!_activeVillagers.Contains(villager))
             _activeVillagers.Add(villager);
 
-        // Pool decides villager gender on retrieval and assigns a name accordingly
+        // Pool assigns a name accordingly to its gender
         try
         {
-            bool isFemale = UnityEngine.Random.value < _femaleRatio;
-            villager.ResolveGender(isFemale);
-
-            string given = _namesDatabase.GetRandomGiven(isFemale);
+            string given = _namesDatabase.GetRandomGiven(villager.IsFemale);
             string family = _namesDatabase.GetRandomFamily();
             villager.SetName(given, family);
         }
