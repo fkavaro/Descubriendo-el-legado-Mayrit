@@ -12,7 +12,7 @@ public class Villager : ANPC<BehaviourTree>
     public Market _market;
     #endregion
 
-    #region PROPERTIES
+    #region INTERNAL PROPERTIES
     BehaviourTree _villagerBT;
     #endregion
 

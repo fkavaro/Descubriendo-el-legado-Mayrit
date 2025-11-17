@@ -10,6 +10,8 @@ using UnityEngine.AI;
 public abstract class ANPC<T> : ABehaviourEntity<T>, INPC
 where T : ABehaviourSystem
 {
+
+
     #region EDITOR PROPERTIES
     [Header("Movement settings")]
     [Tooltip("Walking speed of the agent")]
@@ -35,6 +37,17 @@ where T : ABehaviourSystem
 
     [Header("Animation")]
     public Animator _animator;
+
+    [Header("Identity")]
+    [SerializeField] string _givenName = "";
+    [SerializeField] string _familyName = "";
+    [SerializeField] INPC.NPCGender _gender = INPC.NPCGender.Male;
+
+    public string GivenName => _givenName;
+    public string FamilyName => _familyName;
+    public string FullName => string.IsNullOrEmpty(_familyName) ? _givenName : $"{_givenName} {_familyName}";
+    public INPC.NPCGender Gender => _gender;
+    public bool IsFemale => _gender == INPC.NPCGender.Female;
     #endregion
 
     #region INTERNAL PROPERTIES
@@ -94,6 +107,23 @@ where T : ABehaviourSystem
 
         if (_agent.speed != _walkSpeed)
             _agent.speed = _walkSpeed;
+    }
+    #endregion
+
+    #region IDENTITY METHODS
+    public void SetName(string given, string family)
+    {
+        _givenName = given ?? string.Empty;
+        _familyName = family ?? string.Empty;
+        try { gameObject.name = FullName; } catch { }
+    }
+
+    public void ResolveGender(bool isFemale)
+    {
+        if (isFemale)
+            _gender = INPC.NPCGender.Female;
+        else
+            _gender = INPC.NPCGender.Male;
     }
     #endregion
 

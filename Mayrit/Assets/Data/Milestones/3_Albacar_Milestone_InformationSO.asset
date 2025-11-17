@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8afea8fe5a2c454a8016a077e6ce91e, type: 3}
+  m_Name: 3_Albacar_Milestone_InformationSO
+  m_EditorClassIdentifier: 
+  _header: El albacar
+  _subHeader: Segunda mitad s.IX
+  _description: "Tras la construcci\xF3n del castillo, es posible que la poblaci\xF3n
+    se fuera asentando al sur de este, en torno al arroyo de las Tener\xEDas. Esto
+    hizo necesaria la construcci\xF3n de un albacar, donde proteger a las personas
+    y sus animales en caso de ataque, y de una mezquita. \r\nAunque este poblamiento
+    se llamase Mayrit por lo menos a partir del siglo XI, actualmente no se sabe
+    con certeza el origen de su toponimia. Se barajan varias teor\xEDas, siendo las
+    m\xE1s populares:\r\nMayrit, como palabra compuesta a partir de mayra \u2013
+    canal subterr\xE1neo para conseguir agua potable \u2013 y el sufijo romance -it,
+    que indicaba abundancia. Esto implica que tuvieron que haber muchos de estos
+    canales para abastecer de agua a la poblaci\xF3n, a pesar de que esta no fuera
+    destacable por su n\xFAmero durante el dominio musulm\xE1n. Esta teor\xEDa apareci\xF3
+    con el historiador Oliver As\xEDn.\r\nMayrit, como arabizaci\xF3n de Matrice,
+    nombre referente al presunto poblado de origen visigodo que se encontraba a orillas
+    del arroyo del mismo nombre posteriormente conocido como el de San Pedro. Sin
+    embargo, no se han encontrado pruebas arqueol\xF3gicas que fundamenten la existencia
+    de ese poblado.\r"
+  _icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  _image: {fileID: 0}
+  _imageCaption: 
+  _wantedTime: 10

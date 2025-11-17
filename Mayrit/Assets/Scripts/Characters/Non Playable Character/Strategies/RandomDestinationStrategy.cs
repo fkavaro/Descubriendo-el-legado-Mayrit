@@ -43,7 +43,7 @@ public class RandomDestinationStrategy : RandomPatrolStrategy
         else // Hasn't arrived
         {
             // Reduce energy
-            _npc.ReduceEnergy(Time.deltaTime);
+            //_npc.ReduceEnergy(Time.deltaTime);
 
             return Node.Status.Running;
         }

@@ -21,6 +21,13 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
     [Tooltip("Maximum number of villager at once")]
     public int _maxActiveVillagers;
     public List<Villager> _activeVillagers = new();
+
+    [Header("Identities")]
+    [Tooltip("Names database (ScriptableObject)")]
+    public NamesDatabase _namesDatabase;
+    [Tooltip("Proportion of villagers that should be female (0..1)")]
+    [Range(0f, 1f)]
+    public float _femaleRatio = 0.5f;
     #endregion
 
     #region PRIVATE PROPERTIES
@@ -30,6 +37,14 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
     #region MONOBEHAVIOUR
     void OnEnable()
     {
+        // NamesDatabase is required for name generation. Disable this manager if not assigned.
+        if (_namesDatabase == null)
+        {
+            Debug.LogError("NPCPoolManager requires a NamesDatabase assigned in the inspector. Disabling NPCPoolManager.");
+            enabled = false;
+            return;
+        }
+
         // Pool creation
         _villagerPool = new ObjectPool<Villager>(
             createFunc: CreateVillager,
@@ -125,6 +140,18 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
         // Track active
         if (!_activeVillagers.Contains(villager))
             _activeVillagers.Add(villager);
+
+        // Pool decides villager gender on retrieval and assigns a name accordingly
+        try
+        {
+            bool isFemale = UnityEngine.Random.value < _femaleRatio;
+            villager.ResolveGender(isFemale);
+
+            string given = _namesDatabase.GetRandomGiven(isFemale);
+            string family = _namesDatabase.GetRandomFamily();
+            villager.SetName(given, family);
+        }
+        catch { }
 
         House randomFreeHouse = TownManager.Instance.GetHouse();
         villager.AssignHome(randomFreeHouse);

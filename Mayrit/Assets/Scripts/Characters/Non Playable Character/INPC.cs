@@ -3,9 +3,31 @@ using UnityEngine.AI;
 
 public interface INPC : IBehaviourEntity
 {
+    public enum NPCGender
+    {
+        Male,
+        Female
+    }
+
     #region PUBLIC METHODS
     public NavMeshAgent Agent { get; }
     public AnimationController AnimationController { get; }
+
+    public string GivenName { get; }
+    public string FamilyName { get; }
+    public string FullName { get; }
+    public NPCGender Gender { get; }
+    public bool IsFemale { get; }
+
+    /// <summary>
+    /// Sets the NPC's full name.
+    /// </summary>
+    public void SetName(string given, string family);
+
+    /// <summary>
+    /// Resolves the NPC's gender
+    /// </summary>
+    public void ResolveGender(bool isFemale);
 
     /// <summary>
     /// Sets the destination position for the NavMeshAgent to navigate to
