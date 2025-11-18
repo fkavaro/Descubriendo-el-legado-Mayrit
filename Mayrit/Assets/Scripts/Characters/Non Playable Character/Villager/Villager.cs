@@ -9,10 +9,16 @@ public class Villager : ANPC<BehaviourTree>
     public Workplace _workplace;
     public Sanctuary _sanctuary;
     public Market _market;
+    [Tooltip("Cooldown time between interactions with other villlagers")]
+    public float _interactionCooldown = 120f;
+    [Tooltip("Maximum distance at which villagers consider others 'nearby' and can start an interaction")]
+    public float _interactionRange = 3f;
     #endregion
 
     #region INTERNAL PROPERTIES
     BehaviourTree _villagerBT;
+    // Cached target found by proximity queries to use for interactions
+    private Villager _nearbyVillagerTarget;
     #endregion
 
     #region INHERITED
@@ -34,18 +40,20 @@ public class Villager : ANPC<BehaviourTree>
         // Interact sequence
         ConditionStrategy isInStreet = new(this, IsInStreet);
         ConditionStrategy isOtherNearby = new(this, IsOtherNearby);
-        ConditionStrategy isEnoughSinceLastInteraction = new(this, IsEnoughTimeSinceLastInteraction);
         InteractStrategy interactStrategy = new(this);
 
         SequenceNode interactSequence = new(this);
         LeafNode isInStreetLeaf = new(this, "IsInStreet?", isInStreet);
         LeafNode isOtherNearbyLeaf = new(this, "IsOtherNearby?", isOtherNearby);
-        LeafNode isEnoughSinceLastInteractionLeaf = new(this, "IsEnoughSinceLastInteraction?", isEnoughSinceLastInteraction);
         LeafNode talkLeaf = new(this, "Talking", interactStrategy);
+
+        // Wrap the talking leaf with a CooldownDecorator so the tree itself enforces the cooldown
+        CooldownDecorator talkCooldown = new(this, _interactionCooldown);
+        talkCooldown.AddChild(talkLeaf);
+
         interactSequence.AddChild(isInStreetLeaf);
         interactSequence.AddChild(isOtherNearbyLeaf);
-        interactSequence.AddChild(isEnoughSinceLastInteractionLeaf);
-        interactSequence.AddChild(talkLeaf);
+        interactSequence.AddChild(talkCooldown);
 
         // Routine sequence
         SequenceNode routineSequence = new(this);
@@ -115,7 +123,7 @@ public class Villager : ANPC<BehaviourTree>
 
         // Behaviour sequence
         SelectorNode behaviourSelector = new(this);
-        behaviourSelector.AddChild(interactSequence);
+        behaviourSelector.AddChild(interactSequence); // First: higher priority
         behaviourSelector.AddChild(routineSequence);
 
         InfiniteLoopNode infiniteLoop = new(this, behaviourSelector);
@@ -183,16 +191,20 @@ public class Villager : ANPC<BehaviourTree>
     #endregion
 
     #region PRIVATE METHODS
-    private bool IsEnoughTimeSinceLastInteraction()
-    {
-        // TODO
-        return false;
-    }
-
     private bool IsOtherNearby()
     {
-        // TODO
-        return false;
+        // Use the centralized pool manager helper for proximity queries
+        try
+        {
+            var pool = NPCPoolManager.Instance;
+            if (pool == null) return false;
+
+            // Use the GC-friendly single-result helper
+            var other = pool.GetAnyNearbyVillager(transform.position, _interactionRange, this);
+            _nearbyVillagerTarget = other; // may be null
+            return other != null;
+        }
+        catch { _nearbyVillagerTarget = null; return false; }
     }
 
     private bool IsInStreet()

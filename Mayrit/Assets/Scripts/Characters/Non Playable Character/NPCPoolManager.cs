@@ -25,10 +25,20 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
     [Tooltip("Maximum number of villager at once")]
     public int _maxActiveVillagers;
     public List<Villager> _activeVillagers = new();
+
+    [Header("Proximity Query")]
+    [Tooltip("Layer mask used for Physics overlap queries to find villager colliders")]
+    public LayerMask _villagerLayer;
+    [Tooltip("Maximum number of collider hits to consider in a single proximity query")]
+    public int _maxOverlapResults = 32;
+
+
     #endregion
 
     #region PRIVATE PROPERTIES
-
+    Collider[] _overlapResults; // Cached buffer for OverlapSphereNonAlloc
+    // Cache to avoid GetComponent calls on colliders returned by physics queries
+    Dictionary<Collider, Villager> _colliderToVillager;
     #endregion
 
     #region MONOBEHAVIOUR
@@ -49,6 +59,11 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
             actionOnRelease: ReleaseVillager,
             actionOnDestroy: (villager) => Destroy(villager.gameObject)
         );
+
+        // Allocate cached overlap buffer
+        _overlapResults = new Collider[_maxOverlapResults];
+        // Initialize collider->villager cache
+        _colliderToVillager = new Dictionary<Collider, Villager>(_maxActiveVillagers > 0 ? _maxActiveVillagers * 2 : 32);
 
         // Subscribe to town population changes
         TownManager.Instance.OnPopulationChanged += OnTownPopulationChanged;
@@ -75,6 +90,91 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
     {
         if (_villagerPool == null || villager == null) return;
         _villagerPool.Release(villager);
+    }
+
+    /// <summary>
+    /// Returns a list of active villagers within the specified range from a position.
+    /// The optional exclude parameter can be used to ignore a specific villager (usually the caller).
+    /// </summary>
+    public List<Villager> GetNearbyVillagers(Vector3 position, float range, Villager exclude = null)
+    {
+        var result = new List<Villager>();
+
+        // Prefer physics-based broadphase if a layer mask and overlap buffer are available.
+        try
+        {
+            if (_overlapResults != null && _overlapResults.Length > 0 && _villagerLayer != 0)
+            {
+                int mask = _villagerLayer.value;
+                int hits = Physics.OverlapSphereNonAlloc(position, range, _overlapResults, mask, QueryTriggerInteraction.Collide);
+                for (int i = 0; i < hits; i++)
+                {
+                    var col = _overlapResults[i];
+                    if (col == null) continue;
+
+                    Villager v = null;
+                    if (_colliderToVillager != null && _colliderToVillager.TryGetValue(col, out v))
+                    {
+                        // got cached villager
+                    }
+                    else
+                    {
+                        // fallback: try to resolve and cache
+                        v = col.GetComponentInParent<Villager>();
+                        if (v != null && _colliderToVillager != null)
+                        {
+                            try { _colliderToVillager[col] = v; } catch { }
+                        }
+                    }
+
+                    if (v == null) continue;
+                    if (v == exclude) continue;
+                    if (!v.gameObject.activeInHierarchy) continue;
+
+                    // check exact distance to be safe
+                    if ((v.transform.position - position).sqrMagnitude <= range * range)
+                        result.Add(v);
+                }
+
+                return result;
+            }
+        }
+        catch { /* fall back to managed list below on error */ }
+
+        // Fallback: iterate managed active villager list
+        if (_activeVillagers == null || _activeVillagers.Count == 0) return result;
+        float sqrRange = range * range;
+        foreach (var v in _activeVillagers)
+        {
+            if (v == null) continue;
+            if (v == exclude) continue;
+            if (!v.gameObject.activeInHierarchy) continue;
+
+            if ((v.transform.position - position).sqrMagnitude <= sqrRange)
+                result.Add(v);
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// GC-free: returns the first nearby Villager found within range (or null).
+    /// Useful when you only need one target (avoids allocating a results list).
+    /// </summary>
+    public Villager GetAnyNearbyVillager(Vector3 position, float range, Villager exclude = null)
+    {
+        // Reuse existing GetNearbyVillagers implementation to avoid duplicating physics/cache logic.
+        var list = GetNearbyVillagers(position, range, exclude);
+        if (list != null && list.Count > 0) return list[0];
+        return null;
+    }
+
+    /// <summary>
+    /// GC-free boolean check: returns true if any villager is nearby (uses GetAnyNearbyVillager under the hood).
+    /// </summary>
+    public bool IsAnyVillagerNearby(Vector3 position, float range, Villager exclude = null)
+    {
+        return GetAnyNearbyVillager(position, range, exclude) != null;
     }
     #endregion
 
@@ -135,6 +235,19 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
             ).GetComponent<Villager>();
 
         villager.gameObject.SetActive(false);
+
+        // Register all colliders found in this villager's hierarchy to the collider->villager map
+        try
+        {
+            var cols = villager.GetComponentsInChildren<Collider>(true);
+            foreach (var c in cols)
+            {
+                if (c == null) continue;
+                if (!_colliderToVillager.ContainsKey(c))
+                    _colliderToVillager[c] = villager;
+            }
+        }
+        catch { }
 
         return villager;
     }

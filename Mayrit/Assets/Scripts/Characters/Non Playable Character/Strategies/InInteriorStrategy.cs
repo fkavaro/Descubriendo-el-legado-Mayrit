@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class InInteriorStrategy : ATimerStrategy
+public class InInteriorStrategy : ATimedStrategy
 {
     readonly GameObject _model;
 
