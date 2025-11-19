@@ -26,16 +26,11 @@ public class InteractStrategy : ATimedStrategy
     public override void OnTimerComplete()
     {
         // End interaction on both participants
-        try
-        {
-            _npc.EndInteraction();
-            _otherNPC.EndInteraction();
-        }
-        catch { }
-        finally
-        {
-            _otherNPC = null;
-        }
+        _npc.EndInteraction();
+        _otherNPC.EndInteraction();
+        _otherNPC = null;
+
+        Debug.Log($"{_npc.Name} has ended the interaction.");
     }
 }
 

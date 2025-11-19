@@ -324,17 +324,11 @@ where T : ABehaviourSystem
     {
         if (!_agent.isOnNavMesh)
         {
-            Debug.LogError("IsStopped(): NavMeshAgent is not on a NavMesh.");
+            Debug.LogError(Name + ", IsStopped(): NavMeshAgent is not on a NavMesh.");
             return;
         }
 
         _agent.isStopped = isStopped;
-
-        // Change animation accordingly
-        if (isStopped)
-            _animationController.ChangeToIdle();
-        else
-            _animationController.ChangeToWalk();
     }
 
     public bool IsPathPending()
@@ -399,17 +393,20 @@ where T : ABehaviourSystem
     {
         _isInteracting = true;
 
-        try
-        {
+        // Record previous stopped state only if the agent is valid and on the NavMesh.
+        if (Agent != null && Agent.isOnNavMesh)
             _wasAgentStoppedBeforeInteraction = Agent.isStopped;
-        }
-        catch
-        {
+        else
             _wasAgentStoppedBeforeInteraction = false;
-        }
 
-        SetIfStopped(true);
-        AnimationController.ChangeToTalk();
+        // Stop the agent (only if on NavMesh)
+        if (Agent != null && Agent.isOnNavMesh)
+        {
+            SetIfStopped(true);
+            AnimationController.ChangeToTalk();
+        }
+        else
+            Debug.LogWarning($"{Name}, StartInteraction(): not interacting properly. NavMeshAgent is null or not on NavMesh.");
     }
 
     public void EndInteraction()
@@ -417,9 +414,12 @@ where T : ABehaviourSystem
         _isInteracting = false;
         _interactionTarget = null;
 
-        // restore agent state
-        SetIfStopped(_wasAgentStoppedBeforeInteraction);
-        AnimationController.ChangeToWalk();
+        // Restore agent state (only if on NavMesh)
+        if (Agent != null && Agent.isOnNavMesh)
+        {
+            SetIfStopped(_wasAgentStoppedBeforeInteraction);
+            AnimationController.ChangeToWalk();
+        }
     }
     #endregion
 }

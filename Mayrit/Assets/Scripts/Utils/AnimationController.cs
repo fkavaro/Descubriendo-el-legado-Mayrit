@@ -42,6 +42,12 @@ public class AnimationController
             return;
         }
 
+        if (!AnimatorAvailable())
+        {
+            // Animator or GameObject is inactive/disabled — skip animation change
+            return;
+        }
+
         AnimatorStateInfo currentState = _animator.GetCurrentAnimatorStateInfo(0);
         int currentAnimation = currentState.shortNameHash;
 
@@ -72,6 +78,9 @@ public class AnimationController
     /// <returns> True if the current animation is finished, false otherwise.</returns>
     public virtual bool IsCurrentAnimationFinished()
     {
+        if (!AnimatorAvailable() || _animator == null)
+            return true;
+
         // Get current animation state info
         AnimatorStateInfo currentStateInfo = _animator.GetCurrentAnimatorStateInfo(0);
 
@@ -85,6 +94,9 @@ public class AnimationController
 
     public bool IsAnimationFinished(int animation)
     {
+        if (!AnimatorAvailable() || _animator == null)
+            return true;
+
         // Get current animation state info
         AnimatorStateInfo currentStateInfo = _animator.GetCurrentAnimatorStateInfo(0);
 
@@ -188,6 +200,13 @@ public class AnimationController
     public bool IsTalkAnimationFinished()
     {
         return IsAnimationFinished(_idleAnim); // TODO: talk animation
+    }
+    #endregion
+
+    #region PRIVATE METHODS
+    bool AnimatorAvailable()
+    {
+        return _animator != null && _animator.isActiveAndEnabled && _animator.gameObject.activeInHierarchy;
     }
     #endregion
 }

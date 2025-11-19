@@ -52,9 +52,9 @@ public abstract class AAssignedBuilding : ABuilding
                 {
                     // Iterate over a snapshot to avoid collection-modified exceptions:
                     var snapshot = _assignedVillagers.ToArray();
-                    foreach (var v in snapshot)
+                    foreach (var villager in snapshot)
                     {
-                        try { pool.ReturnVillagerToPool(v); } catch { }
+                        try { pool.ReturnVillagerToPool(villager); } catch { }
                     }
                 }
                 _assignedVillagers.Clear();

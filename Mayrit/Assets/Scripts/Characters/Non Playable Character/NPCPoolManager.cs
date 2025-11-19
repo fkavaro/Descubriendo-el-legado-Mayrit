@@ -79,6 +79,13 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
         }
         catch { }
     }
+
+    void Update()
+    {
+        // Spawn a villager (per frame) if active villagers are below max
+        if (_villagerPool != null && _activeVillagers.Count < _maxActiveVillagers)
+            _villagerPool.Get();
+    }
     #endregion
 
     #region PUBLIC METHODS
@@ -182,20 +189,15 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
     /// </summary>
     void OnTownPopulationChanged(int newPopulation)
     {
+        // Update target active villager count. Spawning (growth) is handled
+        // incrementally by Update() to avoid hitches — it will add at most
+        // one villager per frame until the target is reached.
         _maxActiveVillagers = Mathf.RoundToInt(newPopulation * _activeVillagersRatio);
 
+        // If we need to retire villagers (active > max), release extras immediately.
         int currentActive = _activeVillagers.Count;
         int activeDifference = _maxActiveVillagers - currentActive;
-
-        // More active villagers are desired
-        if (activeDifference > 0)
-        {
-            // Spawn needed villagers
-            for (int i = 0; i < activeDifference; i++)
-                _villagerPool.Get();
-        }
-        // Fewer active villagers are desired
-        else if (activeDifference < 0)
+        if (activeDifference < 0)
         {
             int toRetire = -activeDifference;
             for (int i = 0; i < toRetire; i++)
@@ -296,16 +298,6 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
         // Track active
         if (_activeVillagers.Contains(villager))
             _activeVillagers.Remove(villager);
-
-        // Spawn a replacement if active villagers are below max
-        try
-        {
-            if (_villagerPool != null && _activeVillagers.Count < _maxActiveVillagers)
-            {
-                _villagerPool.Get();
-            }
-        }
-        catch { }
     }
     #endregion
 }
