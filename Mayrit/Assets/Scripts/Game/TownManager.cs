@@ -158,6 +158,9 @@ public class TownManager : Singleton<TownManager>
 
     public Market GetNearestMarket(ABuilding other)
     {
+        if (_markets == null || _markets.Count == 0)
+            Debug.LogWarning("GetNearestMarket: No markets registered in TownManager.");
+
         return GetNearestBuilding(other, _markets);
     }
     #endregion
