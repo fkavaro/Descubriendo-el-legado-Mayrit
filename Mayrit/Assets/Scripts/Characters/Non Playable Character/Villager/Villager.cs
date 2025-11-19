@@ -32,12 +32,14 @@ public class Villager : ANPC<BehaviourTree>
             homeEntrance = _home.GetRandomAccessSpot();
 
         // Interaction sequence
-        ConditionStrategy isInStreet = new(this, IsInStreet);
+        ConditionStrategy isInStreet = new(this, () => IsInStreet);
+        ConditionStrategy IsNotAlreadyTalking = new(this, () => IsInteracting == false);
         ConditionStrategy isOtherNearby = new(this, IsOtherNearby);
         InteractStrategy interactStrategy = new(this);
 
         SequenceNode interactionSequence = new(this);
         LeafNode isInStreetLeaf = new(this, "IsInStreet?", isInStreet);
+        LeafNode noOneIsTalkingLeaf = new(this, "IsNotAlreadyTalking?", IsNotAlreadyTalking);
         LeafNode isOtherNearbyLeaf = new(this, "IsOtherNearby?", isOtherNearby);
         LeafNode interactLeaf = new(this, "Talking", interactStrategy);
 
@@ -45,6 +47,7 @@ public class Villager : ANPC<BehaviourTree>
         talkCooldown.AddChild(interactLeaf);
 
         interactionSequence.AddChild(isInStreetLeaf);
+        interactionSequence.AddChild(noOneIsTalkingLeaf);
         interactionSequence.AddChild(isOtherNearbyLeaf);
         interactionSequence.AddChild(talkCooldown);
 
@@ -116,7 +119,7 @@ public class Villager : ANPC<BehaviourTree>
 
         // Behaviour sequence
         SelectorNode behaviourSelector = new(this);
-        behaviourSelector.AddChild(interactionSequence); // First: higher priority
+        //behaviourSelector.AddChild(interactionSequence); // First: higher priority
         behaviourSelector.AddChild(routineSequence);
 
         InfiniteLoopNode infiniteLoop = new(this, behaviourSelector);
@@ -184,11 +187,6 @@ public class Villager : ANPC<BehaviourTree>
     #endregion
 
     #region PRIVATE METHODS
-    bool IsInStreet()
-    {
-        return true; //IsPathPending(); // TODO
-    }
-
     bool IsOtherNearby()
     {
         try

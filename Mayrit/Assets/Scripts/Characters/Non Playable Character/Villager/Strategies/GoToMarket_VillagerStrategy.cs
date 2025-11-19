@@ -23,7 +23,10 @@ public class GoToMarket_VillagerStrategy : AStrategy
         }
 
         if (_npc.IsDestination(_marketStallSpot))
+        {
+            _npc.IsInStreet = true;
             return Node.Status.Success;
+        }
         else
             return Node.Status.Failure;
     }
@@ -39,6 +42,8 @@ public class GoToMarket_VillagerStrategy : AStrategy
         // Is close to destination stall spot
         if (_npc.IsCloseTo(_marketStallSpot))
         {
+            _npc.IsInStreet = false;
+
             if (!_market.IsOpen())
             {
                 Debug.LogWarning($"{_npc.Name} found that no stalls are open in the market.");

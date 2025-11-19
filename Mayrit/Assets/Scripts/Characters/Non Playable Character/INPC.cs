@@ -18,6 +18,9 @@ public interface INPC : IBehaviourEntity
     public string FullName { get; }
     public NPCGender Gender { get; }
     public bool IsFemale { get; }
+    bool IsInStreet { get; set; }
+    bool IsInteracting { get; }
+    public INPC CurrentInteractionTarget { get; }
 
     /// <summary>
     /// Sets the NPC's full name.
@@ -118,10 +121,5 @@ public interface INPC : IBehaviourEntity
     /// Ends an ongoing interaction on this villager (called on both participants)
     /// </summary>
     public void EndInteraction();
-
-    /// <summary>
-    /// Expose current target for strategies to read
-    /// </summary>
-    public INPC CurrentInteractionTarget { get; }
     #endregion
 }

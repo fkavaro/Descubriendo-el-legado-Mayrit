@@ -37,12 +37,12 @@ public abstract class ABuilding : MonoBehaviour
         Spot entranceSpot = GetRandomAccessSpot();
         if (entranceSpot != null)
         {
-            npc.Agent.transform.position = entranceSpot.transform.position;
+            npc.PlaceAt(entranceSpot.transform.position);
             npc.ForceRotation(entranceSpot.WorldDirection);
         }
         else
         {
-            npc.Agent.transform.position = transform.position;
+            npc.PlaceAt(transform.position);
             Debug.LogWarning($"No entrance spots defined for building {gameObject.name}. Placing villager at building position.");
         }
     }
