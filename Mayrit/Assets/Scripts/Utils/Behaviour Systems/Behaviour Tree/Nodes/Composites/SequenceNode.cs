@@ -18,20 +18,27 @@ public class SequenceNode : Node
     #region INHERITED METHODS
     public override Status UpdateNode()
     {
-        foreach (var child in _children)
+        // Execute children in order, preserving progress across ticks using
+        // `_currentChildId`. If a child returns Running we must resume from
+        // that child next tick instead of restarting from the first child.
+        while (_currentChildId < _children.Count)
         {
-            switch (child.UpdateNode())
+            var status = _children[_currentChildId].UpdateNode();
+
+            if (status == Status.Running)
+                return Status.Running;
+
+            if (status == Status.Failure)
             {
-                case Status.Running:
-                    return Status.Running;
-                case Status.Failure:
-                    Reset();
-                    return Status.Failure;
-                default: // Success
-                    continue;
+                Reset();
+                return Status.Failure;
             }
+
+            // status == Success -> advance to next child
+            _currentChildId++;
         }
 
+        // All children succeeded
         Reset();
         return Status.Success;
     }

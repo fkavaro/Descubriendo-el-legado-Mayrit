@@ -18,20 +18,33 @@ public class SelectorNode : Node
     #region INHERITED METHODS
     public override Status UpdateNode()
     {
-        foreach (var child in _children)
+        // Priority selector: evaluate children from highest to lowest priority
+        for (int i = 0; i < _children.Count; i++)
         {
-            switch (child.UpdateNode())
+            var status = _children[i].UpdateNode();
+
+            if (status == Status.Success)
             {
-                case Status.Running:
-                    return Status.Running;
-                case Status.Success:
-                    Reset();
-                    return Status.Success;
-                default: // Failure
-                    continue;
+                Reset();
+                return Status.Success;
             }
+
+            if (status == Status.Running)
+            {
+                // If a different child was previously running, reset it (preempt)
+                if (_currentChildId != i && _currentChildId < _children.Count)
+                {
+                    _children[_currentChildId].Reset();
+                    _currentChildId = i;
+                }
+
+                return Status.Running;
+            }
+
+            // Failure -> continue to next child
         }
 
+        // No child succeeded or is running
         Reset();
         return Status.Failure;
     }

@@ -22,20 +22,32 @@ public class PrioritySelectorNode : SelectorNode
     #region INHERITED METHODS
     public override Status UpdateNode()
     {
-        foreach (var child in SortedChildren)
+        // Priority selector over sorted children (preemptive)
+        for (int i = 0; i < SortedChildren.Count; i++)
         {
-            switch (child.UpdateNode())
+            var child = SortedChildren[i];
+            var status = child.UpdateNode();
+
+            if (status == Status.Success)
             {
-                case Status.Running:
-                    return Status.Running;
-                case Status.Success:
-                    Reset();
-                    return Status.Success;
-                // Continue to next if failed
-                default:
-                    continue;
+                Reset();
+                return Status.Success;
             }
+
+            if (status == Status.Running)
+            {
+                if (_currentChildId != i && _currentChildId < SortedChildren.Count)
+                {
+                    // If previously a different child was running, reset it
+                    SortedChildren[_currentChildId].Reset();
+                    _currentChildId = i;
+                }
+                return Status.Running;
+            }
+
+            // Failure -> continue
         }
+
         Reset();
         return Status.Failure;
     }

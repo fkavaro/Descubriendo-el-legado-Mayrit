@@ -119,7 +119,7 @@ public class Villager : ANPC<BehaviourTree>
 
         // Behaviour sequence
         SelectorNode behaviourSelector = new(this);
-        //behaviourSelector.AddChild(interactionSequence); // First: higher priority
+        behaviourSelector.AddChild(interactionSequence); // First: higher priority
         behaviourSelector.AddChild(routineSequence);
 
         InfiniteLoopNode infiniteLoop = new(this, behaviourSelector);
