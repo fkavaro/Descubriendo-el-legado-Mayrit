@@ -22,7 +22,7 @@ public class GoToMarket_VillagerStrategy : AStrategy
             return Node.Status.Failure;
         }
 
-        if (_npc.IsDestination(_marketStallSpot))
+        if (_npc.MovementController.IsDestination(_marketStallSpot))
         {
             _npc.IsInStreet = true;
             return Node.Status.Success;
@@ -40,7 +40,7 @@ public class GoToMarket_VillagerStrategy : AStrategy
         }
 
         // Is close to destination stall spot
-        if (_npc.IsCloseTo(_marketStallSpot))
+        if (_npc.MovementController.IsCloseTo(_marketStallSpot))
         {
             _npc.IsInStreet = false;
 
@@ -58,16 +58,16 @@ public class GoToMarket_VillagerStrategy : AStrategy
                 {
                     // Stop and idle
                     Debug.Log($"{_npc.Name} is near market stall spot but it's occupied. Stopping.");
-                    _npc.SetIfStopped(true);
+                    _npc.MovementController.SetIfStopped(true);
                     _npc.AnimationController.ChangeToIdle();
                 }
                 // Is not occupied
                 else
                 {
-                    _npc.SetIfStopped(false);
+                    _npc.MovementController.SetIfStopped(false);
 
                     // Has arrived
-                    if (_npc.HasArrivedAt(_marketStallSpot, true, false))
+                    if (_npc.MovementController.HasArrivedAt(_marketStallSpot, true, false))
                     {
                         _npc.AnimationController.ChangeToTalk();
                         return Node.Status.Success;
@@ -93,6 +93,6 @@ public class GoToMarket_VillagerStrategy : AStrategy
     {
         _marketStall = _market.GetRandomStall();
         _marketStallSpot = _marketStall.GetRandomAccessSpot();
-        _npc.SetDestinationSpot(_marketStallSpot);
+        _npc.MovementController.SetDestinationSpot(_marketStallSpot);
     }
 }

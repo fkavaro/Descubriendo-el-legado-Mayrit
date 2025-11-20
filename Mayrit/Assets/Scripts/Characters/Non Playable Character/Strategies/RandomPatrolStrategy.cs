@@ -27,11 +27,11 @@ public class RandomPatrolStrategy : AStrategy
     #region INHERITED METHODS
     public override Node.Status Update()
     {
-        if (_npc.HasArrivedAtDestination())
+        if (_npc.MovementController.HasArrivedAtDestination())
         {
             // Random destination is reachable
-            if (_npc.CalculateRandomDestination(_samplingIterations, _areaRadious, _centerPoint, out Vector3 randomDestination))
-                _npc.SetDestination(randomDestination);
+            if (_npc.MovementController.CalculateRandomDestination(_samplingIterations, _areaRadious, _centerPoint, out Vector3 randomDestination))
+                _npc.MovementController.SetDestination(randomDestination);
             // It's not
             else
                 return Node.Status.Failure;

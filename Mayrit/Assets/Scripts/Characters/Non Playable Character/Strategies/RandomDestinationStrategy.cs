@@ -25,9 +25,9 @@ public class RandomDestinationStrategy : RandomPatrolStrategy
         if (!_destinationIsSet)
         {
             // Random destination is reachable, calculated from controller position
-            if (_npc.CalculateRandomDestination(_samplingIterations, _areaRadious, _centerPoint, out Vector3 randomDestination))
+            if (_npc.MovementController.CalculateRandomDestination(_samplingIterations, _areaRadious, _centerPoint, out Vector3 randomDestination))
             {
-                _npc.SetDestination(randomDestination);
+                _npc.MovementController.SetDestination(randomDestination);
                 _destinationIsSet = true;
             }
             // It's not
@@ -36,7 +36,7 @@ public class RandomDestinationStrategy : RandomPatrolStrategy
         }
 
         // Is close to destination
-        if (_npc.IsCloseToDestination(1f))
+        if (_npc.MovementController.IsCloseToDestination(1f))
         {
             return Node.Status.Success;
         }

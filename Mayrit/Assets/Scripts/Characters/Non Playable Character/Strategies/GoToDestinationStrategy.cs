@@ -16,9 +16,9 @@ public class GoToDestinationStrategy : AStrategy
     public override Node.Status Start()
     {
         // Set initial destination
-        _npc.SetDestinationSpot(_destinationSpot);
+        _npc.MovementController.SetDestinationSpot(_destinationSpot);
 
-        if (_npc.IsDestination(_destinationSpot))
+        if (_npc.MovementController.IsDestination(_destinationSpot))
         {
             _npc.IsInStreet = true;
             return Node.Status.Success;
@@ -29,13 +29,13 @@ public class GoToDestinationStrategy : AStrategy
 
     public override Node.Status Update()
     {
-        if (_npc.IsCloseTo(_destinationSpot))
+        if (_npc.MovementController.IsCloseTo(_destinationSpot))
         {
             _npc.IsInStreet = false;
         }
 
         // Success if arrived at destination
-        if (_npc.HasArrivedAt(_destinationSpot, _fixRotation, _fixPosition))
+        if (_npc.MovementController.HasArrivedAt(_destinationSpot, _fixRotation, _fixPosition))
         {
             _npc.AnimationController.ChangeToIdle();
             return Node.Status.Success;

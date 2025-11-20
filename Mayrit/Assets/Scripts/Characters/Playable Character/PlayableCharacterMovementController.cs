@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 
-public class PlayerController // TODO: inherit from AnimationController?
+public class PlayableCharacterMovementController // TODO: inherit from AnimationController?
 {
-    #region PRIVATE PROPERTIES
+    #region PROPERTIES
     readonly PlayableCharacter _player;
     readonly CharacterController _playerCharacterController;
     readonly Transform _cameraTarget;
@@ -24,7 +24,7 @@ public class PlayerController // TODO: inherit from AnimationController?
 
 
     // Constructor
-    public PlayerController(PlayableCharacter player, CharacterController playerCharacterController)
+    public PlayableCharacterMovementController(PlayableCharacter player, CharacterController playerCharacterController)
     {
         _player = player;
         _playerCharacterController = playerCharacterController;

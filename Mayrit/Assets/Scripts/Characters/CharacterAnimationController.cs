@@ -3,10 +3,11 @@ using System.Collections;
 using System;
 
 /// <summary>
-/// Controller for handling animations via Animator component.
+/// Controller for animation handling via Animator component.
 /// </summary>
-public class AnimationController
+public class CharacterAnimationController
 {
+    #region PROPERTIES
     readonly MonoBehaviour _entity;
     readonly IBehaviourEntity _behaviourEntity;
     readonly Animator _animator;
@@ -20,14 +21,16 @@ public class AnimationController
         ;
 
     int _lastPlayedAnimation, _lastRequestedAnimation;
+    #endregion
 
-    // Constructor
-    public AnimationController(MonoBehaviour entity, IBehaviourEntity behaviourEntity, Animator animator)
+    #region CONSTRUCTOR
+    public CharacterAnimationController(MonoBehaviour entity, IBehaviourEntity behaviourEntity, Animator animator)
     {
         _entity = entity;
         _behaviourEntity = behaviourEntity;
         _animator = animator;
     }
+    #endregion
 
     #region PUBLIC METHODS
     /// <summary>
@@ -130,7 +133,9 @@ public class AnimationController
         _behaviourEntity.IsExecutionPaused = false;
         onComplete?.Invoke();
     }
+    #endregion
 
+    #region HELPER PUBLIC METHODS
     public void ChangeToIdle()
     {
         ChangeAnimationTo(_idleAnim);

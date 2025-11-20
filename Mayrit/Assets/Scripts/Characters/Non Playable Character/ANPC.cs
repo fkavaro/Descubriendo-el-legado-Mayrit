@@ -1,5 +1,4 @@
 using System;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -50,37 +49,46 @@ where T : ABehaviourSystem
     #endregion
 
     #region INTERNAL PROPERTIES
+    NPCMovementController _movementController;
     NavMeshAgent _agent;
-    public NavMeshAgent Agent => _agent;
-    AnimationController _animationController;
-    public AnimationController AnimationController => _animationController;
-    Spot _destinationSpot = null;
+    CharacterAnimationController _animationController;
+    bool _isInStreet = true;
+    bool _isInteracting = false; // availability flag
+    bool _wasAgentStoppedBeforeInteraction = false; // Keep previous agent stopped state if needed
+    protected INPC _interactionTarget; // Cached target found by proximity queries to use for interactions
+    #endregion
 
-    float _arrivedhorizontalDistance, _arrivedVerticalDistance,
-        _nearHorizontalDistance, _nearVerticalDistance;
+    #region PROPERTIES HELPERS
+    public NavMeshAgent Agent => _agent;
+    public CharacterAnimationController AnimationController => _animationController;
+
+    public NPCMovementController MovementController => _movementController;
+    public float WalkSpeed => _walkSpeed;
+    public float RotationSpeed => _rotationSpeed;
+    public Vector2 ArrivedDistance => _arrivedDistance;
+    public Vector2 NearDistance => _nearDistance;
+    public float AvoidanceRadius => _avoidanceRadius;
+    public float MaxSamplingDistance => _maxSamplingDistance;
+    public int AvoidancePriorityVariance => _avoidancePriorityVariance;
+    public int BaseAvoidancePriority => _baseAvoidancePriority;
+    public bool IsStopped
+    {
+        get => _isStopped;
+        set => _isStopped = value;
+    }
 
     public string GivenName => _givenName;
     public string FamilyName => _familyName;
-    public string FullName => string.IsNullOrEmpty(_familyName) ? _givenName : $"{_givenName} {_familyName}";
-
     public INPC.NPCGender Gender => _gender;
     public bool IsFemale => _gender == INPC.NPCGender.Female;
 
-    bool _isInStreet = true; // flag for being in the street
     public bool IsInStreet
     {
         get => _isInStreet;
         set => _isInStreet = value;
     }
-
-    bool _isInteracting = false; // availability flag
     public bool IsInteracting => _isInteracting;
-
-    protected INPC _interactionTarget; // Cached target found by proximity queries to use for interactions
     public INPC CurrentInteractionTarget => _interactionTarget;
-
-    bool _wasAgentStoppedBeforeInteraction = false; // Keep previous agent stopped state if needed
-
     #endregion
 
     #region MONOBEHAVIOUR
@@ -89,322 +97,31 @@ where T : ABehaviourSystem
         base.Awake();
 
         _animationController = new(this, this, _animator);
-
-        _arrivedhorizontalDistance = _arrivedDistance.x;
-        _arrivedVerticalDistance = _arrivedDistance.y;
-        _nearHorizontalDistance = _nearDistance.x;
-        _nearVerticalDistance = _nearDistance.y;
-
-
         _agent = GetComponent<NavMeshAgent>();
-        _agent.speed = _walkSpeed;
-        _agent.angularSpeed = _rotationSpeed * 100f;
-        _agent.stoppingDistance = _arrivedhorizontalDistance;
-        _agent.radius = _avoidanceRadius;
-
-        // Assign a randomized avoidance priority to reduce symmetric deadlocks between agents
-        int offset = UnityEngine.Random.Range(-_avoidancePriorityVariance, _avoidancePriorityVariance + 1);
-        _agent.avoidancePriority = Mathf.Clamp(_baseAvoidancePriority + offset, 0, 99);
-
-        // Deactivate agent initially
-        _agent.enabled = false;
+        _movementController = new(this);
     }
 
     protected override void Update()
     {
         base.Update();
 
-        if (!_agent.isOnNavMesh)
-            return;
-
-        // Stop moving if execution is paused
-        if (IsExecutionPaused)
-            _agent.isStopped = true;
-        else
-            _agent.isStopped = _isStopped;
-
-        if (_agent.speed != _walkSpeed)
-            _agent.speed = _walkSpeed;
+        _movementController.CheckNPCExecution();
     }
     #endregion
 
-    #region IDENTITY METHODS
-    public void SetName(string given, string family)
+    #region PUBLIC METHODS
+    public void SetFullName(string given, string family)
     {
         _givenName = given;
         _familyName = family;
-        try { gameObject.name = FullName; } catch { }
-    }
-    #endregion
-
-    #region DESTINATION METHODS
-    public Vector3 GetDestinationPos()
-    {
-        return _agent.destination;
-    }
-
-    public Spot GetDestinationSpot()
-    {
-        return _destinationSpot;
-    }
-
-    public bool IsDestination(Vector3 position)
-    {
-        return _agent.destination == position;
-    }
-
-    public bool IsDestination(Spot spot)
-    {
-        if (spot == null) return false;
-        return _destinationSpot == spot;
-    }
-
-    public bool IsDestinationSpotOccupied()
-    {
-        if (_destinationSpot == null)
-            return false;
-        else
-            return _destinationSpot.IsOccupied();
-    }
-    #endregion
-
-    #region SET DESTINATION METHODS
-    public void SetDestination(Vector3 destinationPos)
-    {
-        if (_agent.destination == destinationPos) return;
-
-        if (_destinationSpot != null)
-        {
-            _destinationSpot.SetOccupied(false); // Leave free current target spot
-            _destinationSpot = null; // Reset the target spot
-        }
-
-        _agent.updateRotation = true;
-        _agent.SetDestination(destinationPos);
-
-        if (HasArrivedAtDestination()) return;
-        else _animationController.ChangeToWalk();
-    }
-
-    public void SetDestinationSpot(Spot destinationSpot)
-    {
-        if (_destinationSpot == destinationSpot) return;
-
-        SetDestination(destinationSpot.transform.position); // Set the target position for the NavMeshAgent
-
-        _destinationSpot = destinationSpot;
-    }
-    #endregion
-
-    #region IS CLOSE METHODS
-    public bool IsCloseTo(Vector3 destination, float horizontalDistance = 2f, float verticalDistance = 3.5f)
-    {
-        Vector3 agentPos = _agent.transform.position;
-        Vector3 destPos = destination;
-
-        // Horizontal distance on XZ plane
-        Vector2 agentXZ = new(agentPos.x, agentPos.z);
-        Vector2 destXZ = new(destPos.x, destPos.z);
-        float horizontalDist = Vector2.Distance(agentXZ, destXZ);
-
-        // Vertical distance on Y axis
-        float verticalDist = Mathf.Abs(agentPos.y - destPos.y);
-
-        // Take max values of provided distances and npc's near distances
-        horizontalDistance = Mathf.Max(horizontalDistance, _nearHorizontalDistance);
-        verticalDistance = Mathf.Max(verticalDistance, _nearVerticalDistance);
-
-        // Check if within stopping distances
-        if (horizontalDist < horizontalDistance && verticalDist < verticalDistance)
-            return true;
-        else
-            return false;
-    }
-
-    public bool IsCloseTo(Spot spot, float horizontalDistance = 2f, float verticalDistance = 3.5f)
-    {
-        return IsCloseTo(spot.transform.position, horizontalDistance, verticalDistance);
-    }
-
-    public bool IsCloseToDestination(float horizontalDistance = 2f, float verticalDistance = 3.5f)
-    {
-        return IsCloseTo(_agent.destination, horizontalDistance, verticalDistance);
-    }
-    #endregion
-
-    #region HAS ARRIVED METHODS
-    public bool HasArrivedAtDestination(bool fixRotation = false, bool fixPosition = false)
-    {
-        return HasArrivedAt(_agent.destination, fixRotation, fixPosition);
-    }
-
-    public bool HasArrivedAt(Spot spot, bool fixRotation = false, bool fixPosition = false)
-    {
-        return HasArrivedAt(spot.transform.position, fixRotation, fixPosition);
-    }
-
-    public bool HasArrivedAt(Vector3 destination, bool fixRotation = false, bool fixPosition = false)
-    {
-        Vector3 agentPos = _agent.transform.position;
-        Vector3 destPos = destination;
-
-        // Horizontal distance on XZ plane
-        Vector2 agentXZ = new(agentPos.x, agentPos.z);
-        Vector2 destXZ = new(destPos.x, destPos.z);
-        float horizontalDist = Vector2.Distance(agentXZ, destXZ);
-
-        // Vertical distance on Y axis
-        float verticalDist = Mathf.Abs(agentPos.y - destPos.y);
-
-        // Check if within stopping distances
-        if (horizontalDist < _arrivedhorizontalDistance && verticalDist < _arrivedVerticalDistance)
-        {
-            if (_destinationSpot != null)
-            {
-                _destinationSpot.SetOccupied(true);
-
-                if (fixRotation)
-                    ForceRotation(_destinationSpot.WorldDirection);
-                if (fixPosition)
-                    _agent.transform.position = _destinationSpot.transform.position;
-            }
-
-            return true;
-        }
-        else return false;
-    }
-    #endregion
-
-    #region FORCE ROTATION METHODS
-    public void ForceRotation(Vector3 lookDirection)
-    {
-        if (_agent.isOnNavMesh)
-            _agent.updateRotation = false; // Disable automatic rotation
-
-        _agent.transform.rotation = Quaternion.Euler(lookDirection);
-    }
-    public void ForceRotation(Quaternion rotation)
-    {
-        if (_agent.isOnNavMesh)
-            _agent.updateRotation = false; // Disable automatic rotation
-
-        _agent.transform.rotation = rotation;
-    }
-    #endregion
-
-    #region OTHER METHODS
-    public bool CanReachPosition(Vector3 targetPos, out Vector3 reachablePos)
-    {
-        NavMeshHit hitLocation;
-
-        if (NavMesh.SamplePosition(targetPos, out hitLocation, _maxSamplingDistance, NavMesh.AllAreas))
-        {
-            reachablePos = hitLocation.position;
-            return true;
-        }
-        else
-        {
-            reachablePos = Vector3.zero;
-            return false;
-        }
-    }
-
-    public bool CalculateRandomDestination(int samplingIterations, float areaRadious, Transform centerPoint, out Vector3 destination)
-    {
-        // Repeat until a random position in the navmesh is found
-        for (int i = 0; i < samplingIterations; i++)
-        {
-            // Random point inside a circular area
-            Vector3 randomPoint = centerPoint.position + UnityEngine.Random.insideUnitSphere * areaRadious;
-
-            // Try to find a position in the navmesh area sampled from the random position
-            if (CanReachPosition(randomPoint, out destination))
-                return true;
-        }
-
-        // Hasn't found any reachable point in the navmesh
-        destination = Vector3.zero;
-        return false;
-    }
-
-    public void SetIfStopped(bool isStopped)
-    {
-        if (_agent == null)
-        {
-            Debug.LogError(Name + ", IsStopped(): NavMeshAgent is null.");
-            return;
-        }
-
-        if (!_agent.isOnNavMesh)
-        {
-            Debug.LogError(Name + ", IsStopped(): NavMeshAgent is not on a NavMesh.");
-            return;
-        }
-
-        _isStopped = isStopped;
-    }
-
-    public bool IsPathPending()
-    {
-        return _agent.pathPending;
-    }
-
-    public void PlaceAt(Spot spot)
-    {
-        if (spot == null)
-        {
-            Debug.LogError("PlaceAt(): destinationSpot is null.");
-            return;
-        }
-
-        PlaceAt(spot.transform.position);
-
-        // Set spot as occupied
-        spot.SetOccupied(true);
-        _destinationSpot = spot;
-    }
-
-    public void PlaceAt(Vector3 position)
-    {
-        Vector3 placementPos;
-        bool sampled = false;
-
-        if (NavMesh.SamplePosition(position, out NavMeshHit hit, 2f, NavMesh.AllAreas))
-        {
-            placementPos = hit.position;
-            sampled = true;
-        }
-        else
-        {
-            placementPos = position;
-        }
-
-        // Place transform first
-        transform.position = placementPos;
-
-        // Now enable the agent and warp it to the sampled NavMesh position if available
         try
         {
-            Agent.enabled = true;
-            if (sampled)
-            {
-                try { Agent.Warp(placementPos); }
-                catch (Exception e) { Debug.LogException(e); }
-            }
+            gameObject.name = string.IsNullOrEmpty(_familyName) ?
+                _givenName :
+                $"{_givenName} {_familyName}";
         }
-        catch (Exception e) { Debug.LogException(e); }
-
-        // Check if it's in a destination spot and set occupancy
-        if (_destinationSpot != null && Vector3.Distance(_destinationSpot.transform.position, placementPos) <= 0.1f)
-            _destinationSpot.SetOccupied(true);
+        catch { }
     }
-
-    #region INTERACTION METHODS
-    public void PlaceAtDestination()
-    {
-        PlaceAt(_agent.destination);
-    }
-    #endregion
 
     public bool IsAvailableForInteraction()
     {
@@ -431,7 +148,7 @@ where T : ABehaviourSystem
         // Keep previous logical stopped flag so we can restore it later
         _wasAgentStoppedBeforeInteraction = _isStopped;
 
-        SetIfStopped(true);
+        _movementController.SetIfStopped(true);
         AnimationController.ChangeToTalk();
     }
 
@@ -440,7 +157,7 @@ where T : ABehaviourSystem
         _isInteracting = false;
         _interactionTarget = null;
 
-        SetIfStopped(_wasAgentStoppedBeforeInteraction);
+        _movementController.SetIfStopped(_wasAgentStoppedBeforeInteraction);
         AnimationController.ChangeToWalk();
     }
     #endregion

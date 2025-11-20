@@ -20,8 +20,8 @@ public class PlayableCharacter : ABehaviourEntity<FiniteStateMachine>
     #endregion
 
     #region INTERNAL PROPERTIES
-    public AnimationController _animationController;
-    public PlayerController _playerController;
+    public CharacterAnimationController _animationController;
+    public PlayableCharacterMovementController _playerController;
 
     FiniteStateMachine _fsm;
     public FreeRoam_PlayableCharacterState _freeRoamState;

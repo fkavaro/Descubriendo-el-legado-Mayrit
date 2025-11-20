@@ -263,7 +263,7 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
         {
             string given = _namesDatabase.GetRandomGiven(villager.IsFemale);
             string family = _namesDatabase.GetRandomFamily();
-            villager.SetName(given, family);
+            villager.SetFullName(given, family);
         }
         catch { }
 
