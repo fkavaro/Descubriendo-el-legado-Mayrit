@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class InteractStrategy : ATimedStrategy
+public class InteractionStrategy : ATimedStrategy
 {
     INPC _otherNPC;
 
-    public InteractStrategy(INPC npc, int min = 30, int max = 60)
+    public InteractionStrategy(INPC npc, int min = 30, int max = 60)
     : base(npc, min, max) { }
 
     public override Node.Status Start()

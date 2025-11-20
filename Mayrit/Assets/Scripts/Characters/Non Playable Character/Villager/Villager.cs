@@ -35,7 +35,7 @@ public class Villager : ANPC<BehaviourTree>
         ConditionStrategy isInStreet = new(this, () => IsInStreet);
         ConditionStrategy IsNotAlreadyTalking = new(this, () => IsInteracting == false);
         ConditionStrategy isOtherNearby = new(this, IsOtherNearby);
-        InteractStrategy interactStrategy = new(this);
+        InteractionStrategy interactStrategy = new(this);
 
         SequenceNode interactionSequence = new(this);
         LeafNode isInStreetLeaf = new(this, "IsInStreet?", isInStreet);
