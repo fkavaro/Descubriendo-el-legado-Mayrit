@@ -10,10 +10,11 @@ public abstract class AAssignedBuilding : ABuilding
     [SerializeField]
     protected List<Villager> _assignedVillagers = new();
     public bool AtMaxCapacity => _assignedVillagers.Count >= _capacity;
+    public bool IsEmpty => _assignedVillagers.Count == 0;
     #endregion
 
     #region ABSTRACT METHODS
-    public abstract void Reassign(List<Villager> residents);
+    public abstract void Reassign(List<Villager> assigned);
     #endregion
 
     #region MONOBEHAVIOUR
@@ -78,6 +79,11 @@ public abstract class AAssignedBuilding : ABuilding
     {
         if (_assignedVillagers.Contains(villager))
             _assignedVillagers.Remove(villager);
+    }
+
+    public virtual void IncreaseCapacity(int increase)
+    {
+        _capacity += increase;
     }
     #endregion
 }

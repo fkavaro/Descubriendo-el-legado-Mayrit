@@ -38,7 +38,7 @@ public class TownManager : Singleton<TownManager>
     }
     #endregion
 
-    #region PUBLIC METHODS 
+    #region BUILDING REGISTRATION METHODS 
     public void UpdatePopulation(int householdSize)
     {
         _population += householdSize;
@@ -89,7 +89,9 @@ public class TownManager : Singleton<TownManager>
     {
         UnregisterBuilding(_sanctuaries, sanctuary);
     }
+    #endregion
 
+    #region BUILDING GETTERS
     /// <summary>
     /// Returns a random registered house with capacity for a new resident. 
     /// Optionally excluding given house.
@@ -97,18 +99,60 @@ public class TownManager : Singleton<TownManager>
     /// <returns>Never null. If no house with free capacity found, returns a random house with increased capacity.</returns>
     public House GetHouse(House excludedHouse = null)
     {
-        House house = GetBuildingWithFreeCapacity(_houses, excludedHouse);
+        House house;
+
+        if (_houses == null || _houses.Count == 0)
+        {
+            Debug.LogError("TownManager.GetHouse: No houses registered in TownManager.");
+            return null;
+        }
+
+        // First try to get an empty house
+        house = GetEmptyBuilding(_houses, excludedHouse);
+
+        // If no empty house found, try to get a house with free capacity
+        if (house == null)
+            house = GetBuildingWithFreeCapacity(_houses, excludedHouse);
 
         // If no house with free capacity found
-        if (house == null && _houses.Count > 0)
+        if (house == null)
         {
-            // Return random house with increased capacity
+            // Return random house and increase its capacity
             house = _houses[UnityEngine.Random.Range(0, _houses.Count)];
             house.IncreaseCapacity(1);
         }
 
-        // Never reeturn null assured
+        // Never return null assured
         return house;
+    }
+
+    public Workplace GetWorkplace(Workplace excludedWorkplace = null)
+    {
+        Workplace workplace;
+
+        if (_workplaces == null || _workplaces.Count == 0)
+        {
+            Debug.LogError("TownManager.GetWorkplace: No workplaces registered in TownManager.");
+            return null;
+        }
+
+        // First try to get an empty workplace
+        workplace = GetEmptyBuilding(_workplaces, excludedWorkplace);
+
+        // If no empty workplace found, try to get one with free capacity
+        if (workplace == null)
+            workplace = GetBuildingWithFreeCapacity(_workplaces, excludedWorkplace);
+
+        // If no workplace with free capacity found
+        if (workplace == null)
+        {
+            // Return random workplace and increase its capacity
+            workplace = _workplaces[UnityEngine.Random.Range(0, _workplaces.Count)];
+            workplace.IncreaseCapacity(1);
+        }
+
+        // Never return null assured
+        return workplace;
     }
 
     /// <returns>Random registered workplace with capacity for a new employee. 
@@ -119,6 +163,21 @@ public class TownManager : Singleton<TownManager>
         return GetBuildingWithFreeCapacity(_workplaces, excludedWorkplace);
     }
 
+    public Sanctuary GetNearestSanctuary(ABuilding other)
+    {
+        return GetNearestBuilding(other, _sanctuaries);
+    }
+
+    public Market GetNearestMarket(ABuilding other)
+    {
+        if (_markets == null || _markets.Count == 0)
+            Debug.LogWarning("GetNearestMarket: No markets registered in TownManager.");
+
+        return GetNearestBuilding(other, _markets);
+    }
+    #endregion
+
+    #region REASSIGNATION METHODS
     /// <summary>
     /// Attempts to reassign residents from a destroyed house to other houses with free capacity.
     /// If a resident cannot be reassigned, it will be returned to the NPC pool and population decremented.
@@ -150,19 +209,6 @@ public class TownManager : Singleton<TownManager>
             workplace.AddNewAssigned(villager);
         });
     }
-
-    public Sanctuary GetNearestSanctuary(ABuilding other)
-    {
-        return GetNearestBuilding(other, _sanctuaries);
-    }
-
-    public Market GetNearestMarket(ABuilding other)
-    {
-        if (_markets == null || _markets.Count == 0)
-            Debug.LogWarning("GetNearestMarket: No markets registered in TownManager.");
-
-        return GetNearestBuilding(other, _markets);
-    }
     #endregion
 
     #region PRIVATE METHODS
@@ -193,6 +239,51 @@ public class TownManager : Singleton<TownManager>
             buildings.Remove(building);
             if (populationDelta != 0) UpdatePopulation(populationDelta);
         }
+    }
+
+    T GetNearestBuilding<T>(ABuilding buildingCloseBy, List<T> buildings)
+    where T : ABuilding
+    {
+        // Validate inputs: no buildings configured or invalid home -> nothing to do
+        if (buildings == null || buildings.Count == 0 || buildingCloseBy == null)
+            return null;
+
+        T nearestBuilding = null;
+        float nearestDistanceSqr = float.MaxValue;
+        Vector3 buildingCloseByPos = buildingCloseBy.transform.position;
+
+        foreach (var building in buildings)
+        {
+            // Skip null or deactivated entries
+            if (building == null || !building.gameObject.activeSelf)
+                continue;
+
+            // Use squared magnitude to avoid the cost of sqrt when comparing distances
+            float distanceSqr = (building.transform.position - buildingCloseByPos).sqrMagnitude;
+            if (distanceSqr < nearestDistanceSqr)
+            {
+                nearestDistanceSqr = distanceSqr;
+                nearestBuilding = building;
+            }
+        }
+
+        return nearestBuilding;
+    }
+
+    T GetEmptyBuilding<T>(List<T> buildings, T excludedBuilding)
+    where T : AAssignedBuilding
+    {
+        if (buildings == null || buildings.Count == 0) return null;
+        List<T> candidates = new();
+        foreach (var building in buildings)
+        {
+            if (building == null || building == excludedBuilding) continue;
+            if (!building.gameObject.activeSelf) continue;
+
+            if (building.IsEmpty) candidates.Add(building);
+        }
+        if (candidates.Count == 0) return null;
+        return candidates[UnityEngine.Random.Range(0, candidates.Count)];
     }
 
     T GetBuildingWithFreeCapacity<T>(List<T> buildings, T excludedBuilding)
@@ -236,35 +327,6 @@ public class TownManager : Singleton<TownManager>
                 try { NPCPoolManager.Instance.ReturnVillagerToPool(villager); } catch { }
             }
         }
-    }
-
-    T GetNearestBuilding<T>(ABuilding buildingCloseBy, List<T> buildings)
-    where T : ABuilding
-    {
-        // Validate inputs: no buildings configured or invalid home -> nothing to do
-        if (buildings == null || buildings.Count == 0 || buildingCloseBy == null)
-            return null;
-
-        T nearestBuilding = null;
-        float nearestDistanceSqr = float.MaxValue;
-        Vector3 buildingCloseByPos = buildingCloseBy.transform.position;
-
-        foreach (var building in buildings)
-        {
-            // Skip null or deactivated entries
-            if (building == null || !building.gameObject.activeSelf)
-                continue;
-
-            // Use squared magnitude to avoid the cost of sqrt when comparing distances
-            float distanceSqr = (building.transform.position - buildingCloseByPos).sqrMagnitude;
-            if (distanceSqr < nearestDistanceSqr)
-            {
-                nearestDistanceSqr = distanceSqr;
-                nearestBuilding = building;
-            }
-        }
-
-        return nearestBuilding;
     }
     #endregion
 }

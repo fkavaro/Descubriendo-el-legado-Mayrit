@@ -14,13 +14,13 @@ public class Working_VillagerStrategy : ATimedStrategy
     public override Node.Status Start()
     {
         _npc.AnimationController.ChangeToIdle();
-        _workplace.OpenWorkplace();
+        _workplace.IsWorkplaceOpen = true;
 
         return Node.Status.Success;
     }
 
     public override void OnTimerComplete()
     {
-        _workplace.CloseWorkplace();
+        _workplace.IsWorkplaceOpen = false;
     }
 }

@@ -270,7 +270,7 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
         House randomFreeHouse = TownManager.Instance.GetHouse();
         villager.AssignHome(randomFreeHouse);
 
-        Workplace randomWorkplace = TownManager.Instance.GetWorkplaceWithFreeCapacity();
+        Workplace randomWorkplace = TownManager.Instance.GetWorkplace();
         villager.AssignWorkplace(randomWorkplace);
 
         Sanctuary nearestSanctuary = TownManager.Instance.GetNearestSanctuary(randomFreeHouse);

@@ -51,7 +51,7 @@ public class GoToMarket_VillagerStrategy : AStrategy
             }
 
             // Is open
-            if (_marketStall.IsOpen())
+            if (_marketStall.IsWorkplaceOpen)
             {
                 // Is occupied
                 if (_marketStallSpot.IsOccupied())

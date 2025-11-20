@@ -55,7 +55,7 @@ public class Market : ABuilding
 
         foreach (var stall in _stalls)
         {
-            if (stall.IsOpen())
+            if (stall.IsWorkplaceOpen)
                 openedStalls.Add(stall);
         }
 
@@ -81,7 +81,7 @@ public class Market : ABuilding
     {
         foreach (var stall in _stalls)
         {
-            if (stall.IsOpen())
+            if (stall.IsWorkplaceOpen)
                 return true;
         }
         return false;

@@ -24,9 +24,10 @@ public class House : AAssignedBuilding
     }
     #endregion
 
-    public void IncreaseCapacity(int increase)
+    public override void IncreaseCapacity(int increase)
     {
-        _capacity += increase;
+        base.IncreaseCapacity(increase);
+
         var tm = TownManager.ExistingInstance;
         if (tm != null)
             tm.UpdatePopulation(increase);

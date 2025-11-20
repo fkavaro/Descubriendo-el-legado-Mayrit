@@ -8,6 +8,11 @@ public class Workplace : AAssignedBuilding
     [Header("Workplace Properties")]
     [SerializeField] List<Spot> _workSpots;
     [SerializeField] bool _isOpen = false;
+    public bool IsWorkplaceOpen
+    {
+        get { return _isOpen; }
+        set { _isOpen = value; }
+    }
     #endregion
 
     #region INHERITED METHODS
@@ -23,10 +28,10 @@ public class Workplace : AAssignedBuilding
         if (tm != null) tm.UnregisterWorkplace(this);
     }
 
-    public override void Reassign(List<Villager> residents)
+    public override void Reassign(List<Villager> employees)
     {
         var tm = TownManager.ExistingInstance;
-        if (tm != null) tm.ReassignEmployees(this, residents);
+        if (tm != null) tm.ReassignEmployees(this, employees);
     }
     #endregion
 
@@ -36,21 +41,6 @@ public class Workplace : AAssignedBuilding
         if (_workSpots == null || _workSpots.Count == 0) return null;
         int randomIndex = UnityEngine.Random.Range(0, _workSpots.Count);
         return _workSpots[randomIndex];
-    }
-
-    public void OpenWorkplace()
-    {
-        _isOpen = true;
-    }
-
-    public void CloseWorkplace()
-    {
-        _isOpen = false;
-    }
-
-    public bool IsOpen()
-    {
-        return _isOpen;
     }
     #endregion
 }
