@@ -45,7 +45,6 @@ where T : ABehaviourSystem
     #region INTERNAL PROPERTIES
     NPCMovementController _movementController;
     NavMeshAgent _agent;
-    bool _wasAgentStoppedBeforeInteraction = false; // Keep previous agent stopped state if needed
     #endregion
 
     #region MONOBEHAVIOUR
@@ -78,21 +77,6 @@ where T : ABehaviourSystem
                 $"{_givenName} {_familyName}";
         }
         catch { }
-    }
-
-    public override void StartInteraction()
-    {
-        base.StartInteraction();
-
-        _wasAgentStoppedBeforeInteraction = _isStopped;
-        _movementController.SetIfStopped(true);
-    }
-
-    public override void EndInteraction()
-    {
-        base.EndInteraction();
-
-        _movementController.SetIfStopped(_wasAgentStoppedBeforeInteraction);
     }
     #endregion
 }

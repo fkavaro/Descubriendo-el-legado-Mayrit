@@ -94,16 +94,14 @@ where T : ABehaviourSystem
 
         Debug.Log($"{Name} accepted interaction with {initiator.Name}");
 
+        IsInteracting = true;
+        initiator.IsInteracting = true;
         _currentInteractionTarget = initiator;
-        StartInteraction();
-        initiator.StartInteraction();
-
         return true;
     }
 
     public virtual void StartInteraction()
     {
-        IsInteracting = true;
         AnimationController.ChangeToTalk();
     }
 
