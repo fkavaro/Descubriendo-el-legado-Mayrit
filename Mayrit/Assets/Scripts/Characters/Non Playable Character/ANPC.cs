@@ -23,6 +23,36 @@ where T : ABehaviourSystem
     }
     public string GivenName => _givenName;
     public string FamilyName => _familyName;
+    public bool IsInStreet
+    {
+        get => _isInStreet;
+        set => _isInStreet = value;
+    }
+    public bool IsTalking
+    {
+        get => _isTalking;
+        set => _isTalking = value;
+    }
+    public bool IsBeingTalkedTo
+    {
+        get => _isBeingTalkedTo;
+        set => _isBeingTalkedTo = value;
+    }
+    public bool IsReadyToTalk
+    {
+        get => _isReadyToTalk;
+        set => _isReadyToTalk = value;
+    }
+    public INPC CurrentInteractionTarget
+    {
+        get => _currentInteractionTarget;
+        set => _currentInteractionTarget = value;
+    }
+    public INPC LastInteractionTarget
+    {
+        get => _lastInteractionTarget;
+        set => _lastInteractionTarget = value;
+    }
     #endregion
 
     #region EDITOR PROPERTIES
@@ -45,6 +75,11 @@ where T : ABehaviourSystem
     #region INTERNAL PROPERTIES
     NPCMovementController _movementController;
     NavMeshAgent _agent;
+    bool _isInStreet = true;
+    bool _isTalking = false;
+    bool _isBeingTalkedTo = false;
+    bool _isReadyToTalk = false;
+    INPC _currentInteractionTarget, _lastInteractionTarget;
     #endregion
 
     #region MONOBEHAVIOUR
@@ -77,6 +112,35 @@ where T : ABehaviourSystem
                 $"{_givenName} {_familyName}";
         }
         catch { }
+    }
+
+    public virtual bool CanAcceptConversation(INPC initiator)
+    {
+        if (_isInStreet && !_isTalking &&
+            gameObject.activeInHierarchy && CharacterModel.activeInHierarchy &&
+            _lastInteractionTarget != initiator)
+        {
+            _currentInteractionTarget = initiator;
+            _isBeingTalkedTo = true;
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public virtual void StartConversation()
+    {
+        _isTalking = true;
+        AnimationController.ChangeToTalk();
+    }
+
+    public virtual void EndConversation()
+    {
+        _isTalking = false;
+        _isBeingTalkedTo = false;
+        _isReadyToTalk = false;
+        _lastInteractionTarget = CurrentInteractionTarget;
+        _currentInteractionTarget = null;
     }
     #endregion
 }

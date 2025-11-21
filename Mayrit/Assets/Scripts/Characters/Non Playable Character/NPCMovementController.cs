@@ -324,5 +324,29 @@ public class NPCMovementController
     {
         return _agent.pathPending;
     }
+
+    public Vector3 GoToMiddlePoint(INPC otherNPC)
+    {
+        // Compute midpoint and safe target positions offset so NPCs don't overlap
+        Vector3 posA = _npc.GO.transform.position;
+        Vector3 posB = otherNPC.GO.transform.position;
+        Vector3 midPoint = (posA + posB) * 0.5f;
+
+        Vector3 direction = posB - posA;
+        if (direction.sqrMagnitude < 0.0001f)
+            direction = _npc.GO.transform.forward;
+        direction.Normalize();
+
+        // Determine a comfortable separation using avoidance radii
+        float separation = Mathf.Max(0.5f, _npc.AvoidanceRadius + otherNPC.AvoidanceRadius) + 0.1f;
+        float half = separation * 0.5f;
+
+        Vector3 correctedMidPoint = midPoint - direction * half;
+
+        // Command movement to middle point
+        SetDestination(correctedMidPoint);
+
+        return correctedMidPoint;
+    }
     #endregion
 }

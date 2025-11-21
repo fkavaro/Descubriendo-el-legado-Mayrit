@@ -31,29 +31,34 @@ public class Villager : ANPC<BehaviourTree>
         if (_home != null)
             homeEntrance = _home.GetRandomAccessSpot();
 
-        // Interaction sequence
+        // Conversation sequence
         ConditionStrategy isInStreetStrategy = new(this, () => IsInStreet);
-        ConditionStrategy IsAlreadyTalkingStrategy = new(this, () => IsTalkedTo == true);
-        ConditionStrategy isOtherNearbyStrategy = new(this, IsOtherNearby);
-        InteractionStrategy interactionStrategy = new(this);
+        ConditionStrategy isBeingTalkedToStrategy = new(this, () => IsBeingTalkedTo);
+        ConversationFollowerStrategy followConversationStrategy = new(this);
+        ConditionStrategy canSomeoneNearbyTalkStrategy = new(this, CanSomeoneNearbyTalk);
+        ConversationInitiatorStrategy initiateConversationStrategy = new(this);
 
-        SequenceNode interactionSequence = new(this);
+        CooldownDecorator conversationCooldown = new(this, _conversationCooldown);
+        SequenceNode conversationSequence = new(this);
         SelectorNode roleSelector = new(this);
-        CooldownDecorator talkCooldown = new(this, _interactionCooldown);
+        SequenceNode followConversationSequence = new(this);
+        SequenceNode initiateConversationSequence = new(this);
 
-        LeafNode isInStreetLeaf = new(this, "IsInStreet?", isInStreetStrategy);
+        LeafNode isInStreetLeaf = new(this, "Is in street?", isInStreetStrategy);
+        LeafNode isBeingTalkedToLeaf = new(this, "Is being talked to?", isBeingTalkedToStrategy);
+        LeafNode followConversationLeaf = new(this, "Talking [as Follower]", followConversationStrategy);
+        LeafNode isOtherNearbyLeaf = new(this, "Can someone nearby talk?", canSomeoneNearbyTalkStrategy);
+        LeafNode initiateConversationLeafCheck = new(this, "Talking [as Initiator]", initiateConversationStrategy);
 
-        LeafNode noOneIsTalkingLeaf = new(this, "IsAlreadyTalking?", IsAlreadyTalkingStrategy);
-        LeafNode isOtherNearbyLeaf = new(this, "IsOtherNearby?", isOtherNearbyStrategy);
-        roleSelector.AddChild(noOneIsTalkingLeaf);
-        roleSelector.AddChild(isOtherNearbyLeaf);
-
-        LeafNode interactLeaf = new(this, "Talking", interactionStrategy);
-        talkCooldown.AddChild(interactLeaf);
-
-        interactionSequence.AddChild(isInStreetLeaf);
-        interactionSequence.AddChild(roleSelector);
-        interactionSequence.AddChild(talkCooldown);
+        conversationCooldown.AddChild(conversationSequence);
+        conversationSequence.AddChild(isInStreetLeaf);
+        conversationSequence.AddChild(roleSelector);
+        roleSelector.AddChild(followConversationSequence);
+        followConversationSequence.AddChild(isBeingTalkedToLeaf);
+        followConversationSequence.AddChild(followConversationLeaf);
+        roleSelector.AddChild(initiateConversationSequence);
+        initiateConversationSequence.AddChild(isOtherNearbyLeaf);
+        initiateConversationSequence.AddChild(initiateConversationLeafCheck);
 
         // Routine sequence
         SequenceNode routineSequence = new(this);
@@ -64,7 +69,7 @@ public class Villager : ANPC<BehaviourTree>
             InInteriorStrategy prayingStrategy = new(this);
 
             SequenceNode prayingSequence = new(this);
-            LeafNode goToSanctuaryLeaf = new(this, "GoingToSanctuary", goToSanctuaryStrategy);
+            LeafNode goToSanctuaryLeaf = new(this, "Going to sanctuary", goToSanctuaryStrategy);
             LeafNode prayLeaf = new(this, "Praying", prayingStrategy);
             prayingSequence.AddChild(goToSanctuaryLeaf);
             prayingSequence.AddChild(prayLeaf);
@@ -78,7 +83,7 @@ public class Villager : ANPC<BehaviourTree>
             Working_VillagerStrategy workingStrategy = new(this, _workplace, 60, 180);
 
             SequenceNode workingSequence = new(this);
-            LeafNode goToWorkLeaf = new(this, "GoingToWork", goToWorkStrategy);
+            LeafNode goToWorkLeaf = new(this, "Going to work", goToWorkStrategy);
             LeafNode workLeaf = new(this, "Working", workingStrategy);
             workingSequence.AddChild(goToWorkLeaf);
             workingSequence.AddChild(workLeaf);
@@ -92,7 +97,7 @@ public class Villager : ANPC<BehaviourTree>
             Shopping_VillagerStrategy shoppingStrategy = new(this, 15, 45);
 
             SequenceNode shoppingSequence = new(this);
-            LeafNode goToMarketStallLeaf = new(this, "GoingToMarket", goToMarketStrategy);
+            LeafNode goToMarketStallLeaf = new(this, "Going to market", goToMarketStrategy);
             LeafNode shopLeaf = new(this, "Shopping", shoppingStrategy);
             shoppingSequence.AddChild(goToMarketStallLeaf);
             shoppingSequence.AddChild(shopLeaf);
@@ -113,7 +118,7 @@ public class Villager : ANPC<BehaviourTree>
             AtHome_VillagerStrategy atHomeStrategy = new(this);
 
             SequenceNode atHomeSequence = new(this);
-            LeafNode goHomeLeaf = new(this, "GoingHome", goToHomeStrategy);
+            LeafNode goHomeLeaf = new(this, "Going home", goToHomeStrategy);
             LeafNode restLeaf = new(this, "Resting", atHomeStrategy);
             atHomeSequence.AddChild(goHomeLeaf);
             atHomeSequence.AddChild(restLeaf);
@@ -123,7 +128,7 @@ public class Villager : ANPC<BehaviourTree>
 
         // Behaviour sequence
         SelectorNode behaviourSelector = new(this);
-        behaviourSelector.AddChild(interactionSequence); // First: higher priority
+        behaviourSelector.AddChild(conversationCooldown); // First: higher priority
         behaviourSelector.AddChild(routineSequence);
 
         InfiniteLoopNode infiniteLoop = new(this, behaviourSelector);
@@ -191,24 +196,28 @@ public class Villager : ANPC<BehaviourTree>
     #endregion
 
     #region PRIVATE METHODS
-    bool IsOtherNearby()
+    bool CanSomeoneNearbyTalk()
     {
-        try
-        {
-            var pool = NPCPoolManager.Instance;
-            if (pool == null) return false;
+        var pool = NPCPoolManager.Instance;
+        if (pool == null) return false;
 
-            // Get a villager in the interaction range from this position
-            Villager other = pool.GetAnyNearbyVillager(transform.position, _interactionRange, this);
-            CurrentInteractionTarget = other; // May be null
+        // Get a villager in the interaction range from this position
+        Villager someoneNearby = pool.GetAnyNearbyVillager(transform.position, _interactionRange, this);
 
-            return other != null;
-        }
-        catch
-        {
-            CurrentInteractionTarget = null;
+        // If no candidate found, bail out
+        if (someoneNearby == null)
             return false;
+
+        // Conversation is accepted by the target
+        if (someoneNearby.CanAcceptConversation(this))
+        {
+            // Set other as current interaction target
+            CurrentInteractionTarget = someoneNearby;
+            return true;
         }
+        // Conversation is denied
+        else
+            return false;
     }
     #endregion
 }

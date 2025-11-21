@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 public abstract class ACharacter<T> : ABehaviourEntity<T>, ICharacter
 where T : ABehaviourSystem
@@ -12,6 +11,7 @@ where T : ABehaviourSystem
         get => _animationController;
         set => _animationController = value;
     }
+
     public GameObject CharacterModel => _characterModel;
     public bool IsFemale => _gender == ICharacter.CharacterGender.Female;
     public float WalkSpeed => _walkSpeed;
@@ -21,27 +21,6 @@ where T : ABehaviourSystem
     public float GravityForce => _gravityForce;
     public Vector2 ArrivedDistance => _arrivedDistance;
     public Vector2 NearDistance => _nearDistance;
-    public bool IsTalkedTo
-    {
-        get => _isTalkedTo;
-        set => _isTalkedTo = value;
-    }
-    public bool IsInStreet
-    {
-        get => _isInStreet;
-        set => _isInStreet = value;
-    }
-    public ICharacter CurrentInteractionTarget
-    {
-        get => _currentInteractionTarget;
-        set => _currentInteractionTarget = value;
-    }
-    public ICharacter LastInteractionTarget
-    {
-        get => _lastInteractionTarget;
-        set => _lastInteractionTarget = value;
-    }
-    public event Action<ICharacter> OnInteractionEnded;
     #endregion
 
     #region EDITOR PROPERTIES
@@ -63,7 +42,7 @@ where T : ABehaviourSystem
     [Tooltip("Minimum range to start an interaction with another character")]
     [SerializeField] protected float _interactionRange = 2f;
     [Tooltip("Cooldown time between interactions with other characters")]
-    [SerializeField] protected float _interactionCooldown = 0f;
+    [SerializeField] protected float _conversationCooldown = 0f;
 
     [Header("Character information")]
     [SerializeField] protected ICharacter.CharacterGender _gender = ICharacter.CharacterGender.Male;
@@ -72,47 +51,5 @@ where T : ABehaviourSystem
 
     #region INTERNAL PROPERTIES   
     CharacterAnimationController _animationController;
-    bool _isTalkedTo = false;
-    bool _isInStreet = true;
-    ICharacter _currentInteractionTarget,
-        _lastInteractionTarget;
-    #endregion
-
-    #region INHERITED METHODS
-    public virtual bool IsAvailableForInteraction(ICharacter initiator)
-    {
-        // TRUE if not already interacting, both game object and model are active, and is not the last interaction target
-        return IsInStreet &&
-            !IsTalkedTo &&
-            gameObject.activeInHierarchy &&
-            CharacterModel.activeInHierarchy &&
-            _lastInteractionTarget != initiator;
-    }
-
-    public virtual bool TryAcceptInteraction(ICharacter initiator)
-    {
-        if (!IsAvailableForInteraction(initiator))
-            return false;
-
-        Debug.Log($"{Name} accepted interaction with {initiator.Name}");
-
-        IsTalkedTo = true;
-        _currentInteractionTarget = initiator;
-        return true;
-    }
-
-    public virtual void StartInteraction()
-    {
-        AnimationController.ChangeToTalk();
-    }
-
-    public virtual void EndInteraction()
-    {
-        IsTalkedTo = false;
-        _lastInteractionTarget = _currentInteractionTarget;
-        _currentInteractionTarget = null;
-        AnimationController.ChangeToWalk();
-        try { OnInteractionEnded?.Invoke(this); } catch { }
-    }
     #endregion
 }
