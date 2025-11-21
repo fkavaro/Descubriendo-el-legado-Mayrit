@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 
@@ -20,10 +21,10 @@ where T : ABehaviourSystem
     public float GravityForce => _gravityForce;
     public Vector2 ArrivedDistance => _arrivedDistance;
     public Vector2 NearDistance => _nearDistance;
-    public bool IsInteracting
+    public bool IsTalkedTo
     {
-        get => _isInteracting;
-        set => _isInteracting = value;
+        get => _isTalkedTo;
+        set => _isTalkedTo = value;
     }
     public bool IsInStreet
     {
@@ -40,6 +41,7 @@ where T : ABehaviourSystem
         get => _lastInteractionTarget;
         set => _lastInteractionTarget = value;
     }
+    public event Action<ICharacter> OnInteractionEnded;
     #endregion
 
     #region EDITOR PROPERTIES
@@ -70,7 +72,7 @@ where T : ABehaviourSystem
 
     #region INTERNAL PROPERTIES   
     CharacterAnimationController _animationController;
-    bool _isInteracting = false;
+    bool _isTalkedTo = false;
     bool _isInStreet = true;
     ICharacter _currentInteractionTarget,
         _lastInteractionTarget;
@@ -81,7 +83,7 @@ where T : ABehaviourSystem
     {
         // TRUE if not already interacting, both game object and model are active, and is not the last interaction target
         return IsInStreet &&
-            !IsInteracting &&
+            !IsTalkedTo &&
             gameObject.activeInHierarchy &&
             CharacterModel.activeInHierarchy &&
             _lastInteractionTarget != initiator;
@@ -94,8 +96,7 @@ where T : ABehaviourSystem
 
         Debug.Log($"{Name} accepted interaction with {initiator.Name}");
 
-        IsInteracting = true;
-        initiator.IsInteracting = true;
+        IsTalkedTo = true;
         _currentInteractionTarget = initiator;
         return true;
     }
@@ -107,10 +108,11 @@ where T : ABehaviourSystem
 
     public virtual void EndInteraction()
     {
-        IsInteracting = false;
+        IsTalkedTo = false;
         _lastInteractionTarget = _currentInteractionTarget;
         _currentInteractionTarget = null;
         AnimationController.ChangeToWalk();
+        try { OnInteractionEnded?.Invoke(this); } catch { }
     }
     #endregion
 }

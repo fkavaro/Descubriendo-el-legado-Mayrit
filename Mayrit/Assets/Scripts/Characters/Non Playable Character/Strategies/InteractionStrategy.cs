@@ -89,6 +89,4 @@ public class InteractionStrategy : ATimedStrategy
 
         Debug.Log($"{_npc.Name} has ended the interaction.");
     }
-
-
 }

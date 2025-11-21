@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public interface ICharacter : IBehaviourEntity
@@ -20,10 +21,15 @@ public interface ICharacter : IBehaviourEntity
     float GravityForce { get; }
     Vector2 ArrivedDistance { get; }
     Vector2 NearDistance { get; }
-    bool IsInteracting { get; set; }
+    /// <summary>
+    /// Indicates whether the character is currently being talked to
+    /// (is interaction follower).
+    /// </summary>
+    bool IsTalkedTo { get; set; }
     bool IsInStreet { get; set; }
     public ICharacter CurrentInteractionTarget { get; set; }
     public ICharacter LastInteractionTarget { get; set; }
+    public event Action<ICharacter> OnInteractionEnded;
     #endregion
 
     #region METHODS

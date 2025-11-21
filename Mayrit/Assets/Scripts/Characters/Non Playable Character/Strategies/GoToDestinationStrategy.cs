@@ -29,10 +29,12 @@ public class GoToDestinationStrategy : AStrategy
 
     public override Node.Status Update()
     {
+        // Failure if not going to destination anymore
+        if (!_npc.MovementController.IsDestination(_destinationSpot))
+            return Node.Status.Failure;
+
         if (_npc.MovementController.IsCloseTo(_destinationSpot))
-        {
             _npc.IsInStreet = false;
-        }
 
         // Success if arrived at destination
         if (_npc.MovementController.HasArrivedAt(_destinationSpot, _fixRotation, _fixPosition))

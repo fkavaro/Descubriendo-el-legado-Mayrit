@@ -33,22 +33,26 @@ public class Villager : ANPC<BehaviourTree>
 
         // Interaction sequence
         ConditionStrategy isInStreetStrategy = new(this, () => IsInStreet);
-        ConditionStrategy IsNotAlreadyTalkingStrategy = new(this, () => IsInteracting == false);
+        ConditionStrategy IsAlreadyTalkingStrategy = new(this, () => IsTalkedTo == true);
         ConditionStrategy isOtherNearbyStrategy = new(this, IsOtherNearby);
         InteractionStrategy interactionStrategy = new(this);
 
         SequenceNode interactionSequence = new(this);
-        LeafNode isInStreetLeaf = new(this, "IsInStreet?", isInStreetStrategy);
-        LeafNode noOneIsTalkingLeaf = new(this, "IsNotAlreadyTalking?", IsNotAlreadyTalkingStrategy);
-        LeafNode isOtherNearbyLeaf = new(this, "IsOtherNearby?", isOtherNearbyStrategy);
-        LeafNode interactLeaf = new(this, "Talking", interactionStrategy);
-
+        SelectorNode roleSelector = new(this);
         CooldownDecorator talkCooldown = new(this, _interactionCooldown);
+
+        LeafNode isInStreetLeaf = new(this, "IsInStreet?", isInStreetStrategy);
+
+        LeafNode noOneIsTalkingLeaf = new(this, "IsAlreadyTalking?", IsAlreadyTalkingStrategy);
+        LeafNode isOtherNearbyLeaf = new(this, "IsOtherNearby?", isOtherNearbyStrategy);
+        roleSelector.AddChild(noOneIsTalkingLeaf);
+        roleSelector.AddChild(isOtherNearbyLeaf);
+
+        LeafNode interactLeaf = new(this, "Talking", interactionStrategy);
         talkCooldown.AddChild(interactLeaf);
 
         interactionSequence.AddChild(isInStreetLeaf);
-        interactionSequence.AddChild(noOneIsTalkingLeaf);
-        interactionSequence.AddChild(isOtherNearbyLeaf);
+        interactionSequence.AddChild(roleSelector);
         interactionSequence.AddChild(talkCooldown);
 
         // Routine sequence
