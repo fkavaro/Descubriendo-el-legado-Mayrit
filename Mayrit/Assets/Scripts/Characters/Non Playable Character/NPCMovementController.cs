@@ -338,15 +338,50 @@ public class NPCMovementController
         direction.Normalize();
 
         // Determine a comfortable separation using avoidance radii
-        float separation = Mathf.Max(0.5f, _npc.AvoidanceRadius + otherNPC.AvoidanceRadius) + 0.1f;
+        float separation = Mathf.Max(0.5f, _npc.AvoidanceRadius + otherNPC.AvoidanceRadius);
         float half = separation * 0.5f;
 
         Vector3 correctedMidPoint = midPoint - direction * half;
 
-        // Command movement to middle point
-        SetDestination(correctedMidPoint);
+        // Prefer a reachable point on the NavMesh. Try corrected midpoint first,
+        // then raw midpoint, then sample along the segment between the two NPCs.
+        Vector3 destination = correctedMidPoint;
 
-        return correctedMidPoint;
+        if (CanReachPosition(correctedMidPoint, out Vector3 reachablePos))
+        {
+            destination = reachablePos;
+        }
+        else if (CanReachPosition(midPoint, out reachablePos))
+        {
+            destination = reachablePos;
+        }
+        else
+        {
+            bool found = false;
+            // Sample several points along the line between the two NPCs to find a reachable spot
+            for (int i = 1; i <= 9; i++)
+            {
+                float t = i / 10f;
+                Vector3 sample = Vector3.Lerp(posA, posB, t);
+                if (CanReachPosition(sample, out reachablePos))
+                {
+                    destination = reachablePos;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                // As a last resort, remain in place (avoid commanding unreachable destination)
+                destination = _agent != null ? _agent.transform.position : correctedMidPoint;
+            }
+        }
+
+        // Command movement to the chosen reachable destination
+        SetDestination(destination);
+
+        return destination;
     }
     #endregion
 }

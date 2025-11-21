@@ -16,26 +16,44 @@ public class ConversationFollowerStrategy : AStrategy
             return Node.Status.Failure;
 
         _middlePoint = _npc.MovementController.GoToMiddlePoint(_otherNPC);
-        return Node.Status.Success;
+
+        if (_middlePoint == null)
+            return Node.Status.Failure;
+        else
+            return Node.Status.Success;
     }
 
     public override Node.Status Update()
     {
-        // Check arrival to middle point
-        if (!_npc.IsReadyToTalk
-        && _npc.MovementController.HasArrivedAt(_middlePoint))
-            _npc.IsReadyToTalk = true;
+        if (_otherNPC.IsAvailableForConversation())
+        {
 
-        // Both arrived
-        if (!_npc.IsTalking &&
-        _npc.IsReadyToTalk && _otherNPC.IsReadyToTalk)
-            _npc.StartConversation();
+            // Check arrival to middle point
+            if (!_npc.IsReadyToTalk && _npc.MovementController.HasArrivedAt(_middlePoint))
+                _npc.IsReadyToTalk = true;
 
-        // Success when conversation ends (when current interaction target is null)
-        // Depeds on the other, the initiator, to end the conversation
-        if (_npc.CurrentInteractionTarget == null)
-            return Node.Status.Success;
+            // Both arrived
+            if (_npc.IsReadyToTalk && _otherNPC.IsReadyToTalk)
+            {
+                if (!_npc.IsTalking)
+                    _npc.StartConversation();
+                else
+                    // Look at other npc
+                    _npc.GO.transform.LookAt(_otherNPC.GO.transform.position);
+            }
 
-        return Node.Status.Running;
+            // Success when conversation ends (when current interaction target is null)
+            // Depeds on the other, the initiator, to end the conversation
+            if (_npc.CurrentInteractionTarget == null)
+                return Node.Status.Success;
+
+            return Node.Status.Running;
+        }
+        else
+        {
+            // Other NPC is no longer available: end conversation
+            _npc.EndConversation();
+            return Node.Status.Failure;
+        }
     }
 }

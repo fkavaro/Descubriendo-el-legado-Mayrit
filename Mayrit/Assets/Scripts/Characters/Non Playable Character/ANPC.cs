@@ -114,11 +114,14 @@ where T : ABehaviourSystem
         catch { }
     }
 
+    public virtual bool IsAvailableForConversation()
+    {
+        return _isInStreet && CharacterModel.activeInHierarchy;
+    }
+
     public virtual bool CanAcceptConversation(INPC initiator)
     {
-        if (_isInStreet && !_isTalking &&
-            gameObject.activeInHierarchy && CharacterModel.activeInHierarchy &&
-            _lastInteractionTarget != initiator)
+        if (IsAvailableForConversation() && !_isTalking && _lastInteractionTarget != initiator)
         {
             _currentInteractionTarget = initiator;
             _isBeingTalkedTo = true;

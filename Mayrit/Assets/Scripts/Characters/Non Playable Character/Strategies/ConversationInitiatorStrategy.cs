@@ -16,27 +16,47 @@ public class ConversationInitiatorStrategy : ATimedStrategy
             return Node.Status.Failure;
 
         _middlePoint = _npc.MovementController.GoToMiddlePoint(_otherNPC);
-        return Node.Status.Success;
+
+        if (_middlePoint == null)
+        {
+            Debug.LogWarning("Failed to calculate middle point for conversation between " + _npc.Name + " and " + _otherNPC.Name);
+            return Node.Status.Failure;
+        }
+        else
+            return Node.Status.Success;
     }
 
     public override Node.Status Update()
     {
-        // Check arrival to middle point
-        if (!_npc.IsReadyToTalk
-        && _npc.MovementController.HasArrivedAt(_middlePoint))
-            _npc.IsReadyToTalk = true;
-
-        // Both arrived
-        if (_npc.IsReadyToTalk && _otherNPC.IsReadyToTalk)
+        if (_otherNPC.IsAvailableForConversation())
         {
-            if (!_npc.IsTalking)
-                _npc.StartConversation();
-            else
-                // Advance timed logic
-                return base.Update();
-        }
+            // Check arrival to middle point
+            if (!_npc.IsReadyToTalk && _npc.MovementController.HasArrivedAt(_middlePoint))
+                _npc.IsReadyToTalk = true;
 
-        return Node.Status.Running;
+            // Both arrived
+            if (_npc.IsReadyToTalk && _otherNPC.IsReadyToTalk)
+            {
+                if (!_npc.IsTalking)
+                    _npc.StartConversation();
+                else
+                {
+                    // Look at other npc
+                    _npc.GO.transform.LookAt(_otherNPC.GO.transform.position);
+                    // Advance timed logic
+                    return base.Update();
+                }
+            }
+
+            return Node.Status.Running;
+        }
+        else
+        {
+            // Other NPC is no longer available: end conversation
+            _npc.EndConversation();
+            Debug.Log("Conversation aborted between " + _npc.Name + " and " + _otherNPC.Name);
+            return Node.Status.Failure;
+        }
     }
 
     public override void OnTimerComplete()

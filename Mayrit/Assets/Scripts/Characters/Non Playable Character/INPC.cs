@@ -28,6 +28,12 @@ public interface INPC : ICharacter
     public void SetFullName(string given, string family);
 
     /// <summary>
+    /// Returns true if is in the street and its model is active.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsAvailableForConversation();
+
+    /// <summary>
     /// Returns true if the character is available to start an interaction.
     /// </summary>
     public bool CanAcceptConversation(INPC initiator);
