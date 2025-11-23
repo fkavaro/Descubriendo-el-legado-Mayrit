@@ -14,7 +14,7 @@ public abstract class AInformationSO : ScriptableObject
     [SerializeField] private Sprite _image;
     [SerializeField] private string _imageCaption;
 
-    // Public properties for read-only acces
+    // PROPERTY HELPERS
     public string Header => _header;
     public string SubHeader => _subHeader;
     public string Description => _description;
