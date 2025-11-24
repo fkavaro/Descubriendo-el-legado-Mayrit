@@ -61,7 +61,7 @@ public class TimeManager : Singleton<TimeManager>
         base.Awake();
 
         // Subscribe to ProgressManager event to set the wanted time when the game starts
-        ProgressManager.Instance.OnTimeSet += (time) => { _wantedTime = time; };
+        ProgressManager.Instance.OnTimeSetEvent += (time) => { _wantedTime = time; };
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

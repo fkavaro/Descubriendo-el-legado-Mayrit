@@ -17,14 +17,17 @@ public class FiniteStateMachine : AStateMachine<FiniteStateMachine>
     /// <summary>
     /// Switchs to another state after exiting the current.
     /// </summary>
-    public override void SwitchState(AState<FiniteStateMachine> state)
+    public override void SwitchState(AState<FiniteStateMachine> newState)
     {
-        if (state == _currentState) return;
+        if (newState == _currentState) return;
 
         _currentState?.OnExitState();
-        _currentState = state;
+        _currentState = newState;
         DebugDecision();
         _currentState?.StartState();
+
+        // Invoke switch event
+        base.SwitchState(newState);
     }
     #endregion
 }

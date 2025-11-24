@@ -32,35 +32,6 @@ public class ProgressObject : MonoBehaviour
     }
     #endregion
 
-    #region EVENTS
-    void OnMilestoneChanged(ProgressManager.Milestone entry)
-    {
-        if (this == null) return;
-
-        SetChildrenActive(milestonesActivated.Contains(entry));
-    }
-
-    private void OnEditorUpdateChanged(bool updateInEditor)
-    {
-#if UNITY_EDITOR
-        if (Application.isPlaying)
-            return;
-
-        if (this == null) return;
-        if (!updateInEditor)
-            SetChildrenActive(true);
-        else
-        {
-            var pm = FindAnyObjectByType<ProgressManager>();
-            if (pm == null) return;
-            var milestone = pm._currentMilestone;
-            SetChildrenActive(milestonesActivated.Contains(milestone));
-        }
-
-#endif
-    }
-    #endregion
-
     #region PRIVATE METHODS
     void SetChildrenActive(bool isActive)
     {
@@ -80,8 +51,8 @@ public class ProgressObject : MonoBehaviour
 
         if (progressManager != null)
         {
-            progressManager.OnMilestoneChanged += OnMilestoneChanged;
-            progressManager.OnEditorUpdateChanged += OnEditorUpdateChanged;
+            progressManager.OnMilestoneChangedEvent += OnMilestoneChanged;
+            progressManager.OnEditorUpdateChangedEvent += OnEditorUpdateChanged;
         }
     }
 
@@ -91,9 +62,38 @@ public class ProgressObject : MonoBehaviour
 
         if (progressManager != null)
         {
-            progressManager.OnMilestoneChanged -= OnMilestoneChanged;
-            progressManager.OnEditorUpdateChanged -= OnEditorUpdateChanged;
+            progressManager.OnMilestoneChangedEvent -= OnMilestoneChanged;
+            progressManager.OnEditorUpdateChangedEvent -= OnEditorUpdateChanged;
         }
+    }
+    #endregion
+
+    #region EVENTS METHODS
+    void OnMilestoneChanged(ProgressManager.Milestone entry)
+    {
+        if (this == null) return;
+
+        SetChildrenActive(milestonesActivated.Contains(entry));
+    }
+
+    void OnEditorUpdateChanged(bool updateInEditor)
+    {
+#if UNITY_EDITOR
+        if (Application.isPlaying)
+            return;
+
+        if (this == null) return;
+        if (!updateInEditor)
+            SetChildrenActive(true);
+        else
+        {
+            var pm = FindAnyObjectByType<ProgressManager>();
+            if (pm == null) return;
+            var milestone = pm.CurrentMilestone;
+            SetChildrenActive(milestonesActivated.Contains(milestone));
+        }
+
+#endif
     }
     #endregion
 }

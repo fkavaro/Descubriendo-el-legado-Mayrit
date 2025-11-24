@@ -3,8 +3,8 @@ using UnityEngine;
 
 public abstract class AProgressState : AState<FiniteStateMachine>
 {
-    public readonly Milestone_InformationSO _informationSO;
     public readonly ProgressManager.Milestone _milestone;
+    public readonly Milestone_InformationSO _informationSO;
 
     public AProgressState(string name,
         ProgressManager.Milestone milestone,
@@ -14,12 +14,5 @@ public abstract class AProgressState : AState<FiniteStateMachine>
     {
         _milestone = milestone;
         _informationSO = milestoneInfoSo;
-    }
-
-    public override void StartState()
-    {
-        ProgressManager.Instance._currentMilestone = _milestone;
-        ProgressManager.Instance.InvokeOnMilestoneChanged();
-        ProgressManager.Instance.InvokeOnTimeSet(_informationSO.WantedTime);
     }
 }

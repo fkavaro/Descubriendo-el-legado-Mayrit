@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.Events;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(LineRenderer))]
@@ -35,10 +34,10 @@ public class TourManager : Singleton<TourManager>
     PathVisualizer _pathVisualizer;
 
     int _currentTourIndex = -1;
-    [HideInInspector] public UnityEvent OnTourStartedEvent;
-    [HideInInspector] public UnityEvent OnAllToursCompletedEvent;
-    [HideInInspector] public UnityEvent OnTourChangedEvent;
-    [HideInInspector] public UnityEvent<PointOfInterest> OnNextPOIChangedEvent;
+    public event Action OnTourStartedEvent;
+    public event Action OnAllToursCompletedEvent;
+    public event Action OnTourChangedEvent;
+    public event Action<PointOfInterest> OnNextPOIChangedEvent;
     #endregion
 
     #region MONOBEHAVIOUR
@@ -72,8 +71,8 @@ public class TourManager : Singleton<TourManager>
         // Handle last tour
         if (CurrentTour != null)
         {
-            CurrentTour.OnTourCompletedEvent.RemoveListener(OnTourCompleted);
-            CurrentTour.OnNextPOIChangedEvent.RemoveListener(OnNextPOIChanged);
+            CurrentTour.OnTourCompletedEvent -= OnTourCompleted;
+            CurrentTour.OnNextPOIChangedEvent -= OnNextPOIChanged;
             CurrentTour.Deactivate();
         }
 
@@ -90,8 +89,8 @@ public class TourManager : Singleton<TourManager>
         // Handle new tour
         if (CurrentTour != null)
         {
-            CurrentTour.OnTourCompletedEvent.AddListener(OnTourCompleted);
-            CurrentTour.OnNextPOIChangedEvent.AddListener(OnNextPOIChanged);
+            CurrentTour.OnTourCompletedEvent += OnTourCompleted;
+            CurrentTour.OnNextPOIChangedEvent += OnNextPOIChanged;
             CurrentTour.Activate();
             CurrentTour.StartTour();
             OnTourStartedEvent?.Invoke();

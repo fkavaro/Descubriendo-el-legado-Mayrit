@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 
@@ -15,14 +14,13 @@ public class GameManager : ASingletonBehaviourEntity<GameManager, FiniteStateMac
     #endregion
 
     #region INTERNAL PROPERTIES
+    public event Action<PlayableCharacter> OnPlayableCharacterChanged;
+
     FiniteStateMachine _fsm;
     public MainMenu_GameState _mainMenuState;
     public GamePlay_GameState _gamePlayState;
     public Pause_GameState _pauseState;
-
     public GameInputActions _inputActions;
-
-    [HideInInspector] public UnityEvent<PlayableCharacter> OnPlayableCharacterChanged;
     #endregion
 
     #region INHERITED
@@ -54,7 +52,7 @@ public class GameManager : ASingletonBehaviourEntity<GameManager, FiniteStateMac
         _inputActions = new();
 
         // Subscribe to milestone change event
-        ProgressManager.Instance.OnMilestoneChanged += UpdatePlayableCharacter;
+        ProgressManager.Instance.OnMilestoneChangedEvent += UpdatePlayableCharacter;
 
         // Find the playable character
         _playableCharacter = FindFirstObjectByType<PlayableCharacter>();

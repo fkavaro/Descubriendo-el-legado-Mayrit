@@ -18,11 +18,20 @@ public class ProgressManager : ASingletonBehaviourEntity<ProgressManager, Finite
         _8_Conquest,
     }
 
+    #region PROPERTY HELPERS
+    public Milestone CurrentMilestone
+    {
+        get => _currentMilestone;
+        set => _currentMilestone = value;
+    }
+    #endregion
+
     #region EDITOR PROPERTIES
     [Header("Milestones")]
-    public bool _updateInInspector = true;
-    public Milestone _currentMilestone;
-    [Space]
+    [SerializeField] bool _updateInInspector = true;
+    [SerializeField] Milestone _currentMilestone;
+
+    [Space] // TODO: make list?
     public Milestone_InformationSO _visionInformation;
     public Milestone_InformationSO _foundationInformation;
     public Milestone_InformationSO _albacarInformation;
@@ -34,12 +43,12 @@ public class ProgressManager : ASingletonBehaviourEntity<ProgressManager, Finite
     #endregion
 
     #region INTERNAL PROPERTIES
+    public event Action<Milestone> OnMilestoneChangedEvent;
+    public event Action<bool> OnEditorUpdateChangedEvent;
+    public event Action<float> OnTimeSetEvent;
+
     Milestone _lastValidatedMilestone;
     bool _lastUpdateInInspector;
-
-    public event Action<Milestone> OnMilestoneChanged;
-    public event Action<bool> OnEditorUpdateChanged;
-    public event Action<float> OnTimeSet;
 
     FiniteStateMachine _fsm;
     public Vision_AProgressState _visionState;
@@ -57,15 +66,18 @@ public class ProgressManager : ASingletonBehaviourEntity<ProgressManager, Finite
     {
         _fsm = new(this);
 
+        // Susbcribe to state switch event to update current milestone
+        _fsm.OnStateSwitchEvent += OnStateSwitch;
+
         // States initialization
-        _visionState = new(Milestone._1_Vision, _visionInformation, _fsm);
-        _foundationState = new(Milestone._2_Foundation, _foundationInformation, _fsm);
-        _albacarState = new(Milestone._3_Albacar, _albacarInformation, _fsm);
-        _almudaynaState = new(Milestone._4_Almudayna, _almudaynaInformation, _fsm);
-        _ramiroIIState = new(Milestone._5_RamiroII, _ramiroAttackInformation, _fsm);
-        _almanzorState = new(Milestone._6_Almanzor, _almanzorInformation, _fsm);
-        _schoolState = new(Milestone._7_School, _schoolInformation, _fsm);
-        _conquestState = new(Milestone._8_Conquest, _conquestInformation, _fsm);
+        Vision_AProgressState _visionState = new(Milestone._1_Vision, _visionInformation, _fsm);
+        Foundation_AProgressState _foundationState = new(Milestone._2_Foundation, _foundationInformation, _fsm);
+        Albacar_AProgressState _albacarState = new(Milestone._3_Albacar, _albacarInformation, _fsm);
+        Almudayna_AProgressState _almudaynaState = new(Milestone._4_Almudayna, _almudaynaInformation, _fsm);
+        RamiroIIAttack_AProgressState _ramiroIIState = new(Milestone._5_RamiroII, _ramiroAttackInformation, _fsm);
+        AlmanzorMeeting_AProgressState _almanzorState = new(Milestone._6_Almanzor, _almanzorInformation, _fsm);
+        MaslamaSchool_AProgressState _schoolState = new(Milestone._7_School, _schoolInformation, _fsm);
+        Conquest_AProgressState _conquestState = new(Milestone._8_Conquest, _conquestInformation, _fsm);
 
         _fsm.SetInitialState(_visionState);
 
@@ -91,7 +103,7 @@ public class ProgressManager : ASingletonBehaviourEntity<ProgressManager, Finite
                 Milestone milestone = _currentMilestone;
 
                 // To avoid issues with re-entrancy
-                UnityEditor.EditorApplication.delayCall += () => OnMilestoneChanged?.Invoke(milestone);
+                UnityEditor.EditorApplication.delayCall += () => OnMilestoneChangedEvent?.Invoke(milestone);
             }
         }
 
@@ -101,7 +113,7 @@ public class ProgressManager : ASingletonBehaviourEntity<ProgressManager, Finite
             _lastUpdateInInspector = _updateInInspector;
             bool update = _updateInInspector;
 
-            UnityEditor.EditorApplication.delayCall += () => OnEditorUpdateChanged?.Invoke(update);
+            UnityEditor.EditorApplication.delayCall += () => OnEditorUpdateChangedEvent?.Invoke(update);
         }
 #endif
     }
@@ -127,51 +139,32 @@ public class ProgressManager : ASingletonBehaviourEntity<ProgressManager, Finite
         return _currentMilestone.Equals(Milestone._1_Vision);
     }
 
-    public void InvokeOnMilestoneChanged()
-    {
-        OnMilestoneChanged?.Invoke(_currentMilestone);
-    }
-
-    public void InvokeOnTimeSet(float time)
-    {
-        OnTimeSet?.Invoke(time);
-    }
-
     public Milestone_InformationSO GetCurrentMilestoneInfo()
     {
-        Milestone_InformationSO info;
-
-        switch (_currentMilestone)
+        Milestone_InformationSO info = _currentMilestone switch
         {
-            case Milestone._1_Vision:
-                info = _visionInformation;
-                break;
-            case Milestone._2_Foundation:
-                info = _foundationInformation;
-                break;
-            case Milestone._3_Albacar:
-                info = _albacarInformation;
-                break;
-            case Milestone._4_Almudayna:
-                info = _almudaynaInformation;
-                break;
-            case Milestone._5_RamiroII:
-                info = _ramiroAttackInformation;
-                break;
-            case Milestone._6_Almanzor:
-                info = _almanzorInformation;
-                break;
-            case Milestone._7_School:
-                info = _schoolInformation;
-                break;
-            case Milestone._8_Conquest:
-                info = _conquestInformation;
-                break;
-            default:
-                info = null;
-                break;
-        }
+            Milestone._1_Vision => _visionInformation,
+            Milestone._2_Foundation => _foundationInformation,
+            Milestone._3_Albacar => _albacarInformation,
+            Milestone._4_Almudayna => _almudaynaInformation,
+            Milestone._5_RamiroII => _ramiroAttackInformation,
+            Milestone._6_Almanzor => _almanzorInformation,
+            Milestone._7_School => _schoolInformation,
+            Milestone._8_Conquest => _conquestInformation,
+            _ => null,
+        };
         return info;
+    }
+    #endregion
+
+    #region EVENT METHODS
+    void OnStateSwitch()
+    {
+        AProgressState currentState = _fsm.CurrentState as AProgressState;
+
+        _currentMilestone = currentState._milestone;
+        OnMilestoneChangedEvent?.Invoke(_currentMilestone);
+        OnTimeSetEvent?.Invoke(currentState._informationSO.WantedTime);
     }
     #endregion
 }

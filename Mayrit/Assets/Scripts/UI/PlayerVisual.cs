@@ -26,7 +26,7 @@ public class PlayerVisual : Billboard
         _playerButton.visible = false;
 
         // Subscribe to milestone change event
-        ProgressManager.Instance.OnMilestoneChanged += UpdatePlayerButtonVisual;
+        ProgressManager.Instance.OnMilestoneChangedEvent += UpdatePlayerButtonVisual;
 
         // Register click event
         _playerButton.RegisterCallback<ClickEvent>(OnPlayerButtonClick);

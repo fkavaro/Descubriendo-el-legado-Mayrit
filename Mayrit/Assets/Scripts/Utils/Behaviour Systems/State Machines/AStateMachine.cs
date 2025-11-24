@@ -12,6 +12,8 @@ where TStateMachineType : AStateMachine<TStateMachineType>
     public AState<TStateMachineType> CurrentState => _currentState;
     protected AState<TStateMachineType> _currentState, _initialState;
     protected List<AState<TStateMachineType>> _statesSequence = new();
+
+    public event Action OnStateSwitchEvent;
     #endregion
 
     #region CONSTRUCTOR
@@ -20,7 +22,10 @@ where TStateMachineType : AStateMachine<TStateMachineType>
     #endregion
 
     #region TO BE IMPLEMENTED METHODS
-    public abstract void SwitchState(AState<TStateMachineType> state);
+    public virtual void SwitchState(AState<TStateMachineType> state)
+    {
+        OnStateSwitchEvent?.Invoke();
+    }
     #endregion
 
     #region INHERITED METHODS

@@ -31,8 +31,8 @@ public class PathVisualizer
     #region PUBLIC METHODS
     public void Initialize()
     {
-        TourManager.Instance.OnNextPOIChangedEvent.AddListener(OnNextPOIChanged);
-        GameManager.Instance.OnPlayableCharacterChanged.AddListener(OnPlayableCharacterChanged);
+        TourManager.Instance.OnNextPOIChangedEvent += OnNextPOIChanged;
+        GameManager.Instance.OnPlayableCharacterChanged += OnPlayableCharacterChanged;
 
         ConfigureLineRenderer();
     }

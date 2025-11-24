@@ -29,6 +29,9 @@ public class StackFiniteStateMachine : AStateMachine<StackFiniteStateMachine>
         _currentState = newState;
         DebugDecision();
         _currentState?.StartState();
+
+        // Invoke switch event
+        base.SwitchState(newState);
     }
 
     public override void ForceState(AState<StackFiniteStateMachine> newState)

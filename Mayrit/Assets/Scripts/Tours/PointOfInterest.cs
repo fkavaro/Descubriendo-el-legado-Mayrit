@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 [RequireComponent(typeof(SphereCollider))]
 public class PointOfInterest : MonoBehaviour
@@ -13,7 +12,7 @@ public class PointOfInterest : MonoBehaviour
     #endregion
 
     #region INTERNAL PROPERTIES
-    [HideInInspector] public UnityEvent OnVisitedPOIEvent;
+    public event Action OnVisitedPOIEvent;
 
     bool _isVisited;
     readonly float _visitRadius = 2f;
@@ -38,9 +37,7 @@ public class PointOfInterest : MonoBehaviour
         {
             int playableLayer = LayerMask.NameToLayer("PlayableCharacter");
             if (playableLayer != -1)
-            {
                 detectionMask = 1 << playableLayer;
-            }
         }
     }
 

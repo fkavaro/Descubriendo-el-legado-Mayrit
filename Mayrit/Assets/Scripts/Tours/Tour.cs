@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class Tour : MonoBehaviour
 {
@@ -18,8 +17,8 @@ public class Tour : MonoBehaviour
     #endregion
 
     #region INTERNAL PROPERTIES
-    [HideInInspector] public UnityEvent OnTourCompletedEvent;
-    [HideInInspector] public UnityEvent<PointOfInterest> OnNextPOIChangedEvent;
+    public event Action OnTourCompletedEvent;
+    public event Action<PointOfInterest> OnNextPOIChangedEvent;
 
     int _currentPOIindex = -1;
     #endregion
@@ -71,7 +70,7 @@ public class Tour : MonoBehaviour
         // Handle last POI
         if (CurrentPOI != null)
         {
-            CurrentPOI.OnVisitedPOIEvent.RemoveListener(OnPOIVisited);
+            CurrentPOI.OnVisitedPOIEvent -= OnPOIVisited;
             CurrentPOI.Deactivate();
         }
 
@@ -88,7 +87,7 @@ public class Tour : MonoBehaviour
         // Handle new POI
         if (CurrentPOI != null)
         {
-            CurrentPOI.OnVisitedPOIEvent.RemoveListener(OnPOIVisited);
+            CurrentPOI.OnVisitedPOIEvent -= OnPOIVisited;
             CurrentPOI.Activate();
         }
 

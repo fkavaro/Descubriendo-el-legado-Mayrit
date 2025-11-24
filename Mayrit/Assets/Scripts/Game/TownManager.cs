@@ -27,14 +27,14 @@ public class TownManager : Singleton<TownManager>
     void Start()
     {
         // Subscribe to milestone changes to update population accordingly
-        ProgressManager.Instance.OnMilestoneChanged += OnMilestoneChanged;
+        ProgressManager.Instance.OnMilestoneChangedEvent += OnMilestoneChanged;
     }
     void OnDestroy()
     {
         // Unsubscribe from milestone changes
         var pm = ProgressManager.ExistingInstance;
         if (pm != null)
-            pm.OnMilestoneChanged -= OnMilestoneChanged;
+            pm.OnMilestoneChangedEvent -= OnMilestoneChanged;
     }
     #endregion
 
