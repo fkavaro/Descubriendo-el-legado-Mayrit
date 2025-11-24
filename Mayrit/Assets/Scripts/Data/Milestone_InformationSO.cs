@@ -8,7 +8,11 @@ using UnityEngine;
 public class Milestone_InformationSO : AInformationSO
 {
     [Header("Environment Settings")]
-    [SerializeField] private float _wantedTime;
+    [SerializeField] float _wantedTime;
+
+    [Header("Milestone index")]
+    [SerializeField] int _milestoneIndex;
 
     public float WantedTime => _wantedTime;
+    public int MilestoneIndex => _milestoneIndex;
 }

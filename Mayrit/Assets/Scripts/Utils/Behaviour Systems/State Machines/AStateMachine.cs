@@ -70,6 +70,30 @@ where StateType : AState
         _currentState.StartState();
     }
 
+    /// <summary>
+    /// Coroutine to wait for a random amount of time before switching to the next state.
+    /// </summary>
+    public IEnumerator SwitchStateAfterRandomTime(StateType nextState, int min = 5, int max = 21)
+    {
+        int waitTime = UnityEngine.Random.Range(min, max);
+        return SwitchStateAfterCertainTime(nextState, waitTime);
+    }
+
+    /// <summary>
+    /// Coroutine to wait for a specified amount of time before switching to the next state.
+    /// </summary>
+    public virtual IEnumerator SwitchStateAfterCertainTime(StateType nextState, float waitTime)
+    {
+        _behaviourEntity.IsExecutionPaused = true;
+
+        yield return new WaitForSeconds(waitTime);
+
+        SwitchState(nextState);
+        _behaviourEntity.IsExecutionPaused = false;
+    }
+    #endregion
+
+    #region STATE SEQUENCE METHODS
     public void AddStateToSequence(StateType state)
     {
         if (_statesSequence.Contains(state)) return;
@@ -113,26 +137,14 @@ where StateType : AState
         return true;
     }
 
-    /// <summary>
-    /// Coroutine to wait for a random amount of time before switching to the next state.
-    /// </summary>
-    public IEnumerator SwitchStateAfterRandomTime(StateType nextState, int min = 5, int max = 21)
+    public bool AtFistStateInSequence()
     {
-        int waitTime = UnityEngine.Random.Range(min, max);
-        return SwitchStateAfterCertainTime(nextState, waitTime);
+        return _currentState == _statesSequence[0];
     }
 
-    /// <summary>
-    /// Coroutine to wait for a specified amount of time before switching to the next state.
-    /// </summary>
-    public virtual IEnumerator SwitchStateAfterCertainTime(StateType nextState, float waitTime)
+    public bool AtLastStateInSequence()
     {
-        _behaviourEntity.IsExecutionPaused = true;
-
-        yield return new WaitForSeconds(waitTime);
-
-        SwitchState(nextState);
-        _behaviourEntity.IsExecutionPaused = false;
+        return _currentState == _statesSequence[^1];
     }
     #endregion
 

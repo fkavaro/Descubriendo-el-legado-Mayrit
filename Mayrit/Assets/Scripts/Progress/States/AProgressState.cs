@@ -3,15 +3,12 @@ using UnityEngine;
 
 public abstract class AProgressState : AState
 {
-    public readonly ProgressManager.Milestone _milestone;
-    public readonly Milestone_InformationSO _informationSO;
+    public readonly Milestone_InformationSO _milestoneInformation;
 
     public AProgressState(string name,
-        ProgressManager.Milestone milestone,
-        Milestone_InformationSO milestoneInfoSo)
+        Milestone_InformationSO milestoneInformation)
     : base(name)
     {
-        _milestone = milestone;
-        _informationSO = milestoneInfoSo;
+        _milestoneInformation = milestoneInformation;
     }
 }

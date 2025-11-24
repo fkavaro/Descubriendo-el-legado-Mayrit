@@ -10,7 +10,7 @@ using UnityEngine;
 /// </summary>
 public class ProgressObject : MonoBehaviour
 {
-    public List<ProgressManager.Milestone> milestonesActivated;
+    public List<int> milestonesActivated;
 
     #region MONOBEHAVIOUR
     void OnEnable()
@@ -69,11 +69,11 @@ public class ProgressObject : MonoBehaviour
     #endregion
 
     #region EVENTS METHODS
-    void OnMilestoneChanged(ProgressManager.Milestone entry)
+    void OnMilestoneChanged(int milestoneIndex)
     {
         if (this == null) return;
 
-        SetChildrenActive(milestonesActivated.Contains(entry));
+        SetChildrenActive(milestonesActivated.Contains(milestoneIndex));
     }
 
     void OnEditorUpdateChanged(bool updateInEditor)
@@ -87,9 +87,9 @@ public class ProgressObject : MonoBehaviour
             SetChildrenActive(true);
         else
         {
-            var pm = FindAnyObjectByType<ProgressManager>();
-            if (pm == null) return;
-            var milestone = pm.CurrentMilestone;
+            var progressManager = FindAnyObjectByType<ProgressManager>();
+            if (progressManager == null) return;
+            var milestone = progressManager.CurrentMilestoneIndex;
             SetChildrenActive(milestonesActivated.Contains(milestone));
         }
 
