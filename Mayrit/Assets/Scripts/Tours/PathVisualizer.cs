@@ -1,83 +1,55 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(LineRenderer))]
-public class PathVisualizer : MonoBehaviour
+public class PathVisualizer
 {
-    #region EDITOR PROPERTIES
-    [Tooltip("TourManager to read player and current POI from. If left empty, will try to find one on the same GameObject.")]
-    public TourManager _tourManager;
+    #region PROPERTIES
+    readonly LineRenderer _lineRenderer;
+    readonly bool _useNavMesh;
+    readonly float _lineWidth;
+    readonly int _maxCorners;
+    readonly Gradient _colorGradient;
 
-    [Tooltip("LineRenderer to use. If empty, a LineRenderer will be added to this GameObject automatically.")]
-    public LineRenderer _lineRenderer;
-
-    [Tooltip("Use NavMesh.CalculatePath when available; otherwise fall back to a straight-line path.")]
-    public bool _useNavMesh = true;
-
-    [Tooltip("Seconds between path updates")]
-    public float _updateInterval = 0.25f;
-
-    [Tooltip("Width of the line")]
-    public float _lineWidth = 0.12f;
-
-    [Tooltip("Maximum number of corners to display (safety cap)")]
-    public int _maxCorners = 512;
-
-    [Tooltip("If true the LineRenderer will be enabled only when there is a target")]
-    public bool _hideWhenNoTarget = true;
-
-    public Gradient _colorGradient;
+    PlayableCharacter _playableCharacter;
+    PointOfInterest _nextPOI;
+    Vector3 _playerPos, _nextPOIPos;
     #endregion
 
-    #region MONOBEHAVIOUR
-    void Awake()
+    #region CONSTRUCTOR
+    public PathVisualizer(LineRenderer lineRenderer, Gradient colorGradient, float lineWidth, bool useNavMesh, int maxCorners)
     {
-        _tourManager = TourManager.Instance;
-        TryGetComponent(out _lineRenderer);
+        _lineRenderer = lineRenderer;
+        _colorGradient = colorGradient;
+        _lineWidth = lineWidth;
+        _useNavMesh = useNavMesh;
+        _maxCorners = maxCorners;
+    }
+    #endregion
+
+    #region PUBLIC METHODS
+    public void Initialize()
+    {
+        TourManager.Instance.OnNextPOIChangedEvent.AddListener(OnNextPOIChanged);
+        GameManager.Instance.OnPlayableCharacterChanged.AddListener(OnPlayableCharacterChanged);
+
         ConfigureLineRenderer();
     }
 
-    void Update()
+    public void UpdatePath()
     {
-
-        if (_tourManager == null || _tourManager._player == null)
+        // If no target or player, clear the line
+        if (_nextPOI == null || _playableCharacter == null)
         {
             Clear();
             return;
         }
 
-        var poi = _tourManager.CurrentTour.CurrentPOI;
-        if (poi == null)
-        {
-            if (_hideWhenNoTarget) Clear();
-            return;
-        }
+        _playerPos = _playableCharacter.transform.position;
+        _nextPOIPos = _nextPOI.transform.position;
 
-        DrawPath(_tourManager._player.position, poi.transform.position);
-    }
-
-    void OnEnable()
-    {
-        if (_tourManager != null)
-            _tourManager.CurrentTour.OnPOIChanged.AddListener(OnPOIChanged);
-    }
-
-    void OnDisable()
-    {
-        if (_tourManager != null)
-            _tourManager.CurrentTour.OnPOIChanged.RemoveListener(OnPOIChanged);
-
-        Clear();
-    }
-    #endregion
-
-    #region PUBLIC METHODS
-    public void Clear()
-    {
-        if (_lineRenderer == null) return;
-        _lineRenderer.positionCount = 0;
-        _lineRenderer.enabled = false;
+        DrawPath(_playerPos, _nextPOIPos);
     }
     #endregion
 
@@ -85,27 +57,19 @@ public class PathVisualizer : MonoBehaviour
     void ConfigureLineRenderer()
     {
         if (_lineRenderer == null) return;
+
         _lineRenderer.useWorldSpace = true;
         _lineRenderer.widthMultiplier = _lineWidth;
-        if (_colorGradient == null)
-        {
-            _colorGradient = new Gradient();
-            _colorGradient.SetKeys(
-                new GradientColorKey[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
-                new GradientAlphaKey[] { new GradientAlphaKey(0.9f, 0f), new GradientAlphaKey(0.9f, 1f) }
-            );
-        }
         _lineRenderer.colorGradient = _colorGradient;
-        if (_lineRenderer.material == null) _lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
     }
 
     void DrawPath(Vector3 start, Vector3 end)
     {
-        List<Vector3> corners = new List<Vector3>();
+        List<Vector3> corners = new();
 
         if (_useNavMesh)
         {
-            var path = new NavMeshPath();
+            NavMeshPath path = new();
             if (NavMesh.CalculatePath(start, end, NavMesh.AllAreas, path) && path.corners != null && path.corners.Length > 0)
             {
                 corners.AddRange(path.corners);
@@ -131,12 +95,24 @@ public class PathVisualizer : MonoBehaviour
 
         _lineRenderer.enabled = true;
     }
+
+    void Clear()
+    {
+        if (_lineRenderer == null) return;
+        _lineRenderer.positionCount = 0;
+        _lineRenderer.enabled = false;
+    }
     #endregion
 
     #region EVENT METHODS
-    void OnPOIChanged()
+    void OnNextPOIChanged(PointOfInterest poi)
     {
+        _nextPOI = poi;
+    }
 
+    void OnPlayableCharacterChanged(PlayableCharacter player)
+    {
+        _playableCharacter = player;
     }
     #endregion
 }

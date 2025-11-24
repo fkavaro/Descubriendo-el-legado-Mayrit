@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 
@@ -10,7 +11,7 @@ public class GameManager : ASingletonBehaviourEntity<GameManager, FiniteStateMac
 {
     #region EDITOR PROPERTIES
     [Header("Player")]
-    public PlayableCharacter _currentPlayableCharacter;
+    public PlayableCharacter _playableCharacter; // TODO: make private
     #endregion
 
     #region INTERNAL PROPERTIES
@@ -20,6 +21,8 @@ public class GameManager : ASingletonBehaviourEntity<GameManager, FiniteStateMac
     public Pause_GameState _pauseState;
 
     public GameInputActions _inputActions;
+
+    [HideInInspector] public UnityEvent<PlayableCharacter> OnPlayableCharacterChanged;
     #endregion
 
     #region INHERITED
@@ -54,7 +57,7 @@ public class GameManager : ASingletonBehaviourEntity<GameManager, FiniteStateMac
         ProgressManager.Instance.OnMilestoneChanged += UpdatePlayableCharacter;
 
         // Find the playable character
-        _currentPlayableCharacter = FindFirstObjectByType<PlayableCharacter>();
+        _playableCharacter = FindFirstObjectByType<PlayableCharacter>();
     }
 
     private void OnDestroy()
@@ -67,7 +70,8 @@ public class GameManager : ASingletonBehaviourEntity<GameManager, FiniteStateMac
     void UpdatePlayableCharacter(ProgressManager.Milestone milestone)
     {
         // Find the playable character
-        _currentPlayableCharacter = FindFirstObjectByType<PlayableCharacter>();
+        _playableCharacter = FindFirstObjectByType<PlayableCharacter>();
+        OnPlayableCharacterChanged?.Invoke(_playableCharacter);
     }
     #endregion
 }

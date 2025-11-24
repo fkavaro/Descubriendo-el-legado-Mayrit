@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7674455726905756848}
   - component: {fileID: 2205850838238336329}
-  - component: {fileID: 7875204318314525517}
   - component: {fileID: 8812951187567992187}
   m_Layer: 0
   m_Name: "\U0001F6B8TourManager"
@@ -144,7 +143,7 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &7875204318314525517
+--- !u!114 &8812951187567992187
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -153,17 +152,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 5288560190054026351}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d088e4afc66d84448b90dd7532892a65, type: 3}
+  m_Script: {fileID: 11500000, guid: 5b7ace6a186710947b76b99699c13100, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PathVisualizer
-  manager: {fileID: 8812951187567992187}
-  lineRenderer: {fileID: 2205850838238336329}
-  useNavMesh: 1
-  updateInterval: 0.25
-  lineWidth: 0.12
-  maxCorners: 512
-  hideWhenNoTarget: 1
-  colorGradient:
+  m_EditorClassIdentifier: Assembly-CSharp::TourManager
+  _dontDestroyOnLoad: 0
+  _tours: []
+  _useNavMesh: 1
+  _lineWidth: 0.1
+  _maxCorners: 512
+  _colorGradient:
     serializedVersion: 2
     key0: {r: 1, g: 1, b: 1, a: 1}
     key1: {r: 1, g: 1, b: 1, a: 1}
@@ -193,33 +190,15 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
---- !u!114 &8812951187567992187
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5288560190054026351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b7ace6a186710947b76b99699c13100, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TourManager
-  _player: {fileID: 0}
-  useLayerDetection: 0
-  visitingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  visitingTriggerInteraction: 1
-  visitingOverlapBufferSize: 8
-  _startingTour: {fileID: 0}
-  _checkInterval: 0.25
-  _onTourStarted:
+  OnTourStartedEvent:
     m_PersistentCalls:
       m_Calls: []
-  _onTourCompleted:
+  OnAllToursCompletedEvent:
     m_PersistentCalls:
       m_Calls: []
-  _onPOIChanged:
+  OnTourChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnNextPOIChangedEvent:
     m_PersistentCalls:
       m_Calls: []

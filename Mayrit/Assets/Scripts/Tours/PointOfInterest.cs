@@ -6,21 +6,17 @@ using UnityEngine.Events;
 public class PointOfInterest : MonoBehaviour
 {
     #region EDITOR PROPERTIES
-    [Tooltip("Invoke when this POI is visited")]
-    public UnityEvent OnVisited;
-
     [Tooltip("Information associated with this POI")]
     public AInformationSO _information;
-
-    [Tooltip("Radius around the POI where it counts as visited")]
-    public float _visitRadius = 2f;
-
     [Tooltip("Layer mask used for trigger checks (defaults to PlayableCharacter layer if present)")]
     public LayerMask detectionMask = ~0;
     #endregion
 
     #region INTERNAL PROPERTIES
+    [HideInInspector] public UnityEvent OnVisitedPOIEvent;
+
     bool _isVisited;
+    readonly float _visitRadius = 2f;
     SphereCollider _sphereCollider;
     #endregion
 
@@ -30,7 +26,6 @@ public class PointOfInterest : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        if (_visitRadius < 0.5f) _visitRadius = 0.5f;
         if (TryGetComponent(out _sphereCollider))
         {
             _sphereCollider.radius = _visitRadius;
@@ -93,7 +88,7 @@ public class PointOfInterest : MonoBehaviour
         if (_isVisited) return;
 
         _isVisited = true;
-        OnVisited?.Invoke();
+        OnVisitedPOIEvent?.Invoke();
     }
     #endregion
 

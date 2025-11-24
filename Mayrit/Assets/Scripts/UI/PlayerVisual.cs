@@ -35,7 +35,7 @@ public class PlayerVisual : Billboard
     void Start()
     {
         // Update current playable character
-        _playableCharacter = GameManager.Instance._currentPlayableCharacter;
+        _playableCharacter = GameManager.Instance._playableCharacter;
     }
 
     void LateUpdate()
@@ -73,7 +73,7 @@ public class PlayerVisual : Billboard
     void UpdatePlayerButtonVisual(ProgressManager.Milestone milestone)
     {
         // Update current playable character
-        _playableCharacter = GameManager.Instance._currentPlayableCharacter;
+        _playableCharacter = GameManager.Instance._playableCharacter;
 
         // Set this transform as player child
         transform.SetParent(_playableCharacter.transform);

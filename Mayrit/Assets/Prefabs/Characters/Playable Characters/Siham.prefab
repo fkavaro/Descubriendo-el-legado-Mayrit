@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7322661222714234494}
   - component: {fileID: 1596673507731933656}
   - component: {fileID: 5391638514220604821}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Siham
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -58,7 +58,7 @@ MonoBehaviour:
   _nearDistance: {x: 5, y: 7}
   _animator: {fileID: 1639577397424246107}
   _interactionRange: 3
-  _interactionCooldown: 0
+  _conversationCooldown: 0
   _gender: 0
   _characterModel: {fileID: 5434453373518007707}
   _information: {fileID: 11400000, guid: 4146047eade613e41aeaf3f8813dbe44, type: 2}
@@ -138,6 +138,50 @@ PrefabInstance:
     - target: {fileID: 851846255601093310, guid: f7453fa73fb665b4ab3a6ff469bbd729, type: 3}
       propertyPath: m_Name
       value: Prefab_Villager_Female
+      objectReference: {fileID: 0}
+    - target: {fileID: 851846255601093310, guid: f7453fa73fb665b4ab3a6ff469bbd729, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1345519458711086522, guid: f7453fa73fb665b4ab3a6ff469bbd729, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1620687623901734625, guid: f7453fa73fb665b4ab3a6ff469bbd729, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1861854374991655329, guid: f7453fa73fb665b4ab3a6ff469bbd729, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3968369030203697373, guid: f7453fa73fb665b4ab3a6ff469bbd729, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4490900323090727001, guid: f7453fa73fb665b4ab3a6ff469bbd729, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5203846145214572780, guid: f7453fa73fb665b4ab3a6ff469bbd729, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6393108657378655390, guid: f7453fa73fb665b4ab3a6ff469bbd729, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6901313891178379414, guid: f7453fa73fb665b4ab3a6ff469bbd729, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7827190734709660233, guid: f7453fa73fb665b4ab3a6ff469bbd729, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8632639996160547011, guid: f7453fa73fb665b4ab3a6ff469bbd729, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

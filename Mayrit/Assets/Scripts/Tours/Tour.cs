@@ -13,15 +13,14 @@ public class Tour : MonoBehaviour
     #endregion
 
     #region EDITOR PROPERTIES
-    public UnityEvent OnTourStarted; // TODO not used yet
-    public UnityEvent OnTourCompleted;
-    public UnityEvent OnPOIChanged;
-
     [Tooltip("Ordered POIs for this tour")]
     public List<PointOfInterest> _pointsOfInterest = new();
     #endregion
 
     #region INTERNAL PROPERTIES
+    [HideInInspector] public UnityEvent OnTourCompletedEvent;
+    [HideInInspector] public UnityEvent<PointOfInterest> OnNextPOIChangedEvent;
+
     int _currentPOIindex = -1;
     #endregion
 
@@ -34,7 +33,6 @@ public class Tour : MonoBehaviour
     {
         Reset();
         NextPOI();
-        OnTourStarted?.Invoke();
     }
 
     /// <summary>
@@ -73,7 +71,7 @@ public class Tour : MonoBehaviour
         // Handle last POI
         if (CurrentPOI != null)
         {
-            CurrentPOI.OnVisited.RemoveListener(OnPOIVisited);
+            CurrentPOI.OnVisitedPOIEvent.RemoveListener(OnPOIVisited);
             CurrentPOI.Deactivate();
         }
 
@@ -82,7 +80,7 @@ public class Tour : MonoBehaviour
         // All POIs visited
         if (_currentPOIindex >= _pointsOfInterest.Count)
         {
-            OnTourCompleted?.Invoke();
+            OnTourCompletedEvent?.Invoke();
             Reset();
             return;
         }
@@ -90,11 +88,11 @@ public class Tour : MonoBehaviour
         // Handle new POI
         if (CurrentPOI != null)
         {
-            CurrentPOI.OnVisited.RemoveListener(OnPOIVisited);
+            CurrentPOI.OnVisitedPOIEvent.RemoveListener(OnPOIVisited);
             CurrentPOI.Activate();
         }
 
-        OnPOIChanged?.Invoke();
+        OnNextPOIChangedEvent?.Invoke(CurrentPOI);
     }
 
     void ResetPOIs()
