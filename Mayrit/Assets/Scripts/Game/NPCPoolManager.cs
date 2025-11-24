@@ -31,8 +31,6 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
     public LayerMask _villagerLayer;
     [Tooltip("Maximum number of collider hits to consider in a single proximity query")]
     public int _maxOverlapResults = 32;
-
-
     #endregion
 
     #region PRIVATE PROPERTIES

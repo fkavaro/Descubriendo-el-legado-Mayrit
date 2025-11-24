@@ -1,165 +1,93 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
-public class TourManager : MonoBehaviour
+using System.Collections.Generic;
+
+public class TourManager : Singleton<TourManager>
 {
+    #region PROPERTY HELPERS
+    public Tour CurrentTour =>
+    (_currentTourIndex >= 0 && _currentTourIndex < _tours.Count) ?
+        _tours[_currentTourIndex] :
+        null;
+    #endregion
+
+    #region EDITOR PROPERTIES
+    public UnityEvent OnTourStarted;
+    public UnityEvent OnAllToursCompleted;
+    public UnityEvent OnTourChanged;
+
     [Tooltip("Player transform used to check POI visits")]
     public Transform _player;
 
-    [Header("Visit Detection")]
-    [Tooltip("If true, TourManager will use a layer-based physics check to detect visits instead of relying on POI.CheckVisited(actor).")]
-    public bool useLayerDetection = false;
+    [Tooltip("Ordered tours as milestones order")]
+    public List<Tour> _tours = new();
+    #endregion
 
-    [Tooltip("Layer mask used when useLayerDetection is enabled. If left as default and a layer named 'PlayableCharacter' exists, it will be used.")]
-    public LayerMask visitingMask = ~0;
+    #region INTERNAL PROPERTIES
+    int _currentTourIndex = -1;
+    #endregion
 
-    [Tooltip("How to treat trigger colliders for manager overlap checks")]
-    public QueryTriggerInteraction visitingTriggerInteraction = QueryTriggerInteraction.Ignore;
-
-    [Tooltip("Internal buffer size for overlap checks (per-class shared buffer)")]
-    public int visitingOverlapBufferSize = 8;
-
-    // shared buffer used by manager for overlap checks
-    private static Collider[] s_visitBuffer;
-    private static readonly object s_visitLock = new object();
-
-    [Tooltip("Optional starting tour (drag a GameObject with a Tour component)")]
-    public Tour _startingTour;
-
-    [Tooltip("Check every N seconds for arrival. Lower = more responsive")]
-    public float _checkInterval = 0.25f;
-
-    public UnityEvent _onTourStarted;
-    public UnityEvent _onTourCompleted;
-    public UnityEvent _onPOIChanged;
-
-    private Tour _currentTour;
-    private int _currentIndex = -1;
-    private float _checkTimer;
-
-    public PointOfInterest CurrentPOI =>
-        (_currentTour != null && _currentIndex >= 0 && _currentIndex < _currentTour._pointsOfInterest.Count) ?
-        _currentTour._pointsOfInterest[_currentIndex] :
-        null;
-
-    void Start()
+    #region MONOBEHAVIOUR
+    protected override void Awake()
     {
-        if (_startingTour != null) StartTour(_startingTour);
+        Reset();
+        NextTour();
     }
+    #endregion
 
-    void Awake()
+    #region PUBLIC METHODS
+    public void Reset()
     {
-        // If visitingMask left as default and there's a PlayableCharacter layer, restrict automatically
-        if (visitingMask == (LayerMask)~0)
+        _currentTourIndex = -1;
+        ResetTours();
+    }
+    #endregion
+
+    #region PRIVATE METHODS
+    void NextTour()
+    {
+        // Handle last tour
+        if (CurrentTour != null)
         {
-            int playable = LayerMask.NameToLayer("PlayableCharacter");
-            if (playable != -1) visitingMask = 1 << playable;
+            CurrentTour.OnTourCompleted.RemoveListener(OnTourCompleted);
+            CurrentTour.Deactivate();
         }
-    }
 
-    void OnValidate()
-    {
-        if (visitingOverlapBufferSize < 1) visitingOverlapBufferSize = 1;
-    }
+        _currentTourIndex++;
 
-    void Update()
-    {
-        if (_currentTour == null || _player == null) return;
-        _checkTimer -= Time.deltaTime;
-        if (_checkTimer <= 0f)
+        // All tours visited
+        if (_currentTourIndex >= _tours.Count)
         {
-            _checkTimer = _checkInterval;
-            var poi = CurrentPOI;
-            if (poi != null)
-            {
-                bool visited = false;
-                if (useLayerDetection)
-                {
-                    visited = ManagerPhysicsCheckVisit(poi);
-                }
-                else
-                {
-                    visited = poi.CheckVisited(_player);
-                }
-
-                if (visited)
-                {
-                    Advance();
-                }
-            }
-        }
-    }
-
-    void StartTour(Tour tour)
-    {
-        if (tour == null) return;
-        _currentTour = tour;
-        _currentTour.ResetVisited();
-        _currentIndex = -1;
-        Next();
-        _onTourStarted?.Invoke();
-    }
-
-    void Next()
-    {
-        if (_currentTour == null) return;
-        _currentIndex++;
-        if (_currentIndex >= _currentTour._pointsOfInterest.Count)
-        {
-            // finished
-            _onTourCompleted?.Invoke();
-            _currentIndex = -1;
+            OnAllToursCompleted?.Invoke();
+            Reset();
             return;
         }
-        _onPOIChanged?.Invoke();
-    }
 
-    void Advance()
-    {
-        Next();
-    }
-
-    void CancelTour()
-    {
-        _currentTour = null;
-        _currentIndex = -1;
-    }
-
-    private bool ManagerPhysicsCheckVisit(PointOfInterest poi)
-    {
-        if (poi == null) return false;
-
-        // Ensure shared buffer large enough
-        EnsureVisitBufferSize(Mathf.Max(1, visitingOverlapBufferSize));
-
-        int found = Physics.OverlapSphereNonAlloc(poi.transform.position, poi._visitRadius, s_visitBuffer, visitingMask, visitingTriggerInteraction);
-
-        for (int i = 0; i < found; ++i)
+        // Handle new tour
+        if (CurrentTour != null)
         {
-            var col = s_visitBuffer[i];
-            if (col == null) continue;
-            // similar logic to POI: prefer rigidbody transform
-            var colTransform = col.attachedRigidbody != null ? col.attachedRigidbody.transform : col.transform;
-            // we don't require exact actor transform here; any collider in mask counts
-            if (colTransform != null)
-            {
-                poi.isVisited = true;
-                poi.onVisited?.Invoke();
-                return true;
-            }
+            CurrentTour.OnTourCompleted.AddListener(OnTourCompleted);
+            CurrentTour.Activate();
+            CurrentTour.StartTour();
+            OnTourStarted?.Invoke();
         }
 
-        return false;
+        OnTourChanged?.Invoke();
     }
 
-    private void EnsureVisitBufferSize(int size)
+    void ResetTours()
     {
-        if (s_visitBuffer != null && s_visitBuffer.Length >= size) return;
-        lock (s_visitLock)
-        {
-            if (s_visitBuffer == null) s_visitBuffer = new Collider[size];
-            else if (s_visitBuffer.Length < size) s_visitBuffer = new Collider[size];
-        }
+        foreach (Tour tour in _tours)
+            if (tour != null) tour.Reset();
     }
+    #endregion
+
+    #region EVENT METHODS
+    void OnTourCompleted()
+    {
+        NextTour();
+    }
+    #endregion
 }
 

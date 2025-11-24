@@ -1,41 +1,42 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
-[DisallowMultipleComponent]
+[RequireComponent(typeof(SphereCollider))]
 public class PointOfInterest : MonoBehaviour
 {
-    [Tooltip("Unique id for the POI (optional)")]
-    public string _POIid;
+    #region EDITOR PROPERTIES
+    [Tooltip("Invoke when this POI is visited")]
+    public UnityEvent OnVisited;
 
-    [Tooltip("Short title shown in UI")]
+    [Tooltip("Information associated with this POI")]
     public AInformationSO _information;
 
     [Tooltip("Radius around the POI where it counts as visited")]
     public float _visitRadius = 2f;
 
-    [Tooltip("Invoke when this POI is visited")]
-    public UnityEvent onVisited;
-
-    [HideInInspector]
-    public bool isVisited;
-
-    [Tooltip("Layer mask used for overlap checks (defaults to Everything)")]
+    [Tooltip("Layer mask used for trigger checks (defaults to PlayableCharacter layer if present)")]
     public LayerMask detectionMask = ~0;
+    #endregion
 
-    [Tooltip("How to treat trigger colliders during overlap checks")]
-    public QueryTriggerInteraction triggerInteraction = QueryTriggerInteraction.Ignore;
+    #region INTERNAL PROPERTIES
+    bool _isVisited;
+    SphereCollider _sphereCollider;
+    #endregion
 
-    [Tooltip("Size of the internal overlap buffer (increase if you expect many colliders nearby)")]
-    public int overlapBufferSize = 16;
-
-    // shared internal reusable buffer (not serialized). Using a single static buffer reduces memory
-    // usage when many POI instances exist. It will be resized as needed. Calls must process
-    // results immediately because the buffer is shared.
-    private static Collider[] s_overlapBuffer;
-    private static readonly object s_overlapLock = new object();
-
+    #region MONOBEHAVIOUR
+    /// <summary>
+    /// Sets the collider radius and trigger settings.
+    /// </summary>
     private void Awake()
     {
+        if (_visitRadius < 0.5f) _visitRadius = 0.5f;
+        if (TryGetComponent(out _sphereCollider))
+        {
+            _sphereCollider.radius = _visitRadius;
+            _sphereCollider.isTrigger = true;
+        }
+
         // If detectionMask is left as default (all bits) and there's a layer named "PlayableCharacter",
         // restrict detection to that layer automatically so POIs only respond to the player.
         if (detectionMask == (LayerMask)~0)
@@ -48,66 +49,58 @@ public class PointOfInterest : MonoBehaviour
         }
     }
 
-    private void OnValidate()
+    /// <summary>
+    /// Called when another collider enters the POI trigger zone. If the collider is on a valid layer and the POI
+    /// hasn't been visited yet, marks it as visited.
+    /// </summary>
+    void OnTriggerEnter(Collider other)
     {
-        // Keep overlap buffer size sane
-        if (overlapBufferSize < 1) overlapBufferSize = 1;
+        if (_isVisited) return;
+
+        // Check layer mask
+        if (((1 << other.gameObject.layer) & detectionMask) == 0) return;
+
+        SetAsVisited();
+    }
+    #endregion
+
+    #region PUBLIC METHODS
+    /// <summary>
+    /// Marks as unvisited and enables the POI collider.
+    /// </summary>
+    public void Activate()
+    {
+        _isVisited = false;
+        _sphereCollider.enabled = true;
     }
 
-    public bool CheckVisited(Transform actor)
+    /// <summary>
+    /// Marks as visited and disables the POI collider.
+    /// </summary>
+    public void Deactivate()
     {
-        if (isVisited || actor == null) return false;
-
-        // Ensure shared buffer exists and is appropriately sized. We resize the shared buffer
-        // under a lock to avoid races if multiple POIs are validated in the editor (or other unexpected cases).
-        EnsureSharedBufferSize(Mathf.Max(1, overlapBufferSize));
-
-        // Use Physics.OverlapSphereNonAlloc for low GC and fast checks
-        int found = Physics.OverlapSphereNonAlloc(transform.position, _visitRadius, s_overlapBuffer, detectionMask, triggerInteraction);
-        for (int i = 0; i < found; ++i)
-        {
-            var col = s_overlapBuffer[i];
-            if (col == null) continue;
-
-            // Prefer attachedRigidbody's transform (covers ragdolls / rigidbody-on-parent setups)
-            Transform colTransform = col.attachedRigidbody != null ? col.attachedRigidbody.transform : col.transform;
-
-            // Accept if the collider belongs to the actor or is a child/parent of it
-            if (colTransform == actor || colTransform.IsChildOf(actor) || actor.IsChildOf(colTransform))
-            {
-                isVisited = true;
-                onVisited?.Invoke();
-                return true;
-            }
-        }
-
-        return false;
+        _isVisited = true;
+        _sphereCollider.enabled = false;
     }
+    #endregion
 
-    private static void EnsureSharedBufferSize(int size)
+    #region PRIVATE METHODS
+    /// <summary>
+    /// Marks this POI as visited and invokes the OnVisited event.
+    /// </summary>
+    void SetAsVisited()
     {
-        // Quick path: already large enough
-        if (s_overlapBuffer != null && s_overlapBuffer.Length >= size) return;
+        if (_isVisited) return;
 
-        lock (s_overlapLock)
-        {
-            if (s_overlapBuffer == null)
-            {
-                s_overlapBuffer = new Collider[size];
-            }
-            else if (s_overlapBuffer.Length < size)
-            {
-                // grow to required size (avoid shrinking)
-                var newBuf = new Collider[size];
-                // no need to copy contents because buffer is transient
-                s_overlapBuffer = newBuf;
-            }
-        }
+        _isVisited = true;
+        OnVisited?.Invoke();
     }
+    #endregion
 
-    private void OnDrawGizmos()
+    #region DEBUG GIZMOW
+    void OnDrawGizmos()
     {
-        Gizmos.color = isVisited ? new Color(0.2f, 1f, 0.2f, 0.35f) : new Color(1f, 0.6f, 0.1f, 0.35f);
+        Gizmos.color = _isVisited ? Color.green : Color.yellow;
         Gizmos.DrawSphere(transform.position, _visitRadius);
 
 #if UNITY_EDITOR
@@ -115,5 +108,6 @@ public class PointOfInterest : MonoBehaviour
             string.IsNullOrEmpty(_information.Header) ? name : _information.Header);
 #endif
     }
+    #endregion
 }
 
