@@ -12,16 +12,27 @@ public class TourManager : Singleton<TourManager>
     #region EDITOR PROPERTIES
     [Header("Tour manager")]
     [SerializeField] Tour _currentTour;
+    [Header("Path visualizer settings")]
+    [Tooltip("Meters between samples along segments")]
+    [SerializeField] float _sampleSpacing = 0.5f;
+    [Tooltip("Max distance to snap start/end to NavMesh")]
+    [SerializeField] float _sampleDistance = 2f;
+    [Tooltip("Max distance to project samples to NavMesh")]
+    [SerializeField] float _projSampleDistance = 1f;
+    [Tooltip("How much to lift the rendered line above navmesh")]
+    [SerializeField] float _renderYOffset = 0.03f;
+    [Tooltip("Safety cap for points to render")]
+    [SerializeField] int _maxPoints = 2000;
+    [Tooltip("RDP tolerance in meters; <=0 disables simplification")]
+    [SerializeField] float _simplifyTolerance = 0.05f;
+    [Tooltip("Whether to use simplification")]
+    [SerializeField] bool _useSimplification = true;
 
-    [Header("Path Visualizer Settings")]
-    [Tooltip("Use NavMesh.CalculatePath when available; otherwise fall back to a straight-line path.")]
-    public bool _useNavMesh = true;
-
-    [Tooltip("Width of the line")]
-    [SerializeField] float _lineWidth = 0.1f;
-
-    [Tooltip("Maximum number of corners to display (safety cap)")]
-    [SerializeField] int _maxCorners = 512;
+    [Header("Debug Gizmos")]
+    [SerializeField] bool _drawPathGizmos = true;
+    [SerializeField] float _gizmoSphereSize = 0.08f;
+    [SerializeField] Color _rawGizmoColor = Color.magenta;
+    [SerializeField] Color _simplifiedGizmoColor = Color.yellow;
     #endregion
 
     #region INTERNAL PROPERTIES
@@ -35,8 +46,9 @@ public class TourManager : Singleton<TourManager>
     #region MONOBEHAVIOUR
     void Start()
     {
-        LineRenderer lineRenderer = GetComponent<LineRenderer>();
-        _pathVisualizer = new(lineRenderer, _lineWidth, _useNavMesh, _maxCorners);
+        _pathVisualizer = new PathVisualizer(GetComponent<LineRenderer>(),
+            _sampleSpacing, _sampleDistance, _projSampleDistance,
+            _renderYOffset, _maxPoints, _simplifyTolerance, _useSimplification);
         _pathVisualizer.Initialize();
 
         // Subscribe to ProgressManager milestone changes to track active tour
@@ -83,6 +95,9 @@ public class TourManager : Singleton<TourManager>
     void DetachFromTour(Tour tour)
     {
         if (tour == null) return;
+
+        tour.OnVisitedPOIEvent -= OnTourPOIVisited;
+        tour.OnNextPOIChangeEvent -= OnTourNextPOIChange;
         tour.OnCompletedEvent -= OnTourCompleted;
         _currentTour = null;
     }
@@ -110,5 +125,39 @@ public class TourManager : Singleton<TourManager>
         OnTourCompletedEvent?.Invoke(tour);
     }
     #endregion
+
+
+
+    // Draw debug gizmos in the editor during Play mode
+    void OnDrawGizmos()
+    {
+        if (!Application.isPlaying || !_drawPathGizmos) return;
+        if (_pathVisualizer == null) return;
+
+        var raw = _pathVisualizer.SampledPoints;
+        var simp = _pathVisualizer.SimplifiedPoints;
+
+        if (raw != null && raw.Count > 0)
+        {
+            Gizmos.color = _rawGizmoColor;
+            for (int i = 0; i < raw.Count; i++)
+            {
+                Gizmos.DrawSphere(raw[i], _gizmoSphereSize);
+                if (i > 0)
+                    Gizmos.DrawLine(raw[i - 1], raw[i]);
+            }
+        }
+
+        if (simp != null && simp.Count > 0)
+        {
+            Gizmos.color = _simplifiedGizmoColor;
+            for (int i = 0; i < simp.Count; i++)
+            {
+                Gizmos.DrawCube(simp[i], Vector3.one * _gizmoSphereSize);
+                if (i > 0)
+                    Gizmos.DrawLine(simp[i - 1], simp[i]);
+            }
+        }
+    }
 }
 

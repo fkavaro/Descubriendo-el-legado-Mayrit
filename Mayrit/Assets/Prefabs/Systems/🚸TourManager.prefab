@@ -92,13 +92,22 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 0
+        inSlope: 2.3347764
+        outSlope: 2.3347764
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.3711005
+      - serializedVersion: 3
+        time: 0.22965908
+        value: 0.22907688
         inSlope: 0
         outSlope: 0
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -157,6 +166,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TourManager
   _dontDestroyOnLoad: 0
   _currentTour: {fileID: 0}
-  _useNavMesh: 1
-  _lineWidth: 0.05
-  _maxCorners: 512
