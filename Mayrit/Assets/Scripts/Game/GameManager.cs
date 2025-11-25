@@ -63,7 +63,7 @@ public class GameManager : ASingletonBehaviourEntity<GameManager, FiniteStateMac
     }
     #endregion
 
-    #region PRIVATE METHODS
+    #region EVENT METHODS
     void OnMilestoneChanged(MilestoneMapping milestoneMapping)
     {
         _playableCharacter = milestoneMapping.PlayableCharacter;

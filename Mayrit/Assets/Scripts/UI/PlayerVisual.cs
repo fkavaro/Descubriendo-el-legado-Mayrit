@@ -9,6 +9,7 @@ public class PlayerVisual : Billboard
     Button _playerButton;
     PlayableCharacter _playableCharacter;
 
+    #region MONOBEHAVIOUR
     void Awake()
     {
         // Try to get the UIDocument component from the same GameObject
@@ -35,7 +36,9 @@ public class PlayerVisual : Billboard
     {
         CheckButtonVisibility();
     }
+    #endregion
 
+    #region PRIVATE METHODS
     void CheckButtonVisibility()
     {
         if (_playableCharacter == null)
@@ -68,7 +71,9 @@ public class PlayerVisual : Billboard
         else
             _playerButton.visible = false;
     }
+    #endregion
 
+    #region EVENT METHODS
     void OnMilestoneChanged(MilestoneMapping milestoneMapping)
     {
         // Update current playable character
@@ -85,9 +90,10 @@ public class PlayerVisual : Billboard
     {
         // Spectator camera
         if (CameraManager.Instance.IsInSpectatorState)
-            CameraManager.Instance.SwitchToOrbitalCamera(_playableCharacter.transform, _playableCharacter._information);
+            CameraManager.Instance.SwitchToOrbitalCamera(_playableCharacter.transform, _playableCharacter.Data);
         // Third person camera
         else if (CameraManager.Instance.IsInThirdPersonState)
             CameraManager.Instance.SwitchToSpectatorCamera();
     }
+    #endregion
 }

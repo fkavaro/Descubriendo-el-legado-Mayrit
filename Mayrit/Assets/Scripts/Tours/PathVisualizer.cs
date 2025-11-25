@@ -12,9 +12,7 @@ public class PathVisualizer
     readonly int _maxCorners;
     readonly Gradient _colorGradient;
 
-    PlayableCharacter _playableCharacter;
-    PointOfInterest _nextPOI;
-    Vector3 _playerPos, _nextPOIPos;
+    Transform _player, _nextPOI;
     Tour _currentTour;
     #endregion
 
@@ -40,26 +38,23 @@ public class PathVisualizer
     public void UpdatePath()
     {
         // If no target POI or player, clear the line
-        if (_nextPOI == null || _playableCharacter == null)
+        if (_nextPOI == null || _player == null)
         {
             if (_nextPOI == null)
                 Debug.LogWarning("PathVisualizer: Clear path - no POI target");
-            if (_playableCharacter == null)
+            if (_player == null)
                 Debug.LogWarning("PathVisualizer: Clear path - no playable character");
 
             Clear();
             return;
         }
 
-        _playerPos = _playableCharacter.transform.position;
-        _nextPOIPos = _nextPOI.transform.position;
-
-        DrawPath(_playerPos, _nextPOIPos);
+        DrawPath(_player.position, _nextPOI.position);
     }
 
     public void Deinitialize()
     {
-        ProgressManager.Instance.OnMilestoneChangedEvent -= OnMilestoneChanged;
+        ProgressManager.ExistingInstance.OnMilestoneChangedEvent -= OnMilestoneChanged;
 
         DetachFromTour(_currentTour);
     }
@@ -138,13 +133,13 @@ public class PathVisualizer
     #region EVENT METHODS
     void OnMilestoneChanged(MilestoneMapping milestoneMapping)
     {
-        _playableCharacter = milestoneMapping.PlayableCharacter;
+        _player = milestoneMapping.PlayableCharacter.transform;
         AttachToTour(milestoneMapping.Tour);
     }
 
     void OnNextPOIChange(PointOfInterest poi)
     {
-        _nextPOI = poi;
+        _nextPOI = poi.transform;
     }
     #endregion
 }

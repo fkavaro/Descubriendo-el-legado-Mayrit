@@ -86,7 +86,7 @@ MonoBehaviour:
   _conversationCooldown: 0
   _gender: 1
   _characterModel: {fileID: 5434453373518007707}
-  _information: {fileID: 11400000, guid: 4146047eade613e41aeaf3f8813dbe44, type: 2}
+  _data: {fileID: 11400000, guid: 4146047eade613e41aeaf3f8813dbe44, type: 2}
 --- !u!1001 &4663850333815916325
 PrefabInstance:
   m_ObjectHideFlags: 0

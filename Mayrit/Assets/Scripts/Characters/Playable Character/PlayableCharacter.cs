@@ -4,9 +4,12 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacterState>>
 {
+    #region PROPERTY HELPERS
+    public AInformationSO Data => _data;
+    #endregion
+
     #region EDITOR PROPERTIES
-    // Character information
-    public AInformationSO _information;
+    public AInformationSO _data;
     #endregion
 
     #region INTERNAL PROPERTIES
