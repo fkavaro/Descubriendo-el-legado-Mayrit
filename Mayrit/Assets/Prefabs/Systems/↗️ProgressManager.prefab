@@ -50,7 +50,7 @@ MonoBehaviour:
   _dontDestroyOnLoad: 0
   _updateInInspector: 0
   _currentMilestoneIndex: 0
-  _milestoneSequence:
+  _milestonesData:
   - {fileID: 11400000, guid: c2541da2a3af8a246b55a5e4b79c1812, type: 2}
   - {fileID: 11400000, guid: 9276c034d53293a459586c7287b06553, type: 2}
   - {fileID: 11400000, guid: faca3230df511b44388c375fd203fc3b, type: 2}
