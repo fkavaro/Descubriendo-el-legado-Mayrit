@@ -48,8 +48,7 @@ public class PlayerVisual : Billboard
         }
 
         // Hide button if not in spectator HUD state or if orbital camera is active
-        if (!UIManager.Instance.BehaviourSystem.IsCurrentState(UIManager.Instance._spectatorHUDState) ||
-            CameraManager.Instance.IsInOrbitalState)
+        if (!UIManager.Instance.IsInSpectatorHUDState || CameraManager.Instance.IsInOrbitalState)
         {
             _playerButton.visible = false;
             return;

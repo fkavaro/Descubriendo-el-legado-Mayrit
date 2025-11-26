@@ -49,7 +49,7 @@ where M : MonoBehaviour
     public static M ExistingInstance => _instance;
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLE
     protected override void Awake()
     {
         lock (_instanceLock) // Ensures thread safety when setting the instance.

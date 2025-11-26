@@ -12,7 +12,7 @@ public class Pause_GameState : AGameState
     public override void StartState()
     {
         Time.timeScale = 0f;
-        GameManager.Instance._inputActions.Camera.Disable();
+        GameManager.Instance.InputActions.Camera.Disable();
     }
 
     public override void UpdateState()
@@ -23,6 +23,6 @@ public class Pause_GameState : AGameState
     public override void ExitState()
     {
         Time.timeScale = 1f;
-        GameManager.Instance._inputActions.Camera.Enable();
+        GameManager.Instance.InputActions.Camera.Enable();
     }
 }

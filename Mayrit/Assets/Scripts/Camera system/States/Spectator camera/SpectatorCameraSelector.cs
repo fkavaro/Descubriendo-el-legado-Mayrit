@@ -29,7 +29,7 @@ public class SpectatorCameraSelector
 
     public void Update()
     {
-        _isSelectPressed = GameManager.Instance._inputActions.Camera.Select.IsPressed();
+        _isSelectPressed = GameManager.Instance.InputActions.Camera.Select.IsPressed();
 
         // Get the current mouse position
         _cursorScreenPos = Mouse.current.position.ReadValue();
@@ -66,7 +66,7 @@ public class SpectatorCameraSelector
     public void SelectObject()
     {
         // Cursor over UI element
-        if (UIManager.Instance._spectatorHUDState.IsCursorOverUI())
+        if (UIManager.Instance.IsCursorOverSpectatorHUD())
             return;
 
         //Debug.DrawRay(_cameraRay.origin, _cameraRay.direction * 100, Color.green, 120f);
@@ -111,9 +111,9 @@ public class SpectatorCameraSelector
     void ResetSelection()
     {
         if (_currentSelected == null) return;
-        if (UIManager.Instance._spectatorHUDState.IsCursorOverUI()) return;
+        if (UIManager.Instance.IsCursorOverSpectatorHUD()) return;
 
-        UIManager.Instance._spectatorHUDState._contextualPanel.Hide();
+        UIManager.Instance.HideContextualPanel();
         CameraManager.Instance.SwitchToSpectatorCamera();
         _currentSelected = null;
     }
@@ -124,7 +124,7 @@ public class SpectatorCameraSelector
     void UpdateTooltip()
     {
         // Cursor over UI element
-        if (UIManager.Instance._spectatorHUDState.IsCursorOverUI())
+        if (UIManager.Instance.IsCursorOverSpectatorHUD())
         {
             ResetHover();
             return;
@@ -156,7 +156,7 @@ public class SpectatorCameraSelector
     /// </summary>
     void ApplyHover()
     {
-        UIManager.Instance._spectatorHUDState.ShowTooltip(_currentHover);
+        UIManager.Instance.ShowTooltip(_currentHover);
     }
 
     /// <summary>
@@ -167,7 +167,7 @@ public class SpectatorCameraSelector
         if (_currentHover == null) return;
 
         _currentHover = null;
-        UIManager.Instance._spectatorHUDState.HideTooltip();
+        UIManager.Instance.HideTooltip();
     }
     #endregion
 }

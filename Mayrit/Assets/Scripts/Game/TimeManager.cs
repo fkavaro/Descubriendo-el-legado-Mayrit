@@ -46,14 +46,14 @@ public class TimeManager : Singleton<TimeManager>
     public AnimationCurve _moonIntensityCurve;
     #endregion
 
-    #region PROPERTIES
+    #region INTERNAL PROPERTIES
     [HideInInspector] public bool _isDayTime = true; // Whether current time is between 6 and 18 hours or not
     bool _isWantedTimeReached, // Whether the current time is close enough to the wanted time
         _increaseTime; // Whether the time should be increased or decreased
     float _normalisedTime; // Normalised time value between 0 and 1, where 0 is midnight and 1 is the next midnight
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLE
     // Awake is called when the script instance is being loaded
     protected override void Awake()
     {

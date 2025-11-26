@@ -90,7 +90,7 @@ public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStat
     }
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLE
     protected override void Start()
     {
         base.Start();
@@ -155,8 +155,7 @@ public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStat
 
     public void SwitchToOrbitalCamera(Transform objectToOrbitAround, AInformationSO information)
     {
-        // Hide contextual panel
-        UIManager.Instance._spectatorHUDState._contextualPanel.Hide();
+        UIManager.Instance.HideContextualPanel();
 
         _orbitalState._information = information;
         _orbitalCamera.Follow = objectToOrbitAround;

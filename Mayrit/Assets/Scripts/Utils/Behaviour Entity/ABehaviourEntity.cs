@@ -47,7 +47,7 @@ where BehaviourSystemType : ABehaviourSystem
     public abstract BehaviourSystemType InitializeBehaviourSystem();
     #endregion
 
-    #region MONOBEHAVIOUR: DERIVED TO BEHAVIOUR SYSTEM
+    #region LIFE CYCLE: DERIVED TO BEHAVIOUR SYSTEM
     protected virtual void Awake()
     {
         _behaviourSystem = InitializeBehaviourSystem();

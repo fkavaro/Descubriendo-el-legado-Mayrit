@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 public class TownManager : Singleton<TownManager>
 {
@@ -16,14 +15,11 @@ public class TownManager : Singleton<TownManager>
     public List<Market> _markets;
     #endregion
 
-    #region INTERNAL PROPERTIES    
-    /// <summary>
-    /// Event fired when population changes. Provides the new population value.
-    /// </summary>
+    #region INTERNAL PROPERTIES
     public event Action<int> OnPopulationChanged;
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLE
     void Start()
     {
         // Subscribe to milestone changes to update population accordingly

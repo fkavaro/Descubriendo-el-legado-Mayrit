@@ -11,14 +11,14 @@ public class ThirdPerson_CameraState : ACameraState
 
     public override void StartState()
     {
-        GameManager.Instance._inputActions.Player.Enable();
-        GameManager.Instance._inputActions.Camera.ExitMode.Enable();
-        GameManager.Instance._inputActions.Camera.ExitMode.performed += SwicthToSpectatorCamera;
+        GameManager.Instance.InputActions.Player.Enable();
+        GameManager.Instance.InputActions.Camera.ExitMode.Enable();
+        GameManager.Instance.InputActions.Camera.ExitMode.performed += SwicthToSpectatorCamera;
 
         _camera.gameObject.SetActive(true);
 
         // Change HUD
-        UIManager.Instance.BehaviourSystem.SwitchState(UIManager.Instance._playerHUDState);
+        UIManager.Instance.SwitchToPlayerHUDState();
 
         // Adjust simulation speed
         TimeManager.Instance.SetSimulationSpeed(_simulationSpeed);
@@ -33,9 +33,9 @@ public class ThirdPerson_CameraState : ACameraState
 
     public override void ExitState()
     {
-        GameManager.Instance._inputActions.Player.Disable();
-        GameManager.Instance._inputActions.Camera.ExitMode.Disable();
-        GameManager.Instance._inputActions.Camera.ExitMode.performed -= SwicthToSpectatorCamera;
+        GameManager.Instance.InputActions.Player.Disable();
+        GameManager.Instance.InputActions.Camera.ExitMode.Disable();
+        GameManager.Instance.InputActions.Camera.ExitMode.performed -= SwicthToSpectatorCamera;
         _camera.gameObject.SetActive(false);
     }
 

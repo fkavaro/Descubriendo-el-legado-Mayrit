@@ -36,7 +36,7 @@ public class MainMenu_UIState : AUIState
     #region PRIVATE METHODS
     void SwitchToGamePlayState(ClickEvent evt)
     {
-        GameManager.Instance.BehaviourSystem.SwitchState(GameManager.Instance._gamePlayState);
+        GameManager.Instance.SwitchToGamePlayState();
     }
 
     void SwitchToSettingsState(ClickEvent evt)

@@ -9,6 +9,7 @@ using UnityEditor;
 
 public class Spot : MonoBehaviour
 {
+    #region EDITOR PROPERTIES
     [SerializeField] bool _isOccupied = false;
     [SerializeField] bool _isRotationFixed = false;
 
@@ -17,12 +18,16 @@ public class Spot : MonoBehaviour
     [SerializeField] float _gizmoLength = 0.5f;
     [SerializeField] float _gizmoThickness = 20f;
     [SerializeField] Color _gizmoColor = Color.yellow;
+    #endregion
 
+    #region INTERNAL PROPERTIES
     [HideInInspector] public Quaternion LocalDirection => Quaternion.Euler(0f, transform.rotation.y, 0f);
     [HideInInspector] public Quaternion WorldDirection => transform.rotation * LocalDirection;
 
     readonly object posLock = new();
+    #endregion
 
+    #region PUBLIC METHODS
     public void SetOccupied(bool occupied)
     {
         lock (posLock)
@@ -38,6 +43,7 @@ public class Spot : MonoBehaviour
             return _isOccupied;
         }
     }
+    #endregion
 
 #if UNITY_EDITOR
     void OnDrawGizmos()
@@ -64,6 +70,7 @@ public class Spot : MonoBehaviour
 #endif
 }
 
+#region EDITOR TOOLS
 #if UNITY_EDITOR
 [UnityEditor.CustomEditor(typeof(Spot))]
 [UnityEditor.CanEditMultipleObjects]
@@ -105,3 +112,4 @@ class SpotEditor : UnityEditor.Editor
     }
 }
 #endif
+#endregion

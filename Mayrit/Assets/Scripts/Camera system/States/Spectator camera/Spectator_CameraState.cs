@@ -15,12 +15,12 @@ public class Spectator_CameraState : ACameraState
 
     public override void StartState()
     {
-        GameManager.Instance._inputActions.Camera.Enable();
+        GameManager.Instance.InputActions.Camera.Enable();
 
         _camera.gameObject.SetActive(true);
 
         // Change HUD
-        UIManager.Instance.BehaviourSystem.SwitchState(UIManager.Instance._spectatorHUDState);
+        UIManager.Instance.SwicthToSpectatorHUDState();
 
         // Adjust simulation speed
         TimeManager.Instance.SetSimulationSpeed(_simulationSpeed);
@@ -43,6 +43,6 @@ public class Spectator_CameraState : ACameraState
     public override void ExitState()
     {
         _camera.gameObject.SetActive(false);
-        GameManager.Instance._inputActions.Camera.Disable();
+        GameManager.Instance.InputActions.Camera.Disable();
     }
 }

@@ -29,8 +29,7 @@ public class PauseMenu_UIState : AUIState
 
         _screen.style.display = DisplayStyle.Flex; // Show pause menu
 
-        // Game pause state
-        GameManager.Instance.BehaviourSystem.SwitchState(GameManager.Instance._pauseState);
+        GameManager.Instance.SwitchToPauseState();
     }
 
     public override void ExitState()
@@ -47,12 +46,12 @@ public class PauseMenu_UIState : AUIState
     void SwitchToHUDState(ClickEvent evt)
     {
         UIManager.Instance.BehaviourSystem.SwitchToPreviousStateInStack(); // Switch to previous state: player or spectator HUD
-        GameManager.Instance.BehaviourSystem.SwitchState(GameManager.Instance._gamePlayState);
+        GameManager.Instance.SwitchToGamePlayState();
     }
 
     void SwitchToMainMenuState(ClickEvent evt)
     {
-        GameManager.Instance.BehaviourSystem.SwitchState(GameManager.Instance._mainMenuState);
+        GameManager.Instance.SwitchToMainMenuState();
     }
 
     void QuitGame(ClickEvent evt)

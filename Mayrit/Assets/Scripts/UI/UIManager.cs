@@ -12,6 +12,14 @@ using System.Reflection;
 [RequireComponent(typeof(UIDocument))]
 public class UIManager : ASingletonBehaviourEntity<UIManager, StackFiniteStateMachine<AUIState>>
 {
+    #region PROPERTY HELPERS
+    public bool IsInMainMenuState => _sfsm.IsCurrentState(_mainMenuState);
+    public bool IsInSpectatorHUDState => _sfsm.IsCurrentState(_spectatorHUDState);
+    public bool IsInPlayerHUDState => _sfsm.IsCurrentState(_playerHUDState);
+    public bool IsInPauseState => _sfsm.IsCurrentState(_pauseState);
+    public bool IsInHeritageState => _sfsm.IsCurrentState(_heritageState);
+    #endregion
+
     #region EDITOR PROPERTIES
     [Header("User Interface Document")]
     public UIDocument _UIDocument;
@@ -21,12 +29,14 @@ public class UIManager : ASingletonBehaviourEntity<UIManager, StackFiniteStateMa
     #endregion
 
     #region INTERNAL PROPERTIES
+    public event Action OnModernSuperpositionEvent;
+
     StackFiniteStateMachine<AUIState> _sfsm;
-    public MainMenu_UIState _mainMenuState;
-    public SpectatorHUD_UIState _spectatorHUDState;
-    public PlayerHUD_UIState _playerHUDState;
-    public PauseMenu_UIState _pauseState;
-    public HeritageMenu_UIState _heritageState;
+    MainMenu_UIState _mainMenuState;
+    SpectatorHUD_UIState _spectatorHUDState;
+    PlayerHUD_UIState _playerHUDState;
+    PauseMenu_UIState _pauseState;
+    HeritageMenu_UIState _heritageState;
     #endregion
 
     #region INHERITED
@@ -50,7 +60,70 @@ public class UIManager : ASingletonBehaviourEntity<UIManager, StackFiniteStateMa
         else
             _sfsm.SetInitialState(_mainMenuState);
 
+        _spectatorHUDState.OnModernSuperpositionEvent += OnModernSuperpositionToggled;
+
         return _sfsm;
+    }
+    #endregion
+
+    #region STATE HANDLING
+    public void SwitchToMainMenuState()
+    {
+        _sfsm.SwitchState(_mainMenuState);
+    }
+
+    public void SwicthToSpectatorHUDState()
+    {
+        _sfsm.SwitchState(_spectatorHUDState);
+    }
+
+    public void SwitchToPlayerHUDState()
+    {
+        _sfsm.SwitchState(_playerHUDState);
+    }
+
+    public void SwitchToPauseState()
+    {
+        _sfsm.SwitchState(_pauseState);
+    }
+
+    public void SwitchToHeritageState()
+    {
+        _sfsm.SwitchState(_heritageState);
+    }
+    #endregion 
+
+    #region UI PUBLIC METHODS
+    public void HideContextualPanel()
+    {
+        _spectatorHUDState._contextualPanel.Hide();
+    }
+
+    public void ShowContextualPanel(AInformationSO data)
+    {
+        _spectatorHUDState.ShowContextualPanel(data);
+    }
+
+    public bool IsCursorOverSpectatorHUD()
+    {
+        return _spectatorHUDState.IsCursorOverUI();
+    }
+
+    public void ShowTooltip(SelectableObject selectableObject)
+    {
+        _spectatorHUDState.ShowTooltip(selectableObject);
+    }
+
+    public void HideTooltip()
+    {
+        _spectatorHUDState.HideTooltip();
+    }
+    #endregion
+
+    #region EVENT METHODS
+    void OnModernSuperpositionToggled()
+    {
+        OnModernSuperpositionEvent?.Invoke();
     }
     #endregion
 
@@ -59,7 +132,7 @@ public class UIManager : ASingletonBehaviourEntity<UIManager, StackFiniteStateMa
     [Tooltip("Show debug overlay (toggle from the inspector at runtime)")]
     public bool _showDebugOverlay = true;
     [Tooltip("Collapse the debug overlay to a small header")]
-    public bool _debugCollapsed = false;
+    public bool _debugCollapsed = true;
 
     void OnGUI()
     {

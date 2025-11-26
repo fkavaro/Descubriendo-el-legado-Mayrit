@@ -41,6 +41,6 @@ public class LandmarkVisual : MonoBehaviour
     void OnNameButtonClick(ClickEvent evt)
     {
         // Open contextual panel with landmark information
-        UIManager.Instance._spectatorHUDState.ShowContextualPanel(_information);
+        UIManager.Instance.ShowContextualPanel(_information);
     }
 }

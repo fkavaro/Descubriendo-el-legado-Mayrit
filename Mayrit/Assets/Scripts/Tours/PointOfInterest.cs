@@ -23,7 +23,7 @@ public class PointOfInterest : MonoBehaviour
     SphereCollider _sphereCollider;
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLE
     /// <summary>
     /// Sets the collider radius and trigger settings.
     /// </summary>

@@ -67,7 +67,7 @@ public class ProgressManager : ASingletonBehaviourEntity<ProgressManager, Finite
     }
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLE
     // Called when the script is loaded or a value is changed in the inspector
     void OnValidate()
     {

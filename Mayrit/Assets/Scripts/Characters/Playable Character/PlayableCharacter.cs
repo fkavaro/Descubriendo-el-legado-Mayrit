@@ -30,7 +30,7 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     }
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLE
     protected override void Awake()
     {
         base.Awake();

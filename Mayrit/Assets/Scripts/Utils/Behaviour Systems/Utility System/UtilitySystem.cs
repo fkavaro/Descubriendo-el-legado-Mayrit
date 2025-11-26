@@ -41,7 +41,7 @@ public class UtilitySystem : ABehaviourSystem
     }
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLE
     public override void Start()
     {
         CalculateActionsUtilities();

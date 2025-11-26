@@ -18,7 +18,7 @@ public class Orbital_CameraState : ACameraState
 
     public override void StartState()
     {
-        GameManager.Instance._inputActions.Camera.Enable();
+        GameManager.Instance.InputActions.Camera.Enable();
 
         // Is character information
         if (_information is Character_InformationSO)
@@ -39,7 +39,7 @@ public class Orbital_CameraState : ACameraState
         ApplyContextualPanelOffset();
 
         _camera.gameObject.SetActive(true);
-        UIManager.Instance._spectatorHUDState.ShowContextualPanel(_information);
+        UIManager.Instance.ShowContextualPanel(_information);
 
         // Adjust simulation speed
         TimeManager.Instance.SetSimulationSpeed(_simulationSpeed);
@@ -53,7 +53,7 @@ public class Orbital_CameraState : ACameraState
     public override void ExitState()
     {
         _camera.gameObject.SetActive(false);
-        GameManager.Instance._inputActions.Camera.Disable();
+        GameManager.Instance.InputActions.Camera.Disable();
     }
 
     void ApplyContextualPanelOffset()

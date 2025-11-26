@@ -13,7 +13,7 @@ public abstract class ABuilding : MonoBehaviour
     public abstract void UnregisterBuilding();
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLE
     public virtual void OnEnable()
     {
         RegisterBuilding();

@@ -36,7 +36,7 @@ public abstract class ABehaviourSystem : IBehaviourSystem
     public abstract void Reset();
     #endregion
 
-    #region MONOBEHAVIOUR EQUIVALENTS: OPTIONAL
+    #region LIFE CYCLE: OPTIONAL
     public virtual void Awake() { }
     public virtual void Start() { }
     public virtual void Update() { }

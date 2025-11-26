@@ -51,7 +51,7 @@ public class PlayerHUD_UIState : AUIState
     #region PRIVATE METHODS
     void SwitchToPauseState(ClickEvent evt)
     {
-        UIManager.Instance.BehaviourSystem.SwitchState(UIManager.Instance._pauseState);
+        UIManager.Instance.SwitchToPauseState();
     }
     #endregion
 }

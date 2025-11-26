@@ -3,9 +3,7 @@ using UnityEngine;
 
 public class ModernSuperposition : MonoBehaviour
 {
-    [Header("Settings")]
-    public bool _isActive = false;
-
+    #region PROPERTY HELPERS
     bool IsActive
     {
         get { return _isActive; }
@@ -15,28 +13,37 @@ public class ModernSuperposition : MonoBehaviour
             SetChildrenActive(_isActive);
         }
     }
+    #endregion
 
+    #region EDITOR PROPERTIES
+    [Header("Settings")]
+    public bool _isActive = false;
+    #endregion
+
+    #region LIFE CYCLE
     void Start()
     {
         // To know when to deactivate the mode if the camera changes to 3rd person
         CameraManager.Instance.OnCameraStateChangedEvent += OnCameraStateChanged;
 
         // To know when the button is pressed in the HUD
-        SpectatorHUD_UIState spectatorHUD = UIManager.Instance._spectatorHUDState;
-        if (spectatorHUD != null)
-            spectatorHUD.OnModernSuperpositionToggled += ToggleMode;
+        UIManager.Instance.OnModernSuperpositionEvent += ToggleMode;
     }
 
     void OnValidate()
     {
         SetChildrenActive(IsActive);
     }
+    #endregion 
 
+    #region PUBLIC METHODS
     public void ToggleMode()
     {
         IsActive = !IsActive;
     }
+    #endregion
 
+    #region PRIVATE METHODS
     void OnCameraStateChanged()
     {
         if (CameraManager.Instance.IsInThirdPersonState)
@@ -48,4 +55,5 @@ public class ModernSuperposition : MonoBehaviour
         foreach (Transform child in transform)
             child.gameObject.SetActive(isActive);
     }
+    #endregion
 }

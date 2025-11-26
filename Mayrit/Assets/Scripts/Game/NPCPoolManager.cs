@@ -9,10 +9,7 @@ using UnityEngine.Pool;
 /// </summary>
 public class NPCPoolManager : Singleton<NPCPoolManager>
 {
-    #region PUBLIC PROPERTIES
-    public ObjectPool<Villager> _villagerPool;
-    // TODO: soldier pool
-
+    #region EDITOR PROPERTIES
     [Header("Villagers pool")]
     [Tooltip("Names database (ScriptableObject)")]
     public NamesDatabase _namesDatabase;
@@ -33,12 +30,15 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
     public int _maxOverlapResults = 32;
     #endregion
 
-    #region PRIVATE PROPERTIES
+    #region INTERNAL PROPERTIES
+    public ObjectPool<Villager> _villagerPool;
+    // TODO: soldier pool
+
     Collider[] _overlapResults; // Cached buffer for OverlapSphereNonAlloc
     Dictionary<Collider, Villager> _colliderToVillager; // Cache to avoid GetComponent calls on colliders returned by physics queries
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLE
     void OnEnable()
     {
         // NamesDatabase is required for name generation. Disable this manager if not assigned.

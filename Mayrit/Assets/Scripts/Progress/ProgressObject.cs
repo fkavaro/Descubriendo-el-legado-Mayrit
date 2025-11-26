@@ -13,7 +13,7 @@ public class ProgressObject : MonoBehaviour
     [Tooltip("Range of milestones where this object is active")]
     public Vector2 milestonesActivated;
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLE
     void OnEnable()
     {
         SubscribeToRuntimeEvents();

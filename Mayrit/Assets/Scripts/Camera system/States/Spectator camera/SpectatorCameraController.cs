@@ -90,14 +90,14 @@ public class SpectatorCameraController
 
     public void LateUpdate()
     {
-        _moveInput = GameManager.Instance._inputActions.Camera.Move.ReadValue<Vector2>();
-        _sprintPressed = GameManager.Instance._inputActions.Camera.Sprint.IsPressed();
-        _lookInput = GameManager.Instance._inputActions.Camera.Look.ReadValue<Vector2>();
-        _middleClickPressed = GameManager.Instance._inputActions.Camera.Rotate.IsPressed();
+        _moveInput = GameManager.Instance.InputActions.Camera.Move.ReadValue<Vector2>();
+        _sprintPressed = GameManager.Instance.InputActions.Camera.Sprint.IsPressed();
+        _lookInput = GameManager.Instance.InputActions.Camera.Look.ReadValue<Vector2>();
+        _middleClickPressed = GameManager.Instance.InputActions.Camera.Rotate.IsPressed();
 
         // Cursor NOT over UI element
-        if (!UIManager.Instance._spectatorHUDState.IsCursorOverUI())
-            _scrollInput = GameManager.Instance._inputActions.Camera.Zoom.ReadValue<Vector2>();
+        if (!UIManager.Instance.IsCursorOverSpectatorHUD())
+            _scrollInput = GameManager.Instance.InputActions.Camera.Zoom.ReadValue<Vector2>();
 
         if (_edgeScrolling)
             UpdateEdgeScrolling();

@@ -38,10 +38,10 @@ public class PlayableCharacterMovementController
         if (_isJumping && _playerCharacterController.isGrounded)
             _movementInput = Vector2.zero;
         else
-            _movementInput = GameManager.Instance._inputActions.Player.Move.ReadValue<Vector2>();
+            _movementInput = GameManager.Instance.InputActions.Player.Move.ReadValue<Vector2>();
 
-        _isRunPressed = GameManager.Instance._inputActions.Player.Sprint.IsPressed();
-        _isJumpPressed = GameManager.Instance._inputActions.Player.Jump.IsPressed();
+        _isRunPressed = GameManager.Instance.InputActions.Player.Sprint.IsPressed();
+        _isJumpPressed = GameManager.Instance.InputActions.Player.Jump.IsPressed();
 
         // Get direction in 3D space based on camera orientation
         _forward = _cameraTarget.forward.normalized;

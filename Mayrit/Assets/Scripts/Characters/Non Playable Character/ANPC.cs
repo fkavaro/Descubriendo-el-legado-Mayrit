@@ -83,7 +83,7 @@ where BehaviourSystemType : ABehaviourSystem
     INPC _currentInteractionTarget, _lastInteractionTarget;
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLE
     protected override void Awake()
     {
         base.Awake();

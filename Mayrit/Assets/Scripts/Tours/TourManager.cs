@@ -33,7 +33,7 @@ public class TourManager : Singleton<TourManager>
     PathVisualizer _pathVisualizer;
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLE
     void Start()
     {
         _pathVisualizer = new PathVisualizer(GetComponent<LineRenderer>(),

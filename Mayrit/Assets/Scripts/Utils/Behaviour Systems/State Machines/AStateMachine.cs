@@ -148,7 +148,7 @@ where StateType : AState
     }
     #endregion
 
-    #region MONOBEHAVIOUR EQUIVALENTS: DERIVED TO CURRENT STATE
+    #region LIFE CYCLE: DERIVED TO CURRENT STATE
     public override void Awake()
     {
         if (_initialState == null)

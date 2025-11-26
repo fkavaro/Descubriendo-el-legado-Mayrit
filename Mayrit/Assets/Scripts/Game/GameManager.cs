@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
 /// <summary>
 /// Manages the game states and data. Singleton.
 /// </summary>
@@ -10,6 +9,10 @@ public class GameManager : ASingletonBehaviourEntity<GameManager, FiniteStateMac
 {
     #region PROPERTY HELPERS
     public PlayableCharacter PlayableCharacter => _playableCharacter;
+    public GameInputActions InputActions => _inputActions;
+    public bool IsInMainMenuState => _fsm.IsCurrentState(_mainMenuState);
+    public bool IsInGamePlayState => _fsm.IsCurrentState(_gamePlayState);
+    public bool IsInPauseState => _fsm.IsCurrentState(_pauseState);
     #endregion
 
     #region EDITOR PROPERTIES
@@ -18,11 +21,11 @@ public class GameManager : ASingletonBehaviourEntity<GameManager, FiniteStateMac
     #endregion
 
     #region INTERNAL PROPERTIES
+    GameInputActions _inputActions;
     FiniteStateMachine<AGameState> _fsm;
-    public MainMenu_GameState _mainMenuState;
-    public GamePlay_GameState _gamePlayState;
-    public Pause_GameState _pauseState;
-    public GameInputActions _inputActions;
+    MainMenu_GameState _mainMenuState;
+    GamePlay_GameState _gamePlayState;
+    Pause_GameState _pauseState;
     #endregion
 
     #region INHERITED
@@ -46,7 +49,7 @@ public class GameManager : ASingletonBehaviourEntity<GameManager, FiniteStateMac
     }
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLE
     protected override void Awake()
     {
         base.Awake();
@@ -57,9 +60,26 @@ public class GameManager : ASingletonBehaviourEntity<GameManager, FiniteStateMac
         ProgressManager.Instance.OnMilestoneChangedEvent += OnMilestoneChanged;
     }
 
-    private void OnDestroy()
+    void OnDestroy()
     {
         _inputActions?.Disable(); // Disables all action maps. To avoid errors
+    }
+    #endregion
+
+    #region PUBLIC METHODS
+    public void SwitchToMainMenuState()
+    {
+        _fsm.SwitchState(_mainMenuState);
+    }
+
+    public void SwitchToGamePlayState()
+    {
+        _fsm.SwitchState(_gamePlayState);
+    }
+
+    public void SwitchToPauseState()
+    {
+        _fsm.SwitchState(_pauseState);
     }
     #endregion
 

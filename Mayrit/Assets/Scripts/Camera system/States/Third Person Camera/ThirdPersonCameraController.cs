@@ -32,7 +32,7 @@ public class ThirdPersonCameraController
     public void LateUpdate()
     {
         // Read input
-        _lookInput = GameManager.Instance._inputActions.Player.Look.ReadValue<Vector2>();
+        _lookInput = GameManager.Instance.InputActions.Player.Look.ReadValue<Vector2>();
 
         // Update pitch and yaw based on input
         _targetPitch = Mathf.Clamp(_targetPitch - _lookInput.y * _orbitSpeed * Time.deltaTime, _bottomClamp, _topClamp);

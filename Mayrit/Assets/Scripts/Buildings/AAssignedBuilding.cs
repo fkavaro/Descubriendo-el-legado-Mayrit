@@ -17,7 +17,7 @@ public abstract class AAssignedBuilding : ABuilding
     public abstract void Reassign(List<Villager> assigned);
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLE
     public override void OnDisable()
     {
         var tm = TownManager.ExistingInstance;
