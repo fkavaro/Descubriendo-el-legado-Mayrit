@@ -1,5 +1,6 @@
 using System;
 using Unity.Cinemachine;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class ThirdPerson_CameraState : ACameraState
@@ -13,7 +14,7 @@ public class ThirdPerson_CameraState : ACameraState
     {
         GameManager.Instance.InputActions.Player.Enable();
         GameManager.Instance.InputActions.Camera.ExitMode.Enable();
-        GameManager.Instance.InputActions.Camera.ExitMode.performed += SwicthToSpectatorCamera;
+        GameManager.Instance.InputActions.Camera.ExitMode.performed += SwitchToSpectatorCamera;
 
         _camera.gameObject.SetActive(true);
 
@@ -28,18 +29,18 @@ public class ThirdPerson_CameraState : ACameraState
 
     public override void LateUpdateState()
     {
-        _cameraController.LateUpdate();
+        _cameraController.Update();
     }
 
     public override void ExitState()
     {
         GameManager.Instance.InputActions.Player.Disable();
         GameManager.Instance.InputActions.Camera.ExitMode.Disable();
-        GameManager.Instance.InputActions.Camera.ExitMode.performed -= SwicthToSpectatorCamera;
+        GameManager.Instance.InputActions.Camera.ExitMode.performed -= SwitchToSpectatorCamera;
         _camera.gameObject.SetActive(false);
     }
 
-    void SwicthToSpectatorCamera(InputAction.CallbackContext context)
+    void SwitchToSpectatorCamera(InputAction.CallbackContext context)
     {
         CameraManager.Instance.SwitchToSpectatorCamera();
     }

@@ -9,6 +9,7 @@ public class PointOfInterest : MonoBehaviour
     #endregion
 
     #region EDITOR PROPERTIES
+    [SerializeField] bool _isVisited;
     [Tooltip("Information associated with this POI")]
     [SerializeField] DataSO _data;
     [Tooltip("Layer mask used for trigger checks (defaults to PlayableCharacter layer if present)")]
@@ -18,7 +19,6 @@ public class PointOfInterest : MonoBehaviour
     #region INTERNAL PROPERTIES
     public event Action<PointOfInterest> OnVisitedEvent;
 
-    bool _isVisited;
     readonly float _visitRadius = 2f;
     SphereCollider _sphereCollider;
     #endregion

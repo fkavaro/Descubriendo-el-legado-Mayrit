@@ -29,7 +29,13 @@ public class ThirdPersonCameraController
         _topClamp = CameraManager.Instance._topClamp;
     }
 
-    public void LateUpdate()
+    public void Update()
+    {
+        MouseTracking();
+        TargetSmoothFolow();
+    }
+
+    void MouseTracking()
     {
         // Read input
         _lookInput = GameManager.Instance.InputActions.Player.Look.ReadValue<Vector2>();
@@ -42,14 +48,18 @@ public class ThirdPersonCameraController
         if (_targetYaw > 360f) _targetYaw -= 360f;
         if (_targetYaw < 0f) _targetYaw += 360f;
 
-        if (_cameraTarget != null)
-        {
-            // Apply rotation to camera target
-            _cameraTarget.rotation = Quaternion.Euler(_targetPitch, _targetYaw, 0f);
+        if (_cameraTarget == null) return;
 
-            // Move smoothly camera target to follow the player
-            Transform player = GameManager.Instance.PlayableCharacter.transform;
-            _cameraTarget.position = Vector3.Lerp(_cameraTarget.position, player.position, Time.unscaledDeltaTime * _followSpeed);
-        }
+        // Apply rotation to camera target
+        _cameraTarget.rotation = Quaternion.Euler(_targetPitch, _targetYaw, 0f);
+    }
+
+    void TargetSmoothFolow()
+    {
+        if (_cameraTarget == null) return;
+
+        // Move smoothly camera target to follow the player
+        Transform player = GameManager.Instance.PlayableCharacter.transform;
+        _cameraTarget.position = Vector3.Lerp(_cameraTarget.position, player.position, Time.unscaledDeltaTime * _followSpeed);
     }
 }

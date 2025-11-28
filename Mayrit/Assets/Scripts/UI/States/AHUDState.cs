@@ -20,7 +20,6 @@ public abstract class AHUDState : AUIState
 
         InitializeContextualPanel();
 
-        _contextualPanel.OnHiddenEvent += HideContextualPanel;
         UIManager.Instance.ShowContextualPanelEvent += ShowContextualPanel;
         UIManager.Instance.HideContextualPanelEvent += HideContextualPanel;
     }
@@ -29,38 +28,42 @@ public abstract class AHUDState : AUIState
     {
         base.ExitState();
 
-        _contextualPanel.OnHiddenEvent -= HideContextualPanel;
         UIManager.Instance.ShowContextualPanelEvent -= ShowContextualPanel;
         UIManager.Instance.HideContextualPanelEvent -= HideContextualPanel;
     }
     #endregion
 
     #region PROTECTED METHODS
-    void InitializeContextualPanel()
-    {
-        VisualElement contextualPanelRoot = _screen.Q<VisualElement>("ContextualPanel");
-
-        if (contextualPanelRoot == null)
-            Debug.LogWarning("_contextualPanel not found");
-
-        _contextualPanel = new(contextualPanelRoot);
-    }
-
     protected void ShowContextualPanel(DataSO data, bool isCharacterData = false)
     {
         _contextualPanel.ShowInfo(data, isCharacterData);
         OnContextualPanelShown();
     }
-    #endregion
 
-    #region PRIVATE METHODS
-    void HideContextualPanel()
+    protected void HideContextualPanel()
     {
+        _contextualPanel.Hide();
         OnContextualPanelHidden();
     }
     #endregion
 
-    #region ABSTRACT METHODS
+    #region PRIVATE METHODS
+    void InitializeContextualPanel()
+    {
+        VisualElement hudScreen = _UIDocument.rootVisualElement.Q<VisualElement>("HUD");
+        VisualElement contextualPanelRoot = hudScreen.Q<VisualElement>("ContextualPanel");
+
+        if (contextualPanelRoot == null)
+        {
+            Debug.LogWarning("_contextualPanel not found");
+            return;
+        }
+
+        _contextualPanel = new(contextualPanelRoot);
+    }
+    #endregion
+
+    #region VIRTUAL METHODS
     protected virtual void OnContextualPanelShown() { }
     protected virtual void OnContextualPanelHidden() { }
     #endregion

@@ -5,8 +5,6 @@ using UnityEngine.UIElements;
 public class ContextualPanel
 {
     #region PROPERTIES
-    public event Action OnHiddenEvent;
-
     readonly Label _header,
         _subHeader,
         _description,
@@ -89,13 +87,10 @@ public class ContextualPanel
         _root.style.display = DisplayStyle.Flex; // Show
     }
 
-    void Hide()
+    public void Hide()
     {
         _root.style.display = DisplayStyle.None; // Hide
-
         Reset();
-
-        OnHiddenEvent?.Invoke();
     }
     #endregion
 
@@ -108,6 +103,7 @@ public class ContextualPanel
     void OnPlayCharacter(ClickEvent evt)
     {
         CameraManager.Instance.SwitchToThirdPersonCamera();
+        Hide();
     }
 
     void Reset()

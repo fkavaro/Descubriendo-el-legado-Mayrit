@@ -5,10 +5,14 @@ using UnityEngine;
 public class Tour : MonoBehaviour
 {
     #region PROPERTY HELPERS
+    public DataSO Data => _data;
     public PointOfInterest NextPOI => _nextPOI;
     #endregion
 
     #region EDITOR PROPERTIES
+    [Tooltip("Information associated with this tour")]
+    [SerializeField] DataSO _data;
+    [Tooltip("Next POI to visit in the tour")]
     [SerializeField] PointOfInterest _nextPOI;
     [Tooltip("Ordered POIs for this tour")]
     [SerializeField] List<PointOfInterest> _pointsOfInterest = new();
@@ -100,7 +104,7 @@ public class Tour : MonoBehaviour
     void ResetPOIs()
     {
         foreach (PointOfInterest point in _pointsOfInterest)
-            if (point != null) point.Deactivate();
+            if (point != null) point.Activate();
     }
     #endregion
 

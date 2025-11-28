@@ -5,9 +5,9 @@ public class PlayerHUD_UIState : AHUDState
 {
     #region  PROPERTIES
     Button _pauseButton;
-    VisualElement _activityArea;
-    Label _activityName,
-        _activityDescription;
+    VisualElement _tourArea;
+    Label _tourName,
+        _tourDescription;
     #endregion
 
     #region CONSTRUCTOR
@@ -19,29 +19,46 @@ public class PlayerHUD_UIState : AHUDState
     protected override void ConfigureUIElements()
     {
         _pauseButton = _screen.Q<Button>("PauseButton");
-        _activityArea = _screen.Q<VisualElement>("ActivityArea");
+        _tourArea = _screen.Q<VisualElement>("TourArea");
+        _tourName = _tourArea.Q<Label>("Name");
+        _tourDescription = _tourArea.Q<Label>("Description");
 
         if (_pauseButton == null)
             Debug.LogWarning("_pauseButton not found");
-        if (_activityArea == null)
-            Debug.LogWarning("_activityArea not found");
+        if (_tourArea == null)
+            Debug.LogWarning("TourArea not found");
+        if (_tourName == null)
+            Debug.LogWarning("_tourName not found");
+        if (_tourDescription == null)
+            Debug.LogWarning("_tourDescription not found");
     }
 
     protected override void RegisterCallbacks()
     {
         _pauseButton.RegisterCallback<ClickEvent>(OnPauseClicked);
     }
+
+    protected override void OnStartState()
+    {
+        // Overwrite HUD info with current tour info
+        Tour currentTour = TourManager.Instance.CurrentTour;
+        if (currentTour != null)
+        {
+            _tourName.text = currentTour.Data.Header;
+            _tourDescription.text = currentTour.Data.SubHeader;
+        }
+    }
     #endregion
 
     #region HUD STATE INHERITED METHODS
     protected override void OnContextualPanelShown()
     {
-        _activityArea.style.display = DisplayStyle.None;
+        _tourArea.style.display = DisplayStyle.None;
     }
 
     protected override void OnContextualPanelHidden()
     {
-        _activityArea.style.display = DisplayStyle.Flex;
+        _tourArea.style.display = DisplayStyle.Flex;
     }
     #endregion
 
