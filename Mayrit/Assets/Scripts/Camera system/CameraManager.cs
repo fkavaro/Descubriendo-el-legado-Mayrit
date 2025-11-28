@@ -48,12 +48,6 @@ public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStat
     [Range(0.1f, 5f)]
     public float _orbitalSimSpeed = 1f;
     public CinemachineCamera _orbitalCamera;
-    public float _orbitalBuildingOrbitSpeed = 30f;
-    public float _orbitalBuildingZoom;
-    public float _orbitalBuildingOffset = 20f;
-    public float _orbitalCharacterOrbitSpeed = 15f;
-    public float _orbitalCharacterZoom;
-    public float _orbitalCharacterOffset = 10f;
 
     [Header("Third Person Camera")]
     [Range(0.1f, 5f)]
@@ -153,13 +147,11 @@ public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStat
         OnCameraStateChangedEvent?.Invoke();
     }
 
-    public void SwitchToOrbitalCamera(Transform objectToOrbitAround, AInformationSO information)
+    public void SwitchToOrbitalCamera(SelectableObject selectedElement)
     {
         UIManager.Instance.HideContextualPanel();
 
-        _orbitalState._information = information;
-        _orbitalCamera.Follow = objectToOrbitAround;
-        _orbitalCamera.LookAt = objectToOrbitAround;
+        _orbitalState.SelectedObject = selectedElement;
 
         // Same orbit values as spectator camera
         _orbitalCamera.GetComponent<CinemachineOrbitalFollow>().HorizontalAxis.Value =

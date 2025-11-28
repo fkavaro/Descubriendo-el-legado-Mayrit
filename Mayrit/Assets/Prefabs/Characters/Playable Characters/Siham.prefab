@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7322661222714234494}
   - component: {fileID: 5391638514220604821}
   - component: {fileID: 1596673507731933656}
+  - component: {fileID: 59659429370565961}
   m_Layer: 8
   m_Name: Siham
   m_TagString: Player
@@ -86,7 +87,24 @@ MonoBehaviour:
   _conversationCooldown: 0
   _gender: 1
   _characterModel: {fileID: 5434453373518007707}
-  _data: {fileID: 11400000, guid: 4146047eade613e41aeaf3f8813dbe44, type: 2}
+--- !u!114 &59659429370565961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5927973518140181291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52adadd7abfef744fa7f89eb0562edec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectableObject
+  _isCharacter: 1
+  _data: {fileID: 11400000, guid: bcba68fbbf70b3f4d91f4610afb85ec1, type: 2}
+  _orbitalCameraValues:
+    _orbitSpeed: 5
+    _zoomValue: 7
+    _horizontalOffset: 2
 --- !u!1001 &4663850333815916325
 PrefabInstance:
   m_ObjectHideFlags: 0

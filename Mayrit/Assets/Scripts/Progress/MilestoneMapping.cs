@@ -3,11 +3,19 @@ using UnityEngine;
 [System.Serializable]
 public class MilestoneMapping
 {
-    [SerializeField] Milestone_InformationSO _milestoneData;
+    [SerializeField] DataSO _milestoneData;
     [SerializeField] GameObject _playableCharacter;
     [SerializeField] GameObject _tour;
+    [SerializeField] float _wantedTime;
+    [SerializeField] int _milestoneIndex;
 
-    public Milestone_InformationSO Data => _milestoneData;
+    public DataSO Data => _milestoneData;
     public PlayableCharacter PlayableCharacter => _playableCharacter.GetComponent<PlayableCharacter>();
     public Tour Tour => _tour.GetComponent<Tour>();
+    public float WantedTime => _wantedTime;
+    public int Index
+    {
+        get => _milestoneIndex;
+        set => _milestoneIndex = value;
+    }
 }

@@ -5,9 +5,6 @@ using UnityEngine.UIElements;
 public abstract class AHUDState : AUIState
 {
     #region PROPERTIES
-    public event Action OnPanelShownEvent;
-    public event Action OnPanelHiddenEvent;
-
     protected ContextualPanel _contextualPanel;
     #endregion
 
@@ -49,11 +46,10 @@ public abstract class AHUDState : AUIState
         _contextualPanel = new(contextualPanelRoot);
     }
 
-    protected void ShowContextualPanel(AInformationSO objectInfo)
+    protected void ShowContextualPanel(DataSO data, bool isCharacterData = false)
     {
-        _contextualPanel.ShowInfo(objectInfo);
+        _contextualPanel.ShowInfo(data, isCharacterData);
         OnContextualPanelShown();
-        OnPanelShownEvent?.Invoke();
     }
     #endregion
 
@@ -61,7 +57,6 @@ public abstract class AHUDState : AUIState
     void HideContextualPanel()
     {
         OnContextualPanelHidden();
-        OnPanelHiddenEvent?.Invoke();
     }
     #endregion
 

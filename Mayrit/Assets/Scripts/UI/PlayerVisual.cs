@@ -9,7 +9,7 @@ public class PlayerVisual : Billboard
     Button _playerButton;
     PlayableCharacter _playableCharacter;
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLLE
     void Awake()
     {
         // Try to get the UIDocument component from the same GameObject
@@ -89,7 +89,7 @@ public class PlayerVisual : Billboard
     {
         // Spectator camera
         if (CameraManager.Instance.IsInSpectatorState)
-            CameraManager.Instance.SwitchToOrbitalCamera(_playableCharacter.transform, _playableCharacter.Data);
+            CameraManager.Instance.SwitchToOrbitalCamera(_playableCharacter.GetComponent<SelectableObject>());
         // Third person camera
         else if (CameraManager.Instance.IsInThirdPersonState)
             CameraManager.Instance.SwitchToSpectatorCamera();

@@ -9,14 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8afea8fe5a2c454a8016a077e6ce91e, type: 3}
+  m_Script: {fileID: 11500000, guid: abc58fc9460fcf84eb0c46c995f89837, type: 3}
   m_Name: 4_RamiroII_Milestone_InformationSO
   m_EditorClassIdentifier: 
   _header: Ataque de Ramiro II
   _subHeader: 932
-  _description: 
+  _description: "[Fue un intento de ocupaci\xF3n de Ramiro II de Le\xF3n, en el que
+    Mayrit fue arrasada para reducir su amenaza. Tras esto se refuerza la muralla,
+    que qued\xF3 bastante perjudicada.]"
   _icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   _image: {fileID: 0}
   _imageCaption: 
-  _wantedTime: 14
-  _milestoneIndex: 4

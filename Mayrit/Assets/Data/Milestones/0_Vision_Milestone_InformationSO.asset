@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8afea8fe5a2c454a8016a077e6ce91e, type: 3}
+  m_Script: {fileID: 11500000, guid: abc58fc9460fcf84eb0c46c995f89837, type: 3}
   m_Name: 0_Vision_Milestone_InformationSO
   m_EditorClassIdentifier: 
-  _header: "La visi\xF3n"
+  _header: "La visi\xF3n "
   _subHeader: Entorno al 875
   _description: "Durante esta \xE9poca, el emirato independiente de C\xF3rdoba, bajo
     el gobierno de Muhammad I, buscaba reforzar su autoridad en la Marca Media \u2013
@@ -24,8 +24,7 @@ MonoBehaviour:
     la antigua capital visigoda conservaba un fuerte car\xE1cter levantisco frente
     al gobierno isl\xE1mico. Tanto, que desde mediados de siglo protagoniz\xF3 dos
     grandes sublevaciones: una en el 852, con el apoyo del rey Ordo\xF1o I de Asturias;
-    y otra en el 871.\r"
+    y otra en el 871."
   _icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   _image: {fileID: 0}
   _imageCaption: 
-  _wantedTime: 7

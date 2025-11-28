@@ -72,7 +72,7 @@ public class ProgressObject : MonoBehaviour
     #region EVENTS METHODS
     void OnMilestoneChanged(MilestoneMapping milestoneMapping)
     {
-        int milestoneIndex = milestoneMapping.Data.Index;
+        int milestoneIndex = milestoneMapping.Index;
 
         if (this == null) return;
 

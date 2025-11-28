@@ -57,33 +57,33 @@ public class ContextualPanel
     #endregion
 
     #region PUBLIC METHODS
-    public void ShowInfo(AInformationSO objectInfo)
+    public void ShowInfo(DataSO data, bool isCharacterData)
     {
         Reset();
 
         // Overwrite panel information
-        _header.text = objectInfo.Header;
-        _subHeader.text = objectInfo.SubHeader;
-        _description.text = objectInfo.Description;
+        _header.text = data.Header;
+        _subHeader.text = data.SubHeader;
+        _description.text = data.Description;
 
         // Theres is an icon
-        if (objectInfo.Icon != null)
+        if (data.Icon != null)
         {
-            _icon.style.backgroundImage = new StyleBackground(objectInfo.Icon.texture);
+            _icon.style.backgroundImage = new StyleBackground(data.Icon.texture);
             _icon.style.display = DisplayStyle.Flex;
         }
 
         // There is an image
-        if (objectInfo.Image != null)
+        if (data.Image != null)
         {
-            _image.style.backgroundImage = new StyleBackground(objectInfo.Image.texture);
+            _image.style.backgroundImage = new StyleBackground(data.Image.texture);
             _image.style.display = DisplayStyle.Flex;
-            _imageCaption.text = objectInfo.ImageCaption;
+            _imageCaption.text = data.ImageCaption;
             _imageCaption.style.display = DisplayStyle.Flex;
         }
 
         // If the information type is Character, show the play button
-        if (objectInfo is Character_InformationSO)
+        if (isCharacterData)
             _playCharacterButton.style.display = DisplayStyle.Flex;
 
         _root.style.display = DisplayStyle.Flex; // Show

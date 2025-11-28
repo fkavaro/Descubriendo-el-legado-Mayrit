@@ -67,7 +67,7 @@ public class TimeManager : Singleton<TimeManager>
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _currentTime = ProgressManager.Instance.CurrentMilestoneMapping.Data.WantedTime;
+        _currentTime = ProgressManager.Instance.CurrentMilestoneMapping.WantedTime;
         UpdateLighting();
     }
 
@@ -215,7 +215,7 @@ public class TimeManager : Singleton<TimeManager>
     void OnMilestoneChanged(MilestoneMapping mapping)
     {
         if (mapping != null)
-            _wantedTime = mapping.Data.WantedTime;
+            _wantedTime = mapping.WantedTime;
     }
     #endregion
 }

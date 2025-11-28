@@ -12,7 +12,7 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
     #region EDITOR PROPERTIES
     [Header("Villagers pool")]
     [Tooltip("Names database (ScriptableObject)")]
-    public NamesDatabase _namesDatabase;
+    public NamesDatabaseSO _namesDatabase;
     public GameObject[] _femaleVillagerPrefabs;
     public GameObject[] _maleVillagerPrefabs;
     [Tooltip("Proportion of villagers that should be female (0..1)"), Range(0f, 1f)]

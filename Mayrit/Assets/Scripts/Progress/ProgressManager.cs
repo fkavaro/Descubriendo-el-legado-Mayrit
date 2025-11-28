@@ -135,7 +135,7 @@ public class ProgressManager : ASingletonBehaviourEntity<ProgressManager, Finite
                 return;
             }
 
-            int idx = milestoneMapping.Data.Index;
+            int idx = milestoneMapping.Index;
             if (!_milestonesMappings.ContainsKey(idx))
                 _milestonesMappings[idx] = milestoneMapping;
         }
@@ -159,7 +159,7 @@ public class ProgressManager : ASingletonBehaviourEntity<ProgressManager, Finite
         if (_fsm?.CurrentState == null || _fsm.CurrentState.MilestoneMapping == null)
             return;
 
-        _currentMilestoneIndex = _fsm.CurrentState.MilestoneMapping.Data.Index;
+        _currentMilestoneIndex = _fsm.CurrentState.MilestoneMapping.Index;
         _currentMilestoneMapping = CurrentMilestoneMapping;
 
         if (_currentMilestoneMapping == null)

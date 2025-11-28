@@ -2,16 +2,9 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(SelectableObject))]
 public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacterState>>
 {
-    #region PROPERTY HELPERS
-    public AInformationSO Data => _data;
-    #endregion
-
-    #region EDITOR PROPERTIES
-    public AInformationSO _data;
-    #endregion
-
     #region INTERNAL PROPERTIES
     public PlayableCharacterMovementController _playerController;
     FiniteStateMachine<APlayableCharacterState> _fsm;

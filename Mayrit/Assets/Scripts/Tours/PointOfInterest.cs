@@ -5,12 +5,12 @@ using UnityEngine;
 public class PointOfInterest : MonoBehaviour
 {
     #region PROPERTY HELPERS
-    public AInformationSO Data => _data;
+    public DataSO Data => _data;
     #endregion
 
     #region EDITOR PROPERTIES
     [Tooltip("Information associated with this POI")]
-    [SerializeField] AInformationSO _data;
+    [SerializeField] DataSO _data;
     [Tooltip("Layer mask used for trigger checks (defaults to PlayableCharacter layer if present)")]
     [SerializeField] LayerMask detectionMask = ~0;
     #endregion

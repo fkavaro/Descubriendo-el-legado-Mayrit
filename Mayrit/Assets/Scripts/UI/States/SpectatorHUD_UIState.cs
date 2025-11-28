@@ -145,7 +145,7 @@ public class SpectatorHUD_UIState : AHUDState
         ShowContextualPanel(mapping.Data);
     }
 
-    void OnShowTooltip(AInformationSO data)
+    void OnShowTooltip(DataSO data)
     {
         if (!CameraManager.Instance.IsInSpectatorState)
         {

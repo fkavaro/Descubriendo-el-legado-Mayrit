@@ -8,7 +8,7 @@ public class LandmarkVisual : MonoBehaviour
     Label _nameLabel;
     Button _nameButton;
 
-    public AInformationSO _information;
+    public DataSO _information;
 
     void OnEnable()
     {

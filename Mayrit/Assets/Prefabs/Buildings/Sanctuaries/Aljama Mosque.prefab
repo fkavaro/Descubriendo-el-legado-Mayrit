@@ -1733,7 +1733,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52adadd7abfef744fa7f89eb0562edec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _data: {fileID: 11400000, guid: 7b7b682e8cb3e9342a5adf400568df56, type: 2}
+  _isCharacter: 0
+  _data: {fileID: 11400000, guid: 161bff25305ffa946b56fcfaa7b5915a, type: 2}
+  _orbitalCameraValues:
+    _orbitSpeed: 10
+    _zoomValue: 70
+    _horizontalOffset: 20
 --- !u!114 &9093015535903969266
 MonoBehaviour:
   m_ObjectHideFlags: 0

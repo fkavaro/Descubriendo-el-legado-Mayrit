@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
+using NUnit.Framework;
 
 /// <summary>
 /// Manages the user interface states and data. Singleton.
@@ -26,9 +27,9 @@ public class UIManager : ASingletonBehaviourEntity<UIManager, StackFiniteStateMa
     #endregion
 
     #region INTERNAL PROPERTIES
-    public event Action<AInformationSO> ShowContextualPanelEvent;
+    public event Action<DataSO, bool> ShowContextualPanelEvent;
     public event Action HideContextualPanelEvent;
-    public event Action<AInformationSO> ShowTooltipEvent;
+    public event Action<DataSO> ShowTooltipEvent;
     public event Action HideTooltipEvent;
     public event Action ModernSuperpositionToggledEvent;
 
@@ -107,12 +108,12 @@ public class UIManager : ASingletonBehaviourEntity<UIManager, StackFiniteStateMa
         HideContextualPanelEvent?.Invoke();
     }
 
-    public void ShowContextualPanel(AInformationSO data)
+    public void ShowContextualPanel(DataSO data, bool isCharacterData = false)
     {
-        ShowContextualPanelEvent?.Invoke(data);
+        ShowContextualPanelEvent?.Invoke(data, isCharacterData);
     }
 
-    public void ShowTooltip(AInformationSO data)
+    public void ShowTooltip(DataSO data)
     {
         ShowTooltipEvent?.Invoke(data);
     }
