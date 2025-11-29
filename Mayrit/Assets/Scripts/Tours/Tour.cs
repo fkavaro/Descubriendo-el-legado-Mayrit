@@ -6,12 +6,16 @@ public class Tour : MonoBehaviour
 {
     #region PROPERTY HELPERS
     public DataSO Data => _data;
+    public bool IsCompleted => _isCompleted;
     public PointOfInterest NextPOI => _nextPOI;
     #endregion
 
     #region EDITOR PROPERTIES
     [Tooltip("Information associated with this tour")]
     [SerializeField] DataSO _data;
+
+    [Header("Tour Settings")]
+    [SerializeField] bool _isCompleted;
     [Tooltip("Next POI to visit in the tour")]
     [SerializeField] PointOfInterest _nextPOI;
     [Tooltip("Ordered POIs for this tour")]
@@ -21,7 +25,6 @@ public class Tour : MonoBehaviour
     #region INTERNAL PROPERTIES
     public event Action<PointOfInterest> OnVisitedPOIEvent;
     public event Action<PointOfInterest> OnNextPOIChangeEvent;
-    public event Action<Tour> OnCompletedEvent;
 
     int _currentPOIindex = -1;
     #endregion
@@ -31,7 +34,15 @@ public class Tour : MonoBehaviour
     {
         Reset();
         Activate();
-        UpdateNextPOI();
+
+        UIManager.Instance.OnContextualPanelHiddenEvent += OnContextualPanelHidden;
+    }
+
+    public void StopTour()
+    {
+        Deactivate();
+
+        UIManager.Instance.OnContextualPanelHiddenEvent -= OnContextualPanelHidden;
     }
     #endregion
 
@@ -48,8 +59,7 @@ public class Tour : MonoBehaviour
         // All POIs visited
         if (_currentPOIindex >= _pointsOfInterest.Count)
         {
-            OnCompletedEvent?.Invoke(this);
-            Deactivate();
+            _isCompleted = true;
             return;
         }
 
@@ -97,6 +107,7 @@ public class Tour : MonoBehaviour
 
     void Reset()
     {
+        _isCompleted = false;
         _currentPOIindex = -1;
         ResetPOIs();
     }
@@ -104,7 +115,7 @@ public class Tour : MonoBehaviour
     void ResetPOIs()
     {
         foreach (PointOfInterest point in _pointsOfInterest)
-            if (point != null) point.Activate();
+            if (point != null) point.Reset();
     }
     #endregion
 
@@ -112,6 +123,10 @@ public class Tour : MonoBehaviour
     void OnPOIVisited(PointOfInterest poi)
     {
         OnVisitedPOIEvent?.Invoke(poi);
+    }
+
+    void OnContextualPanelHidden()
+    {
         UpdateNextPOI();
     }
     #endregion

@@ -41,13 +41,16 @@ public class TourManager : Singleton<TourManager>
             _renderYOffset, _maxPoints);
         _pathVisualizer.Initialize();
 
-        // Subscribe to ProgressManager milestone changes to track active tour
+        // Subscribe to events
         ProgressManager.Instance.OnMilestoneChangedEvent += OnMilestoneChanged;
+        UIManager.Instance.OnContextualPanelHiddenEvent += OnContextualPanelHidden;
+        UIManager.Instance.PlayCharacterClickedEvent += OnPlayCharacterClicked;
     }
 
     void Update()
     {
-        if (CameraManager.Instance.IsInThirdPersonState)
+        if (GameManager.Instance.PlayableCharacter.IsBeingControlled &&
+            _currentTour != null && !_currentTour.IsCompleted)
             _pathVisualizer.UpdatePath();
         else
             _pathVisualizer.Clear();
@@ -58,11 +61,10 @@ public class TourManager : Singleton<TourManager>
         // Let the visualizer unsubscribe from ProgressManager and cleanup
         _pathVisualizer.Deinitialize();
 
-        if (ProgressManager.Instance != null)
-            ProgressManager.Instance.OnMilestoneChangedEvent -= OnMilestoneChanged;
+        ProgressManager.ExistingInstance.OnMilestoneChangedEvent -= OnMilestoneChanged;
+        UIManager.ExistingInstance.OnContextualPanelHiddenEvent -= OnContextualPanelHidden;
 
-        if (_currentTour != null)
-            DetachFromTour(_currentTour);
+        DetachFromCurrentTour();
     }
     #endregion
 
@@ -71,24 +73,24 @@ public class TourManager : Singleton<TourManager>
     void AttachToTour(Tour tour)
     {
         if (tour == null) return;
+        if (_currentTour == tour) return;
 
         // Detach previous
-        if (_currentTour != null && _currentTour != tour)
-            DetachFromTour(_currentTour);
+        DetachFromCurrentTour();
 
+        // Update current
         _currentTour = tour;
         _currentTour.OnVisitedPOIEvent += OnTourPOIVisited;
         _currentTour.OnNextPOIChangeEvent += OnTourNextPOIChange;
-        _currentTour.OnCompletedEvent += OnTourCompleted;
     }
 
-    void DetachFromTour(Tour tour)
+    void DetachFromCurrentTour()
     {
-        if (tour == null) return;
+        if (_currentTour == null) return;
 
-        tour.OnVisitedPOIEvent -= OnTourPOIVisited;
-        tour.OnNextPOIChangeEvent -= OnTourNextPOIChange;
-        tour.OnCompletedEvent -= OnTourCompleted;
+        _currentTour.OnVisitedPOIEvent -= OnTourPOIVisited;
+        _currentTour.OnNextPOIChangeEvent -= OnTourNextPOIChange;
+        _currentTour.StopTour();
         _currentTour = null;
     }
     #endregion
@@ -97,7 +99,6 @@ public class TourManager : Singleton<TourManager>
     void OnMilestoneChanged(MilestoneMapping milestoneMapping)
     {
         AttachToTour(milestoneMapping?.Tour);
-        _currentTour.StartTour();
     }
 
     void OnTourPOIVisited(PointOfInterest poi)
@@ -110,9 +111,19 @@ public class TourManager : Singleton<TourManager>
         OnTourNextPOIChangeEvent?.Invoke(poi);
     }
 
-    void OnTourCompleted(Tour tour)
+    void OnContextualPanelHidden()
     {
-        OnTourCompletedEvent?.Invoke(tour);
+        // Invoke completed event if tour is completed
+        if (_currentTour != null && _currentTour.IsCompleted)
+        {
+            OnTourCompletedEvent?.Invoke(_currentTour);
+            DetachFromCurrentTour();
+        }
+    }
+
+    void OnPlayCharacterClicked()
+    {
+        _currentTour.StartTour();
     }
     #endregion
 }

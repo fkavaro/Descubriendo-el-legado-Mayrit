@@ -50,14 +50,7 @@ public class PointOfInterest : MonoBehaviour
                 _detectionMask = 1 << playableLayer;
         }
 
-        // Disable camera at start
-        if (_camera == null)
-        {
-            Debug.LogWarning($"POI '{name}' has no Cinemachine camera assigned.");
-            return;
-        }
-
-        _camera.gameObject.SetActive(false);
+        Reset();
     }
 
     /// <summary>
@@ -76,29 +69,25 @@ public class PointOfInterest : MonoBehaviour
     #endregion
 
     #region PUBLIC METHODS
-    /// <summary>
-    /// Marks as unvisited and enables the POI collider.
-    /// </summary>
     public void Activate()
     {
-        _isVisited = false;
-        _sphereCollider.enabled = true;
+        transform.gameObject.SetActive(true);
     }
 
-    /// <summary>
-    /// Marks as visited and disables the POI collider.
-    /// </summary>
     public void Deactivate()
     {
-        _isVisited = true;
-        _sphereCollider.enabled = false;
+        transform.gameObject.SetActive(false);
+    }
+
+    public void Reset()
+    {
+        _isVisited = false;
+
+        Deactivate();
     }
     #endregion
 
     #region PRIVATE METHODS
-    /// <summary>
-    /// Marks this POI as visited and invokes the OnVisited event.
-    /// </summary>
     void SetAsVisited()
     {
         if (_isVisited) return;
