@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 public class SpectatorCameraSelector
 {
     #region PUBLIC PROPERTIES
+    public event Action<SelectableObject> ObjectSelectedEvent;
     public LayerMask _selectableLayer;
     #endregion
 
@@ -86,7 +87,7 @@ public class SpectatorCameraSelector
     /// </summary>
     void ApplySelection()
     {
-        CameraManager.Instance.SwitchToOrbitalCamera(_currentSelected);
+        ObjectSelectedEvent?.Invoke(_currentSelected);
         ResetHover();
     }
 
@@ -98,8 +99,6 @@ public class SpectatorCameraSelector
         if (_currentSelected == null) return;
         if (UIManager.Instance.IsCursorOverUI()) return;
 
-        UIManager.Instance.HideContextualPanel();
-        CameraManager.Instance.SwitchToSpectatorCamera();
         _currentSelected = null;
     }
     #endregion

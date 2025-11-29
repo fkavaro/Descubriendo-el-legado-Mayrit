@@ -443,7 +443,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3814782983823893589
 Transform:
   m_ObjectHideFlags: 0
@@ -693,12 +693,6 @@ MonoBehaviour:
   _spectatorTargetFixingSpeed: 50
   _orbitalSimSpeed: 1
   _orbitalCamera: {fileID: 1263816906637668818}
-  _orbitalBuildingOrbitSpeed: 10
-  _orbitalBuildingZoom: 70
-  _orbitalBuildingOffset: 20
-  _orbitalCharacterOrbitSpeed: 5
-  _orbitalCharacterZoom: 7
-  _orbitalCharacterOffset: 2
   _thirdPersonSimSpeed: 1
   _thirdPersonCamera: {fileID: 412980351691204597}
   _3rdPersonCameraOrbitSpeed: 3

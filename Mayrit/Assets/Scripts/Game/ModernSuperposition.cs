@@ -46,7 +46,7 @@ public class ModernSuperposition : MonoBehaviour
     #region PRIVATE METHODS
     void OnCameraStateChanged()
     {
-        if (CameraManager.Instance.IsInThirdPersonState)
+        if (!CameraManager.Instance.IsInSpectatorState)
             IsActive = false;
     }
 

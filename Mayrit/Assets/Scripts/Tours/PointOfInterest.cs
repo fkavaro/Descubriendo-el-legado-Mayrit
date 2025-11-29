@@ -1,4 +1,5 @@
 using System;
+using Unity.Cinemachine;
 using UnityEngine;
 
 [RequireComponent(typeof(SphereCollider))]
@@ -6,20 +7,25 @@ public class PointOfInterest : MonoBehaviour
 {
     #region PROPERTY HELPERS
     public DataSO Data => _data;
+    public CinemachineCamera Camera => _camera;
     #endregion
 
     #region EDITOR PROPERTIES
-    [SerializeField] bool _isVisited;
     [Tooltip("Information associated with this POI")]
     [SerializeField] DataSO _data;
+
+    [Header("Detection Settings")]
+    [SerializeField] bool _isVisited;
     [Tooltip("Layer mask used for trigger checks (defaults to PlayableCharacter layer if present)")]
-    [SerializeField] LayerMask detectionMask = ~0;
+    [SerializeField] LayerMask _detectionMask = ~0;
+    [SerializeField] float _colliderRadius = 2f;
+
+    [Header("Camera")]
+    [SerializeField] CinemachineCamera _camera;
     #endregion
 
     #region INTERNAL PROPERTIES
     public event Action<PointOfInterest> OnVisitedEvent;
-
-    readonly float _visitRadius = 2f;
     SphereCollider _sphereCollider;
     #endregion
 
@@ -31,18 +37,27 @@ public class PointOfInterest : MonoBehaviour
     {
         if (TryGetComponent(out _sphereCollider))
         {
-            _sphereCollider.radius = _visitRadius;
+            _sphereCollider.radius = _colliderRadius;
             _sphereCollider.isTrigger = true;
         }
 
         // If detectionMask is left as default (all bits) and there's a layer named "PlayableCharacter",
         // restrict detection to that layer automatically so POIs only respond to the player.
-        if (detectionMask == (LayerMask)~0)
+        if (_detectionMask == (LayerMask)~0)
         {
             int playableLayer = LayerMask.NameToLayer("PlayableCharacter");
             if (playableLayer != -1)
-                detectionMask = 1 << playableLayer;
+                _detectionMask = 1 << playableLayer;
         }
+
+        // Disable camera at start
+        if (_camera == null)
+        {
+            Debug.LogWarning($"POI '{name}' has no Cinemachine camera assigned.");
+            return;
+        }
+
+        _camera.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -54,7 +69,7 @@ public class PointOfInterest : MonoBehaviour
         if (_isVisited) return;
 
         // Check layer mask
-        if (((1 << other.gameObject.layer) & detectionMask) == 0) return;
+        if (((1 << other.gameObject.layer) & _detectionMask) == 0) return;
 
         SetAsVisited();
     }
@@ -97,10 +112,11 @@ public class PointOfInterest : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = _isVisited ? Color.green : Color.red;
-        Gizmos.DrawSphere(transform.position, _visitRadius);
+        Gizmos.DrawSphere(transform.position, _colliderRadius);
 
 #if UNITY_EDITOR
-        UnityEditor.Handles.Label(transform.position + Vector3.up * (_visitRadius + 0.2f),
+        if (_data != null)
+            UnityEditor.Handles.Label(transform.position + Vector3.up * (_colliderRadius + 0.2f),
             string.IsNullOrEmpty(_data.Header) ? name : _data.Header);
 #endif
     }

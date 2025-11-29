@@ -29,13 +29,7 @@ public class ThirdPersonCameraController
         _topClamp = CameraManager.Instance._topClamp;
     }
 
-    public void Update()
-    {
-        MouseTracking();
-        TargetSmoothFolow();
-    }
-
-    void MouseTracking()
+    public void MouseTracking()
     {
         // Read input
         _lookInput = GameManager.Instance.InputActions.Player.Look.ReadValue<Vector2>();
@@ -54,7 +48,7 @@ public class ThirdPersonCameraController
         _cameraTarget.rotation = Quaternion.Euler(_targetPitch, _targetYaw, 0f);
     }
 
-    void TargetSmoothFolow()
+    public void TargetSmoothFolow()
     {
         if (_cameraTarget == null) return;
 

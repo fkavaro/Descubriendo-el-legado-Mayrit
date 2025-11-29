@@ -12,6 +12,7 @@ public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStat
     public bool IsInSpectatorState => _fsm.IsCurrentState(_spectatorState);
     public bool IsInOrbitalState => _fsm.IsCurrentState(_orbitalState);
     public bool IsInThirdPersonState => _fsm.IsCurrentState(_thirdPersonState);
+    public bool IsInPOIState => _fsm.IsCurrentState(_poiState);
     #endregion
 
     #region EDITOR PROPERTIES
@@ -67,6 +68,7 @@ public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStat
     Spectator_CameraState _spectatorState;
     ThirdPerson_CameraState _thirdPersonState;
     Orbital_CameraState _orbitalState;
+    POI_CameraState _poiState;
     #endregion
 
     #region INHERITED
@@ -78,11 +80,9 @@ public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStat
         _spectatorState = new(_spectatorCamera, _spectatorSimSpeed);
         _orbitalState = new(_orbitalCamera, _orbitalSimSpeed);
         _thirdPersonState = new(_thirdPersonCamera, _thirdPersonSimSpeed);
+        _poiState = new(_thirdPersonSimSpeed);
 
         _fsm.SetInitialState(_spectatorState);
-
-        // Subscribe to event
-        UIManager.Instance.OnContextualPanelHiddenEvent += OnContextualPanelHidden;
 
         return _fsm;
     }
@@ -107,12 +107,17 @@ public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStat
         }
 
         // Subscribe to events
+        _spectatorState.ObjectSelectedEvent += SwitchToOrbitalCamera;
         _thirdPersonState.ExitThirdPersonCameraEvent += OnExitThirdPersonCamera;
+        UIManager.Instance.OnContextualPanelHiddenEvent += OnContextualPanelHidden;
         UIManager.Instance.PlayCharacterClickedEvent += SwitchToThirdPersonCamera;
+        TourManager.Instance.TourPOIVisitedEvent += OnTourPOIVisited;
     }
+
+
     #endregion
 
-    #region PUBLIC METHODS
+    #region STATE HANDLING
     public void SwitchToSpectatorCamera()
     {
         if (_fsm.IsCurrentState(_thirdPersonState))
@@ -183,16 +188,23 @@ public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStat
         OnCameraStateChangedEvent?.Invoke();
     }
 
-    /// <summary>
-    /// Moves smoothly the given transform to the new position in given duration.
-    /// </summary>
-    public void SmoothMoveCoroutine(Transform lookAt, Vector3 newPosition, float speed, Action onComplete = null)
+    public void SwitchToPoiCamera(CinemachineCamera camera)
     {
-        StartCoroutine(SmoothMove(lookAt, newPosition, speed, onComplete));
+        _poiState.Camera = camera;
+        _fsm.SwitchState(_poiState);
+        OnCameraStateChangedEvent?.Invoke();
     }
     #endregion
 
     #region PRIVATE METHODS
+    /// <summary>
+    /// Moves smoothly the given transform to the new position in given duration.
+    /// </summary>
+    void SmoothMoveCoroutine(Transform lookAt, Vector3 newPosition, float speed, Action onComplete = null)
+    {
+        StartCoroutine(SmoothMove(lookAt, newPosition, speed, onComplete));
+    }
+
     /// <summary>
     /// Smoothly moves the given transform to the new position in given speed.
     /// </summary>
@@ -236,6 +248,19 @@ public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStat
     {
         if (IsInOrbitalState)
             SwitchToSpectatorCamera();
+        else if (IsInPOIState)
+            SwitchToThirdPersonCamera();
+    }
+
+    void OnTourPOIVisited(PointOfInterest poi)
+    {
+        if (poi.gameObject.activeInHierarchy == false)
+        {
+            Debug.LogWarning($"POI '{poi.name}' is not active in hierarchy.");
+            return;
+        }
+
+        SwitchToPoiCamera(poi.Camera);
     }
     #endregion
 }

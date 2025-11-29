@@ -83,10 +83,6 @@ public class SpectatorHUD_UIState : AHUDState
     protected override void OnContextualPanelHidden()
     {
         _milestoneArea.style.display = DisplayStyle.Flex;
-
-        // Switch to spectator camera state if it's not current state
-        if (CameraManager.Instance.IsInOrbitalState)
-            CameraManager.Instance.SwitchToSpectatorCamera();
     }
     #endregion
 

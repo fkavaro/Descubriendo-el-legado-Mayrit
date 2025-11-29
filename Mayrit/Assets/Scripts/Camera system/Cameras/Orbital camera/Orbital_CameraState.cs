@@ -23,7 +23,7 @@ public class Orbital_CameraState : ACameraState
         _orbitalFollow = camera.GetComponent<CinemachineOrbitalFollow>();
     }
 
-    public override void StartState()
+    public override void OnStateStarted()
     {
         GameManager.Instance.InputActions.Camera.Enable();
 
@@ -44,11 +44,7 @@ public class Orbital_CameraState : ACameraState
         _orbitalFollow.Radius = _zoomValue;
         ApplyContextualPanelOffset();
 
-        _camera.gameObject.SetActive(true);
         UIManager.Instance.ShowContextualPanel(_selectedObject.Data, _selectedObject.IsCharacter);
-
-        // Adjust simulation speed
-        TimeManager.Instance.SetSimulationSpeed(_simulationSpeed);
     }
 
     public override void UpdateState()
@@ -56,9 +52,8 @@ public class Orbital_CameraState : ACameraState
         AutomaticOrbit();
     }
 
-    public override void ExitState()
+    public override void OnStateExited()
     {
-        _camera.gameObject.SetActive(false);
         GameManager.Instance.InputActions.Camera.Disable();
     }
 

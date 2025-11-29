@@ -1,8 +1,11 @@
 
+using System;
 using Unity.Cinemachine;
 
 public class Spectator_CameraState : ACameraState
 {
+    public event Action<SelectableObject> ObjectSelectedEvent;
+
     readonly SpectatorCameraController _cameraController;
     readonly SpectatorCameraSelector _cameraSelector;
 
@@ -13,17 +16,11 @@ public class Spectator_CameraState : ACameraState
         _cameraSelector = new(CameraManager.Instance._selectableLayer);
     }
 
-    public override void StartState()
+    public override void OnStateStarted()
     {
         GameManager.Instance.InputActions.Camera.Enable();
-
-        _camera.gameObject.SetActive(true);
-
-        // Change HUD
         UIManager.Instance.SwitchToSpectatorHUDState();
-
-        // Adjust simulation speed
-        TimeManager.Instance.SetSimulationSpeed(_simulationSpeed);
+        _cameraSelector.ObjectSelectedEvent += OnObjectSelected;
     }
 
     public override void UpdateState()
@@ -37,9 +34,13 @@ public class Spectator_CameraState : ACameraState
         _cameraController.LateUpdate();
     }
 
-    public override void ExitState()
+    public override void OnStateExited()
     {
-        _camera.gameObject.SetActive(false);
         GameManager.Instance.InputActions.Camera.Disable();
+    }
+
+    void OnObjectSelected(SelectableObject selectedObject)
+    {
+        ObjectSelectedEvent?.Invoke(selectedObject);
     }
 }

@@ -15,33 +15,27 @@ public class ThirdPerson_CameraState : ACameraState
         _cameraController = new(_camera);
     }
 
-    public override void StartState()
+    public override void OnStateStarted()
     {
         GameManager.Instance.InputActions.Player.Enable();
         GameManager.Instance.InputActions.Camera.ExitMode.Enable();
         GameManager.Instance.InputActions.Camera.ExitMode.performed += OnExitThirdPersonModePressed;
-
-        _camera.gameObject.SetActive(true);
-
-        // Adjust simulation speed
-        TimeManager.Instance.SetSimulationSpeed(_simulationSpeed);
     }
 
     public override void LateUpdateState()
     {
-        // Don't update camera if player is not being controlled
-        if (!GameManager.Instance.PlayableCharacter.IsBeingControlled)
-            return;
+        _cameraController.TargetSmoothFolow();
 
-        _cameraController.Update();
+        // Only allow camera rotation if the playable character is being controlled
+        if (GameManager.Instance.PlayableCharacter.IsBeingControlled)
+            _cameraController.MouseTracking();
     }
 
-    public override void ExitState()
+    public override void OnStateExited()
     {
         GameManager.Instance.InputActions.Player.Disable();
         GameManager.Instance.InputActions.Camera.ExitMode.Disable();
         GameManager.Instance.InputActions.Camera.ExitMode.performed -= OnExitThirdPersonModePressed;
-        _camera.gameObject.SetActive(false);
     }
 
     void OnExitThirdPersonModePressed(InputAction.CallbackContext context)
