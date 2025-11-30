@@ -5,10 +5,10 @@ using UnityEngine;
 public class Controlled_PlayableCharacterState : APlayableCharacterState
 {
     public Controlled_PlayableCharacterState(PlayableCharacter playableCharacter)
-    : base("Free roam", playableCharacter) { }
+    : base("Controlled", playableCharacter) { }
 
     public override void UpdateState()
     {
-        _playableCharacter._playerController.Update();
+        _playableCharacter.MovementController.UpdateInputMovement();
     }
 }

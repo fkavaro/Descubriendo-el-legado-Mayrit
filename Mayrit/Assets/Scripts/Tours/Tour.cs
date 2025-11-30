@@ -42,7 +42,7 @@ public class Tour : MonoBehaviour
     {
         Deactivate();
 
-        UIManager.Instance.OnContextualPanelHiddenEvent -= OnContextualPanelHidden;
+        UIManager.ExistingInstance.OnContextualPanelHiddenEvent -= OnContextualPanelHidden;
     }
     #endregion
 

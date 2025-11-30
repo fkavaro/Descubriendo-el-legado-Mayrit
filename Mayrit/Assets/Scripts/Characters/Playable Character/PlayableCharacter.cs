@@ -7,14 +7,17 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
 {
     #region PROPERTY HELPERS
     public bool IsBeingControlled => _fsm.IsCurrentState(_controlledState);
+    public PlayableCharacterMovementController MovementController => _movementController;
     #endregion
 
     #region INTERNAL PROPERTIES
-    public PlayableCharacterMovementController _playerController;
+    PlayableCharacterMovementController _movementController;
 
+    // State machine and states
     FiniteStateMachine<APlayableCharacterState> _fsm;
     NotControlled_PlayableCharacterState _notControlledState;
     Controlled_PlayableCharacterState _controlledState;
+    AtPOI_PlayableCharacterState _atPOIState;
     #endregion
 
     #region INHERITED
@@ -24,6 +27,7 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
 
         _notControlledState = new(this);
         _controlledState = new(this);
+        _atPOIState = new(this);
 
         _fsm.SetInitialState(_notControlledState);
 
@@ -37,7 +41,7 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
         base.Awake();
 
         AnimationController = new(this, this, CharacterAnimator);
-        _playerController = new(this, GetComponent<CharacterController>());
+        _movementController = new(this, GetComponent<CharacterController>());
 
         // Subscribe to events
         UIManager.Instance.PlayCharacterClickedEvent += SwitchToControlledState;
@@ -49,8 +53,8 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     void OnDisable()
     {
         // Unsubscribe from events
-        UIManager.ExistingInstance.PlayCharacterClickedEvent -= SwitchToControlledState;
-        UIManager.ExistingInstance.OnContextualPanelHiddenEvent -= SwitchToControlledState;
+        UIManager.ExistingInstance.PlayCharacterClickedEvent -= OnPlayCharacterClicked;
+        UIManager.ExistingInstance.OnContextualPanelHiddenEvent -= OnContextualPanelHidden;
         TourManager.ExistingInstance.TourPOIVisitedEvent -= OnTourPOIVisited;
         CameraManager.ExistingInstance.ThirdPersonCameraExitedEvent -= OnExitThirdPersonCamera;
     }
@@ -66,12 +70,28 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     {
         _fsm.SwitchState(_controlledState);
     }
+
+    public void SwitchToAtPOIState(PointOfInterest poi)
+    {
+        _atPOIState.CurrentPOI = poi;
+        _fsm.SwitchState(_atPOIState);
+    }
     #endregion
 
     #region CALLBACK METHODS
-    void OnTourPOIVisited(PointOfInterest interest)
+    void OnPlayCharacterClicked()
     {
-        SwitchToNotControlledState();
+        SwitchToControlledState();
+    }
+
+    void OnContextualPanelHidden()
+    {
+        SwitchToControlledState();
+    }
+
+    void OnTourPOIVisited(PointOfInterest poi)
+    {
+        SwitchToAtPOIState(poi);
     }
 
     void OnExitThirdPersonCamera()
