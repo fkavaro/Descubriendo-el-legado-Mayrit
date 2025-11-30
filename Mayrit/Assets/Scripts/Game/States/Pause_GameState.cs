@@ -15,14 +15,9 @@ public class Pause_GameState : AGameState
         GamePausedEvent?.Invoke(true);
     }
 
-    public override void UpdateState()
-    {
-
-    }
-
     public override void ExitState()
     {
-        Time.timeScale = 1f;
+        Time.timeScale = TimeManager.Instance.SimulationSpeed;
 
         GamePausedEvent?.Invoke(false);
     }

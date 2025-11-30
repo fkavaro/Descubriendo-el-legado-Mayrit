@@ -59,6 +59,9 @@ public class Orbital_CameraState : ACameraState
 
     void AutomaticOrbit()
     {
+        // Do not orbit if the game simulation is paused
+        if (Time.timeScale == 0f) return;
+
         _orbitalFollow.HorizontalAxis.Value += _orbitSpeed * Time.unscaledDeltaTime;
     }
 }

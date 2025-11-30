@@ -69,7 +69,6 @@ public class TourManager : Singleton<TourManager>
     #endregion
 
     #region PRIVATE METHODS
-    // Attach to a tour managed by ProgressManager
     void AttachToTour(Tour tour)
     {
         if (tour == null) return;
@@ -123,7 +122,8 @@ public class TourManager : Singleton<TourManager>
 
     void OnPlayCharacterClicked()
     {
-        _currentTour.StartTour();
+        if (_currentTour != null)
+            _currentTour.StartTour();
     }
     #endregion
 }

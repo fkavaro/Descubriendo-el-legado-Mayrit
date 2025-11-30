@@ -67,15 +67,23 @@ public class SpectatorHUD_UIState : AHUDState
         _nextMilestoneButton.RegisterCallback<ClickEvent>(OnNextMilestoneClicked);
         _previousMilestoneButton.RegisterCallback<ClickEvent>(OnPreviousMilestoneClicked);
         _modernSuperpositionButton.RegisterCallback<ClickEvent>(OnModerSuperpositionToggled);
+        _contextualPanel.PlayCharacterClickedEvent += OnPlayCharacterClicked;
 
         UIManager.Instance.ShowTooltipEvent += OnShowTooltip;
         UIManager.Instance.HideTooltipEvent += OnHideTooltip;
         ProgressManager.Instance.OnMilestoneChangedEvent += OnMilestoneChanged;
     }
 
+    private void OnPlayCharacterClicked()
+    {
+        // Hide contextual panel
+        HideContextualPanel();
+    }
+
     protected override void OnStartState()
     {
-        _milestoneArea.style.display = DisplayStyle.Flex;
+        if (!_wasContextualPanelShown)
+            _milestoneArea.style.display = DisplayStyle.Flex;
     }
     #endregion
 

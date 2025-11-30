@@ -65,7 +65,7 @@ public class DebugOverlay : MonoBehaviour
             GUILayout.Label("PlayableCharacter: <null>");
 
         if (TimeManager.Instance != null)
-            GUILayout.Label($"TimeManager current time: {TimeManager.Instance._currentTime:F0}h");
+            GUILayout.Label($"TimeManager current time: {TimeManager.Instance.CurrentTime:F0}h");
         else
             GUILayout.Label("TimeManager: <null>");
 

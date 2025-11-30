@@ -26,7 +26,7 @@ public class Tour : MonoBehaviour
     public event Action<PointOfInterest> OnVisitedPOIEvent;
     public event Action<PointOfInterest> OnNextPOIChangeEvent;
 
-    int _currentPOIindex = -1;
+    [SerializeField] int _currentPOIindex = -1;
     #endregion
 
     #region PUBLIC METHODS
@@ -34,15 +34,12 @@ public class Tour : MonoBehaviour
     {
         Reset();
         Activate();
-
-        UIManager.Instance.OnContextualPanelHiddenEvent += OnContextualPanelHidden;
+        UpdateNextPOI();
     }
 
     public void StopTour()
     {
         Deactivate();
-
-        UIManager.ExistingInstance.OnContextualPanelHiddenEvent -= OnContextualPanelHidden;
     }
     #endregion
 
@@ -123,10 +120,6 @@ public class Tour : MonoBehaviour
     void OnPOIVisited(PointOfInterest poi)
     {
         OnVisitedPOIEvent?.Invoke(poi);
-    }
-
-    void OnContextualPanelHidden()
-    {
         UpdateNextPOI();
     }
     #endregion

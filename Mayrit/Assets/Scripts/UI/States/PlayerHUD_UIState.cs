@@ -47,6 +47,9 @@ public class PlayerHUD_UIState : AHUDState
             _tourName.text = currentTour.Data.Header;
             _tourDescription.text = currentTour.Data.SubHeader;
         }
+
+        if (!_wasContextualPanelShown)
+            _tourArea.style.display = DisplayStyle.Flex;
     }
     #endregion
 

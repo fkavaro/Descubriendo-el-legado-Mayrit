@@ -71,18 +71,17 @@ public class PointOfInterest : MonoBehaviour
     #region PUBLIC METHODS
     public void Activate()
     {
-        transform.gameObject.SetActive(true);
+        _sphereCollider.enabled = true;
     }
 
     public void Deactivate()
     {
-        transform.gameObject.SetActive(false);
+        _sphereCollider.enabled = false;
     }
 
     public void Reset()
     {
         _isVisited = false;
-
         Deactivate();
     }
     #endregion

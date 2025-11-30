@@ -6,44 +6,46 @@ using UnityEngine;
 /// </summary>
 public class TimeManager : Singleton<TimeManager>
 {
+    #region PROPERTIES HELPERS
+    public float SimulationSpeed => _gameSimulationSpeed;
+    public float CurrentTime => _currentTime;
+    #endregion
+
     #region EDITOR PROPERTIES
     [Header("Time Settings")]
     [Tooltip("Game simulation speed multiplier. Set by Camera states.")]
     [Range(0.1f, 5f)]
-    public float _gameSimulationSpeed = 1f;
+    [SerializeField] float _gameSimulationSpeed = 1f;
     [Tooltip("Whether the time will advance automatically or just to reach a wanted time")]
-    public bool _isDynamic = false;
-
+    [SerializeField] bool _isDynamic = false;
     [Tooltip("Wanted time in hours to be reached. If dynamic time is enabled, this will be ignored")]
     [Range(0f, 24f)]
-    public float _wantedTime = 10f;
-
+    [SerializeField] float _wantedTime = 10f;
     [Tooltip("Current time in hours since the start of the game")]
     [Range(0f, 24f)]
-    public float _currentTime;
-
+    [SerializeField] float _currentTime;
     [Tooltip("Time cycle speed multiplier")]
-    public float _timeSpeed = 1f;
+    [SerializeField] float _timeSpeed = 1f;
 
     [Header("Sun Light Settings")]
-    public Light _sunSource;
-    public float _sunAngle;
+    [SerializeField] Light _sunSource;
+    [SerializeField] float _sunAngle;
     [Range(0f, 90f)]
-    public float _sunLatitude = 20f;
+    [SerializeField] float _sunLatitude = 20f;
     [Range(-180f, 180f)]
-    public float _sunLongitude = -90;
-    public float _sunMaxIntensity;
-    public AnimationCurve _sunIntensityCurve;
-    public AnimationCurve _sunTemperatureCurve;
+    [SerializeField] float _sunLongitude = -90;
+    [SerializeField] float _sunMaxIntensity;
+    [SerializeField] AnimationCurve _sunIntensityCurve;
+    [SerializeField] AnimationCurve _sunTemperatureCurve;
 
     [Header("Moon Light Settings")]
-    public Light _moonSource;
+    [SerializeField] Light _moonSource;
     [Range(0f, 90f)]
-    public float _moonLatitude = 40f;
+    [SerializeField] float _moonLatitude = 40f;
     [Range(-180f, 180f)]
-    public float _moonLongitude = 90;
-    public float _moonMaxIntensity;
-    public AnimationCurve _moonIntensityCurve;
+    [SerializeField] float _moonLongitude = 90;
+    [SerializeField] float _moonMaxIntensity;
+    [SerializeField] AnimationCurve _moonIntensityCurve;
     #endregion
 
     #region INTERNAL PROPERTIES
@@ -74,10 +76,6 @@ public class TimeManager : Singleton<TimeManager>
     // Update is called once per frame
     void Update()
     {
-        // Ensure time scale matches the desired game simulation speed
-        if (Time.timeScale != _gameSimulationSpeed)
-            SetSimulationSpeed(_gameSimulationSpeed);
-
         // Difference between current time and wanted time is less than threshold of 0.1f
         _isWantedTimeReached = Mathf.Abs(_currentTime - _wantedTime) < 0.1f;
 
