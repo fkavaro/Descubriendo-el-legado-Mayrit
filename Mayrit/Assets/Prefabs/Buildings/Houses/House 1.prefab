@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8404425909734408605}
+  - component: {fileID: 730287453432180199}
   - component: {fileID: 1269317408874022744}
   m_Layer: 0
   m_Name: House 1
@@ -34,6 +35,23 @@ Transform:
   - {fileID: 1386472927714100712}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &730287453432180199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1395640635926063230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifierVolume
+  m_SerializedVersion: 0
+  m_Size: {x: 11, y: 10, z: 8}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_Area: 1
+  m_AffectedAgents: ffffffff
 --- !u!114 &1269317408874022744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -377,7 +395,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1386472927714100712}
-  - component: {fileID: 5172875168565178580}
   m_Layer: 0
   m_Name: Placeholder
   m_TagString: Untagged
@@ -402,26 +419,6 @@ Transform:
   - {fileID: 2923108163921703735}
   m_Father: {fileID: 8404425909734408605}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5172875168565178580
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7081174204748089768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifier
-  m_SerializedVersion: 0
-  m_OverrideArea: 1
-  m_Area: 1
-  m_OverrideGenerateLinks: 0
-  m_GenerateLinks: 0
-  m_IgnoreFromBuild: 0
-  m_ApplyToChildren: 1
-  m_AffectedAgents: ffffffff
 --- !u!1 &8300032548700151136
 GameObject:
   m_ObjectHideFlags: 0
@@ -585,45 +582,45 @@ MonoBehaviour:
   - m_Vertices: 0b0000000e00000012000000
   m_SharedTextures: []
   m_Positions:
-  - {x: -5, y: -3.5, z: 3.5}
-  - {x: 5, y: -3.5, z: 3.5}
-  - {x: -5, y: 3.5, z: 3.5}
-  - {x: 5, y: 3.5, z: 3.5}
-  - {x: 5, y: -3.5, z: 3.5}
-  - {x: 5, y: -3.5, z: -3.5}
-  - {x: 5, y: 3.5, z: 3.5}
-  - {x: 5, y: 3.5, z: -3.5}
-  - {x: 5, y: -3.5, z: -3.5}
-  - {x: -5, y: -3.5, z: -3.5}
-  - {x: 5, y: 3.5, z: -3.5}
-  - {x: -5, y: 3.5, z: -3.5}
-  - {x: -5, y: -3.5, z: -3.5}
-  - {x: -5, y: -3.5, z: 3.5}
-  - {x: -5, y: 3.5, z: -3.5}
-  - {x: -5, y: 3.5, z: 3.5}
-  - {x: -5, y: 3.5, z: 3.5}
-  - {x: 5, y: 3.5, z: 3.5}
-  - {x: -5, y: 3.5, z: -3.5}
-  - {x: 5, y: 3.5, z: -3.5}
-  - {x: -5, y: -3.5, z: -3.5}
-  - {x: 5, y: -3.5, z: -3.5}
-  - {x: -5, y: -3.5, z: 3.5}
-  - {x: 5, y: -3.5, z: 3.5}
+  - {x: -5, y: -5.4773664, z: 3.5}
+  - {x: 5, y: -5.4773664, z: 3.5}
+  - {x: -5, y: 3.5226336, z: 3.5}
+  - {x: 5, y: 3.5226336, z: 3.5}
+  - {x: 5, y: -5.4773664, z: 3.5}
+  - {x: 5, y: -5.4773664, z: -3.5}
+  - {x: 5, y: 3.5226336, z: 3.5}
+  - {x: 5, y: 3.5226336, z: -3.5}
+  - {x: 5, y: -5.4773664, z: -3.5}
+  - {x: -5, y: -5.4773664, z: -3.5}
+  - {x: 5, y: 3.5226336, z: -3.5}
+  - {x: -5, y: 3.5226336, z: -3.5}
+  - {x: -5, y: -5.4773664, z: -3.5}
+  - {x: -5, y: -5.4773664, z: 3.5}
+  - {x: -5, y: 3.5226336, z: -3.5}
+  - {x: -5, y: 3.5226336, z: 3.5}
+  - {x: -5, y: 3.5226336, z: 3.5}
+  - {x: 5, y: 3.5226336, z: 3.5}
+  - {x: -5, y: 3.5226336, z: -3.5}
+  - {x: 5, y: 3.5226336, z: -3.5}
+  - {x: -5, y: -5.4773664, z: -3.5}
+  - {x: 5, y: -5.4773664, z: -3.5}
+  - {x: -5, y: -5.4773664, z: 3.5}
+  - {x: 5, y: -5.4773664, z: 3.5}
   m_Textures0:
-  - {x: 10, y: -6}
-  - {x: 0, y: -6}
+  - {x: 10, y: -8}
+  - {x: 0, y: -8}
   - {x: 10, y: 1}
   - {x: 0, y: 1}
-  - {x: 7, y: -6}
-  - {x: 0, y: -6}
+  - {x: 7, y: -8}
+  - {x: 0, y: -8}
   - {x: 7, y: 1}
   - {x: 0, y: 1}
-  - {x: 10, y: -6}
-  - {x: 0, y: -6}
+  - {x: 10, y: -8}
+  - {x: 0, y: -8}
   - {x: 10, y: 1}
   - {x: 0, y: 1}
-  - {x: 7, y: -6}
-  - {x: 0, y: -6}
+  - {x: 7, y: -8}
+  - {x: 0, y: -8}
   - {x: 7, y: 1}
   - {x: 0, y: 1}
   - {x: 0, y: 1}
@@ -670,7 +667,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 67
+  m_VersionIndex: 1486
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -690,9 +687,9 @@ MonoBehaviour:
   m_Shape:
     rid: 4737004317119348790
   m_ShapeRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_UnmodifiedMeshVersion: 67
-  m_Size: {x: 10, y: 7, z: 7}
-  m_LocalCenter: {x: 0, y: 0, z: 0}
+  m_UnmodifiedMeshVersion: 1486
+  m_Size: {x: 10, y: 9, z: 7}
+  m_LocalCenter: {x: 0, y: -0.97736645, z: 0}
   references:
     version: 2
     RefIds:

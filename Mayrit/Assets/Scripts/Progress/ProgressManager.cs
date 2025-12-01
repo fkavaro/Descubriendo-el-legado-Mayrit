@@ -18,6 +18,8 @@ public class ProgressManager : ASingletonBehaviourEntity<ProgressManager, Finite
     [SerializeField] bool _updateInEditor = true;
 
     [Header("Milestones")]
+    [Range(0, 7)]
+    [SerializeField] int _currentMilestoneIndex = 0;
     [SerializeField] MilestoneMapping _currentMilestoneMapping;
     [SerializeField] List<MilestoneMapping> _milestoneMappings = new();
     #endregion
@@ -26,7 +28,6 @@ public class ProgressManager : ASingletonBehaviourEntity<ProgressManager, Finite
     public event Action<MilestoneMapping> OnMilestoneChangedEvent;
     public event Action<bool> OnEditorUpdateChangedEvent;
 
-    int _currentMilestoneIndex = 0;
     int _lastValidatedMilestoneIndex;
     bool _lastUpdateInEditor;
     Dictionary<int, MilestoneMapping> _milestonesMappings;

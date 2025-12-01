@@ -1673,6 +1673,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1482190129828467039}
+  - component: {fileID: 8857022158926603108}
   - component: {fileID: 8824610579267579164}
   - component: {fileID: 5385769949168039777}
   - component: {fileID: 9093015535903969266}
@@ -1700,6 +1701,23 @@ Transform:
   - {fileID: 9185020067126583511}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8857022158926603108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6634205710336931137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifierVolume
+  m_SerializedVersion: 0
+  m_Size: {x: 29, y: 26, z: 37}
+  m_Center: {x: 0, y: 2.5, z: 2}
+  m_Area: 1
+  m_AffectedAgents: ffffffff
 --- !u!65 &8824610579267579164
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3142,7 +3160,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9185020067126583511}
-  - component: {fileID: 5727521103820379646}
   m_Layer: 0
   m_Name: Placeholder
   m_TagString: Untagged
@@ -3176,26 +3193,6 @@ Transform:
   - {fileID: 6348770964076028390}
   m_Father: {fileID: 1482190129828467039}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5727521103820379646
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7644328732495237226}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifier
-  m_SerializedVersion: 0
-  m_OverrideArea: 1
-  m_Area: 1
-  m_OverrideGenerateLinks: 0
-  m_GenerateLinks: 0
-  m_IgnoreFromBuild: 0
-  m_ApplyToChildren: 1
-  m_AffectedAgents: ffffffff
 --- !u!1 &7761143048776466981
 GameObject:
   m_ObjectHideFlags: 0
@@ -3961,6 +3958,10 @@ PrefabInstance:
     - target: {fileID: 6091380364839650983, guid: 1b402a69ccbccf144bc66f703b8f08d7, type: 3}
       propertyPath: m_Name
       value: Door
+      objectReference: {fileID: 0}
+    - target: {fileID: 8092682297460453601, guid: 1b402a69ccbccf144bc66f703b8f08d7, type: 3}
+      propertyPath: _showGizmo
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
