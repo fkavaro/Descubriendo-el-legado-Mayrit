@@ -36,11 +36,11 @@ public class PrioritySelectorNode : SelectorNode
 
             if (status == Status.Running)
             {
-                if (_currentChildId != i && _currentChildId < SortedChildren.Count)
+                if (_currentChildIdx != i && _currentChildIdx < SortedChildren.Count)
                 {
                     // If previously a different child was running, reset it
-                    SortedChildren[_currentChildId].Reset();
-                    _currentChildId = i;
+                    SortedChildren[_currentChildIdx].Reset();
+                    _currentChildIdx = i;
                 }
                 return Status.Running;
             }

@@ -34,16 +34,8 @@ public class CooldownDecorator : Node
 
         // If child succeeded, record usage time
         if (status == Status.Success)
-        {
             _lastUse = Time.time;
-        }
 
         return status;
-    }
-
-    public override void Reset()
-    {
-        base.Reset();
-        // do not reset _lastUse here; cooldown should persist across resets if desired
     }
 }

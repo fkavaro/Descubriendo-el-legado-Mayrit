@@ -18,12 +18,9 @@ public class SequenceNode : Node
     #region INHERITED METHODS
     public override Status UpdateNode()
     {
-        // Execute children in order, preserving progress across ticks using
-        // `_currentChildId`. If a child returns Running we must resume from
-        // that child next tick instead of restarting from the first child.
-        while (_currentChildId < _children.Count)
+        while (_currentChildIdx < _children.Count)
         {
-            var status = _children[_currentChildId].UpdateNode();
+            Status status = _children[_currentChildIdx].UpdateNode();
 
             if (status == Status.Running)
                 return Status.Running;
@@ -35,7 +32,7 @@ public class SequenceNode : Node
             }
 
             // status == Success -> advance to next child
-            _currentChildId++;
+            _currentChildIdx++;
         }
 
         // All children succeeded

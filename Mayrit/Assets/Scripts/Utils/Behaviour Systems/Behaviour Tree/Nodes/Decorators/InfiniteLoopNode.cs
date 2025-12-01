@@ -28,9 +28,11 @@ public class InfiniteLoopNode : Node
         if (_child == null)
             return Status.Failure; // If there is no child, the node fails
 
-        // Child has finished
-        if (_child.UpdateNode() != Status.Running)
-            _child.Reset();
+        _child.UpdateNode();
+
+        // // Child has finished
+        // if (_child.UpdateNode() != Status.Running)
+        //     _child.Reset();
 
         return Status.Running;
     }

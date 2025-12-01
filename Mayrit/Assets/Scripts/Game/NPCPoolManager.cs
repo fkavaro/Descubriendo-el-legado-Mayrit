@@ -281,6 +281,7 @@ public class NPCPoolManager : Singleton<NPCPoolManager>
         villager.gameObject.SetActive(true);
         villager.InitializeBehaviourSystem(); // Again
         randomFreeHouse.PlaceAtRandomEntrance(villager);
+        villager.BehaviourSystem.Reset();
         villager.Agent.enabled = true; // Activated once its placed
     }
 

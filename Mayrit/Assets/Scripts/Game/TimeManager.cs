@@ -95,6 +95,11 @@ public class TimeManager : Singleton<TimeManager>
             UpdateLighting();
             CheckActiveLightSource();
         }
+
+        if (_gameSimulationSpeed != Time.timeScale && Time.timeScale != 0f)
+        {
+            SetSimulationSpeed(_gameSimulationSpeed);
+        }
     }
 
     // Called when the script is loaded or a value is changed in the inspector

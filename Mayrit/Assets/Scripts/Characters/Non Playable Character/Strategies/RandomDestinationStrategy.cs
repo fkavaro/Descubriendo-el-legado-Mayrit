@@ -41,12 +41,7 @@ public class RandomDestinationStrategy : RandomPatrolStrategy
             return Node.Status.Success;
         }
         else // Hasn't arrived
-        {
-            // Reduce energy
-            //_npc.ReduceEnergy(Time.deltaTime);
-
             return Node.Status.Running;
-        }
     }
 
     public override void Reset()

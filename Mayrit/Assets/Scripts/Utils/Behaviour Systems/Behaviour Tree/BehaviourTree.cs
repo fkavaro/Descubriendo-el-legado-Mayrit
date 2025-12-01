@@ -24,14 +24,14 @@ public class BehaviourTree : Node
     /// <returns>Success when all children have returned success</returns>
     public override Status UpdateNode()
     {
-        while (_currentChildId < _children.Count)
+        while (_currentChildIdx < _children.Count)
         {
-            var status = _children[_currentChildId].UpdateNode();
+            var status = _children[_currentChildIdx].UpdateNode();
 
             if (status != Status.Success)
                 return status;
 
-            _currentChildId++;
+            _currentChildIdx++;
         }
         return Status.Success;
     }
