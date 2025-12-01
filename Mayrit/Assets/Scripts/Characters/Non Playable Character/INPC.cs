@@ -10,6 +10,7 @@ public interface INPC : ICharacter
     float MaxSamplingDistance { get; }
     int AvoidancePriorityVariance { get; }
     int BaseAvoidancePriority { get; }
+    public float WalkSpeedVariance { get; }
     bool IsStopped { get; set; }
     public string GivenName { get; }
     public string FamilyName { get; }

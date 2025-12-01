@@ -15,8 +15,9 @@ where BehaviourSystemType : ABehaviourSystem
     public NPCMovementController MovementController => _movementController;
     public float AvoidanceRadius => _avoidanceRadius;
     public float MaxSamplingDistance => _maxSamplingDistance;
-    public int AvoidancePriorityVariance => _avoidancePriorityVariance;
     public int BaseAvoidancePriority => _baseAvoidancePriority;
+    public int AvoidancePriorityVariance => _avoidancePriorityVariance;
+    public float WalkSpeedVariance => _walkSpeedVariance;
     public bool IsStopped
     {
         get => _isStopped;
@@ -71,6 +72,8 @@ where BehaviourSystemType : ABehaviourSystem
     [SerializeField] protected int _baseAvoidancePriority = 50;
     [Tooltip("Random +/- variance applied to base avoidance priority")]
     [SerializeField] protected int _avoidancePriorityVariance = 10;
+    [Tooltip("Random +/- variance applied to walk speed")]
+    [SerializeField] protected float _walkSpeedVariance = 0.5f;
     #endregion
 
     #region INTERNAL PROPERTIES

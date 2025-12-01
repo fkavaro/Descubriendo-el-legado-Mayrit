@@ -27,16 +27,20 @@ public class NPCMovementController
         _agent = _npc.Agent;
         _destinationSpot = null;
 
+        // Assign a randomized avoidance priority to reduce symmetric deadlocks between agents
+        int priorityOffset = UnityEngine.Random.Range(-_npc.AvoidancePriorityVariance, _npc.AvoidancePriorityVariance + 1);
+        _agent.avoidancePriority = Mathf.Clamp(_npc.BaseAvoidancePriority + priorityOffset, 0, 99);
+
+        // Assign randomized walk speed variance
+        float speedOffset = UnityEngine.Random.Range(-_npc.WalkSpeedVariance, _npc.WalkSpeedVariance);
+        _agent.speed = Mathf.Max(0.1f, _npc.WalkSpeed + speedOffset);
+
         // Set default values
-        _agent.speed = _npc.WalkSpeed;
         _agent.angularSpeed = _npc.RotationSpeed * 100f;
         _agent.stoppingDistance = ArrivedHorizontalDistance;
         _agent.radius = _npc.AvoidanceRadius;
 
-        // Assign a randomized avoidance priority to reduce symmetric deadlocks between agents
-        int offset = UnityEngine.Random.Range(-_npc.AvoidancePriorityVariance, _npc.AvoidancePriorityVariance + 1);
-        _agent.avoidancePriority = Mathf.Clamp(_npc.BaseAvoidancePriority + offset, 0, 99);
-
+        // Configure NavMesh query filter for pathfinding calculations
         _queryFilter = new() { areaMask = _agent.areaMask, agentTypeID = _agent.agentTypeID };
         _positionLeniency = _agent.radius + _agent.stoppingDistance + _agent.height;
 
@@ -60,9 +64,6 @@ public class NPCMovementController
             _agent.isStopped = true;
         else
             _agent.isStopped = _npc.IsStopped;
-
-        if (_agent.speed != _npc.WalkSpeed)
-            _agent.speed = _npc.WalkSpeed;
     }
 
     public void SetIfStopped(bool isStopped)
