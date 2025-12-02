@@ -30,30 +30,27 @@ where BehaviourSystemType : ABehaviourSystem
         get => _isInStreet;
         set => _isInStreet = value;
     }
-    public bool IsTalking
+
+    public INPC.RoleInConversation ConversationRole
     {
-        get => _isTalking;
-        set => _isTalking = value;
+        get => _conversationRole;
+        set => _conversationRole = value;
     }
-    public bool IsBeingTalkedTo
-    {
-        get => _isBeingTalkedTo;
-        set => _isBeingTalkedTo = value;
-    }
+
     public bool IsReadyToTalk
     {
         get => _isReadyToTalk;
         set => _isReadyToTalk = value;
     }
-    public INPC CurrentInteractionTarget
+    public INPC CurrentConversationTarget
     {
-        get => _currentInteractionTarget;
-        set => _currentInteractionTarget = value;
+        get => _currentConversationTarget;
+        set => _currentConversationTarget = value;
     }
-    public INPC LastInteractionTarget
+    public INPC LastConversationTarget
     {
-        get => _lastInteractionTarget;
-        set => _lastInteractionTarget = value;
+        get => _lastConversationTarget;
+        set => _lastConversationTarget = value;
     }
     #endregion
 
@@ -61,6 +58,13 @@ where BehaviourSystemType : ABehaviourSystem
     // Character information
     [SerializeField] protected string _givenName = "";
     [SerializeField] protected string _familyName = "";
+
+    [Header("Conversation")]
+    [Tooltip("Cooldown time between interactions with other NPCs")]
+    [SerializeField] protected float _conversationCooldown = 0f;
+    [SerializeField] protected INPC.RoleInConversation _conversationRole = INPC.RoleInConversation.None;
+    [SerializeField] protected GameObject _currentConversationTargetGO;
+    [SerializeField] protected GameObject _lastConversationTargetGO;
 
     [Header("NavMeshAgent")]
     [Tooltip("Distance to which the agent will avoid other agents"), Range(0.5f, 2f)]
@@ -77,13 +81,13 @@ where BehaviourSystemType : ABehaviourSystem
     #endregion
 
     #region INTERNAL PROPERTIES
+    public event Action ConversationFinishedEvent;
+
     NPCMovementController _movementController;
     NavMeshAgent _agent;
     bool _isInStreet = true;
-    bool _isTalking = false;
-    bool _isBeingTalkedTo = false;
     bool _isReadyToTalk = false;
-    INPC _currentInteractionTarget, _lastInteractionTarget;
+    public INPC _currentConversationTarget, _lastConversationTarget;
     #endregion
 
     #region LIFE CYCLE
@@ -104,7 +108,7 @@ where BehaviourSystemType : ABehaviourSystem
     }
     #endregion
 
-    #region INHERITED METHODS
+    #region CHARACTER INFORMATION METHODS
     public void SetFullName(string given, string family)
     {
         _givenName = given;
@@ -117,7 +121,9 @@ where BehaviourSystemType : ABehaviourSystem
         }
         catch { }
     }
+    #endregion
 
+    #region CONVERSATION METHODS
     public virtual bool IsAvailableForConversation()
     {
         return _isInStreet && CharacterModel.activeInHierarchy;
@@ -125,29 +131,38 @@ where BehaviourSystemType : ABehaviourSystem
 
     public virtual bool CanAcceptConversation(INPC initiator)
     {
-        if (IsAvailableForConversation() && !_isTalking && _lastInteractionTarget != initiator)
+        if (IsAvailableForConversation()
+            && _conversationRole.Equals(INPC.RoleInConversation.None)
+            && _lastConversationTarget != initiator)
         {
-            _currentInteractionTarget = initiator;
-            _isBeingTalkedTo = true;
+            _currentConversationTargetGO = initiator.GO;
+            _currentConversationTarget = initiator;
+
+            // This is the follower
+            _conversationRole = INPC.RoleInConversation.Follower;
+
             return true;
         }
         else
             return false;
     }
 
-    public virtual void StartConversation()
+    public virtual void Talk()
     {
-        _isTalking = true;
         AnimationController.ChangeToTalk();
     }
 
     public virtual void EndConversation()
     {
-        _isTalking = false;
-        _isBeingTalkedTo = false;
+        ConversationFinishedEvent?.Invoke();
+
         _isReadyToTalk = false;
-        _lastInteractionTarget = CurrentInteractionTarget;
-        _currentInteractionTarget = null;
+        _lastConversationTarget = _currentConversationTarget;
+        _lastConversationTargetGO = _currentConversationTargetGO;
+        _currentConversationTarget = null;
+        _currentConversationTargetGO = null;
+
+        _conversationRole = INPC.RoleInConversation.None;
     }
     #endregion
 }

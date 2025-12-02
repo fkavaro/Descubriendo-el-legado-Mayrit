@@ -3,57 +3,62 @@ using UnityEngine;
 public class ConversationFollowerStrategy : AStrategy
 {
     INPC _otherNPC;
-    Vector3 _middlePoint;
+    bool _otherFinishedTalking;
 
     public ConversationFollowerStrategy(INPC npc)
     : base(npc) { }
 
     public override Node.Status Start()
     {
-        _otherNPC = _npc.CurrentInteractionTarget;
+        _otherNPC = _npc.CurrentConversationTarget;
 
         if (_otherNPC == null)
-            return Node.Status.Failure;
+        {
+            if (_npc.DebugMode)
+                Debug.LogWarning($"[ConversationFollowerStrategy.Start()] {_npc.Name} is being talked to by null NPC");
 
-        _middlePoint = _npc.MovementController.GoToMiddlePoint(_otherNPC);
-
-        if (_middlePoint == null)
             return Node.Status.Failure;
-        else
-            return Node.Status.Success;
+        }
+
+        // Subscribe to conversation end event
+        _otherNPC.ConversationFinishedEvent += OnConversationFinished;
+
+        if (_npc.DebugMode)
+            Debug.Log($"[ConversationFollowerStrategy.Start()] {_npc.Name} is being talked to by {_otherNPC.Name}");
+
+        return Node.Status.Success;
     }
 
     public override Node.Status Update()
     {
-        if (_otherNPC.IsAvailableForConversation())
+        // Failure if other NPC is no longer available
+        if (!_otherNPC.IsAvailableForConversation())
         {
+            if (_npc.DebugMode)
+                Debug.LogWarning($"[ConversationInitiatorStrategy.Update()] {_npc.Name} found that {_otherNPC.Name} is no longer available for conversation.");
 
-            // Check arrival to middle point
-            if (!_npc.IsReadyToTalk && _npc.MovementController.HasArrivedAt(_middlePoint))
-                _npc.IsReadyToTalk = true;
-
-            // Both arrived
-            if (_npc.IsReadyToTalk && _otherNPC.IsReadyToTalk)
-            {
-                if (!_npc.IsTalking)
-                    _npc.StartConversation();
-                else
-                    // Look at other npc
-                    _npc.GO.transform.LookAt(_otherNPC.GO.transform.position);
-            }
-
-            // Success when conversation ends (when current interaction target is null)
-            // Depeds on the other, the initiator, to end the conversation
-            if (_npc.CurrentInteractionTarget == null)
-                return Node.Status.Success;
-
-            return Node.Status.Running;
-        }
-        else
-        {
-            // Other NPC is no longer available: end conversation
-            _npc.EndConversation();
             return Node.Status.Failure;
         }
+
+        // Success if other finished talking
+        if (_otherFinishedTalking)
+        {
+            // Unsubscribe from conversation end event
+            _otherNPC.ConversationFinishedEvent -= OnConversationFinished;
+
+            _npc.EndConversation();
+
+            return Node.Status.Success;
+        }
+
+        // Follow conversation
+        _npc.Talk();
+        _npc.GO.transform.LookAt(_otherNPC.GO.transform.position);
+        return Node.Status.Running;
+    }
+
+    void OnConversationFinished()
+    {
+        _otherFinishedTalking = true;
     }
 }

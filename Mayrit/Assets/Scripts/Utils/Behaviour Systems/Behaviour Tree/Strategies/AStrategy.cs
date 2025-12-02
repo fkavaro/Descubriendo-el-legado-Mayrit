@@ -19,7 +19,7 @@ public abstract class AStrategy
     #region TO BE IMPLEMENTED METHODS
     public virtual Node.Status Start()
     {
-        return Node.Status.Success; // Default implementation returns Success
+        return Node.Status.Success;
     }
     public virtual Node.Status Update()
     {

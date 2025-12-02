@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61fe6012eefc0c24f8fb01bc39327cdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Villager
-  _debugMode: 0
+  _debugMode: 1
   _isExecutionPaused: 0
   _currentActionInfo: 
   _walkSpeed: 1.5
@@ -104,11 +104,13 @@ MonoBehaviour:
   _nearDistance: {x: 5, y: 7}
   _animator: {fileID: 8442105521708024458}
   _interactionRange: 5
-  _conversationCooldown: 60
   _gender: 1
   _characterModel: {fileID: 2919351008931398218}
   _givenName: 
   _familyName: 
+  _conversationCooldown: 60
+  _currentConversationTargetGO: {fileID: 0}
+  _lastConversationTargetGO: {fileID: 0}
   _avoidanceRadius: 0.7
   _maxSamplingDistance: 1
   _isStopped: 0

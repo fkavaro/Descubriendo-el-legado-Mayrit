@@ -18,7 +18,9 @@ public class GoToMarket_VillagerStrategy : AStrategy
 
         if (_marketStallSpot == null)
         {
-            Debug.LogWarning($"{_npc.Name} could not find an available stall spot in the market.");
+            if (_npc.DebugMode)
+                Debug.LogWarning($"{_npc.Name} could not find an available stall spot in the market.");
+
             return Node.Status.Failure;
         }
 
@@ -35,7 +37,9 @@ public class GoToMarket_VillagerStrategy : AStrategy
     {
         if (_marketStallSpot == null)
         {
-            Debug.LogWarning($"{_npc.Name} could not find an available stall spot in the market.");
+            if (_npc.DebugMode)
+                Debug.LogWarning($"{_npc.Name} could not find an available stall spot in the market.");
+
             return Node.Status.Failure;
         }
 
@@ -46,7 +50,9 @@ public class GoToMarket_VillagerStrategy : AStrategy
 
             if (!_market.IsOpen())
             {
-                Debug.LogWarning($"{_npc.Name} found that no stalls are open in the market.");
+                if (_npc.DebugMode)
+                    Debug.LogWarning($"{_npc.Name} found that no stalls are open in the market.");
+
                 return Node.Status.Failure;
             }
 
@@ -57,7 +63,8 @@ public class GoToMarket_VillagerStrategy : AStrategy
                 if (_marketStallSpot.IsOccupied())
                 {
                     // Stop and idle
-                    Debug.Log($"{_npc.Name} is near market stall spot but it's occupied. Stopping.");
+                    if (_npc.DebugMode)
+                        Debug.Log($"{_npc.Name} is near market stall spot but it's occupied. Stopping.");
                     _npc.MovementController.SetIfStopped(true);
                     _npc.AnimationController.ChangeToIdle();
                 }

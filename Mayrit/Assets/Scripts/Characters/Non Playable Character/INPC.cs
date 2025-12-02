@@ -1,9 +1,18 @@
-using UnityEngine;
+using System;
 using UnityEngine.AI;
 
 public interface INPC : ICharacter
 {
+    public enum RoleInConversation
+    {
+        Initiator,
+        Follower,
+        None
+    }
+
     #region PROPERTIES HELPERS
+    public event Action ConversationFinishedEvent;
+
     public NavMeshAgent Agent { get; }
     NPCMovementController MovementController { get; }
     float AvoidanceRadius { get; }
@@ -15,11 +24,10 @@ public interface INPC : ICharacter
     public string GivenName { get; }
     public string FamilyName { get; }
     bool IsInStreet { get; set; }
-    bool IsTalking { get; set; }
-    bool IsBeingTalkedTo { get; set; }
+    RoleInConversation ConversationRole { get; set; }
     bool IsReadyToTalk { get; set; }
-    public INPC CurrentInteractionTarget { get; set; }
-    public INPC LastInteractionTarget { get; set; }
+    public INPC CurrentConversationTarget { get; set; }
+    public INPC LastConversationTarget { get; set; }
     #endregion
 
     #region METHODS
@@ -42,7 +50,7 @@ public interface INPC : ICharacter
     /// <summary>
     /// Called on the initiator character to start the interaction
     /// </summary>
-    public void StartConversation();
+    public void Talk();
 
     /// <summary>
     /// Ends an ongoing interaction on this character (called on both participants)

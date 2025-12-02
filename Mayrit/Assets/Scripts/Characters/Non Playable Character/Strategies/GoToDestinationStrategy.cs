@@ -38,6 +38,7 @@ public class GoToDestinationStrategy : AStrategy
         {
             if (_npc.DebugMode)
                 Debug.LogWarning($"[GoToDestinationStrategy.Update()] {_npc.Name} fixing destination");
+
             _npc.MovementController.SetDestinationSpot(_destinationSpot);
         }
 
