@@ -1,11 +1,12 @@
 using UnityEngine;
 
-public class GoToDestinationStrategy : AStrategy
+public class GoToDestinationStrategy<NPCtype> : ANPCStrategy<NPCtype>
+where NPCtype : INPC
 {
     readonly Spot _destinationSpot;
     private readonly bool _fixRotation, _fixPosition;
 
-    public GoToDestinationStrategy(INPC npc, Spot destinationSpot, bool fixRotation = false, bool fixPosition = false)
+    public GoToDestinationStrategy(NPCtype npc, Spot destinationSpot, bool fixRotation = false, bool fixPosition = false)
     : base(npc)
     {
         _destinationSpot = destinationSpot;

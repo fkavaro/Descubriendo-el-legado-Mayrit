@@ -1,11 +1,12 @@
 using UnityEngine;
 
-public class ConversationFollowerStrategy : AStrategy
+public class ConversationFollowerStrategy<NPCtype> : ANPCStrategy<NPCtype>
+where NPCtype : INPC
 {
     INPC _otherNPC;
     bool _otherFinishedTalking;
 
-    public ConversationFollowerStrategy(INPC npc)
+    public ConversationFollowerStrategy(NPCtype npc)
     : base(npc) { }
 
     public override Node.Status Start()
@@ -61,7 +62,7 @@ public class ConversationFollowerStrategy : AStrategy
         if (!_otherNPC.IsStillInConversation(_npc))
         {
             if (_npc.DebugMode)
-                Debug.LogWarning($"[ConversationFollowerStrategy] {_npc.Name} found that {_otherNPC.Name} is no longer in conversation.");
+                Debug.Log($"[ConversationFollowerStrategy] {_npc.Name} found that {_otherNPC.Name} is no longer in conversation.");
 
             _npc.EndConversation();
             return false;

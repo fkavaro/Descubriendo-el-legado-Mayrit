@@ -3,14 +3,15 @@ using UnityEngine;
 /// <summary>
 /// AStrategy defines the contract for all strategies used in the behaviour tree nodes.
 /// </summary>
-public abstract class AStrategy
+public abstract class ANPCStrategy<NPCtype> : IStrategy
+where NPCtype : INPC
 {
     #region PROPERTIES
-    protected readonly INPC _npc;
+    protected readonly NPCtype _npc;
     #endregion
 
     #region CONSTRUCTOR
-    public AStrategy(INPC npc)
+    public ANPCStrategy(NPCtype npc)
     {
         _npc = npc;
     }

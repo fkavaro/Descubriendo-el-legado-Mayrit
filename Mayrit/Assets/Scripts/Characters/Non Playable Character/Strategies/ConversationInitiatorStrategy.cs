@@ -1,10 +1,11 @@
 using UnityEngine;
 
-public class ConversationInitiatorStrategy : ATimedStrategy
+public class ConversationInitiatorStrategy<NPCtype> : ATimedNPCStrategy<NPCtype>
+where NPCtype : INPC
 {
     INPC _otherNPC;
 
-    public ConversationInitiatorStrategy(INPC npc, int min = 30, int max = 60)
+    public ConversationInitiatorStrategy(NPCtype npc, int min = 30, int max = 60)
     : base(npc, min, max) { }
 
     public override Node.Status Start()
@@ -48,7 +49,7 @@ public class ConversationInitiatorStrategy : ATimedStrategy
         if (!_otherNPC.IsStillInConversation(_npc))
         {
             if (_npc.DebugMode)
-                Debug.LogWarning($"[ConversationInitiatorStrategy] {_npc.Name} found that {_otherNPC.Name} is no longer in conversation.");
+                Debug.Log($"[ConversationInitiatorStrategy] {_npc.Name} found that {_otherNPC.Name} is no longer in conversation.");
 
             _npc.EndConversation();
             return false;

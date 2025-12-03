@@ -3,22 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ConditionStrategy : AStrategy
+public class ConditionStrategy : IStrategy
 {
     #region PROPERTIES
     readonly Func<bool> _predicate;
     #endregion
 
     #region CONSTRUCTOR
-    public ConditionStrategy(INPC npc, Func<bool> predicate)
-    : base(npc)
+    public ConditionStrategy(Func<bool> predicate)
     {
         _predicate = predicate;
     }
     #endregion
 
     #region INHERITED METHODS
-    public override Node.Status Update()
+    public Node.Status Start()
+    {
+        return Node.Status.Success;
+    }
+
+    public Node.Status Update()
     {
         return _predicate() ? Node.Status.Success : Node.Status.Failure;
     }

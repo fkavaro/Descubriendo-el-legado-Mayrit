@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class GoToMarket_VillagerStrategy : AStrategy
+public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
 {
     readonly Market _market;
     Stall _marketStall;
     Spot _marketStallSpot;
 
-    public GoToMarket_VillagerStrategy(INPC npc, Market market)
+    public GoToMarket_VillagerStrategy(Villager npc, Market market)
     : base(npc)
     {
         _market = market;
@@ -91,7 +91,7 @@ public class GoToMarket_VillagerStrategy : AStrategy
                     // Has arrived
                     if (_npc.MovementController.HasArrivedAt(_marketStallSpot, true, false))
                     {
-                        // TODO assign market stall to villager - generic class for AStrategy needed
+                        _npc.MarketStall = _marketStall;
 
                         return Node.Status.Success;
                     }
@@ -104,10 +104,10 @@ public class GoToMarket_VillagerStrategy : AStrategy
                 GetStallAndSetDestination();
             }
         }
-        // else
-        // {
-        //     _npc.SetIfStopped(false);
-        // }
+        else
+        {
+            _npc.MovementController.SetIfStopped(false);
+        }
 
         return Node.Status.Running;
     }

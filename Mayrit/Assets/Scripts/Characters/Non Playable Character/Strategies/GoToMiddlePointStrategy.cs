@@ -1,12 +1,13 @@
 using System;
 using UnityEngine;
 
-public class GoToMiddlePointStrategy : AStrategy
+public class GoToMiddlePointStrategy<NPCtype> : ANPCStrategy<NPCtype>
+where NPCtype : INPC
 {
     INPC _otherNPC;
     Vector3 _middlePoint;
 
-    public GoToMiddlePointStrategy(INPC npc)
+    public GoToMiddlePointStrategy(NPCtype npc)
     : base(npc) { }
 
     public override Node.Status Start()
@@ -65,7 +66,7 @@ public class GoToMiddlePointStrategy : AStrategy
         if (!_otherNPC.IsStillInConversation(_npc))
         {
             if (_npc.DebugMode)
-                Debug.LogWarning($"[GoToMiddlePointStrategy] {_npc.Name} found that {_otherNPC.Name} is no longer in conversation.");
+                Debug.Log($"[GoToMiddlePointStrategy] {_npc.Name} found that {_otherNPC.Name} is no longer in conversation.");
 
             _npc.EndConversation();
             return false;

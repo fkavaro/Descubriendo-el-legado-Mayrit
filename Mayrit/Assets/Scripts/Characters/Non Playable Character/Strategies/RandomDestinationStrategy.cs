@@ -6,7 +6,8 @@ using UnityEngine;
 /// <summary>
 /// RandomDestinationStrategy is a strategy for moving constantly between random points using a NavMeshAgent.
 /// </summary>
-public class RandomDestinationStrategy : RandomPatrolStrategy
+public class RandomDestinationStrategy<NPCtype> : RandomPatrolStrategy<NPCtype>
+where NPCtype : INPC
 {
     #region PROPERTIES
     bool _destinationIsSet = false; // Dirty flag
@@ -14,7 +15,7 @@ public class RandomDestinationStrategy : RandomPatrolStrategy
 
     #region CONSTRUCTOR
     // Center point is the controller transform
-    public RandomDestinationStrategy(INPC npc, int samplingIterations = 30, float areaRadious = 10f)
+    public RandomDestinationStrategy(NPCtype npc, int samplingIterations = 30, float areaRadious = 10f)
     : base(npc, npc.GO.transform, samplingIterations, areaRadious) { }
     #endregion
 

@@ -39,13 +39,13 @@ public class Villager : ANPC<BehaviourTree>
             homeEntrance = _home.GetRandomAccessSpot();
 
         // Conversation sequence
-        ConditionStrategy isInStreetStrategy = new(this, () => IsInStreet);
-        ConditionStrategy isFollowingConversationStrategy = new(this, IsFollowingConversation);
-        GoToMiddlePointStrategy goToMiddlePointStrategyForFollower = new(this);
-        GoToMiddlePointStrategy goToMiddlePointStrategyForInitiator = new(this);
-        ConversationFollowerStrategy followConversationStrategy = new(this);
-        ConditionStrategy canSomeoneNearbyTalkStrategy = new(this, CanSomeoneNearbyTalk);
-        ConversationInitiatorStrategy initiateConversationStrategy = new(this);
+        ConditionStrategy isInStreetStrategy = new(() => IsInStreet);
+        ConditionStrategy isFollowingConversationStrategy = new(IsFollowingConversation);
+        GoToMiddlePointStrategy<Villager> goToMiddlePointStrategyForFollower = new(this);
+        GoToMiddlePointStrategy<Villager> goToMiddlePointStrategyForInitiator = new(this);
+        ConversationFollowerStrategy<Villager> followConversationStrategy = new(this);
+        ConditionStrategy canSomeoneNearbyTalkStrategy = new(CanSomeoneNearbyTalk);
+        ConversationInitiatorStrategy<Villager> initiateConversationStrategy = new(this);
 
         CooldownDecorator conversationCooldown = new(this, _conversationCooldown);
         SequenceNode conversationSequence = new(this);
@@ -78,8 +78,8 @@ public class Villager : ANPC<BehaviourTree>
 
         if (sanctuaryEntrance != null)
         {
-            GoToDestinationStrategy goToSanctuaryStrategy = new(this, sanctuaryEntrance);
-            InInteriorStrategy prayingStrategy = new(this);
+            GoToDestinationStrategy<Villager> goToSanctuaryStrategy = new(this, sanctuaryEntrance);
+            InInteriorStrategy<Villager> prayingStrategy = new(this);
 
             SequenceNode prayingSequence = new(this);
             LeafNode goToSanctuaryLeaf = new(this, "Going to sanctuary", goToSanctuaryStrategy);
@@ -92,7 +92,7 @@ public class Villager : ANPC<BehaviourTree>
 
         if (workplaceEntrance != null)
         {
-            GoToDestinationStrategy goToWorkStrategy = new(this, workplaceEntrance, true);
+            GoToDestinationStrategy<Villager> goToWorkStrategy = new(this, workplaceEntrance, true);
             Working_VillagerStrategy workingStrategy = new(this, _workplace, 60, 180);
 
             SequenceNode workingSequence = new(this);
@@ -127,7 +127,7 @@ public class Villager : ANPC<BehaviourTree>
 
         if (homeEntrance != null)
         {
-            GoToDestinationStrategy goToHomeStrategy = new(this, homeEntrance);
+            GoToDestinationStrategy<Villager> goToHomeStrategy = new(this, homeEntrance);
             AtHome_VillagerStrategy atHomeStrategy = new(this);
 
             SequenceNode atHomeSequence = new(this);
@@ -233,7 +233,11 @@ public class Villager : ANPC<BehaviourTree>
 
         // If no candidate found, return false
         if (someoneNearby == null)
+        {
+            // if (DebugMode)
+            //     Debug.Log($"[CanSomeoneNearbyTalk()] {Name} found no one nearby to talk to.");
             return false;
+        }
 
         // Conversation is accepted by the target
         if (someoneNearby.CanAcceptConversation(this))
@@ -246,13 +250,17 @@ public class Villager : ANPC<BehaviourTree>
             _conversationRole = INPC.RoleInConversation.Initiator;
 
             if (DebugMode)
-                Debug.Log($"[CanSomeoneNearbyTalk()] {Name} found {_currentConversationTarget.Name} to talk to.");
+                Debug.Log($"[CanSomeoneNearbyTalk()] {Name} can talk to {_currentConversationTarget.Name}.");
 
             return true;
         }
         // Conversation is denied
         else
+        {
+            // if (DebugMode)
+            //     Debug.Log($"[CanSomeoneNearbyTalk()] {Name} found {someoneNearby.Name} to talk to, but the conversation was denied.");
             return false;
+        }
     }
     #endregion
 }

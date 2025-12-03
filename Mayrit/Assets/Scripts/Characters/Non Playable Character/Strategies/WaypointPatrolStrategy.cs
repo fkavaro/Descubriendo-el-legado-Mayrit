@@ -7,7 +7,8 @@ using UnityEngine.AI;
 /// <summary>
 /// WaypointPatrolStrategy is a strategy for patrolling between a list of points using a NavMeshAgent.
 /// </summary>
-public class WaypointPatrolStrategy : AStrategy
+public class WaypointPatrolStrategy<NPCtype> : ANPCStrategy<NPCtype>
+where NPCtype : ANPC<Node>
 {
     #region PROPERTIES
     readonly List<Transform> _patrolPoints;
@@ -16,7 +17,7 @@ public class WaypointPatrolStrategy : AStrategy
     #endregion
 
     #region CONSTRUCTOR
-    public WaypointPatrolStrategy(ANPC<Node> npc, List<Transform> patrolPoints)
+    public WaypointPatrolStrategy(NPCtype npc, List<Transform> patrolPoints)
     : base(npc)
     {
         _patrolPoints = patrolPoints;

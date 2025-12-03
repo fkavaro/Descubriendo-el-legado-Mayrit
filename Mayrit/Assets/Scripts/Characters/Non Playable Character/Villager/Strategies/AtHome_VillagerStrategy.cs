@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AtHome_VillagerStrategy : AStrategy
+public class AtHome_VillagerStrategy : ANPCStrategy<Villager>
 {
     readonly Villager _villager;
     public AtHome_VillagerStrategy(Villager villager)

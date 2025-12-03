@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Working_VillagerStrategy : ATimedStrategy
+public class Working_VillagerStrategy : ATimedNPCStrategy<Villager>
 {
     readonly Workplace _workplace;
 

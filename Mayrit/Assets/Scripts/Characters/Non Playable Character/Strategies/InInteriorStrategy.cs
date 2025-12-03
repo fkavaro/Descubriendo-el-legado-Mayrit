@@ -1,10 +1,11 @@
 using UnityEngine;
 
-public class InInteriorStrategy : ATimedStrategy
+public class InInteriorStrategy<NPCtype> : ATimedNPCStrategy<NPCtype>
+where NPCtype : INPC
 {
     readonly GameObject _model;
 
-    public InInteriorStrategy(INPC npc, float min = 30, float max = 120)
+    public InInteriorStrategy(NPCtype npc, float min = 30, float max = 120)
     : base(npc, min, max)
     {
         _model = npc.CharacterModel;

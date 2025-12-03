@@ -1,11 +1,12 @@
 using UnityEngine;
 
-public abstract class ATimedStrategy : AStrategy
+public abstract class ATimedNPCStrategy<NPCtype> : ANPCStrategy<NPCtype>
+where NPCtype : INPC
 {
     readonly float _duration;
     float _elapsedTime;
 
-    public ATimedStrategy(INPC npc, float min = 30, float max = 120)
+    public ATimedNPCStrategy(NPCtype npc, float min = 30, float max = 120)
     : base(npc)
     {
         _duration = Random.Range(min, max);
