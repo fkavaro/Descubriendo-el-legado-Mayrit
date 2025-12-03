@@ -129,6 +129,13 @@ where BehaviourSystemType : ABehaviourSystem
         return _isInStreet && CharacterModel.activeInHierarchy;
     }
 
+    public virtual bool IsStillInConversation(INPC otherNpc)
+    {
+        return IsAvailableForConversation()
+            && _currentConversationTarget == otherNpc
+            && Vector3.Distance(GO.transform.position, otherNpc.GO.transform.position) < 5f;
+    }
+
     public virtual bool CanAcceptConversation(INPC initiator)
     {
         if (IsAvailableForConversation()

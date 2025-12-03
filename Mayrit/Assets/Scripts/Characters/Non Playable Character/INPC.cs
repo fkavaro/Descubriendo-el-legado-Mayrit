@@ -42,6 +42,8 @@ public interface INPC : ICharacter
     /// <returns></returns>
     public bool IsAvailableForConversation();
 
+    public bool IsStillInConversation(INPC otherNpc);
+
     /// <summary>
     /// Returns true if the character is available to start an interaction.
     /// </summary>

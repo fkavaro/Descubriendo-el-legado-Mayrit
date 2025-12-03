@@ -20,6 +20,10 @@ public class GoToMiddlePointStrategy : AStrategy
             return Node.Status.Failure;
         }
 
+        // Failure if other NPC is no longer in conversation
+        if (!IsOtherStillInConversation())
+            return Node.Status.Failure;
+
         _middlePoint = _npc.MovementController.GoToMiddlePoint(_otherNPC);
 
         if (_middlePoint == null)
@@ -38,13 +42,9 @@ public class GoToMiddlePointStrategy : AStrategy
 
     public override Node.Status Update()
     {
-        // Failure if other NPC is no longer available
-        if (!_otherNPC.IsAvailableForConversation())
-        {
-            if (_npc.DebugMode)
-                Debug.LogWarning($"[GoToMiddlePointStrategy.Update()] {_npc.Name} found that {_otherNPC.Name} is no longer available for conversation.");
+        // Failure if other NPC is no longer in conversation
+        if (!IsOtherStillInConversation())
             return Node.Status.Failure;
-        }
 
         // Success if arrived at middle point
         if (_npc.MovementController.HasArrivedAt(_middlePoint))
@@ -55,10 +55,22 @@ public class GoToMiddlePointStrategy : AStrategy
 
         // Both are ready to talk
         if (_npc.IsReadyToTalk && _otherNPC.IsReadyToTalk)
-        {
             return Node.Status.Success;
-        }
 
         return Node.Status.Running;
+    }
+
+    bool IsOtherStillInConversation()
+    {
+        if (!_otherNPC.IsStillInConversation(_npc))
+        {
+            if (_npc.DebugMode)
+                Debug.LogWarning($"[GoToMiddlePointStrategy] {_npc.Name} found that {_otherNPC.Name} is no longer in conversation.");
+
+            _npc.EndConversation();
+            return false;
+        }
+
+        return true;
     }
 }

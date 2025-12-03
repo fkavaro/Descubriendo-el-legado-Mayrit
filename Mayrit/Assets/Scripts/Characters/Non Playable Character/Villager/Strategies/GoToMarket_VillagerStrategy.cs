@@ -19,7 +19,7 @@ public class GoToMarket_VillagerStrategy : AStrategy
         if (_marketStallSpot == null)
         {
             if (_npc.DebugMode)
-                Debug.LogWarning($"{_npc.Name} could not find an available stall spot in the market.");
+                Debug.Log($"[GoToMarket_VillagerStrategy.Update()] {_npc.Name} could not find an available stall spot in the market.");
 
             return Node.Status.Failure;
         }
@@ -27,6 +27,15 @@ public class GoToMarket_VillagerStrategy : AStrategy
         if (_npc.MovementController.IsDestination(_marketStallSpot))
         {
             _npc.IsInStreet = true;
+
+            if (_npc.CurrentConversationTarget != null || _npc.ConversationRole != INPC.RoleInConversation.None)
+            {
+                if (_npc.DebugMode)
+                    Debug.LogWarning($"[GoToDestinationStrategy.Start()] {_npc.Name} is going to {_marketStallSpot.name}. Ending conversation with {_npc.CurrentConversationTarget.Name}.");
+
+                _npc.EndConversation();
+            }
+
             return Node.Status.Success;
         }
         else
@@ -38,7 +47,7 @@ public class GoToMarket_VillagerStrategy : AStrategy
         if (_marketStallSpot == null)
         {
             if (_npc.DebugMode)
-                Debug.LogWarning($"{_npc.Name} could not find an available stall spot in the market.");
+                Debug.Log($"[GoToMarket_VillagerStrategy.Update()] {_npc.Name} could not find an available stall spot in the market.");
 
             return Node.Status.Failure;
         }
@@ -51,7 +60,7 @@ public class GoToMarket_VillagerStrategy : AStrategy
             if (!_market.IsOpen())
             {
                 if (_npc.DebugMode)
-                    Debug.LogWarning($"{_npc.Name} found that no stalls are open in the market.");
+                    Debug.Log($"[GoToMarket_VillagerStrategy.Update()] {_npc.Name} found that no stalls are open in the market.");
 
                 return Node.Status.Failure;
             }
@@ -64,9 +73,15 @@ public class GoToMarket_VillagerStrategy : AStrategy
                 {
                     // Stop and idle
                     if (_npc.DebugMode)
-                        Debug.Log($"{_npc.Name} is near market stall spot but it's occupied. Stopping.");
+                        Debug.Log($"[GoToMarket_VillagerStrategy.Update()] {_npc.Name} is near market stall spot but it's occupied. Stopping.");
+
                     _npc.MovementController.SetIfStopped(true);
                     _npc.AnimationController.ChangeToIdle();
+
+                    // Look towards stall
+                    Vector3 lookAtPosition = _marketStall.transform.position;
+                    lookAtPosition.y = _npc.GO.transform.position.y;
+                    _npc.GO.transform.LookAt(lookAtPosition);
                 }
                 // Is not occupied
                 else
@@ -76,7 +91,8 @@ public class GoToMarket_VillagerStrategy : AStrategy
                     // Has arrived
                     if (_npc.MovementController.HasArrivedAt(_marketStallSpot, true, false))
                     {
-                        _npc.AnimationController.ChangeToTalk();
+                        // TODO assign market stall to villager - generic class for AStrategy needed
+
                         return Node.Status.Success;
                     }
                 }

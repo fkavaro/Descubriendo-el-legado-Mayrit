@@ -20,6 +20,10 @@ public class ConversationFollowerStrategy : AStrategy
             return Node.Status.Failure;
         }
 
+        // Failure if other NPC is no longer in conversation
+        if (!IsOtherStillInConversation())
+            return Node.Status.Failure;
+
         // Subscribe to conversation end event
         _otherNPC.ConversationFinishedEvent += OnConversationFinished;
 
@@ -31,14 +35,9 @@ public class ConversationFollowerStrategy : AStrategy
 
     public override Node.Status Update()
     {
-        // Failure if other NPC is no longer available
-        if (!_otherNPC.IsAvailableForConversation())
-        {
-            if (_npc.DebugMode)
-                Debug.LogWarning($"[ConversationInitiatorStrategy.Update()] {_npc.Name} found that {_otherNPC.Name} is no longer available for conversation.");
-
+        // Failure if other NPC is no longer in conversation
+        if (!IsOtherStillInConversation())
             return Node.Status.Failure;
-        }
 
         // Success if other finished talking
         if (_otherFinishedTalking)
@@ -55,6 +54,20 @@ public class ConversationFollowerStrategy : AStrategy
         _npc.Talk();
         _npc.GO.transform.LookAt(_otherNPC.GO.transform.position);
         return Node.Status.Running;
+    }
+
+    bool IsOtherStillInConversation()
+    {
+        if (!_otherNPC.IsStillInConversation(_npc))
+        {
+            if (_npc.DebugMode)
+                Debug.LogWarning($"[ConversationFollowerStrategy] {_npc.Name} found that {_otherNPC.Name} is no longer in conversation.");
+
+            _npc.EndConversation();
+            return false;
+        }
+
+        return true;
     }
 
     void OnConversationFinished()

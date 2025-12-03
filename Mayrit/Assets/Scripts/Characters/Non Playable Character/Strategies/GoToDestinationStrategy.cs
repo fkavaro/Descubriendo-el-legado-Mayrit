@@ -21,6 +21,15 @@ public class GoToDestinationStrategy : AStrategy
         if (_npc.MovementController.IsDestination(_destinationSpot))
         {
             _npc.IsInStreet = true;
+
+            if (_npc.CurrentConversationTarget != null || _npc.ConversationRole != INPC.RoleInConversation.None)
+            {
+                if (_npc.DebugMode)
+                    Debug.LogWarning($"[GoToDestinationStrategy.Start()] {_npc.Name} is going to {_destinationSpot.name}. Ending conversation with {_npc.CurrentConversationTarget.Name}.");
+
+                _npc.EndConversation();
+            }
+
             return Node.Status.Success;
         }
         else
@@ -33,11 +42,11 @@ public class GoToDestinationStrategy : AStrategy
 
     public override Node.Status Update()
     {
-        // Failure if not going to destination anymore
+        // Fix destination if needed
         if (!_npc.MovementController.IsDestination(_destinationSpot))
         {
             if (_npc.DebugMode)
-                Debug.LogWarning($"[GoToDestinationStrategy.Update()] {_npc.Name} fixing destination");
+                Debug.Log($"[GoToDestinationStrategy.Update()] {_npc.Name} fixing destination");
 
             _npc.MovementController.SetDestinationSpot(_destinationSpot);
         }
