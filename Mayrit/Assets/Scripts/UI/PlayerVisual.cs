@@ -33,14 +33,6 @@ public class PlayerVisual : Billboard
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
-
-        // Validate dependencies
-        if (_progressManager == null)
-            Debug.LogError("PlayerVisual: ProgressManager not found in ServiceLocator!");
-        if (_uiManager == null)
-            Debug.LogError("PlayerVisual: UIManager not found in ServiceLocator!");
-        if (_cameraManager == null)
-            Debug.LogError("PlayerVisual: CameraManager not found in ServiceLocator!");
     }
 
     void Start()

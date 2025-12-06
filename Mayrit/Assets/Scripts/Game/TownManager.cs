@@ -29,12 +29,6 @@ public class TownManager : MonoBehaviour
         // Dependency Injection: get services from ServiceLocator
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
         _npcPoolManager = ServiceLocator.Instance.Get<NPCPoolManager>();
-
-        // Validate dependencies
-        if (_progressManager == null)
-            Debug.LogError("TownManager: ProgressManager not found in ServiceLocator!");
-        if (_npcPoolManager == null)
-            Debug.LogError("TownManager: NPCPoolManager not found in ServiceLocator!");
     }
 
     void Start()

@@ -45,12 +45,6 @@ public class PathVisualizer
         // Get dependencies from Service Locator
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
         _tourManager = ServiceLocator.Instance.Get<TourManager>();
-
-        // Validate dependencies
-        if (_progressManager == null)
-            Debug.LogError("PathVisualizer: ProgressManager not found in ServiceLocator!");
-        if (_tourManager == null)
-            Debug.LogError("PathVisualizer: TourManager not found in ServiceLocator!");
     }
     #endregion
 

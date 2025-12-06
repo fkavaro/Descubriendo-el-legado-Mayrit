@@ -23,13 +23,6 @@ public abstract class ABuilding : MonoBehaviour
         // Get from ServiceLocator
         _townManager = ServiceLocator.Instance.Get<TownManager>();
 
-        // Validate
-        if (_townManager == null)
-        {
-            Debug.LogError($"ABuilding.OnEnable: TownManager not found for building {gameObject.name}.");
-            return;
-        }
-
         RegisterBuilding();
     }
 

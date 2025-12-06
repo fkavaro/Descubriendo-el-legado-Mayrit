@@ -30,12 +30,6 @@ public class ModernSuperposition : MonoBehaviour
         // Get dependencies from ServiceLocator
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
-
-        // Validate dependencies
-        if (_cameraManager == null)
-            Debug.LogError("ModernSuperposition: CameraManager not found in ServiceLocator!");
-        if (_uiManager == null)
-            Debug.LogError("ModernSuperposition: UIManager not found in ServiceLocator!");
     }
 
     void Start()

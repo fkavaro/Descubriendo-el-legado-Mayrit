@@ -70,17 +70,7 @@ public class SpectatorCameraController
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
 
-        // Validate dependencies
-        if (_cameraManager == null)
-            Debug.LogError("SpectatorCameraController: CameraManager not found in ServiceLocator!");
-        else
-            _moveSpeedZoomCurve = _cameraManager._moveSpeedZoomCurve;
-
-        if (_gameManager == null)
-            Debug.LogError("SpectatorCameraController: GameManager not found in ServiceLocator!");
-
-        if (_uiManager == null)
-            Debug.LogError("SpectatorCameraController: UIManager not found in ServiceLocator!");
+        _moveSpeedZoomCurve = _cameraManager._moveSpeedZoomCurve;
     }
     #endregion
 

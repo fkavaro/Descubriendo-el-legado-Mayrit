@@ -65,10 +65,6 @@ public class TimeManager : MonoBehaviour
     {
         // Dependency Injection: get services from ServiceLocator
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
-
-        // Validate dependencies
-        if (_progressManager == null)
-            Debug.LogError("TimeManager: ProgressManager not found in ServiceLocator!");
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

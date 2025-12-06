@@ -52,30 +52,7 @@ public abstract class ACameraState : AState
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
 
-        // Validate dependencies
-        if (_timeManager == null)
-        {
-            Debug.LogError($"ACameraState.StartState: TimeManager not found when starting camera state {StateName}.");
-            return;
-        }
-        else
-            _timeManager.SetSimulationSpeed(_simulationSpeed);
-
-        if (_uiManager == null)
-        {
-            Debug.LogError($"ACameraState.StartState: UIManager not found when starting camera state {StateName}.");
-            return;
-        }
-        if (_gameManager == null)
-        {
-            Debug.LogError($"ACameraState.StartState: GameManager not found when starting camera state {StateName}.");
-            return;
-        }
-        if (_cameraManager == null)
-        {
-            Debug.LogError($"ACameraState.StartState: CameraManager not found when starting camera state {StateName}.");
-            return;
-        }
+        _timeManager.SetSimulationSpeed(_simulationSpeed);
 
         OnStateStarted();
 

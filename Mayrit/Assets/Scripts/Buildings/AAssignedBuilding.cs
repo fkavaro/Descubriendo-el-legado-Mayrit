@@ -51,13 +51,6 @@ public abstract class AAssignedBuilding : ABuilding
             // Return assigned to pool if possible, then clear.
             _npcPoolManager = ServiceLocator.Instance.Get<NPCPoolManager>();
 
-            // Validate and return
-            if (_npcPoolManager != null)
-            {
-                Debug.LogError($"AAssignedBuilding.OnDisable: TownManager not found.");
-                return;
-            }
-
             if (_assignedVillagers.Count > 0)
             {
                 if (_npcPoolManager != null)

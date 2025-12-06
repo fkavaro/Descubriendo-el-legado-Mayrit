@@ -60,10 +60,6 @@ public class NPCPoolManager : MonoBehaviour
 
         // Dependency Injection: get services from ServiceLocator
         _townManager = ServiceLocator.Instance.Get<TownManager>();
-
-        // Validate dependencies
-        if (_townManager == null)
-            Debug.LogError("NPCPoolManager: TownManager not found in ServiceLocator!");
     }
 
     void Start()

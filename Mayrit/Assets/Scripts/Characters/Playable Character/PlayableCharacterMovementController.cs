@@ -43,11 +43,7 @@ public class PlayableCharacterMovementController
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
 
-        // Validate dependencies
-        if (_cameraManager == null)
-            Debug.LogError("PlayableCharacterMovementController: CameraManager not found in ServiceLocator!");
-        else
-            _cameraTarget = _cameraManager._thirdPersonCamera.LookAt;
+        _cameraTarget = _cameraManager._thirdPersonCamera.LookAt;
     }
     #endregion
 

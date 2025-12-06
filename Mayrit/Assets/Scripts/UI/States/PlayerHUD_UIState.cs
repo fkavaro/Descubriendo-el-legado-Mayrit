@@ -19,10 +19,6 @@ public class PlayerHUD_UIState : AHUDState
     {
         // Get dependency from Service Locator
         _tourManager = ServiceLocator.Instance.Get<TourManager>();
-
-        // Validate dependency
-        if (_tourManager == null)
-            Debug.LogError("PlayerHUD_UIState: TourManager not found in ServiceLocator!");
     }
     #endregion
 

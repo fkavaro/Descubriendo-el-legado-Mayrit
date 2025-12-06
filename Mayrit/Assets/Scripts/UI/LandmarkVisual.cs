@@ -16,10 +16,6 @@ public class LandmarkVisual : MonoBehaviour
     {
         // Get dependency from Service Locator
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
-
-        // Validate dependency
-        if (_uiManager == null)
-            Debug.LogError("LandmarkVisual: UIManager not found in ServiceLocator!");
     }
 
     void OnEnable()

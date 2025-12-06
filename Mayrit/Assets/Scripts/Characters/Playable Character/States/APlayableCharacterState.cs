@@ -14,8 +14,5 @@ public abstract class APlayableCharacterState : AState
 
         // Get dependency from Service Locator
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
-
-        if (_gameManager == null)
-            Debug.LogError("APlayableCharacterState: GameManager not found in ServiceLocator!");
     }
 }

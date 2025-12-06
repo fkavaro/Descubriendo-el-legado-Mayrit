@@ -40,18 +40,10 @@ public class TourManager : MonoBehaviour
     #region LIFE CYCLE
     void Awake()
     {
-        // Dependency Injection: get services from ServiceLocator
+        // Get dependencies from Service Locator
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
-
-        // Validate dependencies
-        if (_progressManager == null)
-            Debug.LogError("TourManager: ProgressManager not found in ServiceLocator!");
-        if (_uiManager == null)
-            Debug.LogError("TourManager: UIManager not found in ServiceLocator!");
-        if (_gameManager == null)
-            Debug.LogError("TourManager: GameManager not found in ServiceLocator!");
     }
 
     void Start()
@@ -88,14 +80,9 @@ public class TourManager : MonoBehaviour
         _pathVisualizer.Deinitialize();
 
         // Unsubscribe from events
-        if (_progressManager != null)
-            _progressManager.OnMilestoneChangedEvent -= OnMilestoneChanged;
-
-        if (_uiManager != null)
-        {
-            _uiManager.OnContextualPanelHiddenEvent -= OnContextualPanelHidden;
-            _uiManager.PlayCharacterClickedEvent -= OnPlayCharacterClicked;
-        }
+        _progressManager.OnMilestoneChangedEvent -= OnMilestoneChanged;
+        _uiManager.OnContextualPanelHiddenEvent -= OnContextualPanelHidden;
+        _uiManager.PlayCharacterClickedEvent -= OnPlayCharacterClicked;
 
         DetachFromCurrentTour();
     }

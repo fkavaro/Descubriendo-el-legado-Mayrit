@@ -66,8 +66,6 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
         else
             _sfsm.SetInitialState(_mainMenuState);
 
-
-
         return _sfsm;
     }
     #endregion
@@ -79,10 +77,6 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
 
         // Dependency Injection: get services from ServiceLocator
         _tourManager = ServiceLocator.Instance.Get<TourManager>();
-
-        // Validate dependencies
-        if (_tourManager == null)
-            Debug.LogError("GameManager: ProgressManager not found in ServiceLocator!");
     }
 
     protected override void Start()

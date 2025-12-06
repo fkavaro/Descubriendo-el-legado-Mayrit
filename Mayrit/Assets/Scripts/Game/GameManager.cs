@@ -61,12 +61,8 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
 
         _inputActions = new();
 
-        // Dependency Injection: get services from ServiceLocator
+        // Get dependencies from ServiceLocator
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
-
-        // Validate dependencies
-        if (_progressManager == null)
-            Debug.LogError("GameManager: ProgressManager not found in ServiceLocator!");
     }
 
     protected override void Start()

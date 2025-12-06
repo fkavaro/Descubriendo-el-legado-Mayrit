@@ -159,10 +159,6 @@ public class Villager : ANPC<BehaviourTree>
 
         // Get dependency from Service Locator
         _npcPoolManager = ServiceLocator.Instance.Get<NPCPoolManager>();
-
-        // Validate dependency
-        if (_npcPoolManager == null)
-            Debug.LogError("Villager: NPCPoolManager not found in ServiceLocator!");
     }
     #endregion
 

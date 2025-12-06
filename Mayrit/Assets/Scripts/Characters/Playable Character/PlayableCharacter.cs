@@ -54,16 +54,6 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
         _tourManager = ServiceLocator.Instance.Get<TourManager>();
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
-
-        // Validate dependencies
-        if (_uiManager == null)
-            Debug.LogError("PlayableCharacter: UIManager not found in ServiceLocator!");
-        if (_tourManager == null)
-            Debug.LogError("PlayableCharacter: TourManager not found in ServiceLocator!");
-        if (_gameManager == null)
-            Debug.LogError("PlayableCharacter: GameManager not found in ServiceLocator!");
-        if (_cameraManager == null)
-            Debug.LogError("PlayableCharacter: CameraManager not found in ServiceLocator!");
     }
 
     protected override void Start()

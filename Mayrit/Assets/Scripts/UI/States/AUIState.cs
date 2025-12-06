@@ -22,12 +22,6 @@ public abstract class AUIState : AState
         // Get dependencies from Service Locator
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
-
-        // Validate dependencies
-        if (_uiManager == null)
-            Debug.LogError("AUIState: UIManager not found in ServiceLocator!");
-        if (_gameManager == null)
-            Debug.LogError("AUIState: GameManager not found in ServiceLocator!");
     }
     #endregion
 

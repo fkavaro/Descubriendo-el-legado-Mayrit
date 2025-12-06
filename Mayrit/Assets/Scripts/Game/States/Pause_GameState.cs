@@ -12,9 +12,6 @@ public class Pause_GameState : AGameState
     {
         // Get dependencies from Service Locator
         _timeManager = ServiceLocator.Instance.Get<TimeManager>();
-
-        if (_timeManager == null)
-            Debug.LogError("Pause_GameState: TimeManager not found in ServiceLocator!");
     }
 
     public override void StartState()

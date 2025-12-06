@@ -102,14 +102,6 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
         _tourManager = ServiceLocator.Instance.Get<TourManager>();
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
-
-        // Validate dependencies
-        if (_uiManager == null)
-            Debug.LogError("CameraManager: UIManager not found in ServiceLocator!");
-        if (_tourManager == null)
-            Debug.LogError("CameraManager: TourManager not found in ServiceLocator!");
-        if (_gameManager == null)
-            Debug.LogError("CameraManager: GameManager not found in ServiceLocator!");
     }
 
     protected override void Start()

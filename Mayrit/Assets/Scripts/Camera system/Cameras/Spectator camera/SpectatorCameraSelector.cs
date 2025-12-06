@@ -30,17 +30,7 @@ public class SpectatorCameraSelector
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
 
-        // Validate dependencies
-        if (_cameraManager == null)
-            Debug.LogError("SpectatorCameraSelector: CameraManager not found in ServiceLocator!");
-        else
-            _selectableLayer = _cameraManager._selectableLayer;
-
-        if (_gameManager == null)
-            Debug.LogError("SpectatorCameraSelector: GameManager not found in ServiceLocator!");
-
-        if (_uiManager == null)
-            Debug.LogError("SpectatorCameraSelector: UIManager not found in ServiceLocator!");
+        _selectableLayer = _cameraManager._selectableLayer;
     }
     #endregion
 

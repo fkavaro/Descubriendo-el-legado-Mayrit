@@ -35,19 +35,10 @@ public class ThirdPersonCameraController
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
 
-        // Validate dependencies
-        if (_cameraManager == null)
-            Debug.LogError("ThirdPersonCameraController: CameraManager not found in ServiceLocator!");
-        else
-        {
-            _orbitSpeed = _cameraManager._3rdPersonCameraOrbitSpeed;
-            _followSpeed = _cameraManager._3rdPersonCameraFollowSpeed;
-            _bottomClamp = _cameraManager._bottomClamp;
-            _topClamp = _cameraManager._topClamp;
-        }
-
-        if (_gameManager == null)
-            Debug.LogError("ThirdPersonCameraController: GameManager not found in ServiceLocator!");
+        _orbitSpeed = _cameraManager._3rdPersonCameraOrbitSpeed;
+        _followSpeed = _cameraManager._3rdPersonCameraFollowSpeed;
+        _bottomClamp = _cameraManager._bottomClamp;
+        _topClamp = _cameraManager._topClamp;
     }
     #endregion
 

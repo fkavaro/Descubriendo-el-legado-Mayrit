@@ -31,12 +31,6 @@ public class SpectatorHUD_UIState : AHUDState
         // Get dependencies from Service Locator
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
-
-        // Validate dependencies
-        if (_cameraManager == null)
-            Debug.LogError("SpectatorHUD_UIState: CameraManager not found in ServiceLocator!");
-        if (_progressManager == null)
-            Debug.LogError("SpectatorHUD_UIState: ProgressManager not found in ServiceLocator!");
     }
     #endregion
 

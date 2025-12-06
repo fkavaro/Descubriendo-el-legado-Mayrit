@@ -12,9 +12,6 @@ public class AtHome_VillagerStrategy : ANPCStrategy<Villager>
 
         // Get dependency from Service Locator
         _npcPoolManager = ServiceLocator.Instance.Get<NPCPoolManager>();
-
-        if (_npcPoolManager == null)
-            Debug.LogError("AtHome_VillagerStrategy: NPCPoolManager not found in ServiceLocator!");
     }
 
     public override Node.Status Start()
