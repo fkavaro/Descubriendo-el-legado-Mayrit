@@ -15,7 +15,7 @@ public class TimeManager : MonoBehaviour
     #region EDITOR PROPERTIES
     [Header("Time Settings")]
     [Tooltip("Game simulation speed multiplier. Set by Camera states.")]
-    [Range(0.1f, 5f)]
+    [Range(0.1f, 10f)]
     [SerializeField] float _gameSimulationSpeed = 1f;
     [Tooltip("Whether the time will advance automatically or just to reach a wanted time")]
     [SerializeField] bool _isDynamic = false;
@@ -127,7 +127,7 @@ public class TimeManager : MonoBehaviour
 
         // Keep inside sensible bounds (aligns with inspector limits but slightly more permissive for safety)
         const float minSpeed = 0.01f;
-        const float maxSpeed = 5f;
+        const float maxSpeed = 10f;
         float clamped = Mathf.Clamp(speed, minSpeed, maxSpeed);
         if (!Mathf.Approximately(clamped, speed))
             Debug.LogWarning($"TimeManager: requested simulation speed {speed} was clamped to {clamped}.");

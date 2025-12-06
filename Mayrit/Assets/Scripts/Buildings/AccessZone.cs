@@ -3,19 +3,13 @@ using UnityEngine.Events;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(Rigidbody))]
 public class AccessZone : MonoBehaviour
 {
     #region EDITOR PROPERTIES
     [Header("Access Zone Settings")]
     [Tooltip("Layer mask for NPCs that should avoid talking in this zone")]
     [SerializeField] private LayerMask _npcLayerMask;
-    #endregion
-
-    #region PROPERTIES
-    /// <summary>
-    /// Set of NPCs currently in this access zone
-    /// </summary>
-    private readonly HashSet<INPC> _npcsInZone = new();
     #endregion
 
     #region LIFE CYCLE
@@ -36,16 +30,11 @@ public class AccessZone : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider other)
+    void OnTriggerStay(Collider other)
     {
-        Debug.Log($"AccessZone: OnTriggerEnter by {other.gameObject.name}", gameObject);
-
         // Check if the colliding object is on the NPC layer
         if (!IsNPCLayer(other.gameObject.layer))
-        {
-            Debug.Log($"AccessZone: Ignored object on layer {LayerMask.LayerToName(other.gameObject.layer)}", gameObject);
             return;
-        }
 
         // Try to get the INPC interface
         if (!other.TryGetComponent<INPC>(out var npc))
@@ -54,12 +43,8 @@ public class AccessZone : MonoBehaviour
             return;
         }
 
-        // Add NPC to the zone, prevent talking, and invoke enter event
-        if (_npcsInZone.Add(npc))
-        {
-            npc.ShouldTalk = false;
-            Debug.Log($"NPC {npc.GivenName} entered AccessZone", gameObject);
-        }
+        if (npc.CanTalk)
+            npc.CanTalk = false;
     }
 
     void OnTriggerExit(Collider other)
@@ -72,12 +57,8 @@ public class AccessZone : MonoBehaviour
         if (!other.TryGetComponent<INPC>(out var npc))
             return;
 
-        // Remove NPC from the zone, allow talking, and invoke exit event
-        if (_npcsInZone.Remove(npc))
-        {
-            npc.ShouldTalk = true;
-            Debug.Log($"NPC {npc.GivenName} exited AccessZone", gameObject);
-        }
+        if (!npc.CanTalk)
+            npc.CanTalk = true;
     }
     #endregion
 

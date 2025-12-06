@@ -25,11 +25,6 @@ where BehaviourSystemType : ABehaviourSystem
     }
     public string GivenName => _givenName;
     public string FamilyName => _familyName;
-    public bool IsInStreet
-    {
-        get => _isInStreet;
-        set => _isInStreet = value;
-    }
 
     public INPC.RoleInConversation ConversationRole
     {
@@ -37,10 +32,10 @@ where BehaviourSystemType : ABehaviourSystem
         set => _conversationRole = value;
     }
 
-    public bool ShouldTalk
+    public bool CanTalk
     {
-        get => _shouldTalk;
-        set => _shouldTalk = value;
+        get => _canTalk;
+        set => _canTalk = value;
     }
 
     public bool IsReadyToTalk
@@ -91,8 +86,7 @@ where BehaviourSystemType : ABehaviourSystem
 
     NPCMovementController _movementController;
     NavMeshAgent _agent;
-    bool _isInStreet = true;
-    bool _shouldTalk = false;
+    bool _canTalk = true;
     bool _isReadyToTalk = false;
     public INPC _currentConversationTarget, _lastConversationTarget;
     #endregion
@@ -133,7 +127,7 @@ where BehaviourSystemType : ABehaviourSystem
     #region CONVERSATION METHODS
     public virtual bool IsAvailableForConversation()
     {
-        return _isInStreet && _shouldTalk && CharacterModel.activeInHierarchy;
+        return _canTalk && CharacterModel.activeInHierarchy;
     }
 
     public virtual bool IsStillInConversation(INPC otherNpc)

@@ -40,7 +40,7 @@ public class Villager : ANPC<BehaviourTree>
             homeEntrance = _home.GetRandomAccessSpot();
 
         // Conversation sequence
-        ConditionStrategy isInStreetStrategy = new(() => IsInStreet);
+        ConditionStrategy canTalkStrategy = new(() => CanTalk);
         ConditionStrategy isFollowingConversationStrategy = new(IsFollowingConversation);
         GoToMiddlePointStrategy<Villager> goToMiddlePointStrategyForFollower = new(this);
         GoToMiddlePointStrategy<Villager> goToMiddlePointStrategyForInitiator = new(this);
@@ -54,7 +54,7 @@ public class Villager : ANPC<BehaviourTree>
         SequenceNode followConversationSequence = new(this);
         SequenceNode initiateConversationSequence = new(this);
 
-        LeafNode isInStreetLeaf = new(this, "Is in street?", isInStreetStrategy);
+        LeafNode canTalkLeaf = new(this, "Can talk?", canTalkStrategy);
         LeafNode isBeingTalkedToLeaf = new(this, "Is following conversation?", isFollowingConversationStrategy);
         LeafNode goToMiddlePointLeafForFollower = new(this, "Going to middle point", goToMiddlePointStrategyForFollower);
         LeafNode goToMiddlePointLeafForInitiator = new(this, "Going to middle point", goToMiddlePointStrategyForInitiator);
@@ -63,7 +63,7 @@ public class Villager : ANPC<BehaviourTree>
         LeafNode initiateConversationLeafCheck = new(this, "Talking", initiateConversationStrategy);
 
         conversationCooldown.AddChild(conversationSequence);
-        conversationSequence.AddChild(isInStreetLeaf);
+        conversationSequence.AddChild(canTalkLeaf);
         conversationSequence.AddChild(roleSelector);
         roleSelector.AddChild(followConversationSequence);
         followConversationSequence.AddChild(isBeingTalkedToLeaf);

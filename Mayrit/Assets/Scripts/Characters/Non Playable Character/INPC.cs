@@ -23,9 +23,8 @@ public interface INPC : ICharacter
     bool IsStopped { get; set; }
     public string GivenName { get; }
     public string FamilyName { get; }
-    bool IsInStreet { get; set; }
     RoleInConversation ConversationRole { get; set; }
-    bool ShouldTalk { get; set; }
+    bool CanTalk { get; set; }
     bool IsReadyToTalk { get; set; }
     public INPC CurrentConversationTarget { get; set; }
     public INPC LastConversationTarget { get; set; }

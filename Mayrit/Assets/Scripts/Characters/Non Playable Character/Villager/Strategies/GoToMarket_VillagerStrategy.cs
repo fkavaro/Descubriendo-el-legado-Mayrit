@@ -26,8 +26,6 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
 
         if (_npc.MovementController.IsDestination(_marketStallSpot))
         {
-            _npc.IsInStreet = true;
-
             if (_npc.CurrentConversationTarget != null || _npc.ConversationRole != INPC.RoleInConversation.None)
             {
                 if (_npc.DebugMode)
@@ -55,8 +53,6 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
         // Is close to destination stall spot
         if (_npc.MovementController.IsCloseTo(_marketStallSpot))
         {
-            _npc.IsInStreet = false;
-
             if (!_market.IsOpen())
             {
                 if (_npc.DebugMode)
