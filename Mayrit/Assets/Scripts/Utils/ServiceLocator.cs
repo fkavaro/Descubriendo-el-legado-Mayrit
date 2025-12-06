@@ -45,11 +45,8 @@ public class ServiceLocator
     {
         var type = typeof(T);
         if (_services.TryGetValue(type, out var service))
-        {
             return service as T;
-        }
 
-        Debug.LogError($"Service {type.Name} not found!");
         return null;
     }
 

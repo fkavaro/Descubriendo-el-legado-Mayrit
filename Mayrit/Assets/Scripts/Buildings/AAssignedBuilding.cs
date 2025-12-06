@@ -39,7 +39,7 @@ public abstract class AAssignedBuilding : ABuilding
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogError($"House.OnDisable: Reassign failed: {ex}");
+                    Debug.LogError($"AAssignedBuilding.OnDisable: Reassign failed: {ex}");
                 }
 
                 _assignedVillagers.Clear();
