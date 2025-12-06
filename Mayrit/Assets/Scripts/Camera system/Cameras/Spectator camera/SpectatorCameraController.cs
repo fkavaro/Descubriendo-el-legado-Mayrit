@@ -10,7 +10,7 @@ public class SpectatorCameraController
 {
     #region  PROPERTIES
     readonly CinemachineCamera _camera;
-    Transform _cameraTarget;
+    readonly Transform _cameraTarget;
     readonly CinemachineOrbitalFollow _orbitalFollow;
     readonly AnimationCurve _moveSpeedZoomCurve;
 
@@ -67,12 +67,20 @@ public class SpectatorCameraController
 
         // Get dependencies from ServiceLocator
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
+        _gameManager = ServiceLocator.Instance.Get<GameManager>();
+        _uiManager = ServiceLocator.Instance.Get<UIManager>();
 
         // Validate dependencies
         if (_cameraManager == null)
             Debug.LogError("SpectatorCameraController: CameraManager not found in ServiceLocator!");
         else
             _moveSpeedZoomCurve = _cameraManager._moveSpeedZoomCurve;
+
+        if (_gameManager == null)
+            Debug.LogError("SpectatorCameraController: GameManager not found in ServiceLocator!");
+
+        if (_uiManager == null)
+            Debug.LogError("SpectatorCameraController: UIManager not found in ServiceLocator!");
     }
     #endregion
 
