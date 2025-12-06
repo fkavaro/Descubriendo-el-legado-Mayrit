@@ -647,12 +647,11 @@ MonoBehaviour:
   _debugMode: 0
   _isExecutionPaused: 0
   _currentActionInfo: 
-  _dontDestroyOnLoad: 0
-  _spectatorSimSpeed: 3
+  _spectatorSimSpeed: 5
   _spectatorCamera: {fileID: 5488014350122742170}
-  _edgeScrolling: 0
-  _edgeScrollingMargin: 30
-  _moveSpeed: 500
+  _edgeScrolling: 1
+  _edgeScrollingMargin: 100
+  _moveSpeed: 300
   _moveSpeedZoomCurve:
     serializedVersion: 2
     m_Curve:
@@ -677,8 +676,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _acceleration: 200
-  _deceleration: 250
+  _acceleration: 700
+  _deceleration: 1000
   _sprintSpeedMultiplier: 2
   _movementLimitsX: {x: -1000, y: 700}
   _movementLimitsY: {x: 120, y: 400}

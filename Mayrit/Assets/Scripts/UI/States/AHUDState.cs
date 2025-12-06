@@ -1,4 +1,5 @@
 using System;
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -54,6 +55,12 @@ public abstract class AHUDState : AUIState
         _contextualPanel.HiddenEvent -= OnContextualPanelHiddenCallback;
         _uiManager.ShowContextualPanelEvent -= ShowContextualPanel;
         _uiManager.HideContextualPanelEvent -= HideContextualPanel;
+    }
+
+    public override bool IsCursorOverUI()
+    {
+        // Check base UI elements and contextual panel
+        return base.IsCursorOverUI() || IsCursorOver(_contextualPanelRoot);
     }
     #endregion
 

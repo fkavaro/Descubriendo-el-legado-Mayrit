@@ -115,19 +115,31 @@ public class SpectatorCameraController
     #region PRIVATE METHODS
     void UpdateEdgeScrolling()
     {
-        Vector2 mousePosition = Mouse.current.position.ReadValue();
-
         _edgeScrollInput = Vector2.zero;
 
-        if (mousePosition.x <= _edgeScrollingMargin)
-            _edgeScrollInput.x = -1f;
-        else if (mousePosition.x >= Screen.width - _edgeScrollingMargin)
-            _edgeScrollInput.x = 1f;
+        // Ensure mouse is available before reading position
+        if (Mouse.current == null)
+            return;
 
-        if (mousePosition.y <= _edgeScrollingMargin)
-            _edgeScrollInput.y = -1f;
-        else if (mousePosition.y >= Screen.height - _edgeScrollingMargin)
-            _edgeScrollInput.y = 1f;
+        // Return if mouse is over UI
+        if (_uiManager.IsCursorOverUI())
+            return;
+
+        Vector2 mousePosition = Mouse.current.position.ReadValue();
+
+        // Only apply edge scrolling if mouse position is valid (not at origin on first frame)
+        if (mousePosition.x > 0 || mousePosition.y > 0)
+        {
+            if (mousePosition.x <= _edgeScrollingMargin)
+                _edgeScrollInput.x = -1f;
+            else if (mousePosition.x >= Screen.width - _edgeScrollingMargin)
+                _edgeScrollInput.x = 1f;
+
+            if (mousePosition.y <= _edgeScrollingMargin)
+                _edgeScrollInput.y = -1f;
+            else if (mousePosition.y >= Screen.height - _edgeScrollingMargin)
+                _edgeScrollInput.y = 1f;
+        }
     }
 
     /// <summary>

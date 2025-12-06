@@ -17,7 +17,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
 
     #region EDITOR PROPERTIES
     [Header("Spectator camera")]
-    [Range(0.1f, 5f)]
+    [Range(0.1f, 10f)]
     public float _spectatorSimSpeed = 3f;
     public CinemachineCamera _spectatorCamera;
     [Tooltip("Wether to move camera at screen margins or not.")]
@@ -46,12 +46,12 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     public float _spectatorTargetFixingSpeed = 40f;
 
     [Header("Orbital camera")]
-    [Range(0.1f, 5f)]
+    [Range(0.1f, 10f)]
     public float _orbitalSimSpeed = 1f;
     public CinemachineCamera _orbitalCamera;
 
     [Header("Third Person Camera")]
-    [Range(0.1f, 5f)]
+    [Range(0.1f, 10f)]
     public float _thirdPersonSimSpeed = 1f;
     public CinemachineCamera _thirdPersonCamera;
     public float _3rdPersonCameraOrbitSpeed = 3f,
@@ -63,6 +63,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     #region INTERNAL PROPERTIES
     public event Action OnCameraStateChangedEvent;
 
+    // Finiste State Machine and states
     FiniteStateMachine<ACameraState> _fsm;
     Spectator_CameraState _spectatorState;
     ThirdPerson_CameraState _thirdPersonState;
