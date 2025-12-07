@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Installer/Bootstrapper that registers all game services at startup.
 /// </summary>
-public class GameInstaller : MonoBehaviour
+public class GamePlayInstaller : MonoBehaviour
 {
     [Header("Manager References")]
     [SerializeField] private GameManager _gameManager;
@@ -21,42 +21,42 @@ public class GameInstaller : MonoBehaviour
         if (_gameManager != null)
             ServiceLocator.Instance.Register<GameManager>(_gameManager);
         else
-            Debug.LogError("GameInstaller: GameManager reference is missing!");
+            Debug.LogError("GamePlayInstaller: GameManager reference is missing!");
 
         if (_uiManager != null)
             ServiceLocator.Instance.Register<UIManager>(_uiManager);
         else
-            Debug.LogError("GameInstaller: UIManager reference is missing!");
+            Debug.LogError("GamePlayInstaller: UIManager reference is missing!");
 
         if (_progressManager != null)
             ServiceLocator.Instance.Register<ProgressManager>(_progressManager);
         else
-            Debug.LogError("GameInstaller: ProgressManager reference is missing!");
+            Debug.LogError("GamePlayInstaller: ProgressManager reference is missing!");
 
         if (_cameraManager != null)
             ServiceLocator.Instance.Register<CameraManager>(_cameraManager);
         else
-            Debug.LogError("GameInstaller: CameraManager reference is missing!");
+            Debug.LogError("GamePlayInstaller: CameraManager reference is missing!");
 
         if (_tourManager != null)
             ServiceLocator.Instance.Register<TourManager>(_tourManager);
         else
-            Debug.LogError("GameInstaller: TourManager reference is missing!");
+            Debug.LogError("GamePlayInstaller: TourManager reference is missing!");
 
         if (_timeManager != null)
             ServiceLocator.Instance.Register<TimeManager>(_timeManager);
         else
-            Debug.LogError("GameInstaller: TimeManager reference is missing!");
+            Debug.LogError("GamePlayInstaller: TimeManager reference is missing!");
 
         if (_townManager != null)
             ServiceLocator.Instance.Register<TownManager>(_townManager);
         else
-            Debug.LogError("GameInstaller: TownManager reference is missing!");
+            Debug.LogError("GamePlayInstaller: TownManager reference is missing!");
 
         if (_npcPoolManager != null)
             ServiceLocator.Instance.Register<NPCPoolManager>(_npcPoolManager);
         else
-            Debug.LogError("GameInstaller: NPCPoolManager reference is missing!");
+            Debug.LogError("GamePlayInstaller: NPCPoolManager reference is missing!");
     }
 
     private void OnDestroy()

@@ -69,6 +69,8 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
     {
         base.Start();
 
+        if (IsInMainMenuState) return;
+
         // Subscribe to events
         _pauseState.GamePausedEvent += OnGamePaused;
         _progressManager.OnMilestoneChangedEvent += OnMilestoneChanged;

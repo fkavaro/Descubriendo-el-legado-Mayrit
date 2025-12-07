@@ -18,9 +18,6 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     #endregion
 
     #region EDITOR PROPERTIES
-    [Header("User Interface Document")]
-    public UIDocument _UIDocument;
-
     [Header("Tooltip Settings")]
     public Vector2 _tooltipOffset = new(-30, -30);
     #endregion
@@ -82,6 +79,8 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     protected override void Start()
     {
         base.Start();
+
+        if (IsInMainMenuState) return;
 
         // Subscribe to events
         _spectatorHUDState.ContextualPanelHiddenEvent += OnContextualPanelHidden;

@@ -57,7 +57,7 @@ where StateType : AState
 
     public bool IsCurrentState(StateType state)
     {
-        return _currentState == state;
+        return _currentState == state && _currentState != null;
     }
 
     public virtual void ForceState(StateType newState)
