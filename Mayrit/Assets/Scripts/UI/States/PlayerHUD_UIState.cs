@@ -72,11 +72,4 @@ public class PlayerHUD_UIState : AHUDState
         _tourArea.style.display = DisplayStyle.Flex;
     }
     #endregion
-
-    #region CALLBACK METHODS
-    void OnPauseClicked(ClickEvent evt)
-    {
-        _uiManager.SwitchToPauseState();
-    }
-    #endregion
 }

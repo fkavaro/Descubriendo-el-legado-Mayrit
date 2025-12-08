@@ -76,6 +76,12 @@ public abstract class AHUDState : AUIState
         _wasContextualPanelShown = false;
         _contextualPanel.Hide();
     }
+
+    protected void OnPauseClicked(ClickEvent evt)
+    {
+        _uiManager.SwitchToPauseState();
+        _soundManager.PlayButtonClickSFX();
+    }
     #endregion
 
     #region PRIVATE METHODS

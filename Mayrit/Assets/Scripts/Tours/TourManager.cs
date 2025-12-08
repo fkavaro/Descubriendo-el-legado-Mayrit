@@ -35,6 +35,7 @@ public class TourManager : MonoBehaviour
     ProgressManager _progressManager;
     UIManager _uiManager;
     GameManager _gameManager;
+    SoundManager _soundManager;
     #endregion
 
     #region LIFE CYCLE
@@ -44,7 +45,9 @@ public class TourManager : MonoBehaviour
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
+        _soundManager = ServiceLocator.Instance.Get<SoundManager>();
     }
+
 
     void Start()
     {
@@ -135,6 +138,7 @@ public class TourManager : MonoBehaviour
         if (_currentTour != null && _currentTour.IsCompleted)
         {
             OnTourCompletedEvent?.Invoke(_currentTour);
+            _soundManager.PlayTourEndSFX();
             DetachFromCurrentTour();
         }
     }
@@ -142,7 +146,10 @@ public class TourManager : MonoBehaviour
     void OnPlayCharacterClicked()
     {
         if (_currentTour != null)
+        {
             _currentTour.StartTour();
+            _soundManager.PlayTourStartSFX();
+        }
     }
     #endregion
 }

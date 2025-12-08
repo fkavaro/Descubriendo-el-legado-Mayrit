@@ -11,6 +11,7 @@ public abstract class AUIState : AState
     // Dependency Injection
     protected readonly UIManager _uiManager;
     protected readonly GameManager _gameManager;
+    protected readonly SoundManager _soundManager;
     #endregion
 
     #region CONSTRUCTOR
@@ -22,6 +23,7 @@ public abstract class AUIState : AState
         // Get dependencies from Service Locator
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
+        _soundManager = ServiceLocator.Instance.Get<SoundManager>();
     }
     #endregion
 

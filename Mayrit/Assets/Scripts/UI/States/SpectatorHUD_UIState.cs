@@ -20,8 +20,8 @@ public class SpectatorHUD_UIState : AHUDState
     VisualElement _milestoneArea;
 
     // Dependency Injection
-    CameraManager _cameraManager;
-    ProgressManager _progressManager;
+    readonly CameraManager _cameraManager;
+    readonly ProgressManager _progressManager;
     #endregion
 
     #region CONSTRUCTOR
@@ -109,34 +109,34 @@ public class SpectatorHUD_UIState : AHUDState
     #endregion
 
     #region CALLBACK METHODS
-    void OnPauseClicked(ClickEvent evt)
-    {
-        _uiManager.SwitchToPauseState();
-    }
-
     void OnHeritageClicked(ClickEvent evt)
     {
         _uiManager.SwitchToHeritageState();
+        _soundManager.PlayButtonClickSFX();
     }
 
     void OnMilestoneClicked(ClickEvent evt)
     {
         ShowContextualPanel(_progressManager.CurrentMilestoneMapping.Data);
+        _soundManager.PlayButtonClickSFX();
     }
 
     void OnPreviousMilestoneClicked(ClickEvent evt)
     {
         _progressManager.SwitchToPreviousMilestone();
+        _soundManager.PlayButtonClickSFX();
     }
 
     void OnNextMilestoneClicked(ClickEvent evt)
     {
         _progressManager.SwitchToNextMilestone();
+        _soundManager.PlayButtonClickSFX();
     }
 
     void OnModerSuperpositionToggled(ClickEvent evt)
     {
         OnModernSuperpositionEvent?.Invoke();
+        _soundManager.PlayButtonClickSFX();
     }
 
     void OnMilestoneChanged(MilestoneMapping mapping)
