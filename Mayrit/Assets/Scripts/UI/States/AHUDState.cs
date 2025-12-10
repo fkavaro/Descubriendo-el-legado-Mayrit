@@ -19,13 +19,15 @@ public abstract class AHUDState : AUIState
     public AHUDState(string name, UIDocument uiDocument)
     : base(name, uiDocument)
     {
-        InitializeContextualPanel();
     }
     #endregion
 
     #region INHERITED METHODS
     public override void StartState()
     {
+        if (_contextualPanelRoot == null)
+            InitializeContextualPanel();
+
         base.StartState();
 
         // Show contextual panel root if it was shown before
@@ -88,6 +90,13 @@ public abstract class AHUDState : AUIState
     void InitializeContextualPanel()
     {
         VisualElement hudScreen = _UIDocument.rootVisualElement.Q<VisualElement>("HUD");
+
+        if (hudScreen == null)
+        {
+            Debug.LogWarning("HUD element not found in UIDocument");
+            return;
+        }
+
         _contextualPanelRoot = hudScreen.Q<VisualElement>("ContextualPanel");
 
         if (_contextualPanelRoot == null)

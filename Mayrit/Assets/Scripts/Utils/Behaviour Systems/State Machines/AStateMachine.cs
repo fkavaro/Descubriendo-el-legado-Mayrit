@@ -23,7 +23,7 @@ where StateType : AState
     #endregion
 
     #region TO BE IMPLEMENTED METHODS
-    public virtual void SwitchState(StateType state)
+    public virtual void SwitchState(StateType newState)
     {
         OnStateSwitchEvent?.Invoke();
     }

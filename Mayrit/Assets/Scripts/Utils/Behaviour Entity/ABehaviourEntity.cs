@@ -56,7 +56,12 @@ where BehaviourSystemType : ABehaviourSystem
     #region LIFE CYCLE: DERIVED TO BEHAVIOUR SYSTEM
     protected virtual void Awake()
     {
-        _behaviourSystem = InitializeBehaviourSystem();
+        if (_behaviourSystem == null)
+        {
+            if (DebugMode)
+                Debug.Log($"    Initializing {gameObject.name} Behaviour System");
+            _behaviourSystem = InitializeBehaviourSystem();
+        }
         _behaviourSystem?.Awake();
     }
 

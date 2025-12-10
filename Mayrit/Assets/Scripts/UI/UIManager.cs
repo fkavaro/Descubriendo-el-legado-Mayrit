@@ -71,11 +71,15 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     {
         base.Awake();
 
-        if (SceneManager.GetActiveScene().name != "GameScene")
-            return;
+        if (SceneManager.GetActiveScene().name == "GameScene")
+        {
+            _sfsm.SwitchState(_spectatorHUDState);
 
-        // Dependency Injection: get services from ServiceLocator
-        _tourManager = ServiceLocator.Instance.Get<TourManager>();
+            // Dependency Injection: get services from ServiceLocator
+            _tourManager = ServiceLocator.Instance.Get<TourManager>();
+        }
+        else
+            _sfsm.SwitchState(_mainMenuState);
     }
 
     protected override void Start()

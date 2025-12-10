@@ -40,14 +40,11 @@ public class ServiceLocator
 
         var type = typeof(T);
         if (_services.ContainsKey(type))
-        {
-            Debug.LogWarning($"Service {type.Name} is already registered. Overwriting...");
-            _services[type] = serviceConfig.service;
-        }
+            // Destroy new service
+            UnityEngine.Object.Destroy(serviceConfig.service.gameObject);
         else
-        {
+            // Register new service
             _services.Add(type, serviceConfig.service);
-        }
 
         if (serviceConfig.dontDestroyOnLoad)
             UnityEngine.Object.DontDestroyOnLoad(serviceConfig.service.gameObject);

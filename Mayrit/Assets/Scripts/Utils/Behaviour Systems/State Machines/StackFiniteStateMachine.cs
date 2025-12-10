@@ -23,7 +23,15 @@ where StateType : AState
     /// </summary>
     public override void SwitchState(StateType newState)
     {
-        if (newState == _currentState) return;
+        if (newState == _currentState)
+        {
+            if (_behaviourEntity.DebugMode)
+                Debug.LogWarning($"{_behaviourEntity.GO.name} tried to switch to the same state: {newState?.StateName}");
+            return;
+        }
+
+        if (_behaviourEntity.DebugMode)
+            Debug.Log($"{_behaviourEntity.GO.name} switching state from {_currentState?.StateName} to {newState?.StateName}");
 
         PushCurrentState();
         _currentState?.ExitState();
