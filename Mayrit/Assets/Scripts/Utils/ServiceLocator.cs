@@ -2,6 +2,13 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
+public struct ServiceConfig<T> where T : MonoBehaviour
+{
+    [SerializeField] public T service;
+    [SerializeField] public bool dontDestroyOnLoad;
+}
+
 /// <summary>
 /// Simple Service Locator pattern for Dependency Injection in Unity.
 /// This provides a centralized registry for services without using Singletons.
@@ -15,8 +22,7 @@ public class ServiceLocator
     {
         get
         {
-            if (_instance == null)
-                _instance = new ServiceLocator();
+            _instance ??= new ServiceLocator();
             return _instance;
         }
     }
@@ -24,18 +30,27 @@ public class ServiceLocator
     /// <summary>
     /// Register a service instance
     /// </summary>
-    public void Register<T>(T service) where T : class
+    public void Register<T>(ServiceConfig<T> serviceConfig) where T : MonoBehaviour
     {
+        if (serviceConfig.service == null)
+        {
+            Debug.LogError($"Cannot register service {typeof(T).Name}: service reference is null.");
+            return;
+        }
+
         var type = typeof(T);
         if (_services.ContainsKey(type))
         {
             Debug.LogWarning($"Service {type.Name} is already registered. Overwriting...");
-            _services[type] = service;
+            _services[type] = serviceConfig.service;
         }
         else
         {
-            _services.Add(type, service);
+            _services.Add(type, serviceConfig.service);
         }
+
+        if (serviceConfig.dontDestroyOnLoad)
+            UnityEngine.Object.DontDestroyOnLoad(serviceConfig.service.gameObject);
     }
 
     /// <summary>
@@ -46,7 +61,6 @@ public class ServiceLocator
         var type = typeof(T);
         if (_services.TryGetValue(type, out var service))
             return service as T;
-
         return null;
     }
 

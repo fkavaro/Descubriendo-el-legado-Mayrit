@@ -2,32 +2,36 @@ using UnityEngine;
 
 public class BaseGameServicesInstaller : MonoBehaviour
 {
-    [Header("Manager References")]
-    [SerializeField] private GameManager _gameManager;
-    [SerializeField] private UIManager _uiManager;
-    [SerializeField] private SoundManager _soundManager;
+    #region EDITOR PROPERTIES
+    [SerializeField] private ServiceConfig<GameManager> _gameManagerConfig;
+    [SerializeField] private ServiceConfig<UIManager> _uiManagerConfig;
+    [SerializeField] private ServiceConfig<SoundManager> _soundManagerConfig;
+    #endregion
 
+    #region LIFE CYCLE
     protected virtual void Awake()
     {
-        // Register all managers as services
-        if (_gameManager != null)
-            ServiceLocator.Instance.Register(_gameManager);
-        else
-            Debug.LogError("MainMenuInstaller: GameManager reference is missing!");
-
-        if (_uiManager != null)
-            ServiceLocator.Instance.Register(_uiManager);
-        else
-            Debug.LogError("MainMenuInstaller: UIManager reference is missing!");
-
-        if (_soundManager != null)
-            ServiceLocator.Instance.Register(_soundManager);
-        else
-            Debug.LogError("MainMenuInstaller: SoundManager reference is missing!");
+        RegisterInServiceLocator(_gameManagerConfig);
+        RegisterInServiceLocator(_uiManagerConfig);
+        RegisterInServiceLocator(_soundManagerConfig);
     }
 
-    void OnDestroy()
+    // protected virtual void OnDestroy()
+    // {
+    //     ServiceLocator.Instance.Clear();
+    // }
+    #endregion
+
+    #region HELPERS
+    protected void RegisterInServiceLocator<T>(ServiceConfig<T> serviceConfig) where T : MonoBehaviour
     {
-        ServiceLocator.Instance.Clear();
+        if (serviceConfig.service == null)
+        {
+            Debug.LogError($"{typeof(T)} reference is missing!");
+            return;
+        }
+
+        ServiceLocator.Instance.Register(serviceConfig);
     }
+    #endregion
 }

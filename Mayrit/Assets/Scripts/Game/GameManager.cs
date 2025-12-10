@@ -44,8 +44,7 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
         _pauseState = new();
 
         // Set initial state based on scene name
-        string sceneName = SceneManager.GetActiveScene().name;
-        if (sceneName == "GameScene")
+        if (SceneManager.GetActiveScene().name == "GameScene")
             _fsm.SetInitialState(_gamePlayState);
         else
             _fsm.SetInitialState(_mainMenuState);
@@ -58,6 +57,9 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
     protected override void Awake()
     {
         base.Awake();
+
+        if (SceneManager.GetActiveScene().name != "GameScene")
+            return;
 
         _inputActions = new();
 

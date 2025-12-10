@@ -167,10 +167,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7062344410516087662, guid: 572e4cae4c2b54948bc57a99b41597b4, type: 3}
-      propertyPath: Loop
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8958913347159186863, guid: 572e4cae4c2b54948bc57a99b41597b4, type: 3}
       propertyPath: m_Name
       value: "\U0001F50ASoundManager"
@@ -768,18 +764,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5795229730612990247, guid: f159fddb4a5e56746916cbd293b0859e, type: 3}
-      propertyPath: _debugMode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5795229730612990247, guid: f159fddb4a5e56746916cbd293b0859e, type: 3}
-      propertyPath: _UIDocument
-      value: 
-      objectReference: {fileID: 1818354712}
-    - target: {fileID: 5866958546828577272, guid: f159fddb4a5e56746916cbd293b0859e, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8119952740670593480, guid: f159fddb4a5e56746916cbd293b0859e, type: 3}
       propertyPath: m_Name
       value: "\U0001F39E\uFE0FUIManager"
@@ -842,15 +826,15 @@ PrefabInstance:
       value: "\U0001F9E0MainMenuInstaller"
       objectReference: {fileID: 0}
     - target: {fileID: 4846352471098444206, guid: 6430a1cb564bbc841962b1702cbcd349, type: 3}
-      propertyPath: _uiManager
+      propertyPath: _uiManagerConfig.service
       value: 
       objectReference: {fileID: 1818354711}
     - target: {fileID: 4846352471098444206, guid: 6430a1cb564bbc841962b1702cbcd349, type: 3}
-      propertyPath: _gameManager
+      propertyPath: _gameManagerConfig.service
       value: 
       objectReference: {fileID: 1983328029}
     - target: {fileID: 4846352471098444206, guid: 6430a1cb564bbc841962b1702cbcd349, type: 3}
-      propertyPath: _soundManager
+      propertyPath: _soundManagerConfig.service
       value: 
       objectReference: {fileID: 192905145}
     m_RemovedComponents: []
@@ -867,17 +851,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2dcb27f4c44252841aca24bb5b0023a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1818354712 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6354518598366967083, guid: f159fddb4a5e56746916cbd293b0859e, type: 3}
-  m_PrefabInstance: {fileID: 1002981176}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1983328029 stripped

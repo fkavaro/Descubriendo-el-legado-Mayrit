@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DebugOverlay : MonoBehaviour
+public class UIDebugOverlay : MonoBehaviour
 {
     [Header("Debug Overlay")]
     [Tooltip("Collapse the debug overlay to a small header")]

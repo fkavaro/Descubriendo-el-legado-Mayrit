@@ -57,8 +57,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
         _heritageState = new(uiDocument);
 
         // Set initial state based on scene name
-        string sceneName = SceneManager.GetActiveScene().name;
-        if (sceneName == "GameScene")
+        if (SceneManager.GetActiveScene().name == "GameScene")
             _sfsm.SetInitialState(_spectatorHUDState);
         else
             _sfsm.SetInitialState(_mainMenuState);
@@ -71,6 +70,9 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     protected override void Awake()
     {
         base.Awake();
+
+        if (SceneManager.GetActiveScene().name != "GameScene")
+            return;
 
         // Dependency Injection: get services from ServiceLocator
         _tourManager = ServiceLocator.Instance.Get<TourManager>();

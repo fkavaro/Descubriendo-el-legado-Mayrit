@@ -17,8 +17,7 @@ public class PlayerHUD_UIState : AHUDState
     public PlayerHUD_UIState(UIDocument uiDocument)
     : base("PlayerHUD", uiDocument)
     {
-        // Get dependency from Service Locator
-        _tourManager = ServiceLocator.Instance.Get<TourManager>();
+
     }
     #endregion
 
@@ -38,6 +37,9 @@ public class PlayerHUD_UIState : AHUDState
             Debug.LogWarning("_tourName not found");
         if (_tourDescription == null)
             Debug.LogWarning("_tourDescription not found");
+
+        // Get dependency from Service Locator
+        _tourManager = ServiceLocator.Instance.Get<TourManager>();
     }
 
     protected override void RegisterCallbacks()

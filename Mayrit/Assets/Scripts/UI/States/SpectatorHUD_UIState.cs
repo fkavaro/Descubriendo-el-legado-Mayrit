@@ -20,17 +20,15 @@ public class SpectatorHUD_UIState : AHUDState
     VisualElement _milestoneArea;
 
     // Dependency Injection
-    readonly CameraManager _cameraManager;
-    readonly ProgressManager _progressManager;
+    CameraManager _cameraManager;
+    ProgressManager _progressManager;
     #endregion
 
     #region CONSTRUCTOR
     public SpectatorHUD_UIState(UIDocument uiDocument)
     : base("SpectatorHUD", uiDocument)
     {
-        // Get dependencies from Service Locator
-        _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
-        _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
+
     }
     #endregion
 
@@ -66,6 +64,10 @@ public class SpectatorHUD_UIState : AHUDState
             Debug.LogWarning("_previousMilestoneButton button not found");
         if (_modernSuperpositionButton == null)
             Debug.LogWarning("_modernSuperpositionButton button not found");
+
+        // Get dependencies from Service Locator
+        _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
+        _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
     }
 
     protected override void RegisterCallbacks()

@@ -9,9 +9,9 @@ public abstract class AUIState : AState
     public VisualElement _screen;
 
     // Dependency Injection
-    protected readonly UIManager _uiManager;
-    protected readonly GameManager _gameManager;
-    protected readonly SoundManager _soundManager;
+    protected UIManager _uiManager;
+    protected GameManager _gameManager;
+    protected SoundManager _soundManager;
     #endregion
 
     #region CONSTRUCTOR
@@ -19,17 +19,17 @@ public abstract class AUIState : AState
     : base(name)
     {
         _UIDocument = uiDocument;
-
-        // Get dependencies from Service Locator
-        _uiManager = ServiceLocator.Instance.Get<UIManager>();
-        _gameManager = ServiceLocator.Instance.Get<GameManager>();
-        _soundManager = ServiceLocator.Instance.Get<SoundManager>();
     }
     #endregion
 
     #region INHERITED METHODS
     public override void StartState()
     {
+        // Get dependencies from Service Locator
+        _uiManager = ServiceLocator.Instance.Get<UIManager>();
+        _gameManager = ServiceLocator.Instance.Get<GameManager>();
+        _soundManager = ServiceLocator.Instance.Get<SoundManager>();
+
         _screen = _UIDocument.rootVisualElement.Q<VisualElement>(_stateName);
 
         ConfigureUIElements();

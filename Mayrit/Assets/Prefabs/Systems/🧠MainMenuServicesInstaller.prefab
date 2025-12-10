@@ -44,5 +44,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a01b22e14d47aa54b950f75e510ea55b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuInstaller
-  _gameManager: {fileID: 0}
-  _uiManager: {fileID: 0}
+  _gameManagerConfig:
+    service: {fileID: 0}
+    dontDestroyOnLoad: 1
+  _uiManagerConfig:
+    service: {fileID: 0}
+    dontDestroyOnLoad: 1
+  _soundManagerConfig:
+    service: {fileID: 0}
+    dontDestroyOnLoad: 1

@@ -4,18 +4,16 @@ using UnityEngine;
 public class Pause_GameState : AGameState
 {
     public event Action<bool> GamePausedEvent;
-
-    readonly TimeManager _timeManager;
+    TimeManager _timeManager;
 
     public Pause_GameState()
-    : base("Pause")
-    {
-        // Get dependencies from Service Locator
-        _timeManager = ServiceLocator.Instance.Get<TimeManager>();
-    }
+    : base("Pause") { }
 
     public override void StartState()
     {
+        // Get dependencies from Service Locator
+        _timeManager = ServiceLocator.Instance.Get<TimeManager>();
+
         Time.timeScale = 0f;
 
         GamePausedEvent?.Invoke(true);
