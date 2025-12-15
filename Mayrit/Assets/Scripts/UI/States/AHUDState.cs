@@ -93,7 +93,7 @@ public abstract class AHUDState : AUIState
 
         if (hudScreen == null)
         {
-            Debug.LogWarning("HUD element not found in UIDocument");
+            Debug.LogWarning($"{_stateName} HUD element not found in UIDocument");
             return;
         }
 
@@ -101,7 +101,7 @@ public abstract class AHUDState : AUIState
 
         if (_contextualPanelRoot == null)
         {
-            Debug.LogWarning("_contextualPanel not found");
+            Debug.LogWarning($"{_stateName} _contextualPanel not found");
             return;
         }
 

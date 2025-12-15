@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class BaseGameServicesInstaller : MonoBehaviour
@@ -11,15 +12,23 @@ public class BaseGameServicesInstaller : MonoBehaviour
     #region LIFE CYCLE
     protected virtual void Awake()
     {
+        ServiceLocator.Instance.OnDuplicatedServiceEvent += ReassignDuplicatedService;
+
         RegisterInServiceLocator(_gameManagerConfig);
         RegisterInServiceLocator(_uiManagerConfig);
         RegisterInServiceLocator(_soundManagerConfig);
     }
 
-    // protected virtual void OnDestroy()
-    // {
-    //     ServiceLocator.Instance.Clear();
-    // }
+    protected virtual void OnDestroy()
+    {
+        // Unregister services that are not marked as DontDestroyOnLoad
+        if (!_gameManagerConfig.dontDestroyOnLoad)
+            ServiceLocator.Instance.Unregister<GameManager>();
+        if (!_uiManagerConfig.dontDestroyOnLoad)
+            ServiceLocator.Instance.Unregister<UIManager>();
+        if (!_soundManagerConfig.dontDestroyOnLoad)
+            ServiceLocator.Instance.Unregister<SoundManager>();
+    }
     #endregion
 
     #region HELPERS
@@ -32,6 +41,16 @@ public class BaseGameServicesInstaller : MonoBehaviour
         }
 
         ServiceLocator.Instance.Register(serviceConfig);
+    }
+
+    protected virtual void ReassignDuplicatedService(object obj)
+    {
+        if (obj is GameManager)
+            _gameManagerConfig.service = obj as GameManager;
+        else if (obj is UIManager)
+            _uiManagerConfig.service = obj as UIManager;
+        else if (obj is SoundManager)
+            _soundManagerConfig.service = obj as SoundManager;
     }
     #endregion
 }

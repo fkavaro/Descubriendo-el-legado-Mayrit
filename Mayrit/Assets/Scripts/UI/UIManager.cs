@@ -15,11 +15,13 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     public bool IsInPlayerHUDState => _sfsm.IsCurrentState(_playerHUDState);
     public bool IsInPauseState => _sfsm.IsCurrentState(_pauseState);
     public bool IsInHeritageState => _sfsm.IsCurrentState(_heritageState);
+    public Vector2 TooltipOffset => _tooltipOffset;
     #endregion
 
     #region EDITOR PROPERTIES
     [Header("Tooltip Settings")]
-    public Vector2 _tooltipOffset = new(-30, -30);
+    [SerializeField] Vector2 _tooltipOffset = new(-30, -30);
+    [SerializeField] UIDocument _uiDocument;
     #endregion
 
     #region INTERNAL PROPERTIES
@@ -47,14 +49,14 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     {
         _sfsm = new(this);
 
-        UIDocument uiDocument = GetComponent<UIDocument>();
+        _uiDocument = GetComponent<UIDocument>();
 
         // States initialization
-        _mainMenuState = new(uiDocument);
-        _spectatorHUDState = new(uiDocument);
-        _playerHUDState = new(uiDocument);
-        _pauseState = new(uiDocument);
-        _heritageState = new(uiDocument);
+        _mainMenuState = new(_uiDocument);
+        _spectatorHUDState = new(_uiDocument);
+        _playerHUDState = new(_uiDocument);
+        _pauseState = new(_uiDocument);
+        _heritageState = new(_uiDocument);
 
         // Set initial state based on scene name
         if (SceneManager.GetActiveScene().name == "GameScene")
@@ -70,21 +72,14 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     protected override void Awake()
     {
         base.Awake();
-
-        if (SceneManager.GetActiveScene().name == "GameScene")
-        {
-            _sfsm.SwitchState(_spectatorHUDState);
-
-            // Dependency Injection: get services from ServiceLocator
-            _tourManager = ServiceLocator.Instance.Get<TourManager>();
-        }
-        else
-            _sfsm.SwitchState(_mainMenuState);
     }
 
     protected override void Start()
     {
         base.Start();
+
+        // Dependency Injection: get services from ServiceLocator (after FSM initial state is applied)
+        _tourManager = ServiceLocator.Instance.Get<TourManager>();
 
         if (IsInMainMenuState) return;
 

@@ -49,7 +49,7 @@ MonoBehaviour:
     dontDestroyOnLoad: 1
   _uiManagerConfig:
     service: {fileID: 0}
-    dontDestroyOnLoad: 1
+    dontDestroyOnLoad: 0
   _soundManagerConfig:
     service: {fileID: 0}
     dontDestroyOnLoad: 1

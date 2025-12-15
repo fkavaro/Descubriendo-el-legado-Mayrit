@@ -27,6 +27,9 @@ public class ServiceLocator
         }
     }
 
+    // Event
+    public event Action<object> OnDuplicatedServiceEvent;
+
     /// <summary>
     /// Register a service instance
     /// </summary>
@@ -39,15 +42,22 @@ public class ServiceLocator
         }
 
         var type = typeof(T);
+
         if (_services.ContainsKey(type))
-            // Destroy new service
+        {
+            // Service already exists - destroy the new one trying to register
+            Debug.LogWarning($"Service {type.Name} is already registered. Destroying new instance from scene.");
             UnityEngine.Object.Destroy(serviceConfig.service.gameObject);
+            OnDuplicatedServiceEvent?.Invoke(Get<T>());
+        }
         else
+        {
             // Register new service
             _services.Add(type, serviceConfig.service);
 
-        if (serviceConfig.dontDestroyOnLoad)
-            UnityEngine.Object.DontDestroyOnLoad(serviceConfig.service.gameObject);
+            if (serviceConfig.dontDestroyOnLoad)
+                UnityEngine.Object.DontDestroyOnLoad(serviceConfig.service.gameObject);
+        }
     }
 
     /// <summary>
@@ -67,6 +77,17 @@ public class ServiceLocator
     public bool Has<T>() where T : class
     {
         return _services.ContainsKey(typeof(T));
+    }
+
+    /// <summary>
+    /// Check if a service is registered and is not the same as the requester
+    /// </summary>
+    public bool HasOther<T>(object requester) where T : class
+    {
+        var type = typeof(T);
+        if (_services.TryGetValue(type, out var service))
+            return !ReferenceEquals(service, requester);
+        return false;
     }
 
     /// <summary>

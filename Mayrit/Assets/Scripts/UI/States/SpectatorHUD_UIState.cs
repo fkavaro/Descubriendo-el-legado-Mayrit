@@ -180,8 +180,8 @@ public class SpectatorHUD_UIState : AHUDState
 
         // UI Toolkit's Y axis is from top to bottom, 
         // while screen coordinates are from bottom to top
-        _tooltip.style.left = _cursorScreenPos.x + _uiManager._tooltipOffset.x; ;
-        _tooltip.style.top = Screen.height - _cursorScreenPos.y + _uiManager._tooltipOffset.y;
+        _tooltip.style.left = _cursorScreenPos.x + _uiManager.TooltipOffset.x; ;
+        _tooltip.style.top = Screen.height - _cursorScreenPos.y + _uiManager.TooltipOffset.y;
     }
 
     void OnHideTooltip()

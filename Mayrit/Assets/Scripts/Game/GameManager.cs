@@ -56,12 +56,12 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
     #region LIFE CYCLE
     protected override void Awake()
     {
+        _inputActions = new();
+
         base.Awake();
 
         if (SceneManager.GetActiveScene().name != "GameScene")
             return;
-
-        _inputActions = new();
 
         // Get dependencies from ServiceLocator
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
