@@ -46,8 +46,12 @@ public class TourManager : MonoBehaviour
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
         _soundManager = ServiceLocator.Instance.Get<SoundManager>();
-    }
 
+        // Subscribe to events
+        _progressManager.OnMilestoneChangedEvent += OnMilestoneChanged;
+        _uiManager.OnContextualPanelHiddenEvent += OnContextualPanelHidden;
+        _uiManager.PlayCharacterClickedEvent += OnPlayCharacterClicked;
+    }
 
     void Start()
     {
@@ -55,11 +59,6 @@ public class TourManager : MonoBehaviour
             _sampleSpacing, _sampleDistance, _projSampleDistance,
             _renderYOffset, _maxPoints);
         _pathVisualizer.Initialize();
-
-        // Subscribe to events
-        _progressManager.OnMilestoneChangedEvent += OnMilestoneChanged;
-        _uiManager.OnContextualPanelHiddenEvent += OnContextualPanelHidden;
-        _uiManager.PlayCharacterClickedEvent += OnPlayCharacterClicked;
     }
 
     void Update()

@@ -22,7 +22,7 @@ public class PlayerHUD_UIState : AHUDState
     #endregion
 
     #region UI STATE INHERITED METHODS
-    protected override void ConfigureUIElements()
+    protected override void ConfigureUIElementsOnAwake()
     {
         _pauseButton = _screen.Q<Button>("PauseButton");
         _tourArea = _screen.Q<VisualElement>("TourArea");
@@ -39,12 +39,18 @@ public class PlayerHUD_UIState : AHUDState
             Debug.LogWarning("_tourDescription not found");
 
         // Get dependency from Service Locator
-        _tourManager = ServiceLocator.Instance.Get<TourManager>();
+
     }
 
-    protected override void RegisterCallbacks()
+    protected override void RegisterCallbacksOnAwake()
     {
         _pauseButton.RegisterCallback<ClickEvent>(OnPauseClicked);
+    }
+
+    protected override void GetServicesDependenciesOnStart()
+    {
+        _tourManager = ServiceLocator.Instance.Get<TourManager>();
+        base.GetServicesDependenciesOnStart();
     }
 
     protected override void OnStartState()

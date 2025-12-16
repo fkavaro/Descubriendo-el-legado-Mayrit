@@ -77,7 +77,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     #endregion
 
     #region INHERITED
-    public override FiniteStateMachine<ACameraState> InitializeBehaviourSystem()
+    public override FiniteStateMachine<ACameraState> DefineBehaviourSystemOnAwake()
     {
         _fsm = new(this);
 
@@ -98,10 +98,18 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     {
         base.Awake();
 
-        // Dependency Injection: get services from ServiceLocator
+        // Get dependencies from ServiceLocator
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
         _tourManager = ServiceLocator.Instance.Get<TourManager>();
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
+
+        // Subscribe to events
+        _spectatorState.ObjectSelectedEvent += SwitchToOrbitalCamera;
+        _thirdPersonState.ExitThirdPersonCameraEvent += OnExitThirdPersonCamera;
+        _uiManager.OnContextualPanelHiddenEvent += OnContextualPanelHidden;
+        _uiManager.PlayCharacterClickedEvent += SwitchToThirdPersonCamera;
+        _tourManager.TourPOIVisitedEvent += OnTourPOIVisited;
+        _gameManager.GamePausedEvent += OnGamePaused;
     }
 
     protected override void Start()
@@ -120,22 +128,6 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
                 _movementLimitsY.x,
                 _spectatorCamera.LookAt.position.z);
         }
-
-        // Subscribe to events
-        _spectatorState.ObjectSelectedEvent += SwitchToOrbitalCamera;
-        _thirdPersonState.ExitThirdPersonCameraEvent += OnExitThirdPersonCamera;
-        _uiManager.OnContextualPanelHiddenEvent += OnContextualPanelHidden;
-        _uiManager.PlayCharacterClickedEvent += SwitchToThirdPersonCamera;
-        _tourManager.TourPOIVisitedEvent += OnTourPOIVisited;
-        _gameManager.GamePausedEvent += OnGamePaused;
-    }
-
-    private void OnGamePaused(bool isGamePaused)
-    {
-        if (isGamePaused)
-            _gameManager.InputActions.Camera.Disable();
-        else if (IsInSpectatorState || IsInThirdPersonState)
-            _gameManager.InputActions.Camera.Enable();
     }
     #endregion
 
@@ -260,6 +252,14 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     #endregion
 
     #region CALLBACK METHODS
+    void OnGamePaused(bool isGamePaused)
+    {
+        if (isGamePaused)
+            _gameManager.InputActions.Camera.Disable();
+        else if (IsInSpectatorState || IsInThirdPersonState)
+            _gameManager.InputActions.Camera.Enable();
+    }
+
     void OnExitThirdPersonCamera()
     {
         SwitchToSpectatorCamera();

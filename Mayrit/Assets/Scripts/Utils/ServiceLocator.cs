@@ -45,8 +45,10 @@ public class ServiceLocator
 
         if (_services.ContainsKey(type))
         {
+            if (serviceConfig.service.gameObject.activeInHierarchy)
+                Debug.LogWarning($"Service {type.Name} is already registered. Destroying instance from scene: {serviceConfig.service.gameObject}.");
+
             // Service already exists - destroy the new one trying to register
-            Debug.LogWarning($"Service {type.Name} is already registered. Destroying instance from scene: {serviceConfig.service.gameObject}.");
             UnityEngine.Object.Destroy(serviceConfig.service.gameObject);
             OnDuplicatedServiceEvent?.Invoke(Get<T>());
         }
@@ -54,6 +56,9 @@ public class ServiceLocator
         {
             // Register new service
             _services.Add(type, serviceConfig.service);
+
+            if (!serviceConfig.service.gameObject.activeInHierarchy)
+                serviceConfig.service.gameObject.SetActive(true);
 
             if (serviceConfig.dontDestroyOnLoad)
                 UnityEngine.Object.DontDestroyOnLoad(serviceConfig.service.gameObject);

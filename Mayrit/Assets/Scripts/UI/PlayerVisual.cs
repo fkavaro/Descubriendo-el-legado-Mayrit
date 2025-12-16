@@ -33,10 +33,7 @@ public class PlayerVisual : Billboard
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
-    }
 
-    void Start()
-    {
         // Subscribe to events and callbacks
         _progressManager.OnMilestoneChangedEvent += OnMilestoneChanged;
         _playerButton.RegisterCallback<ClickEvent>(OnPlayerButtonClick);

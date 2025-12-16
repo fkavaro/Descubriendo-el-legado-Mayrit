@@ -34,7 +34,7 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
     #endregion
 
     #region INHERITED
-    public override FiniteStateMachine<AGameState> InitializeBehaviourSystem()
+    public override FiniteStateMachine<AGameState> DefineBehaviourSystemOnAwake()
     {
         _fsm = new(this);
 
@@ -42,6 +42,11 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
         _mainMenuState = new();
         _gamePlayState = new();
         _pauseState = new();
+
+        // State AwakeState calls
+        _mainMenuState.AwakeState();
+        _gamePlayState.AwakeState();
+        _pauseState.AwakeState();
 
         // Set initial state based on scene name
         if (SceneManager.GetActiveScene().name == "GameScene")

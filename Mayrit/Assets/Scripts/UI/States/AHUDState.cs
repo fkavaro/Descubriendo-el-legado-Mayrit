@@ -17,18 +17,22 @@ public abstract class AHUDState : AUIState
 
     #region CONSTRUCTOR
     public AHUDState(string name, UIDocument uiDocument)
-    : base(name, uiDocument)
-    {
-    }
+    : base(name, uiDocument) { }
     #endregion
 
     #region INHERITED METHODS
-    public override void StartState()
+    public override void AwakeState()
     {
         if (_contextualPanelRoot == null)
-            InitializeContextualPanel();
+            InitializeContextualPanelOnAwake();
 
-        base.StartState();
+        if (_contextualPanel == null)
+        {
+            Debug.LogError($"{_stateName} HUD State: Contextual Panel is null!");
+            return;
+        }
+
+        base.AwakeState();
 
         // Show contextual panel root if it was shown before
         if (_wasContextualPanelShown)
@@ -39,8 +43,6 @@ public abstract class AHUDState : AUIState
         _contextualPanel.HiddenEvent += () => ContextualPanelHiddenEvent?.Invoke();
         _contextualPanel.ShownEvent += OnContextualPanelShowCallback;
         _contextualPanel.HiddenEvent += OnContextualPanelHiddenCallback;
-        _uiManager.ShowContextualPanelEvent += ShowContextualPanel;
-        _uiManager.HideContextualPanelEvent += HideContextualPanel;
     }
 
     public override void ExitState()
@@ -63,6 +65,14 @@ public abstract class AHUDState : AUIState
     {
         // Check base UI elements and contextual panel
         return base.IsCursorOverUI() || IsCursorOver(_contextualPanelRoot);
+    }
+
+    protected override void GetServicesDependenciesOnStart()
+    {
+        base.GetServicesDependenciesOnStart();
+
+        _uiManager.ShowContextualPanelEvent += ShowContextualPanel;
+        _uiManager.HideContextualPanelEvent += HideContextualPanel;
     }
     #endregion
 
@@ -87,8 +97,20 @@ public abstract class AHUDState : AUIState
     #endregion
 
     #region PRIVATE METHODS
-    void InitializeContextualPanel()
+    void InitializeContextualPanelOnAwake()
     {
+        if (_UIDocument == null)
+        {
+            Debug.LogError($"{_stateName} HUD State: UIDocument is null!");
+            return;
+        }
+
+        if (_UIDocument.rootVisualElement == null)
+        {
+            Debug.LogError($"{_stateName} HUD State: UIDocument rootVisualElement is null!");
+            return;
+        }
+
         VisualElement hudScreen = _UIDocument.rootVisualElement.Q<VisualElement>("HUD");
 
         if (hudScreen == null)

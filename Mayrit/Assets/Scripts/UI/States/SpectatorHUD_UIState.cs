@@ -33,7 +33,7 @@ public class SpectatorHUD_UIState : AHUDState
     #endregion
 
     #region UI STATE INHERITED METHODS
-    protected override void ConfigureUIElements()
+    protected override void ConfigureUIElementsOnAwake()
     {
         _pauseButton = _screen.Q<Button>("PauseButton");
         _heritageButton = _screen.Q<Button>("HeritageButton");
@@ -64,13 +64,9 @@ public class SpectatorHUD_UIState : AHUDState
             Debug.LogWarning("_previousMilestoneButton button not found");
         if (_modernSuperpositionButton == null)
             Debug.LogWarning("_modernSuperpositionButton button not found");
-
-        // Get dependencies from Service Locator
-        _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
-        _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
     }
 
-    protected override void RegisterCallbacks()
+    protected override void RegisterCallbacksOnAwake()
     {
         _pauseButton.RegisterCallback<ClickEvent>(OnPauseClicked);
         _heritageButton.RegisterCallback<ClickEvent>(OnHeritageClicked);
@@ -79,16 +75,18 @@ public class SpectatorHUD_UIState : AHUDState
         _previousMilestoneButton.RegisterCallback<ClickEvent>(OnPreviousMilestoneClicked);
         _modernSuperpositionButton.RegisterCallback<ClickEvent>(OnModerSuperpositionToggled);
         _contextualPanel.PlayCharacterClickedEvent += OnPlayCharacterClicked;
+    }
+
+    protected override void GetServicesDependenciesOnStart()
+    {
+        base.GetServicesDependenciesOnStart();
+
+        _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
+        _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
 
         _uiManager.ShowTooltipEvent += OnShowTooltip;
         _uiManager.HideTooltipEvent += OnHideTooltip;
         _progressManager.OnMilestoneChangedEvent += OnMilestoneChanged;
-    }
-
-    private void OnPlayCharacterClicked()
-    {
-        // Hide contextual panel
-        HideContextualPanel();
     }
 
     protected override void OnStartState()
@@ -111,6 +109,12 @@ public class SpectatorHUD_UIState : AHUDState
     #endregion
 
     #region CALLBACK METHODS
+    void OnPlayCharacterClicked()
+    {
+        // Hide contextual panel
+        HideContextualPanel();
+    }
+
     void OnHeritageClicked(ClickEvent evt)
     {
         _uiManager.SwitchToHeritageState();

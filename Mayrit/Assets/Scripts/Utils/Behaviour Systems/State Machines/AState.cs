@@ -19,10 +19,16 @@ public abstract class AState
     #endregion
 
     #region VIRTUAL METHODS
-    public virtual void StartState() { }
+    public virtual void AwakeState() { }
+    public virtual void StartState()
+    {
+        GetServicesDependenciesOnStart();
+    }
     public virtual void UpdateState() { }
     public virtual void LateUpdateState() { }
     public virtual void ExitState() { }
+
+    protected virtual void GetServicesDependenciesOnStart() { }
 
     public virtual void OnTriggerEnter(Collider other) { }
     public virtual void OnTriggerStay(Collider other) { }

@@ -13,12 +13,12 @@ public class HeritageMenu_UIState : AUIState
     #endregion
 
     #region INHERITED METHODS
-    protected override void ConfigureUIElements()
+    protected override void ConfigureUIElementsOnAwake()
     {
         _playButton = _screen.Q<Button>("PlayButton");
     }
 
-    protected override void RegisterCallbacks()
+    protected override void RegisterCallbacksOnAwake()
     {
         _playButton.RegisterCallback<ClickEvent>(OnPlayClicked);
     }

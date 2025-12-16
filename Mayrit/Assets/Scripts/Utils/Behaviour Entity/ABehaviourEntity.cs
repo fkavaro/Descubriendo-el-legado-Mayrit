@@ -50,15 +50,13 @@ where BehaviourSystemType : ABehaviourSystem
     /// Returned value will be assigned to the BehaviourSystem property.
     /// Is executed in Awake().
     /// </summary>
-    public abstract BehaviourSystemType InitializeBehaviourSystem();
+    public abstract BehaviourSystemType DefineBehaviourSystemOnAwake();
     #endregion
 
     #region LIFE CYCLE: DERIVED TO BEHAVIOUR SYSTEM
     protected virtual void Awake()
     {
-        if (DebugMode)
-            Debug.Log($"    Initializing {gameObject.name} Behaviour System");
-        _behaviourSystem = InitializeBehaviourSystem();
+        _behaviourSystem = DefineBehaviourSystemOnAwake();
     }
 
     protected virtual void Start()

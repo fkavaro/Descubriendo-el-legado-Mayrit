@@ -63,17 +63,16 @@ public class TimeManager : MonoBehaviour
     // Awake is called when the script instance is being loaded
     void Awake()
     {
-        // Dependency Injection: get services from ServiceLocator
+        // Get dependencies from ServiceLocator
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
+
+        // Subscribe to ProgressManager event to set the wanted time when the game starts
+        _progressManager.OnMilestoneChangedEvent += OnMilestoneChanged;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // Subscribe to ProgressManager event to set the wanted time when the game starts
-        _progressManager.OnMilestoneChangedEvent += OnMilestoneChanged;
-
-
         _currentTime = _progressManager.CurrentMilestoneMapping.WantedTime;
         UpdateLighting();
     }

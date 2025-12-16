@@ -45,7 +45,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     #endregion
 
     #region INHERITED
-    public override StackFiniteStateMachine<AUIState> InitializeBehaviourSystem()
+    public override StackFiniteStateMachine<AUIState> DefineBehaviourSystemOnAwake()
     {
         _sfsm = new(this);
 
@@ -57,6 +57,13 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
         _playerHUDState = new(_uiDocument);
         _pauseState = new(_uiDocument);
         _heritageState = new(_uiDocument);
+
+        // State AwakeState calls
+        _mainMenuState.AwakeState();
+        _spectatorHUDState.AwakeState();
+        _playerHUDState.AwakeState();
+        _pauseState.AwakeState();
+        _heritageState.AwakeState();
 
         // Set initial state based on scene name
         if (SceneManager.GetActiveScene().name == "GameScene")

@@ -15,7 +15,7 @@ public class PauseMenu_UIState : AUIState
     #endregion
 
     #region INHERITED METHODS
-    protected override void ConfigureUIElements()
+    protected override void ConfigureUIElementsOnAwake()
     {
         _screen = _UIDocument.rootVisualElement.Q<VisualElement>("PauseMenu");
         _playButton = _screen.Q<Button>("PlayButton");
@@ -30,7 +30,7 @@ public class PauseMenu_UIState : AUIState
             Debug.LogWarning("_quitButton not found");
     }
 
-    protected override void RegisterCallbacks()
+    protected override void RegisterCallbacksOnAwake()
     {
         _playButton.RegisterCallback<ClickEvent>(OnPlayClicked);
         _mainMenuButton.RegisterCallback<ClickEvent>(OnMainMenuClicked);

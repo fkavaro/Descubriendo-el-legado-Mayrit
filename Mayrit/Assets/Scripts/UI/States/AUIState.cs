@@ -23,25 +23,46 @@ public abstract class AUIState : AState
     #endregion
 
     #region INHERITED METHODS
-    public override void StartState()
+    public override void AwakeState()
     {
-        // Get dependencies from Service Locator
-        _uiManager = ServiceLocator.Instance.Get<UIManager>();
-        _gameManager = ServiceLocator.Instance.Get<GameManager>();
-        _soundManager = ServiceLocator.Instance.Get<SoundManager>();
+        if (_UIDocument == null)
+        {
+            Debug.LogError($"{_stateName} UI State: UIDocument is null!");
+            return;
+        }
+
+        if (_UIDocument.rootVisualElement == null)
+        {
+            Debug.LogError($"{_stateName} UI State: UIDocument rootVisualElement is null!");
+            return;
+        }
 
         _screen = _UIDocument.rootVisualElement.Q<VisualElement>(_stateName);
 
-        ConfigureUIElements();
-        RegisterCallbacks();
-        OnStartState();
+        ConfigureUIElementsOnAwake();
+        RegisterCallbacksOnAwake();
+    }
 
+    public override void StartState()
+    {
+        base.StartState();
         _screen.style.display = DisplayStyle.Flex; // Show
+        OnStartState();
     }
 
     public override void ExitState()
     {
         _screen.style.display = DisplayStyle.None; // Hide
+    }
+
+    protected override void GetServicesDependenciesOnStart()
+    {
+        if (_uiManager == null)
+            _uiManager = ServiceLocator.Instance.Get<UIManager>();
+        if (_gameManager == null)
+            _gameManager = ServiceLocator.Instance.Get<GameManager>();
+        if (_soundManager == null)
+            _soundManager = ServiceLocator.Instance.Get<SoundManager>();
     }
     #endregion
 
@@ -78,8 +99,8 @@ public abstract class AUIState : AState
     #endregion
 
     #region ABSTRACT METHODS
-    protected abstract void ConfigureUIElements();
-    protected abstract void RegisterCallbacks();
+    protected abstract void ConfigureUIElementsOnAwake();
+    protected abstract void RegisterCallbacksOnAwake();
     protected virtual void OnStartState() { }
     #endregion
 }

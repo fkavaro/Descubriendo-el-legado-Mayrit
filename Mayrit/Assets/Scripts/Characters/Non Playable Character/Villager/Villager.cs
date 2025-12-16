@@ -24,7 +24,7 @@ public class Villager : ANPC<BehaviourTree>
     #endregion
 
     #region INHERITED
-    public override BehaviourTree InitializeBehaviourSystem()
+    public override BehaviourTree DefineBehaviourSystemOnAwake()
     {
         // Get entrance spots
         Spot sanctuaryEntrance = null;

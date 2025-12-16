@@ -6,7 +6,7 @@ public class TownManager : MonoBehaviour
 {
     #region EDITOR PROPERTIES
     [Header("Town Stats")]
-    public int _population;
+    public int _population = 0;
     public List<House> _houses = new();
     public List<Workplace> _workplaces = new();
 
@@ -26,16 +26,14 @@ public class TownManager : MonoBehaviour
     #region LIFE CYCLE
     void Awake()
     {
-        // Dependency Injection: get services from ServiceLocator
+        // Get dependencies from ServiceLocator
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
         _npcPoolManager = ServiceLocator.Instance.Get<NPCPoolManager>();
-    }
 
-    void Start()
-    {
         // Subscribe to milestone changes to update population accordingly
         _progressManager.OnMilestoneChangedEvent += OnMilestoneChanged;
     }
+
     void OnDestroy()
     {
         // Unsubscribe from milestone changes
@@ -120,7 +118,7 @@ public class TownManager : MonoBehaviour
             house = GetBuildingWithFreeCapacity(_houses, excludedHouse);
 
         // If no house with free capacity found
-        if (house == null)
+        if (house != null)
         {
             // Return random house and increase its capacity
             house = _houses[UnityEngine.Random.Range(0, _houses.Count)];

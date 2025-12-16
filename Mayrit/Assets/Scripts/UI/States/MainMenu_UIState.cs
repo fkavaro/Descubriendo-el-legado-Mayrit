@@ -15,7 +15,7 @@ public class MainMenu_UIState : AUIState
     #endregion
 
     #region INHERITED METHODS
-    protected override void ConfigureUIElements()
+    protected override void ConfigureUIElementsOnAwake()
     {
         _playButton = _screen.Q<Button>("PlayButton");
         _settingsButton = _screen.Q<Button>("SettingsButton");
@@ -28,7 +28,7 @@ public class MainMenu_UIState : AUIState
         if (_quitButton == null)
             Debug.LogWarning("_quitButton not found");
     }
-    protected override void RegisterCallbacks()
+    protected override void RegisterCallbacksOnAwake()
     {
         _playButton.RegisterCallback<ClickEvent>(OnPlayClicked);
         _settingsButton.RegisterCallback<ClickEvent>(OnSettingsClicked);

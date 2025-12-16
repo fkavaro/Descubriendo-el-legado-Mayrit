@@ -36,7 +36,7 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     #endregion
 
     #region INHERITED
-    public override FiniteStateMachine<MilestoneState> InitializeBehaviourSystem()
+    public override FiniteStateMachine<MilestoneState> DefineBehaviourSystemOnAwake()
     {
         if (_milestoneMappings == null || _milestoneMappings.Count == 0)
         {
@@ -69,6 +69,16 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     #endregion
 
     #region LIFE CYCLE
+    protected override void Start()
+    {
+        base.Start();
+
+        if (DebugMode)
+            Debug.Log("    ProgressManager: Starting at milestone index " + _currentMilestoneIndex);
+
+        OnMilestoneChangedEvent?.Invoke(CurrentMilestoneMapping);
+    }
+
     // Called when the script is loaded or a value is changed in the inspector
     void OnValidate()
     {
@@ -157,6 +167,9 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     #region EVENT METHODS
     void OnStateSwitch()
     {
+        if (DebugMode)
+            Debug.Log("    ProgressManager: Milestone state switched.");
+
         if (_fsm?.CurrentState == null || _fsm.CurrentState.MilestoneMapping == null)
             return;
 
