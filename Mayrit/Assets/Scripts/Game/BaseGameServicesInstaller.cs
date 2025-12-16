@@ -21,6 +21,8 @@ public class BaseGameServicesInstaller : MonoBehaviour
 
     protected virtual void OnDestroy()
     {
+        ServiceLocator.Instance.OnDuplicatedServiceEvent -= ReassignDuplicatedService;
+
         // Unregister services that are not marked as DontDestroyOnLoad
         if (!_gameManagerConfig.dontDestroyOnLoad)
             ServiceLocator.Instance.Unregister<GameManager>();

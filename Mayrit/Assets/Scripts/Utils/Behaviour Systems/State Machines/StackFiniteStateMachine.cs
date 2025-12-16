@@ -30,8 +30,8 @@ where StateType : AState
             return;
         }
 
-        if (_behaviourEntity.DebugMode)
-            Debug.Log($"{_behaviourEntity.GO.name} switching state from {_currentState?.StateName} to {newState?.StateName}");
+        // if (_behaviourEntity.DebugMode)
+        //     Debug.Log($"{_behaviourEntity.GO.name} switching state from {_currentState?.StateName} to {newState?.StateName}");
 
         PushCurrentState();
         _currentState?.ExitState();

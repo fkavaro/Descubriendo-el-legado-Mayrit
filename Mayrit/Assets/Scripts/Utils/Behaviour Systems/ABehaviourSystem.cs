@@ -37,7 +37,6 @@ public abstract class ABehaviourSystem : IBehaviourSystem
     #endregion
 
     #region LIFE CYCLE: OPTIONAL
-    public virtual void Awake() { }
     public virtual void Start() { }
     public virtual void Update() { }
     public virtual void LateUpdate() { }

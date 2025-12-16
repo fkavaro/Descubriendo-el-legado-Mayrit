@@ -71,23 +71,16 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     #region LIFE CYCLE
     protected override void Awake()
     {
+        // Subscribe to scene change event
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
         base.Awake();
     }
 
-    protected override void Start()
+    void OnDestroy()
     {
-        base.Start();
-
-        // Dependency Injection: get services from ServiceLocator (after FSM initial state is applied)
-        _tourManager = ServiceLocator.Instance.Get<TourManager>();
-
-        if (IsInMainMenuState) return;
-
-        // Subscribe to events
-        _spectatorHUDState.ContextualPanelHiddenEvent += OnContextualPanelHidden;
-        _spectatorHUDState.OnPlayCharacterEvent += OnPlayCharacterClicked;
-        _spectatorHUDState.OnModernSuperpositionEvent += OnModernSuperpositionToggled;
-        _tourManager.TourPOIVisitedEvent += OnTourPOIVisited;
+        // Unsubscribe from scene change event
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
     #endregion
 
@@ -165,6 +158,21 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     void OnContextualPanelHidden()
     {
         OnContextualPanelHiddenEvent?.Invoke();
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (SceneManager.GetActiveScene().name != "GameScene")
+            return;
+
+        // Get dependencies from ServiceLocator
+        _tourManager = ServiceLocator.Instance.Get<TourManager>();
+
+        // Subscribe to events
+        _spectatorHUDState.ContextualPanelHiddenEvent += OnContextualPanelHidden;
+        _spectatorHUDState.OnPlayCharacterEvent += OnPlayCharacterClicked;
+        _spectatorHUDState.OnModernSuperpositionEvent += OnModernSuperpositionToggled;
+        _tourManager.TourPOIVisitedEvent += OnTourPOIVisited;
     }
     #endregion
 }

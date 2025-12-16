@@ -56,31 +56,20 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
     #region LIFE CYCLE
     protected override void Awake()
     {
+        // Subscribe to scene change event
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
         _inputActions = new();
 
         base.Awake();
-
-        if (SceneManager.GetActiveScene().name != "GameScene")
-            return;
-
-        // Get dependencies from ServiceLocator
-        _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
-    }
-
-    protected override void Start()
-    {
-        base.Start();
-
-        if (IsInMainMenuState) return;
-
-        // Subscribe to events
-        _pauseState.GamePausedEvent += OnGamePaused;
-        _progressManager.OnMilestoneChangedEvent += OnMilestoneChanged;
     }
 
     void OnDestroy()
     {
-        _inputActions?.Disable(); // Disables all action maps. To avoid errors
+        // Unsubscribe from scene change event
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+
+        _inputActions = null;
     }
     #endregion
 
@@ -101,7 +90,7 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
     }
     #endregion
 
-    #region EVENT METHODS
+    #region CALLBACK METHODS
     void OnGamePaused(bool isPaused)
     {
         GamePausedEvent?.Invoke(isPaused);
@@ -110,6 +99,19 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
     void OnMilestoneChanged(MilestoneMapping milestoneMapping)
     {
         _playableCharacter = milestoneMapping.PlayableCharacter;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (SceneManager.GetActiveScene().name != "GameScene")
+            return;
+
+        // Get dependencies from ServiceLocator
+        _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
+
+        // Subscribe to events
+        _pauseState.GamePausedEvent += OnGamePaused;
+        _progressManager.OnMilestoneChangedEvent += OnMilestoneChanged;
     }
     #endregion
 }

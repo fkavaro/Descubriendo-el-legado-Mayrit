@@ -8,7 +8,6 @@ public interface IBehaviourSystem
 
     public abstract void DebugDecision();
     public abstract void Reset();
-    public virtual void Awake() { }
     public virtual void Start() { }
     public virtual void Update() { }
     public virtual void LateUpdate() { }

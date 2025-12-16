@@ -22,8 +22,8 @@ where StateType : AState
     {
         if (newState == _currentState) return;
 
-        if (_behaviourEntity.DebugMode)
-            Debug.Log($"{_behaviourEntity.GO.name} switching state from {_currentState?.StateName} to {newState?.StateName}");
+        // if (_behaviourEntity.DebugMode)
+        //     Debug.Log($"{_behaviourEntity.GO.name} switching state from {_currentState?.StateName} to {newState?.StateName}");
 
         _currentState?.ExitState();
         _currentState = newState;
