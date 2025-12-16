@@ -69,16 +69,6 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     #endregion
 
     #region LIFE CYCLE
-    protected override void Start()
-    {
-        base.Start();
-
-        if (DebugMode)
-            Debug.Log("    ProgressManager: Starting at milestone index " + _currentMilestoneIndex);
-
-        OnMilestoneChangedEvent?.Invoke(CurrentMilestoneMapping);
-    }
-
     // Called when the script is loaded or a value is changed in the inspector
     void OnValidate()
     {
