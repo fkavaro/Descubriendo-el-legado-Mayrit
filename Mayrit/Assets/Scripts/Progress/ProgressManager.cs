@@ -157,9 +157,6 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     #region EVENT METHODS
     void OnStateSwitch()
     {
-        if (DebugMode)
-            Debug.Log("    ProgressManager: Milestone state switched.");
-
         if (_fsm?.CurrentState == null || _fsm.CurrentState.MilestoneMapping == null)
             return;
 

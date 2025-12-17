@@ -24,7 +24,7 @@ public class TownManager : MonoBehaviour
     #endregion
 
     #region LIFE CYCLE
-    void Awake()
+    void Start()
     {
         // Get dependencies from ServiceLocator
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();

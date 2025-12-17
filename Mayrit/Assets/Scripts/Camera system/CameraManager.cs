@@ -94,9 +94,10 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     #endregion
 
     #region LIFE CYCLE
-    protected override void Awake()
+
+    protected override void Start()
     {
-        base.Awake();
+        base.Start();
 
         // Get dependencies from ServiceLocator
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
@@ -110,11 +111,6 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         _uiManager.PlayCharacterClickedEvent += SwitchToThirdPersonCamera;
         _tourManager.TourPOIVisitedEvent += OnTourPOIVisited;
         _gameManager.GamePausedEvent += OnGamePaused;
-    }
-
-    protected override void Start()
-    {
-        base.Start();
 
         // Set camera target at min height
         CinemachineOrbitalFollow _orbitalFollow = _spectatorCamera.GetComponent<CinemachineOrbitalFollow>();

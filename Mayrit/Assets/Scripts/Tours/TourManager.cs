@@ -39,7 +39,7 @@ public class TourManager : MonoBehaviour
     #endregion
 
     #region LIFE CYCLE
-    void Awake()
+    void Start()
     {
         // Get dependencies from Service Locator
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
@@ -51,10 +51,7 @@ public class TourManager : MonoBehaviour
         _progressManager.OnMilestoneChangedEvent += OnMilestoneChanged;
         _uiManager.OnContextualPanelHiddenEvent += OnContextualPanelHidden;
         _uiManager.PlayCharacterClickedEvent += OnPlayCharacterClicked;
-    }
 
-    void Start()
-    {
         _pathVisualizer = new PathVisualizer(GetComponent<LineRenderer>(),
             _sampleSpacing, _sampleDistance, _projSampleDistance,
             _renderYOffset, _maxPoints);

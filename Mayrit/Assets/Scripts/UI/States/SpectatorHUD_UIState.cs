@@ -87,8 +87,6 @@ public class SpectatorHUD_UIState : AHUDState
         _uiManager.ShowTooltipEvent += OnShowTooltip;
         _uiManager.HideTooltipEvent += OnHideTooltip;
         _progressManager.OnMilestoneChangedEvent += OnMilestoneChanged;
-
-        Debug.Log($"    {_stateName} HUD State: Services dependencies acquired");
     }
 
     protected override void OnStartState()

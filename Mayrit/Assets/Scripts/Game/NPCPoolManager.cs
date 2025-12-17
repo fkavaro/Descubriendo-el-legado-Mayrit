@@ -56,17 +56,13 @@ public class NPCPoolManager : MonoBehaviour
         _overlapResults = new Collider[_maxOverlapResults];
         // Initialize collider->villager cache
         _colliderToVillager = new Dictionary<Collider, Villager>(_maxActiveVillagers > 0 ? _maxActiveVillagers * 2 : 32);
-
-        // Get dependencies from ServiceLocator
-        _townManager = ServiceLocator.Instance.Get<TownManager>();
-
-        // TODO
-        // // Subscribe to town population changes
-        // _townManager.OnPopulationChanged += OnTownPopulationChanged;
     }
 
     void Start()
     {
+        // Get dependencies from ServiceLocator
+        _townManager = ServiceLocator.Instance.Get<TownManager>();
+
         // Subscribe to town population changes
         _townManager.OnPopulationChanged += OnTownPopulationChanged;
     }

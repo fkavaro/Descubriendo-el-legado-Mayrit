@@ -49,8 +49,9 @@ public class PlayerHUD_UIState : AHUDState
 
     protected override void GetServicesDependenciesOnStart()
     {
-        _tourManager = ServiceLocator.Instance.Get<TourManager>();
         base.GetServicesDependenciesOnStart();
+
+        _tourManager = ServiceLocator.Instance.Get<TourManager>();
     }
 
     protected override void OnStartState()
