@@ -218,5 +218,21 @@ public class PlayableCharacterMovementController
         float angleDifference = Quaternion.Angle(_player.transform.rotation, fixedXZRotation);
         return angleDifference < 0.1f;
     }
+
+    public void ApplyGravity()
+    {
+        // Player on ground
+        if (_playerCharacterController.isGrounded)
+            _verticalVelocity = -1f; // Small gravity to keep grounded
+        else
+            // Apply gravity to vertical velocity
+            _verticalVelocity -= _player.GravityForce * Time.deltaTime;
+
+        // Apply forces to movement vector
+        Vector3 finalMovement = new(0f, _verticalVelocity, 0f);
+
+        // Moves controller in the movement vector
+        _playerCharacterController.Move(Time.deltaTime * finalMovement);
+    }
     #endregion
 }

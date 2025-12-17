@@ -11,4 +11,9 @@ public class NotControlled_PlayableCharacterState : APlayableCharacterState
     {
         _playableCharacter.AnimationController.ChangeToIdle();
     }
+
+    public override void UpdateState()
+    {
+        _playableCharacter.MovementController.ApplyGravity();
+    }
 }
