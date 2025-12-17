@@ -23,12 +23,18 @@ public abstract class AState
     public virtual void StartState()
     {
         GetServicesDependenciesOnStart();
+        SubscribeToServicesEventsOnStart();
     }
     public virtual void UpdateState() { }
     public virtual void LateUpdateState() { }
-    public virtual void ExitState() { }
+    public virtual void ExitState()
+    {
+        UnsubscribeToServicesEventsOnExit();
+    }
 
     protected virtual void GetServicesDependenciesOnStart() { }
+    protected virtual void SubscribeToServicesEventsOnStart() { }
+    protected virtual void UnsubscribeToServicesEventsOnExit() { }
 
     public virtual void OnTriggerEnter(Collider other) { }
     public virtual void OnTriggerStay(Collider other) { }

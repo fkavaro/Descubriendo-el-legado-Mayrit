@@ -91,6 +91,8 @@ public class ContextualPanel
         _root.style.display = DisplayStyle.Flex; // Show
 
         ShownEvent?.Invoke();
+
+        //Debug.Log($"ContextualPanel shown");
     }
 
     public void Hide()

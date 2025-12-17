@@ -16,15 +16,19 @@ public class HeritageMenu_UIState : AUIState
     protected override void ConfigureUIElementsOnAwake()
     {
         _playButton = _screen.Q<Button>("PlayButton");
+
+        if (_playButton == null)
+            Debug.LogWarning("_playButton not found");
     }
 
-    protected override void RegisterCallbacksOnAwake()
+    protected override void RegisterUICallbacksOnAwake()
     {
         _playButton.RegisterCallback<ClickEvent>(OnPlayClicked);
     }
 
-    protected override void OnStartState()
+    public override void StartState()
     {
+        base.StartState();
         _gameManager.SwitchToPauseState();
     }
     #endregion
@@ -32,7 +36,7 @@ public class HeritageMenu_UIState : AUIState
     #region CALLBACK METHODS
     void OnPlayClicked(ClickEvent evt)
     {
-        _uiManager.BehaviourSystem.SwitchToPreviousStateInStack(); // Switch to previous state: player or spectator HUD
+        _uiManager.BehaviourSystem.SwitchToPreviousStateInStack(); // Player or spectator HUD
         _gameManager.SwitchToGamePlayState();
     }
     #endregion

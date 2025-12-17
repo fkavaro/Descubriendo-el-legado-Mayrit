@@ -30,15 +30,16 @@ public class PauseMenu_UIState : AUIState
             Debug.LogWarning("_quitButton not found");
     }
 
-    protected override void RegisterCallbacksOnAwake()
+    protected override void RegisterUICallbacksOnAwake()
     {
         _playButton.RegisterCallback<ClickEvent>(OnPlayClicked);
         _mainMenuButton.RegisterCallback<ClickEvent>(OnMainMenuClicked);
         _quitButton.RegisterCallback<ClickEvent>(OnQuitClicked);
     }
 
-    protected override void OnStartState()
+    public override void StartState()
     {
+        base.StartState();
         _gameManager.SwitchToPauseState();
     }
     #endregion

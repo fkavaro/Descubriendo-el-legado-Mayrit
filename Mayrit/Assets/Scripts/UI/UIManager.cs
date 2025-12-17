@@ -177,7 +177,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
 
         // Subscribe to events
         _spectatorHUDState.ContextualPanelHiddenEvent += OnContextualPanelHidden;
-        _spectatorHUDState.OnPlayCharacterEvent += OnPlayCharacterClicked;
+        _spectatorHUDState.PlayCharacterEvent += OnPlayCharacterClicked;
         _spectatorHUDState.OnModernSuperpositionEvent += OnModernSuperpositionToggled;
         _tourManager.TourPOIVisitedEvent += OnTourPOIVisited;
     }

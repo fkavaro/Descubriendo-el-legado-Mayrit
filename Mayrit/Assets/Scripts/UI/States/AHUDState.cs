@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 public abstract class AHUDState : AUIState
 {
     #region PROPERTIES
-    public event Action OnPlayCharacterEvent;
+    public event Action PlayCharacterEvent;
     public event Action ContextualPanelHiddenEvent;
 
     protected ContextualPanel _contextualPanel;
@@ -37,12 +37,24 @@ public abstract class AHUDState : AUIState
         // Show contextual panel root if it was shown before
         if (_wasContextualPanelShown)
             _contextualPanelRoot.style.display = DisplayStyle.Flex;
+    }
 
-        // Subscribe to events
-        _contextualPanel.PlayCharacterClickedEvent += () => OnPlayCharacterEvent?.Invoke();
-        _contextualPanel.HiddenEvent += () => ContextualPanelHiddenEvent?.Invoke();
+    protected override void SubscribeToServicesEventsOnStart()
+    {
+        _contextualPanel.PlayCharacterClickedEvent += OnPlayCharacterClicked;
         _contextualPanel.ShownEvent += OnContextualPanelShowCallback;
         _contextualPanel.HiddenEvent += OnContextualPanelHiddenCallback;
+        _uiManager.ShowContextualPanelEvent += ShowContextualPanel;
+        _uiManager.HideContextualPanelEvent += HideContextualPanel;
+    }
+
+    protected override void UnsubscribeToServicesEventsOnExit()
+    {
+        _contextualPanel.PlayCharacterClickedEvent -= OnPlayCharacterClicked; ;
+        _contextualPanel.ShownEvent -= OnContextualPanelShowCallback;
+        _contextualPanel.HiddenEvent -= OnContextualPanelHiddenCallback;
+        _uiManager.ShowContextualPanelEvent -= ShowContextualPanel;
+        _uiManager.HideContextualPanelEvent -= HideContextualPanel;
     }
 
     public override void ExitState()
@@ -51,28 +63,12 @@ public abstract class AHUDState : AUIState
 
         // Hide contextual panel root
         _contextualPanelRoot.style.display = DisplayStyle.None;
-
-        // Unsubscribe from events
-        _contextualPanel.PlayCharacterClickedEvent -= () => OnPlayCharacterEvent?.Invoke();
-        _contextualPanel.HiddenEvent -= () => ContextualPanelHiddenEvent?.Invoke();
-        _contextualPanel.ShownEvent -= OnContextualPanelShowCallback;
-        _contextualPanel.HiddenEvent -= OnContextualPanelHiddenCallback;
-        _uiManager.ShowContextualPanelEvent -= ShowContextualPanel;
-        _uiManager.HideContextualPanelEvent -= HideContextualPanel;
     }
 
     public override bool IsCursorOverUI()
     {
         // Check base UI elements and contextual panel
         return base.IsCursorOverUI() || IsCursorOver(_contextualPanelRoot);
-    }
-
-    protected override void GetServicesDependenciesOnStart()
-    {
-        base.GetServicesDependenciesOnStart();
-
-        _uiManager.ShowContextualPanelEvent += ShowContextualPanel;
-        _uiManager.HideContextualPanelEvent += HideContextualPanel;
     }
     #endregion
 
@@ -132,6 +128,12 @@ public abstract class AHUDState : AUIState
     #endregion
 
     #region CALLBACK METHODS
+    void OnPlayCharacterClicked()
+    {
+        HideContextualPanel();
+
+        PlayCharacterEvent?.Invoke();
+    }
     void OnContextualPanelShowCallback()
     {
         _wasContextualPanelShown = true;
@@ -139,13 +141,14 @@ public abstract class AHUDState : AUIState
     }
     void OnContextualPanelHiddenCallback()
     {
+        ContextualPanelHiddenEvent?.Invoke();
         _wasContextualPanelShown = false;
         OnContextualPanelHidden();
     }
     #endregion
 
     #region VIRTUAL METHODS
-    protected virtual void OnContextualPanelShown() { }
-    protected virtual void OnContextualPanelHidden() { }
+    protected abstract void OnContextualPanelShown();
+    protected abstract void OnContextualPanelHidden();
     #endregion
 }

@@ -40,19 +40,7 @@ public abstract class AUIState : AState
         _screen = _UIDocument.rootVisualElement.Q<VisualElement>(_stateName);
 
         ConfigureUIElementsOnAwake();
-        RegisterCallbacksOnAwake();
-    }
-
-    public override void StartState()
-    {
-        base.StartState();
-        _screen.style.display = DisplayStyle.Flex; // Show
-        OnStartState();
-    }
-
-    public override void ExitState()
-    {
-        _screen.style.display = DisplayStyle.None; // Hide
+        RegisterUICallbacksOnAwake();
     }
 
     protected override void GetServicesDependenciesOnStart()
@@ -63,6 +51,18 @@ public abstract class AUIState : AState
             _gameManager = ServiceLocator.Instance.Get<GameManager>();
         if (_soundManager == null)
             _soundManager = ServiceLocator.Instance.Get<SoundManager>();
+    }
+
+    public override void StartState()
+    {
+        base.StartState();
+        _screen.style.display = DisplayStyle.Flex; // Show
+    }
+
+    public override void ExitState()
+    {
+        base.ExitState();
+        _screen.style.display = DisplayStyle.None; // Hide
     }
     #endregion
 
@@ -100,7 +100,6 @@ public abstract class AUIState : AState
 
     #region ABSTRACT METHODS
     protected abstract void ConfigureUIElementsOnAwake();
-    protected abstract void RegisterCallbacksOnAwake();
-    protected virtual void OnStartState() { }
+    protected abstract void RegisterUICallbacksOnAwake();
     #endregion
 }

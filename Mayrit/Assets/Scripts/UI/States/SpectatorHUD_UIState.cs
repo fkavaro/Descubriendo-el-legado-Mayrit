@@ -26,10 +26,7 @@ public class SpectatorHUD_UIState : AHUDState
 
     #region CONSTRUCTOR
     public SpectatorHUD_UIState(UIDocument uiDocument)
-    : base("SpectatorHUD", uiDocument)
-    {
-
-    }
+    : base("SpectatorHUD", uiDocument) { }
     #endregion
 
     #region UI STATE INHERITED METHODS
@@ -66,7 +63,7 @@ public class SpectatorHUD_UIState : AHUDState
             Debug.LogWarning("_modernSuperpositionButton button not found");
     }
 
-    protected override void RegisterCallbacksOnAwake()
+    protected override void RegisterUICallbacksOnAwake()
     {
         _pauseButton.RegisterCallback<ClickEvent>(OnPauseClicked);
         _heritageButton.RegisterCallback<ClickEvent>(OnHeritageClicked);
@@ -74,7 +71,6 @@ public class SpectatorHUD_UIState : AHUDState
         _nextMilestoneButton.RegisterCallback<ClickEvent>(OnNextMilestoneClicked);
         _previousMilestoneButton.RegisterCallback<ClickEvent>(OnPreviousMilestoneClicked);
         _modernSuperpositionButton.RegisterCallback<ClickEvent>(OnModerSuperpositionToggled);
-        _contextualPanel.PlayCharacterClickedEvent += OnPlayCharacterClicked;
     }
 
     protected override void GetServicesDependenciesOnStart()
@@ -83,16 +79,32 @@ public class SpectatorHUD_UIState : AHUDState
 
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
+    }
+
+    protected override void SubscribeToServicesEventsOnStart()
+    {
+        base.SubscribeToServicesEventsOnStart();
 
         _uiManager.ShowTooltipEvent += OnShowTooltip;
         _uiManager.HideTooltipEvent += OnHideTooltip;
         _progressManager.OnMilestoneChangedEvent += OnMilestoneChanged;
     }
 
-    protected override void OnStartState()
+    public override void StartState()
     {
+        base.StartState();
+
         if (!_wasContextualPanelShown)
             _milestoneArea.style.display = DisplayStyle.Flex;
+    }
+
+    protected override void UnsubscribeToServicesEventsOnExit()
+    {
+        base.UnsubscribeToServicesEventsOnExit();
+
+        _uiManager.ShowTooltipEvent -= OnShowTooltip;
+        _uiManager.HideTooltipEvent -= OnHideTooltip;
+        _progressManager.OnMilestoneChangedEvent -= OnMilestoneChanged;
     }
     #endregion
 
@@ -100,6 +112,7 @@ public class SpectatorHUD_UIState : AHUDState
     protected override void OnContextualPanelShown()
     {
         _milestoneArea.style.display = DisplayStyle.None;
+        Debug.Log($"SpectatorHUD_UIState: Contextual panel shown, hiding milestone area.");
     }
 
     protected override void OnContextualPanelHidden()
@@ -109,12 +122,6 @@ public class SpectatorHUD_UIState : AHUDState
     #endregion
 
     #region CALLBACK METHODS
-    void OnPlayCharacterClicked()
-    {
-        // Hide contextual panel
-        HideContextualPanel();
-    }
-
     void OnHeritageClicked(ClickEvent evt)
     {
         _uiManager.SwitchToHeritageState();

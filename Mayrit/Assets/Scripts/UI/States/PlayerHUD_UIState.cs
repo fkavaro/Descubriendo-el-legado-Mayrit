@@ -15,10 +15,7 @@ public class PlayerHUD_UIState : AHUDState
 
     #region CONSTRUCTOR
     public PlayerHUD_UIState(UIDocument uiDocument)
-    : base("PlayerHUD", uiDocument)
-    {
-
-    }
+    : base("PlayerHUD", uiDocument) { }
     #endregion
 
     #region UI STATE INHERITED METHODS
@@ -37,12 +34,9 @@ public class PlayerHUD_UIState : AHUDState
             Debug.LogWarning("_tourName not found");
         if (_tourDescription == null)
             Debug.LogWarning("_tourDescription not found");
-
-        // Get dependency from Service Locator
-
     }
 
-    protected override void RegisterCallbacksOnAwake()
+    protected override void RegisterUICallbacksOnAwake()
     {
         _pauseButton.RegisterCallback<ClickEvent>(OnPauseClicked);
     }
@@ -54,8 +48,10 @@ public class PlayerHUD_UIState : AHUDState
         _tourManager = ServiceLocator.Instance.Get<TourManager>();
     }
 
-    protected override void OnStartState()
+    public override void StartState()
     {
+        base.StartState();
+
         // Overwrite HUD info with current tour info
         Tour currentTour = _tourManager.CurrentTour;
 
