@@ -176,6 +176,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
         _tourManager = ServiceLocator.Instance.Get<TourManager>();
 
         // Subscribe to events
+        _playerHUDState.ContextualPanelHiddenEvent += OnContextualPanelHidden;
         _spectatorHUDState.ContextualPanelHiddenEvent += OnContextualPanelHidden;
         _spectatorHUDState.PlayCharacterEvent += OnPlayCharacterClicked;
         _spectatorHUDState.OnModernSuperpositionEvent += OnModernSuperpositionToggled;

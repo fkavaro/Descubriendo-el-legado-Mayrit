@@ -112,7 +112,6 @@ public class SpectatorHUD_UIState : AHUDState
     protected override void OnContextualPanelShown()
     {
         _milestoneArea.style.display = DisplayStyle.None;
-        Debug.Log($"SpectatorHUD_UIState: Contextual panel shown, hiding milestone area.");
     }
 
     protected override void OnContextualPanelHidden()
