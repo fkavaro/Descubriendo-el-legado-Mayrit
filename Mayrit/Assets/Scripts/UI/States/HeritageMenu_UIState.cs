@@ -38,6 +38,7 @@ public class HeritageMenu_UIState : AUIState
     {
         _uiManager.BehaviourSystem.SwitchToPreviousStateInStack(); // Player or spectator HUD
         _gameManager.SwitchToGamePlayState();
+        _soundManager.PlayButtonClickSFX();
     }
     #endregion
 }

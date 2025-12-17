@@ -9,9 +9,11 @@ public class PlayerVisual : Billboard
     Button _playerButton;
     PlayableCharacter _playableCharacter;
 
+    // Dependency Injectionq
     ProgressManager _progressManager;
     UIManager _uiManager;
     CameraManager _cameraManager;
+    SoundManager _soundManager;
 
     #region LIFE CYCLLE
     void Awake()
@@ -33,6 +35,7 @@ public class PlayerVisual : Billboard
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
+        _soundManager = ServiceLocator.Instance.Get<SoundManager>();
 
         // Subscribe to events and callbacks
         _progressManager.OnMilestoneChangedEvent += OnMilestoneChanged;
@@ -95,6 +98,7 @@ public class PlayerVisual : Billboard
     void OnPlayerButtonClick(ClickEvent evt)
     {
         _cameraManager.SwitchToOrbitalCamera(_playableCharacter.GetComponent<SelectableObject>());
+        _soundManager.PlayButtonClickSFX();
     }
     #endregion
 }

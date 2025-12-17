@@ -40,15 +40,18 @@ public class MainMenu_UIState : AUIState
     void OnPlayClicked(ClickEvent evt)
     {
         _gameManager.SwitchToGamePlayState();
+        _soundManager.PlayButtonClickSFX();
     }
 
     void OnSettingsClicked(ClickEvent evt)
     {
         // TODO: settings menu
+        _soundManager.PlayButtonClickSFX();
     }
 
     void OnQuitClicked(ClickEvent evt)
     {
+        _soundManager.PlayButtonClickSFX();
         Application.Quit();
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false; // For convenience in the editor

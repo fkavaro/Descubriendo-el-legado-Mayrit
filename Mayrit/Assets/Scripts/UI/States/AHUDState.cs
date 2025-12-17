@@ -45,7 +45,6 @@ public abstract class AHUDState : AUIState
         _contextualPanel.ShownEvent += OnContextualPanelShowCallback;
         _contextualPanel.HiddenEvent += OnContextualPanelHiddenCallback;
         _uiManager.ShowContextualPanelEvent += ShowContextualPanel;
-        _uiManager.HideContextualPanelEvent += HideContextualPanel;
     }
 
     protected override void UnsubscribeToServicesEventsOnExit()
@@ -54,7 +53,6 @@ public abstract class AHUDState : AUIState
         _contextualPanel.ShownEvent -= OnContextualPanelShowCallback;
         _contextualPanel.HiddenEvent -= OnContextualPanelHiddenCallback;
         _uiManager.ShowContextualPanelEvent -= ShowContextualPanel;
-        _uiManager.HideContextualPanelEvent -= HideContextualPanel;
     }
 
     public override void ExitState()
@@ -83,6 +81,7 @@ public abstract class AHUDState : AUIState
     {
         _wasContextualPanelShown = false;
         _contextualPanel.Hide();
+        _soundManager.PlayButtonClickSFX();
     }
 
     protected void OnPauseClicked(ClickEvent evt)
@@ -144,6 +143,7 @@ public abstract class AHUDState : AUIState
         ContextualPanelHiddenEvent?.Invoke();
         _wasContextualPanelShown = false;
         OnContextualPanelHidden();
+        _soundManager.PlayButtonClickSFX();
     }
     #endregion
 

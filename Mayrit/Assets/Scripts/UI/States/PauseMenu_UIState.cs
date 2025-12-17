@@ -49,15 +49,18 @@ public class PauseMenu_UIState : AUIState
     {
         _uiManager.BehaviourSystem.SwitchToPreviousStateInStack(); // Switch to previous state: player or spectator HUD
         _gameManager.SwitchToGamePlayState();
+        _soundManager.PlayButtonClickSFX();
     }
 
     void OnMainMenuClicked(ClickEvent evt)
     {
         _gameManager.SwitchToMainMenuState();
+        _soundManager.PlayButtonClickSFX();
     }
 
     void OnQuitClicked(ClickEvent evt)
     {
+        _soundManager.PlayButtonClickSFX();
         Application.Quit();
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false; // For convenience in the editor

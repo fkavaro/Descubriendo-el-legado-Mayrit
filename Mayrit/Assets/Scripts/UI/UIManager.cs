@@ -26,7 +26,6 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
 
     #region INTERNAL PROPERTIES
     public event Action<DataSO, bool> ShowContextualPanelEvent;
-    public event Action HideContextualPanelEvent;
     public event Action OnContextualPanelHiddenEvent;
     public event Action<DataSO> ShowTooltipEvent;
     public event Action HideTooltipEvent;
@@ -122,11 +121,6 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     public bool IsCursorOverUI()
     {
         return BehaviourSystem.CurrentState.IsCursorOverUI();
-    }
-
-    public void HideContextualPanel()
-    {
-        HideContextualPanelEvent?.Invoke();
     }
 
     public void ShowContextualPanel(DataSO data, bool isCharacterData = false)
