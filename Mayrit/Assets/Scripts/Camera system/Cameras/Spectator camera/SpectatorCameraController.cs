@@ -93,6 +93,10 @@ public class SpectatorCameraController
 
     public void LateUpdate()
     {
+        // Stop if game is paused
+        if (_gameManager.IsInPauseState)
+            return;
+
         _moveInput = _gameManager.InputActions.Camera.Move.ReadValue<Vector2>();
         _sprintPressed = _gameManager.InputActions.Camera.Sprint.IsPressed();
         _lookInput = _gameManager.InputActions.Camera.Look.ReadValue<Vector2>();
