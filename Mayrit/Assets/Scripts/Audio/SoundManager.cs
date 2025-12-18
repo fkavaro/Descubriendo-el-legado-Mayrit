@@ -50,8 +50,8 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioSource _musicSource;
     [SerializeField, Range(0, 1)] private float _effectsVolume = 1f;
     [SerializeField, Range(0, 1)] private float _musicVolume = 1f;
-    [SerializeField, Range(0, 1)] private float _musicFadeDuration = 0.5f;
-    [SerializeField, Range(0, 2)] private float _resumeGuardSeconds = 0.25f;
+    [SerializeField, Range(0, 2)] private float _musicFadeDuration = 0.5f;
+    [SerializeField, Range(0, 1)] private float _resumeGuardSeconds = 0.25f;
     [SerializeField] private List<MusicList> _musicLists = new();
     [SerializeField] private List<SFXlist> _SFXLists = new();
     #endregion
@@ -168,14 +168,11 @@ public class SoundManager : MonoBehaviour
     /// </summary>
     private void PlayMusic(MusicType type, float volume = 1)
     {
-        // Return if type is none
-        if (type == MusicType.None)
-            return;
+        if (type == MusicType.None) return;
 
-        // Set target volume immediately
         _musicVolume = volume;
 
-        // Update current playlist type; reset current clip if switching type
+        // Reset if switching to a different playlist type
         if (_currentMusicType != type)
         {
             _currentMusicType = type;
@@ -183,10 +180,9 @@ public class SoundManager : MonoBehaviour
             _musicSource.clip = null;
         }
 
-        // Ensure at least the first track starts now
         PlayNextInPlaylistInternal();
 
-        // Start/ensure the auto-advance loop (only during play mode)
+        // Start auto-advance loop if not already running
         if (Application.isPlaying && _playlistCoroutine == null)
             _playlistCoroutine = StartCoroutine(PlaylistLoop());
     }
@@ -221,7 +217,6 @@ public class SoundManager : MonoBehaviour
     public void UpdateMusicVolume(float volume)
     {
         _musicVolume = volume;
-        _musicSource.volume = volume;
     }
     #endregion
 
@@ -231,8 +226,7 @@ public class SoundManager : MonoBehaviour
     /// </summary>
     private void PlayNextInPlaylistInternal()
     {
-        if (_currentMusicType == MusicType.None)
-            return;
+        if (_currentMusicType == MusicType.None) return;
 
         var queue = EnsureQueue(_currentMusicType);
         if (queue.Count == 0)
@@ -242,13 +236,11 @@ public class SoundManager : MonoBehaviour
         }
 
         var nextClip = queue.Dequeue();
-        if (nextClip == null)
-            return;
+        if (nextClip == null) return;
 
-        // If a track is already playing and fade is enabled, perform a crossfade.
-        if (_musicFadeDuration > 0f && _musicSource.clip != null && _musicSource.isPlaying)
+        // Use crossfade if already playing and fade is enabled
+        if (_musicFadeDuration > 0f && _musicSource.isPlaying && _musicSource.clip != null)
         {
-            // Smooth transition to the next track
             StartCoroutine(CrossfadeToClip(nextClip));
         }
         else
@@ -274,15 +266,13 @@ public class SoundManager : MonoBehaviour
         if (queue.Count == 0)
         {
             var clips = GetMusicClips(type);
-            if (clips.Count == 0)
-                return queue; // stays empty; caller will warn
-            // Build a fresh shuffled queue
-            var temp = new List<AudioClip>(clips);
-            Shuffle(temp);
-            for (int i = 0; i < temp.Count; i++)
+            if (clips.Count > 0)
             {
-                if (temp[i] != null)
-                    queue.Enqueue(temp[i]);
+                Shuffle(clips);
+                foreach (var clip in clips)
+                {
+                    if (clip != null) queue.Enqueue(clip);
+                }
             }
         }
 
@@ -294,11 +284,8 @@ public class SoundManager : MonoBehaviour
     /// </summary>
     private List<AudioClip> GetMusicClips(MusicType type)
     {
-        // Find the list entry for the type; if missing, return empty list
         int idx = _musicLists.FindIndex(list => list._type == type);
-        if (idx < 0)
-            return new List<AudioClip>();
-        return _musicLists[idx]._sounds ?? new List<AudioClip>();
+        return idx >= 0 ? _musicLists[idx]._sounds ?? new List<AudioClip>() : new List<AudioClip>();
     }
 
     /// <summary>
@@ -319,21 +306,14 @@ public class SoundManager : MonoBehaviour
     /// </summary>
     private IEnumerator PlaylistLoop()
     {
-        // Runs while a music type is active; advances when current clip ends
         while (_currentMusicType != MusicType.None)
         {
-            // Skip advancing while focus is lost or immediately after resume
-            if (_suspendAutoAdvance || Time.unscaledTime < _ignoreAdvanceUntilTime)
+            // Skip if paused/unfocused or within resume guard window
+            if (!_suspendAutoAdvance && Time.unscaledTime >= _ignoreAdvanceUntilTime)
             {
-                yield return null;
-                continue;
-            }
-
-            // Advance only when the current clip actually ended
-            if (_musicSource.clip != null && !_musicSource.isPlaying)
-            {
-                bool ended = _musicSource.timeSamples >= (_musicSource.clip.samples - 1);
-                if (ended)
+                // Advance only when clip truly ended (not just paused)
+                if (_musicSource.clip != null && !_musicSource.isPlaying &&
+                    _musicSource.timeSamples >= _musicSource.clip.samples - 1)
                 {
                     PlayNextInPlaylistInternal();
                 }
@@ -352,38 +332,32 @@ public class SoundManager : MonoBehaviour
     /// </summary>
     private IEnumerator CrossfadeToClip(AudioClip nextClip)
     {
-        if (nextClip == null)
-            yield break;
+        if (nextClip == null) yield break;
 
         _isFadingMusic = true;
+        float halfDuration = _musicFadeDuration * 0.5f;
 
-        float duration = Mathf.Max(0.0001f, _musicFadeDuration);
-        float half = duration * 0.5f;
-
-        // Fade out current
+        // Fade out current track
+        float elapsed = 0f;
         float startVol = _musicSource.volume;
-        float t = 0f;
-        while (t < half)
+        while (elapsed < halfDuration)
         {
-            t += Time.deltaTime;
-            float percent = Mathf.Clamp01(t / half);
-            _musicSource.volume = Mathf.Lerp(startVol, 0f, percent);
+            elapsed += Time.deltaTime;
+            _musicSource.volume = Mathf.Lerp(startVol, 0f, elapsed / halfDuration);
             yield return null;
         }
 
-        // Swap clip
+        // Switch to next track
         _musicSource.Stop();
         _musicSource.clip = nextClip;
-        _musicSource.volume = 0f;
         _musicSource.Play();
 
-        // Fade in to target
-        t = 0f;
-        while (t < half)
+        // Fade in new track
+        elapsed = 0f;
+        while (elapsed < halfDuration)
         {
-            t += Time.deltaTime;
-            float percent = Mathf.Clamp01(t / half);
-            _musicSource.volume = Mathf.Lerp(0f, _musicVolume, percent);
+            elapsed += Time.deltaTime;
+            _musicSource.volume = Mathf.Lerp(0f, _musicVolume, elapsed / halfDuration);
             yield return null;
         }
 
@@ -471,7 +445,6 @@ public class SoundManager : MonoBehaviour
     public void UpdateSFXVolume(float volume)
     {
         _effectsVolume = volume;
-        _effectsSource.volume = volume;
     }
     #endregion
 }
