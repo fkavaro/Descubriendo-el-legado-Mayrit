@@ -14,10 +14,10 @@ public enum MusicType
 public enum SFXType
 {
     None,
-    UI_ButtonClick,
-    UI_TourStart,
-    UI_TourEnd,
-    Camera_Change
+    UIButtonClick,
+    UITourStart,
+    UITourEnd,
+    CameraTransition
 }
 #endregion
 
@@ -398,7 +398,7 @@ public class SoundManager : MonoBehaviour
     /// </summary>
     public void PlayButtonClickSFX()
     {
-        PlaySFX(SFXType.UI_ButtonClick);
+        PlaySFX(SFXType.UIButtonClick);
     }
 
     /// <summary>
@@ -406,7 +406,7 @@ public class SoundManager : MonoBehaviour
     /// </summary>
     public void PlayTourStartSFX()
     {
-        PlaySFX(SFXType.UI_TourStart);
+        PlaySFX(SFXType.UITourStart);
     }
 
     /// <summary>
@@ -414,7 +414,15 @@ public class SoundManager : MonoBehaviour
     /// </summary>
     public void PlayTourEndSFX()
     {
-        PlaySFX(SFXType.UI_TourEnd);
+        PlaySFX(SFXType.UITourEnd);
+    }
+
+    /// <summary>
+    /// Plays a camera far transition sound effect.
+    /// </summary>
+    public void PlayCameraTransitionSFX()
+    {
+        PlaySFX(SFXType.CameraTransition);
     }
 
     /// <summary>

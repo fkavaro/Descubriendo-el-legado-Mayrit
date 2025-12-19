@@ -7,7 +7,7 @@ public class ContextualPanel
     #region PROPERTIES
     public event Action PlayCharacterClickedEvent;
     public event Action ShownEvent;
-    public event Action HiddenEvent;
+    public event Action ClosedEvent;
 
     readonly Label _header,
         _subHeader,
@@ -97,29 +97,14 @@ public class ContextualPanel
         _root.style.display = DisplayStyle.Flex; // Show
 
         ShownEvent?.Invoke();
-
-        //Debug.Log($"ContextualPanel shown");
-    }
-
-    public void Hide()
-    {
-        _root.style.display = DisplayStyle.None; // Hide
-        Reset();
-        HiddenEvent?.Invoke();
     }
     #endregion
 
     #region PRIVATE METHODS
-    void OnCloseButton(ClickEvent evt)
+    void Hide()
     {
-        Hide();
-        _soundManager.PlayButtonClickSFX();
-    }
-
-    void OnPlayCharacter(ClickEvent evt)
-    {
-        PlayCharacterClickedEvent?.Invoke();
-        Hide();
+        _root.style.display = DisplayStyle.None; // Hide
+        Reset();
     }
 
     void Reset()
@@ -133,6 +118,21 @@ public class ContextualPanel
         _image.style.display = DisplayStyle.None;
         _imageCaption.style.display = DisplayStyle.None;
         _playCharacterButton.style.display = DisplayStyle.None;
+    }
+    #endregion
+
+    #region CALLBACK METHODS
+    void OnCloseButton(ClickEvent evt)
+    {
+        Hide();
+        ClosedEvent?.Invoke();
+        _soundManager.PlayButtonClickSFX();
+    }
+
+    void OnPlayCharacter(ClickEvent evt)
+    {
+        Hide();
+        PlayCharacterClickedEvent?.Invoke();
     }
     #endregion
 }

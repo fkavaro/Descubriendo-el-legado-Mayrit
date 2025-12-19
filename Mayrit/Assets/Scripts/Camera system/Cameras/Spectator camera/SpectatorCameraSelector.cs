@@ -95,6 +95,12 @@ public class SpectatorCameraSelector
     /// </summary>
     void ApplySelection()
     {
+        if (_currentSelected == null)
+        {
+            Debug.LogWarning("SpectatorCameraSelector.ApplySelection: current selected is null.");
+            return;
+        }
+
         ObjectSelectedEvent?.Invoke(_currentSelected);
         ResetHover();
     }

@@ -74,6 +74,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     UIManager _uiManager;
     TourManager _tourManager;
     GameManager _gameManager;
+    SoundManager _soundManager;
     #endregion
 
     #region INHERITED
@@ -103,12 +104,13 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
         _tourManager = ServiceLocator.Instance.Get<TourManager>();
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
+        _soundManager = ServiceLocator.Instance.Get<SoundManager>();
 
         // Subscribe to events
         _spectatorState.ObjectSelectedEvent += SwitchToOrbitalCamera;
         _thirdPersonState.ExitThirdPersonCameraEvent += OnExitThirdPersonCamera;
         _uiManager.OnContextualPanelHiddenEvent += OnContextualPanelHidden;
-        _uiManager.PlayCharacterClickedEvent += SwitchToThirdPersonCamera;
+        _uiManager.PlayCharacterClickedEvent += OnPlayCharacterClicked;
         _tourManager.TourPOIVisitedEvent += OnTourPOIVisited;
         _gameManager.GamePausedEvent += OnGamePaused;
 
@@ -130,8 +132,10 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     #region STATE HANDLING
     public void SwitchToSpectatorCamera()
     {
-        if (_fsm.IsCurrentState(_thirdPersonState))
+        if (IsInThirdPersonState)
         {
+            _soundManager.PlayCameraTransitionSFX();
+
             _spectatorCamera.LookAt.position = _thirdPersonCamera.LookAt.position;
 
             // Fix to look at target height
@@ -144,9 +148,16 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
             _fsm.SwitchState(_spectatorState);
 
             SmoothMoveCoroutine(_spectatorCamera.LookAt, fixedSpectatorLookAt, _spectatorTargetFixingSpeed);
+
+            if (DebugMode)
+                Debug.Log("Switched to spectator camera from third person.");
+
+            OnCameraStateChangedEvent?.Invoke();
         }
-        else if (_fsm.IsCurrentState(_orbitalState))
+        else if (IsInOrbitalState)
         {
+            _soundManager.PlayCameraTransitionSFX();
+
             _spectatorCamera.LookAt.position = _orbitalCamera.LookAt.position;
 
             // Same orbit values as orbital camera
@@ -165,14 +176,19 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
             _spectatorCamera.LookAt.position = fixedSpectatorLookAt;
 
             _fsm.SwitchState(_spectatorState);
-        }
 
-        OnCameraStateChangedEvent?.Invoke();
+            if (DebugMode)
+                Debug.Log("Switched to spectator camera from orbital.");
+
+            OnCameraStateChangedEvent?.Invoke();
+        }
     }
 
     public void SwitchToOrbitalCamera(SelectableObject selectedElement)
     {
         _orbitalState.SelectedObject = selectedElement;
+
+        _soundManager.PlayCameraTransitionSFX();
 
         // Same orbit values as spectator camera
         _orbitalCamera.GetComponent<CinemachineOrbitalFollow>().HorizontalAxis.Value =
@@ -181,6 +197,9 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
             _spectatorCamera.GetComponent<CinemachineOrbitalFollow>().VerticalAxis.Value;
 
         _fsm.SwitchState(_orbitalState);
+
+        if (DebugMode)
+            Debug.Log($"Switched to orbital camera around '{selectedElement.name}'.");
 
         OnCameraStateChangedEvent?.Invoke();
     }
@@ -196,10 +215,14 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         _fsm.SwitchState(_thirdPersonState);
 
         OnCameraStateChangedEvent?.Invoke();
+
+        if (DebugMode)
+            Debug.Log("Switched to third person camera.");
     }
 
     public void SwitchToPoiCamera(CinemachineCamera camera)
     {
+        _soundManager.PlayCameraTransitionSFX();
         _poiState.Camera = camera;
         _fsm.SwitchState(_poiState);
         OnCameraStateChangedEvent?.Invoke();
@@ -259,6 +282,11 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     void OnExitThirdPersonCamera()
     {
         SwitchToSpectatorCamera();
+    }
+
+    void OnPlayCharacterClicked()
+    {
+        SwitchToThirdPersonCamera();
     }
 
     void OnContextualPanelHidden()

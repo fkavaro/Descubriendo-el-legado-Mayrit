@@ -276,5 +276,6 @@ MonoBehaviour:
     _sounds:
     - {fileID: 8300000, guid: 270d896f1955cc6499cae8d48e0f975a, type: 3}
   - _type: 4
-    _sounds: []
+    _sounds:
+    - {fileID: 8300000, guid: d6e74ea6890d6824ab660f67af1bfe6c, type: 3}
   _skipToNextTrack: 0

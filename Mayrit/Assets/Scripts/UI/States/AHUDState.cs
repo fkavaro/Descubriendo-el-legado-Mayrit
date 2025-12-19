@@ -42,16 +42,16 @@ public abstract class AHUDState : AUIState
     protected override void SubscribeToServicesEventsOnStart()
     {
         _contextualPanel.PlayCharacterClickedEvent += OnPlayCharacterClicked;
-        _contextualPanel.ShownEvent += OnContextualPanelShowCallback;
-        _contextualPanel.HiddenEvent += OnContextualPanelHiddenCallback;
+        _contextualPanel.ShownEvent += OnContextualPanelShownCallback;
+        _contextualPanel.ClosedEvent += OnContextualPanelClosedCallback;
         _uiManager.ShowContextualPanelEvent += ShowContextualPanel;
     }
 
     protected override void UnsubscribeToServicesEventsOnExit()
     {
         _contextualPanel.PlayCharacterClickedEvent -= OnPlayCharacterClicked; ;
-        _contextualPanel.ShownEvent -= OnContextualPanelShowCallback;
-        _contextualPanel.HiddenEvent -= OnContextualPanelHiddenCallback;
+        _contextualPanel.ShownEvent -= OnContextualPanelShownCallback;
+        _contextualPanel.ClosedEvent -= OnContextualPanelClosedCallback;
         _uiManager.ShowContextualPanelEvent -= ShowContextualPanel;
     }
 
@@ -75,18 +75,6 @@ public abstract class AHUDState : AUIState
     {
         _wasContextualPanelShown = true;
         _contextualPanel.ShowInfo(data, isCharacterData);
-    }
-
-    protected void HideContextualPanel()
-    {
-        _wasContextualPanelShown = false;
-        _contextualPanel.Hide();
-    }
-
-    protected void OnPauseClicked(ClickEvent evt)
-    {
-        _uiManager.SwitchToPauseState();
-        _soundManager.PlayButtonClickSFX();
     }
     #endregion
 
@@ -126,18 +114,25 @@ public abstract class AHUDState : AUIState
     #endregion
 
     #region CALLBACK METHODS
-    void OnPlayCharacterClicked()
+    protected void OnPauseClicked(ClickEvent evt)
     {
-        HideContextualPanel();
-
-        PlayCharacterEvent?.Invoke();
+        _uiManager.SwitchToPauseState();
+        _soundManager.PlayButtonClickSFX();
     }
-    void OnContextualPanelShowCallback()
+
+    void OnContextualPanelShownCallback()
     {
         _wasContextualPanelShown = true;
         OnContextualPanelShown();
     }
-    void OnContextualPanelHiddenCallback()
+
+    void OnPlayCharacterClicked()
+    {
+        _wasContextualPanelShown = false;
+        PlayCharacterEvent?.Invoke();
+    }
+
+    void OnContextualPanelClosedCallback()
     {
         ContextualPanelHiddenEvent?.Invoke();
         _wasContextualPanelShown = false;
