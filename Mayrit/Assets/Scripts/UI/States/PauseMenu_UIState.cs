@@ -8,6 +8,8 @@ public class PauseMenu_UIState : AUIState
         _mainMenuButton,
         _settingsButton,
         _quitButton;
+
+    CameraManager _cameraManager;
     #endregion
 
     #region CONSTRUCTOR
@@ -42,6 +44,14 @@ public class PauseMenu_UIState : AUIState
         _quitButton.RegisterCallback<ClickEvent>(OnQuitClicked);
     }
 
+    protected override void GetServicesDependenciesOnStart()
+    {
+        base.GetServicesDependenciesOnStart();
+
+        if (_cameraManager == null)
+            _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
+    }
+
     public override void StartState()
     {
         base.StartState();
@@ -52,9 +62,18 @@ public class PauseMenu_UIState : AUIState
     #region CALLBACK METHODS
     void OnPlayClicked(ClickEvent evt)
     {
-        _uiManager.BehaviourSystem.SwitchToPreviousStateInStack();
         _gameManager.SwitchToGamePlayState();
         _soundManager.PlayButtonClickSFX();
+
+        if (_cameraManager.IsInSpectatorState || _cameraManager.IsInOrbitalState)
+            _uiManager.SwitchToSpectatorHUDState();
+        else // Third Person or POI cameras
+        {
+            if (_gameManager.PlayableCharacter != null && _gameManager.PlayableCharacter.IsBeingControlled)
+                _uiManager.SwitchToPlayerHUDState();
+            else
+                Debug.LogWarning($"{StateName}: No playable character is being controlled when resuming from pause.");
+        }
     }
 
     void OnMainMenuClicked(ClickEvent evt)

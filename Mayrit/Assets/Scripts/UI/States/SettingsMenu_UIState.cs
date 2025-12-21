@@ -52,8 +52,12 @@ public class SettingsMenu_UIState : AUIState
     void OnCloseClicked(ClickEvent evt)
     {
         base.ExitState();
-        _uiManager.BehaviourSystem.SwitchToPreviousStateInStack();
         _soundManager.PlayButtonClickSFX();
+
+        if (_gameManager.IsInMainMenuState)
+            _uiManager.SwitchToMainMenuState();
+        else if (_gameManager.IsInPauseState)
+            _uiManager.SwitchToPauseState();
     }
 
     void OnEdgeScrollingToggled(ChangeEvent<bool> evt)

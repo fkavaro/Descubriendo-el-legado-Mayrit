@@ -94,7 +94,9 @@ public class SpectatorHUD_UIState : AHUDState
     {
         base.StartState();
 
-        if (!_wasContextualPanelShown)
+        if (_wasContextualPanelShown)
+            _milestoneArea.style.display = DisplayStyle.None;
+        else
             _milestoneArea.style.display = DisplayStyle.Flex;
     }
 

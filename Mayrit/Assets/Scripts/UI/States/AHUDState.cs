@@ -33,6 +33,11 @@ public abstract class AHUDState : AUIState
         }
 
         base.AwakeState();
+    }
+
+    public override void StartState()
+    {
+        base.StartState();
 
         // Show contextual panel root if it was shown before
         if (_wasContextualPanelShown)
