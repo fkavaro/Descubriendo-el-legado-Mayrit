@@ -95,7 +95,6 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     #endregion
 
     #region LIFE CYCLE
-
     protected override void Start()
     {
         base.Start();
@@ -126,6 +125,17 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
                 _movementLimitsY.x,
                 _spectatorCamera.LookAt.position.z);
         }
+    }
+
+    void OnDestroy()
+    {
+        // Unsubscribe from events
+        _spectatorState.ObjectSelectedEvent -= SwitchToOrbitalCamera;
+        _thirdPersonState.ExitThirdPersonCameraEvent -= OnExitThirdPersonCamera;
+        _uiManager.OnContextualPanelHiddenEvent -= OnContextualPanelHidden;
+        _uiManager.PlayCharacterClickedEvent -= OnPlayCharacterClicked;
+        _tourManager.TourPOIVisitedEvent -= OnTourPOIVisited;
+        _gameManager.GamePausedEvent -= OnGamePaused;
     }
     #endregion
 
@@ -206,6 +216,12 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
 
     public void SwitchToThirdPersonCamera()
     {
+        // if (_thirdPersonCamera == null)
+        // {
+        //     Debug.LogError("Cannot switch to third person camera: third person camera is missing or destroyed.");
+        //     return;
+        // }
+
         // Update third person camera target to current playable character
         Transform playerTranform;
 
