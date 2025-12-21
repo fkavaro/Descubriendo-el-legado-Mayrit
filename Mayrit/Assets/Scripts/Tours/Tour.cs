@@ -16,7 +16,6 @@ public class Tour : MonoBehaviour
 
     [Header("Tour Settings")]
     [SerializeField] bool _isCompleted;
-    [SerializeField] int _currentPOIindex = 0;
     [Tooltip("Next POI to visit in the tour")]
     [SerializeField] PointOfInterest _nextPOI;
     [Tooltip("Ordered POIs for this tour")]
@@ -26,23 +25,19 @@ public class Tour : MonoBehaviour
     #region INTERNAL PROPERTIES
     public event Action<PointOfInterest> OnVisitedPOIEvent;
     public event Action<PointOfInterest> OnNextPOIChangeEvent;
+
+    [SerializeField] int _currentPOIindex = -1;
     #endregion
 
     #region PUBLIC METHODS
-    public void Reset()
-    {
-        _isCompleted = false;
-        _currentPOIindex = 0;
-        ResetPOIs();
-    }
-
     public void StartTour()
     {
+        Reset();
         Activate();
-        SetNextPOI();
+        UpdateNextPOI();
     }
 
-    public void EndTour()
+    public void StopTour()
     {
         Deactivate();
     }
@@ -61,11 +56,14 @@ public class Tour : MonoBehaviour
         // All POIs visited
         if (_currentPOIindex >= _pointsOfInterest.Count)
         {
-            TourCompleted();
+            _isCompleted = true;
             return;
         }
 
-        SetNextPOI();
+        _nextPOI = GetPOIFromList(_currentPOIindex);
+        AttachToPOI(_nextPOI);
+
+        OnNextPOIChangeEvent?.Invoke(_nextPOI);
     }
 
     PointOfInterest GetPOIFromList(int index)
@@ -73,13 +71,6 @@ public class Tour : MonoBehaviour
         return (index >= 0 && index < _pointsOfInterest.Count) ?
             _pointsOfInterest[index] :
             null;
-    }
-
-    void SetNextPOI()
-    {
-        _nextPOI = GetPOIFromList(_currentPOIindex);
-        AttachToPOI(_nextPOI);
-        OnNextPOIChangeEvent?.Invoke(_nextPOI);
     }
 
     void AttachToPOI(PointOfInterest poi)
@@ -108,18 +99,20 @@ public class Tour : MonoBehaviour
     void Deactivate()
     {
         transform.gameObject.SetActive(false);
+        Reset();
+    }
+
+    void Reset()
+    {
+        _isCompleted = false;
+        _currentPOIindex = -1;
+        ResetPOIs();
     }
 
     void ResetPOIs()
     {
         foreach (PointOfInterest point in _pointsOfInterest)
             if (point != null) point.Reset();
-    }
-
-    void TourCompleted()
-    {
-        _isCompleted = true;
-        _nextPOI = null;
     }
     #endregion
 

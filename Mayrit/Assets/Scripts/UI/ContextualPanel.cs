@@ -126,10 +126,6 @@ public class ContextualPanel
     {
         Hide();
         ClosedEvent?.Invoke();
-
-        if (_soundManager == null)
-            _soundManager = ServiceLocator.Instance.Get<SoundManager>();
-
         _soundManager.PlayButtonClickSFX();
     }
 

@@ -11,8 +11,6 @@ public class TourManager : MonoBehaviour
     #region EDITOR PROPERTIES
     [Header("Tour manager")]
     [SerializeField] Tour _currentTour;
-    [SerializeField] PointOfInterest _nextPOI;
-
     [Header("Path visualizer settings")]
     [Tooltip("Meters between samples along segments")]
     [SerializeField] float _sampleSpacing = 0.5f;
@@ -99,7 +97,6 @@ public class TourManager : MonoBehaviour
 
         // Update current
         _currentTour = tour;
-        _currentTour.Reset();
         _currentTour.OnVisitedPOIEvent += OnTourPOIVisited;
         _currentTour.OnNextPOIChangeEvent += OnTourNextPOIChange;
     }
@@ -110,9 +107,8 @@ public class TourManager : MonoBehaviour
 
         _currentTour.OnVisitedPOIEvent -= OnTourPOIVisited;
         _currentTour.OnNextPOIChangeEvent -= OnTourNextPOIChange;
-        _currentTour.EndTour();
+        _currentTour.StopTour();
         _currentTour = null;
-        _nextPOI = null;
     }
     #endregion
 
@@ -130,7 +126,6 @@ public class TourManager : MonoBehaviour
     void OnTourNextPOIChange(PointOfInterest poi)
     {
         OnTourNextPOIChangeEvent?.Invoke(poi);
-        _nextPOI = poi;
     }
 
     void OnContextualPanelHidden()
