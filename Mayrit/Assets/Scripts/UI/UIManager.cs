@@ -16,15 +16,24 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     public bool IsInPauseState => _sfsm.IsCurrentState(_pauseState);
     public bool IsInHeritageState => _sfsm.IsCurrentState(_heritageState);
     public Vector2 TooltipOffset => _tooltipOffset;
+    public bool EdgeScrollingValueSet => _edgeScrollingValueSet;
+    public bool ControlsVisibilityValueSet => _controlsVisibilityValueSet;
+    public float MusicVolumeValueSet => _musicVolumeValueSet;
+    public float SFXVolumeValueSet => _sfxVolumeValueSet;
     #endregion
 
     #region EDITOR PROPERTIES
-    [Header("Tooltip Settings")]
     [SerializeField] Vector2 _tooltipOffset = new(-30, -30);
-    [SerializeField] UIDocument _uiDocument;
+    [SerializeField] bool _edgeScrollingValueSet = true;
+    [SerializeField] bool _controlsVisibilityValueSet = true;
+    [SerializeField] float _musicVolumeValueSet = 1f;
+    [SerializeField] float _sfxVolumeValueSet = 1f;
     #endregion
 
     #region INTERNAL PROPERTIES
+    UIDocument _uiDocument;
+
+    // Events
     public event Action<DataSO, bool> ShowContextualPanelEvent;
     public event Action OnContextualPanelHiddenEvent;
     public event Action<DataSO> ShowTooltipEvent;
@@ -32,10 +41,10 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     public event Action PlayCharacterClickedEvent;
     public event Action ModernSuperpositionToggledEvent;
     public event Action<bool> EdgeScrollingToggledEvent;
-    public event Action<bool> ShowControlsToggledEvent;
     public event Action<float> MusicVolumeChangedEvent;
     public event Action<float> SFXVolumeChangedEvent;
 
+    // Stack FSM
     StackFiniteStateMachine<AUIState> _sfsm;
     MainMenu_UIState _mainMenuState;
     SpectatorHUD_UIState _spectatorHUDState;
@@ -149,6 +158,27 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     {
         HideTooltipEvent?.Invoke();
     }
+
+    public void SetControlsVisibility(bool newValue)
+    {
+        _controlsVisibilityValueSet = newValue;
+    }
+
+    public void InvokeEdgeScrollingToggledEvent(bool newValue)
+    {
+        EdgeScrollingToggledEvent?.Invoke(newValue);
+        _edgeScrollingValueSet = newValue;
+    }
+
+    public void InvokeMusicVolumeChangedEvent(float newValue)
+    {
+        MusicVolumeChangedEvent?.Invoke(newValue);
+    }
+
+    public void InvokeSFXVolumeChangedEvent(float newValue)
+    {
+        SFXVolumeChangedEvent?.Invoke(newValue);
+    }
     #endregion
 
     #region CALLBACK METHODS
@@ -202,26 +232,6 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     void OnContextualPanelHidden()
     {
         OnContextualPanelHiddenEvent?.Invoke();
-    }
-
-    public void InvokeEdgeScrollingToggledEvent(bool newValue)
-    {
-        EdgeScrollingToggledEvent?.Invoke(newValue);
-    }
-
-    public void InvokeShowControlsToggledEvent(bool newValue)
-    {
-        ShowControlsToggledEvent?.Invoke(newValue);
-    }
-
-    public void InvokeMusicVolumeChangedEvent(float newValue)
-    {
-        MusicVolumeChangedEvent?.Invoke(newValue);
-    }
-
-    public void InvokeSFXVolumeChangedEvent(float newValue)
-    {
-        SFXVolumeChangedEvent?.Invoke(newValue);
     }
     #endregion
 }

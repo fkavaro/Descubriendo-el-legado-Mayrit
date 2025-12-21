@@ -46,6 +46,16 @@ public class SettingsMenu_UIState : AUIState
         _musicVolumeSlider.RegisterCallback<ChangeEvent<float>>(OnMusicVolumeChanged);
         _sfxVolumeSlider.RegisterCallback<ChangeEvent<float>>(OnSFXVolumeChanged);
     }
+
+    public override void StartState()
+    {
+        base.StartState();
+
+        _musicVolumeSlider.value = _soundManager.MusicVolume;
+        _sfxVolumeSlider.value = _soundManager.EffectsVolume;
+        _showControlsToggle.value = _uiManager.ControlsVisibilityValueSet;
+        _edgeScrollingToggle.value = _uiManager.EdgeScrollingValueSet;
+    }
     #endregion
 
     #region CALLBACK METHODS
@@ -68,7 +78,7 @@ public class SettingsMenu_UIState : AUIState
 
     void OnShowControlsToggled(ChangeEvent<bool> evt)
     {
-        _uiManager.InvokeShowControlsToggledEvent(evt.newValue);
+        _uiManager.SetControlsVisibility(evt.newValue);
         _soundManager.PlayButtonClickSFX();
     }
 

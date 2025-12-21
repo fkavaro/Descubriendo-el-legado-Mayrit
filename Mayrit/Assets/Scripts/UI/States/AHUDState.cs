@@ -12,7 +12,8 @@ public abstract class AHUDState : AUIState
     protected ContextualPanel _contextualPanel;
     protected bool _wasContextualPanelShown;
 
-    VisualElement _contextualPanelRoot;
+    VisualElement _contextualPanelRoot,
+        _controlsVisualRoot;
     #endregion
 
     #region CONSTRUCTOR
@@ -35,6 +36,14 @@ public abstract class AHUDState : AUIState
         base.AwakeState();
     }
 
+    protected override void ConfigureUIElementsOnAwake()
+    {
+        _controlsVisualRoot = _screen.Q<VisualElement>("ControlsVisual");
+
+        if (_controlsVisualRoot == null)
+            Debug.LogWarning($"{_stateName} HUD State: _controlsVisualRoot not found");
+    }
+
     public override void StartState()
     {
         base.StartState();
@@ -42,6 +51,11 @@ public abstract class AHUDState : AUIState
         // Show contextual panel root if it was shown before
         if (_wasContextualPanelShown)
             _contextualPanelRoot.style.display = DisplayStyle.Flex;
+
+        // Show controls visual according to UIManager setting
+        _controlsVisualRoot.style.display = _uiManager.ControlsVisibilityValueSet ?
+            DisplayStyle.Flex :
+            DisplayStyle.None;
     }
 
     protected override void SubscribeToServicesEventsOnStart()

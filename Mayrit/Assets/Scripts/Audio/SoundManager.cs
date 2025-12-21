@@ -45,6 +45,11 @@ public struct SFXlist
 [RequireComponent(typeof(AudioSource))]
 public class SoundManager : MonoBehaviour
 {
+    #region PROPERTY HELPERS
+    public float EffectsVolume => _effectsVolume;
+    public float MusicVolume => _musicVolume;
+    #endregion
+
     #region EDITOR PROPERTIES
     [SerializeField] private AudioSource _effectsSource;
     [SerializeField] private AudioSource _musicSource;
@@ -57,19 +62,24 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private bool _skipToNextTrack;
     #endregion
 
+    #region INTERNAL PROPERTIES
     // Playlist state
     // Current active playlist type; None when stopped
-    private MusicType _currentMusicType = MusicType.None;
+    MusicType _currentMusicType = MusicType.None;
     // Background coroutine that watches for track end and advances
-    private Coroutine _playlistCoroutine;
+    Coroutine _playlistCoroutine;
     // Per-type shuffled queues used to play tracks sequentially without repeats
-    private readonly Dictionary<MusicType, Queue<AudioClip>> _musicQueues = new();
+    readonly Dictionary<MusicType, Queue<AudioClip>> _musicQueues = new();
     // True while app focus is lost or app is paused; prevents unintended advancing
-    private bool _suspendAutoAdvance = false;
+    bool _suspendAutoAdvance = false;
     // After regaining focus, ignore auto-advance checks for a brief window
-    private float _ignoreAdvanceUntilTime = 0f;
+    float _ignoreAdvanceUntilTime = 0f;
     // True while a fade transition is in progress; avoids volume overrides
-    private bool _isFadingMusic = false;
+    bool _isFadingMusic = false;
+
+    // Dependency Injection
+    UIManager _uiManager;
+    #endregion
 
     #region LIFE CYCLE
 #if UNITY_EDITOR
@@ -109,6 +119,17 @@ public class SoundManager : MonoBehaviour
 
         _effectsSource.loop = false;
         _musicSource.loop = false;
+
+        // Get dependencies from ServiceLocator
+        _uiManager = ServiceLocator.Instance.Get<UIManager>();
+
+        // Subscribe to uiManager events
+        _uiManager.MusicVolumeChangedEvent += UpdateMusicVolume;
+        _uiManager.SFXVolumeChangedEvent += UpdateSFXVolume;
+
+        // Set initial volumes
+        UpdateMusicVolume(_uiManager.MusicVolumeValueSet);
+        UpdateSFXVolume(_uiManager.SFXVolumeValueSet);
     }
 
     void OnApplicationFocus(bool hasFocus)

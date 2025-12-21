@@ -21,6 +21,8 @@ public class PlayerHUD_UIState : AHUDState
     #region UI STATE INHERITED METHODS
     protected override void ConfigureUIElementsOnAwake()
     {
+        base.ConfigureUIElementsOnAwake();
+
         _pauseButton = _screen.Q<Button>("PauseButton");
         _tourArea = _screen.Q<VisualElement>("TourArea");
         _tourName = _tourArea.Q<Label>("Name");

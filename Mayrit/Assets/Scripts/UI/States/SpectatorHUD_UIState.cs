@@ -32,6 +32,8 @@ public class SpectatorHUD_UIState : AHUDState
     #region UI STATE INHERITED METHODS
     protected override void ConfigureUIElementsOnAwake()
     {
+        base.ConfigureUIElementsOnAwake();
+
         _pauseButton = _screen.Q<Button>("PauseButton");
         _heritageButton = _screen.Q<Button>("HeritageButton");
         _tooltip = _screen.Q<Label>("Tooltip");

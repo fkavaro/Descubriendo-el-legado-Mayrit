@@ -13,6 +13,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     public bool IsInOrbitalState => _fsm.IsCurrentState(_orbitalState);
     public bool IsInThirdPersonState => _fsm.IsCurrentState(_thirdPersonState);
     public bool IsInPOIState => _fsm.IsCurrentState(_poiState);
+    public bool EdgeScrolling => _edgeScrolling;
     #endregion
 
     #region EDITOR PROPERTIES
@@ -21,7 +22,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     public float _spectatorSimSpeed = 3f;
     public CinemachineCamera _spectatorCamera;
     [Tooltip("Wether to move camera at screen margins or not.")]
-    public bool _edgeScrolling = false;
+    [SerializeField] bool _edgeScrolling = false;
     public int _edgeScrollingMargin = 30;
     public float _moveSpeed = 500f;
     public AnimationCurve _moveSpeedZoomCurve = AnimationCurve.Linear(0f, 0.1f, 1f, 1f);
@@ -110,6 +111,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         _thirdPersonState.ExitThirdPersonCameraEvent += OnExitThirdPersonCamera;
         _uiManager.OnContextualPanelHiddenEvent += OnContextualPanelHidden;
         _uiManager.PlayCharacterClickedEvent += OnPlayCharacterClicked;
+        _uiManager.EdgeScrollingToggledEvent += OnEdgeScrollingToggled;
         _tourManager.TourPOIVisitedEvent += OnTourPOIVisited;
 
         // Set camera target at min height
@@ -124,6 +126,9 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
                 _movementLimitsY.x,
                 _spectatorCamera.LookAt.position.z);
         }
+
+        // Check edge scrolling initial state
+        _edgeScrolling = _uiManager.EdgeScrollingValueSet;
     }
 
     void OnDestroy()
@@ -320,6 +325,11 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         }
 
         SwitchToPoiCamera(poi.Camera);
+    }
+
+    void OnEdgeScrollingToggled(bool value)
+    {
+        _edgeScrolling = value;
     }
     #endregion
 }

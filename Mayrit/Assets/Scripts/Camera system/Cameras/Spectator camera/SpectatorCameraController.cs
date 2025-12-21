@@ -77,8 +77,9 @@ public class SpectatorCameraController
     #region LIFE CYCLE
     public void Update()
     {
+        _edgeScrolling = _cameraManager.EdgeScrolling;
+
         // TODO: move to constructor when final values
-        _edgeScrolling = _cameraManager._edgeScrolling;
         _edgeScrollingMargin = _cameraManager._edgeScrollingMargin;
         _moveSpeed = _cameraManager._moveSpeed;
         _acceleration = _cameraManager._acceleration;
@@ -105,6 +106,7 @@ public class SpectatorCameraController
 
         if (_edgeScrolling)
             UpdateEdgeScrolling();
+
         UpdateMovement();
         UpdateZoom();
         UpdateOrbit();
