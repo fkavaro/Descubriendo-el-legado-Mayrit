@@ -38,37 +38,34 @@ public abstract class ACameraState : AState
     #endregion
 
     #region INHERITED METHODS
-    public override void StartState()
+    protected override void GetServicesDependenciesOnStart()
     {
-        if (_camera == null)
-        {
-            Debug.LogWarning($"ACameraState.StartState: Cannot start camera state {StateName} because the CinemachineCamera reference is null.");
-            return;
-        }
-
-        // Get dependencies from ServiceLocator
         _timeManager = ServiceLocator.Instance.Get<TimeManager>();
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
+    }
+
+    public override void StartState()
+    {
+        base.StartState();
+
+        if (_camera == null)
+        {
+            Debug.LogWarning($"{StateName}: Cannot start because the CinemachineCamera reference is null.");
+            return;
+        }
 
         _timeManager.SetSimulationSpeed(_simulationSpeed);
-
-        OnStateStarted();
 
         _camera.gameObject.SetActive(true);
     }
 
     public override void ExitState()
     {
-        OnStateExited();
+        base.ExitState();
 
         _camera.gameObject.SetActive(false);
     }
-    #endregion
-
-    #region VIRTUAL METHODS
-    public abstract void OnStateStarted();
-    public abstract void OnStateExited();
     #endregion
 }

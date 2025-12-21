@@ -9,6 +9,7 @@ public class Controlled_PlayableCharacterState : APlayableCharacterState
 
     public override void StartState()
     {
+        base.StartState();
         _gameManager.InputActions.Player.Enable();
     }
 
@@ -19,6 +20,7 @@ public class Controlled_PlayableCharacterState : APlayableCharacterState
 
     public override void ExitState()
     {
+        base.ExitState();
         _gameManager.InputActions.Player.Disable();
     }
 }

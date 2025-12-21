@@ -3,31 +3,39 @@ using Unity.Cinemachine;
 
 public class Orbital_CameraState : ACameraState
 {
+    #region PROPERTIES HELPERS
     public SelectableObject SelectedObject
     {
         get => _selectedObject;
         set => _selectedObject = value;
     }
+    #endregion
 
+    #region PROPERTIES
     readonly CinemachineOrbitalFollow _orbitalFollow;
 
     SelectableObject _selectedObject;
     float _orbitSpeed;
     float _zoomValue;
     float _horizontalOffset;
+    #endregion
 
-
+    #region CONSTRUCTOR
     public Orbital_CameraState(CinemachineCamera camera, float simulationSpeed)
     : base("Orbital camera", camera, simulationSpeed)
     {
         _orbitalFollow = camera.GetComponent<CinemachineOrbitalFollow>();
     }
+    #endregion
 
-    public override void OnStateStarted()
+    #region INHERITED METHODS
+    public override void StartState()
     {
+        base.StartState();
+
         if (_selectedObject == null)
         {
-            Debug.LogWarning("Orbital camera state started without a selected object to orbit around.");
+            Debug.LogWarning("Orbital camera state can't start without a selected object to orbit around.");
             return;
         }
 
@@ -49,9 +57,9 @@ public class Orbital_CameraState : ACameraState
     {
         AutomaticOrbit();
     }
+    #endregion
 
-    public override void OnStateExited() { }
-
+    #region PRIVATE METHODS
     void ApplyContextualPanelOffset()
     {
         _camera.GetComponent<CinemachineCameraOffset>().Offset.x = _horizontalOffset;
@@ -60,8 +68,9 @@ public class Orbital_CameraState : ACameraState
     void AutomaticOrbit()
     {
         // Do not orbit if the game simulation is paused
-        if (Time.timeScale == 0f) return;
+        if (_gameManager.IsInPauseState) return;
 
         _orbitalFollow.HorizontalAxis.Value += _orbitSpeed * Time.unscaledDeltaTime;
     }
+    #endregion
 }

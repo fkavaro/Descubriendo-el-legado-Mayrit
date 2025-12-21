@@ -5,14 +5,17 @@ using UnityEngine;
 public abstract class APlayableCharacterState : AState
 {
     protected readonly PlayableCharacter _playableCharacter;
-    protected readonly GameManager _gameManager;
+    protected GameManager _gameManager;
 
     protected APlayableCharacterState(string name, PlayableCharacter playableCharacter)
     : base(name)
     {
         _playableCharacter = playableCharacter;
+    }
 
-        // Get dependency from Service Locator
+    protected override void GetServicesDependenciesOnStart()
+    {
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
+
     }
 }

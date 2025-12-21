@@ -5,18 +5,25 @@ using UnityEngine.InputSystem;
 
 public class ThirdPerson_CameraState : ACameraState
 {
+    #region PROPERTIES
     public event Action ExitThirdPersonCameraEvent;
 
     readonly ThirdPersonCameraController _cameraController;
+    #endregion
 
+    #region CONSTRUCTOR
     public ThirdPerson_CameraState(CinemachineCamera camera, float simulationSpeed)
     : base("Third person camera", camera, simulationSpeed)
     {
         _cameraController = new(_camera);
     }
+    #endregion
 
-    public override void OnStateStarted()
+    #region INHERITED METHODS
+    public override void StartState()
     {
+        base.StartState();
+
         _gameManager.InputActions.Camera.Enable();
         _gameManager.InputActions.Camera.ExitMode.performed += OnExitThirdPersonModePressed;
     }
@@ -30,14 +37,19 @@ public class ThirdPerson_CameraState : ACameraState
             _cameraController.MouseTracking();
     }
 
-    public override void OnStateExited()
+    public override void ExitState()
     {
+        base.ExitState();
+
         _gameManager.InputActions.Camera.Disable();
         _gameManager.InputActions.Camera.ExitMode.performed -= OnExitThirdPersonModePressed;
     }
+    #endregion
 
+    #region CALLBACK METHODS
     void OnExitThirdPersonModePressed(InputAction.CallbackContext context)
     {
         ExitThirdPersonCameraEvent?.Invoke();
     }
+    #endregion
 }

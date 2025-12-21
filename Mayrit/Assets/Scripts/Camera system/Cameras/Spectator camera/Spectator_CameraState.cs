@@ -4,20 +4,27 @@ using Unity.Cinemachine;
 
 public class Spectator_CameraState : ACameraState
 {
+    #region PROPERTIES
     public event Action<SelectableObject> ObjectSelectedEvent;
 
     readonly SpectatorCameraController _cameraController;
     readonly SpectatorCameraSelector _cameraSelector;
+    #endregion
 
+    #region CONSTRUCTOR
     public Spectator_CameraState(CinemachineCamera camera, float simulationSpeed)
     : base("Spectator camera", camera, simulationSpeed)
     {
         _cameraController = new(camera);
         _cameraSelector = new();
     }
+    #endregion
 
-    public override void OnStateStarted()
+    #region INHERITED METHODS
+    public override void StartState()
     {
+        base.StartState();
+
         _gameManager.InputActions.Camera.Enable();
         _uiManager.SwitchToSpectatorHUDState();
         _cameraSelector.ObjectSelectedEvent += OnObjectSelected;
@@ -34,13 +41,18 @@ public class Spectator_CameraState : ACameraState
         _cameraController.LateUpdate();
     }
 
-    public override void OnStateExited()
+    public override void ExitState()
     {
+        base.ExitState();
+
         _gameManager.InputActions.Camera.Disable();
     }
+    #endregion
 
+    #region CALLBACK METHODS
     void OnObjectSelected(SelectableObject selectedObject)
     {
         ObjectSelectedEvent?.Invoke(selectedObject);
     }
+    #endregion
 }
