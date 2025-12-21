@@ -21,7 +21,7 @@ public class ProgressObject : MonoBehaviour
 
     void OnDisable()
     {
-        UnsubscribeToRuntimeEvents();
+        UnsubscribeFromRuntimeEvents();
     }
 
     void OnValidate()
@@ -48,7 +48,6 @@ public class ProgressObject : MonoBehaviour
 
     void SubscribeToRuntimeEvents()
     {
-        // TODO use service locator pattern
         ProgressManager progressManager = FindAnyObjectByType<ProgressManager>();
 
         if (progressManager != null)
@@ -58,7 +57,7 @@ public class ProgressObject : MonoBehaviour
         }
     }
 
-    void UnsubscribeToRuntimeEvents()
+    void UnsubscribeFromRuntimeEvents()
     {
         ProgressManager progressManager = FindAnyObjectByType<ProgressManager>();
 

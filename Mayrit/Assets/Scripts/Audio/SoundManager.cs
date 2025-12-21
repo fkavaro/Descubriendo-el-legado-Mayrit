@@ -204,7 +204,7 @@ public class SoundManager : MonoBehaviour
         if (Application.isPlaying && _playlistCoroutine == null)
         {
             _playlistCoroutine = StartCoroutine(PlaylistLoop());
-            Debug.Log($"SoundManager: Started {type} playlist.");
+            //Debug.Log($"SoundManager: Started {type} playlist.");
         }
     }
 
@@ -288,7 +288,7 @@ public class SoundManager : MonoBehaviour
         var nextClip = queue.Dequeue();
         if (nextClip == null) return;
 
-        Debug.Log($"SoundManager | {_currentMusicType} playlist - Advancing to next track: {nextClip.name}.");
+        //Debug.Log($"SoundManager | {_currentMusicType} playlist - Advancing to next track: {nextClip.name}.");
 
         // Direct approach
         _musicSource.Stop();

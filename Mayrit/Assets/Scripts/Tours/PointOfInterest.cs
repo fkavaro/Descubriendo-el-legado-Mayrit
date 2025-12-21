@@ -30,10 +30,7 @@ public class PointOfInterest : MonoBehaviour
     #endregion
 
     #region LIFE CYCLE
-    /// <summary>
-    /// Sets the collider radius and trigger settings.
-    /// </summary>
-    private void Awake()
+    void OnEnable()
     {
         if (TryGetComponent(out _sphereCollider))
         {
@@ -49,8 +46,6 @@ public class PointOfInterest : MonoBehaviour
             if (playableLayer != -1)
                 _detectionMask = 1 << playableLayer;
         }
-
-        Reset();
     }
 
     /// <summary>
@@ -71,12 +66,14 @@ public class PointOfInterest : MonoBehaviour
     #region PUBLIC METHODS
     public void Activate()
     {
-        _sphereCollider.enabled = true;
+        if (_sphereCollider != null)
+            _sphereCollider.enabled = true;
     }
 
     public void Deactivate()
     {
-        _sphereCollider.enabled = false;
+        if (_sphereCollider != null)
+            _sphereCollider.enabled = false;
     }
 
     public void Reset()

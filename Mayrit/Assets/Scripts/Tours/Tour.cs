@@ -26,6 +26,28 @@ public class Tour : MonoBehaviour
     #region INTERNAL PROPERTIES
     public event Action<PointOfInterest> OnVisitedPOIEvent;
     public event Action<PointOfInterest> OnNextPOIChangeEvent;
+
+    ProgressManager _progressManager;
+    #endregion
+
+    #region LIFE CYCLE
+    void OnEnable()
+    {
+        SubscribeToRuntimeEvents();
+    }
+
+    void OnDisable()
+    {
+        UnsubscribeFromRuntimeEvents();
+    }
+
+    void OnValidate()
+    {
+#if UNITY_EDITOR
+        if (!Application.isPlaying)
+            SubscribeToRuntimeEvents();
+#endif
+    }
     #endregion
 
     #region PUBLIC METHODS
@@ -128,6 +150,61 @@ public class Tour : MonoBehaviour
     {
         OnVisitedPOIEvent?.Invoke(poi);
         UpdateNextPOI();
+    }
+    #endregion
+
+    #region EDITOR UPDATES
+    void SubscribeToRuntimeEvents()
+    {
+        _progressManager = FindAnyObjectByType<ProgressManager>();
+
+        if (_progressManager != null)
+        {
+            _progressManager.OnMilestoneChangedEvent += OnMilestoneChanged;
+            _progressManager.OnEditorUpdateChangedEvent += OnEditorUpdateChanged;
+        }
+    }
+
+    void UnsubscribeFromRuntimeEvents()
+    {
+        _progressManager = FindAnyObjectByType<ProgressManager>();
+
+        if (_progressManager != null)
+        {
+            _progressManager.OnMilestoneChangedEvent -= OnMilestoneChanged;
+            _progressManager.OnEditorUpdateChangedEvent -= OnEditorUpdateChanged;
+        }
+    }
+
+    void OnMilestoneChanged(MilestoneMapping milestoneMapping)
+    {
+        if (milestoneMapping.Tour == this)
+            Activate();
+        else
+            Deactivate();
+    }
+
+    void OnEditorUpdateChanged(bool updateInEditor)
+    {
+#if UNITY_EDITOR
+        if (Application.isPlaying)
+            return;
+
+        if (this == null) return;
+
+        // Not updated through editor
+        if (!updateInEditor)
+            // All tours active
+            Activate();
+        else
+        {
+            // Only active if corresponding to current milestone
+            if (_progressManager.CurrentMilestoneMapping.Tour == this)
+                Activate();
+            else
+                Deactivate();
+        }
+#endif
     }
     #endregion
 }
