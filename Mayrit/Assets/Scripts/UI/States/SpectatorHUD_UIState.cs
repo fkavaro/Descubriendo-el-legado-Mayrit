@@ -8,6 +8,8 @@ public class SpectatorHUD_UIState : AHUDState
     #region PROPERTIES
     public event Action OnModernSuperpositionEvent;
 
+    Tour _currentTour;
+
     Label _tooltip,
         _milestoneName,
         _milestoneDate;
@@ -63,6 +65,9 @@ public class SpectatorHUD_UIState : AHUDState
             Debug.LogWarning("_previousMilestoneButton button not found");
         if (_modernSuperpositionButton == null)
             Debug.LogWarning("_modernSuperpositionButton button not found");
+
+        // Disable next milestone button until tour is completed
+        _nextMilestoneButton.SetEnabled(false);
     }
 
     protected override void RegisterUICallbacksOnAwake()
@@ -96,10 +101,19 @@ public class SpectatorHUD_UIState : AHUDState
     {
         base.StartState();
 
+        _currentTour = _progressManager.CurrentMilestoneMapping.Tour;
+
         if (_wasContextualPanelShown)
             _milestoneArea.style.display = DisplayStyle.None;
         else
             _milestoneArea.style.display = DisplayStyle.Flex;
+
+        if (_currentTour.IsCompleted)
+        {
+            // Enable next milestone button after tour is completed
+            if (!_progressManager.AtLastMilestone())
+                _nextMilestoneButton.SetEnabled(true);
+        }
     }
 
     protected override void UnsubscribeToServicesEventsOnExit()
@@ -157,17 +171,14 @@ public class SpectatorHUD_UIState : AHUDState
 
     void OnMilestoneChanged(MilestoneMapping mapping)
     {
+        _currentTour = mapping.Tour;
+
         // Overwrite milestone area
         _milestoneName.text = mapping.Data.Header;
         _milestoneDate.text = mapping.Data.SubHeader;
 
-        // Check progress for enabling/disabling buttons
-        // Last milestone
-        if (_progressManager.AtLastMilestone())
-            // Disable next button
-            _nextMilestoneButton.SetEnabled(false);
-        else
-            _nextMilestoneButton.SetEnabled(true);
+        // Next milestone according to tour completion
+        _nextMilestoneButton.SetEnabled(_currentTour.HasBeenCompleted);
 
         // First milestone
         if (_progressManager.AtFirstMilestone())

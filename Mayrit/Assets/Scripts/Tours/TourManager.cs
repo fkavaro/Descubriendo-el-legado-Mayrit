@@ -111,7 +111,6 @@ public class TourManager : MonoBehaviour
         _currentTour.OnVisitedPOIEvent -= OnTourPOIVisited;
         _currentTour.OnNextPOIChangeEvent -= OnTourNextPOIChange;
         _currentTour.EndTour();
-        _currentTour = null;
         _nextPOI = null;
     }
     #endregion

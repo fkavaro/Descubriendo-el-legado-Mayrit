@@ -7,6 +7,7 @@ public class Tour : MonoBehaviour
     #region PROPERTY HELPERS
     public DataSO Data => _data;
     public bool IsCompleted => _isCompleted;
+    public bool HasBeenCompleted => _hasBeenCompleted;
     public PointOfInterest NextPOI => _nextPOI;
     #endregion
 
@@ -15,7 +16,8 @@ public class Tour : MonoBehaviour
     [SerializeField] DataSO _data;
 
     [Header("Tour Settings")]
-    [SerializeField] bool _isCompleted;
+    [SerializeField] bool _isCompleted = false;
+    [SerializeField] bool _hasBeenCompleted = false;
     [SerializeField] int _currentPOIindex = 0;
     [Tooltip("Next POI to visit in the tour")]
     [SerializeField] PointOfInterest _nextPOI;
@@ -141,6 +143,7 @@ public class Tour : MonoBehaviour
     void TourCompleted()
     {
         _isCompleted = true;
+        _hasBeenCompleted = true;
         _nextPOI = null;
     }
     #endregion
