@@ -22,7 +22,6 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     // Dependency Injection
     TourManager _tourManager;
     UIManager _uiManager;
-    GameManager _gameManager;
     CameraManager _cameraManager;
 
     ProgressManager _progressManager;
@@ -47,6 +46,9 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     void OnEnable()
     {
         SubscribeToRuntimeEvents();
+
+        if (Application.isPlaying)
+            SubscribeToServicesEvents();
     }
 
     void OnValidate()
@@ -67,7 +69,6 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
         // Get dependencies from ServiceLocator
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
         _tourManager = ServiceLocator.Instance.Get<TourManager>();
-        _gameManager = ServiceLocator.Instance.Get<GameManager>();
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
     }
 
@@ -75,20 +76,12 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     {
         base.Start();
 
-        // Subscribe to events
-        _uiManager.PlayCharacterClickedEvent += OnPlayCharacterClicked;
-        _uiManager.OnContextualPanelHiddenEvent += OnContextualPanelHidden;
-        _tourManager.POIVisitedEvent += OnTourPOIVisited;
-        _cameraManager.CameraStateChangedEvent += OnCameraStateChanged;
+        SubscribeToServicesEvents();
     }
 
     void OnDisable()
     {
-        // Unsubscribe from events
-        _uiManager.PlayCharacterClickedEvent -= OnPlayCharacterClicked;
-        _uiManager.OnContextualPanelHiddenEvent -= OnContextualPanelHidden;
-        _tourManager.POIVisitedEvent -= OnTourPOIVisited;
-        _cameraManager.CameraStateChangedEvent -= OnCameraStateChanged;
+        UnsubscribeFromServicesEvents();
     }
 
     void OnDestroy()
@@ -140,6 +133,22 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
             SwitchToNotControlledState();
     }
     #endregion
+
+    void SubscribeToServicesEvents()
+    {
+        _uiManager.PlayCharacterClickedEvent += OnPlayCharacterClicked;
+        _uiManager.OnContextualPanelHiddenEvent += OnContextualPanelHidden;
+        _tourManager.POIVisitedEvent += OnTourPOIVisited;
+        _cameraManager.CameraStateChangedEvent += OnCameraStateChanged;
+    }
+
+    void UnsubscribeFromServicesEvents()
+    {
+        _uiManager.PlayCharacterClickedEvent -= OnPlayCharacterClicked;
+        _uiManager.OnContextualPanelHiddenEvent -= OnContextualPanelHidden;
+        _tourManager.POIVisitedEvent -= OnTourPOIVisited;
+        _cameraManager.CameraStateChangedEvent -= OnCameraStateChanged;
+    }
 
     #region EDITOR UPDATES
     void SubscribeToRuntimeEvents()
