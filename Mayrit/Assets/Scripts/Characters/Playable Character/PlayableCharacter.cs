@@ -182,11 +182,11 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
 
     void OnMilestoneChanged(MilestoneMapping milestoneMapping)
     {
+        GO.SetActive(milestoneMapping.PlayableCharacter == this);
+
         // Return if not this playable character
         if (milestoneMapping.PlayableCharacter != this)
             return;
-
-        GO.SetActive(true);
 
         // Reset position and rotation if tour is completed
         if (milestoneMapping.Tour != null &&
