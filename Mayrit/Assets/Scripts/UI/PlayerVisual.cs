@@ -95,7 +95,6 @@ public class PlayerVisual : Billboard
 
     void OnPlayerButtonClick(ClickEvent evt)
     {
-        Debug.Log("PlayerVisual: Player button clicked.");
         _cameraManager.SwitchToOrbitalCamera(_playableCharacter.GetComponent<SelectableObject>());
         _soundManager.PlayButtonClickSFX();
     }
