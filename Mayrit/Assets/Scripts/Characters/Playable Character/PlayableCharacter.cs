@@ -78,7 +78,7 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
         // Subscribe to events
         _uiManager.PlayCharacterClickedEvent += OnPlayCharacterClicked;
         _uiManager.OnContextualPanelHiddenEvent += OnContextualPanelHidden;
-        _tourManager.TourPOIVisitedEvent += OnTourPOIVisited;
+        _tourManager.POIVisitedEvent += OnTourPOIVisited;
         _cameraManager.CameraStateChangedEvent += OnCameraStateChanged;
     }
 
@@ -87,7 +87,7 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
         // Unsubscribe from events
         _uiManager.PlayCharacterClickedEvent -= OnPlayCharacterClicked;
         _uiManager.OnContextualPanelHiddenEvent -= OnContextualPanelHidden;
-        _tourManager.TourPOIVisitedEvent -= OnTourPOIVisited;
+        _tourManager.POIVisitedEvent -= OnTourPOIVisited;
         _cameraManager.CameraStateChangedEvent -= OnCameraStateChanged;
     }
 

@@ -112,7 +112,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         _uiManager.OnContextualPanelHiddenEvent += OnContextualPanelHidden;
         _uiManager.PlayCharacterClickedEvent += OnPlayCharacterClicked;
         _uiManager.EdgeScrollingToggledEvent += OnEdgeScrollingToggled;
-        _tourManager.TourPOIVisitedEvent += OnTourPOIVisited;
+        _tourManager.POIVisitedEvent += OnTourPOIVisited;
 
         // Set camera target at min height
         CinemachineOrbitalFollow _orbitalFollow = _spectatorCamera.GetComponent<CinemachineOrbitalFollow>();
@@ -138,7 +138,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         _thirdPersonState.ExitThirdPersonCameraEvent -= OnExitThirdPersonCamera;
         _uiManager.OnContextualPanelHiddenEvent -= OnContextualPanelHidden;
         _uiManager.PlayCharacterClickedEvent -= OnPlayCharacterClicked;
-        _tourManager.TourPOIVisitedEvent -= OnTourPOIVisited;
+        _tourManager.POIVisitedEvent -= OnTourPOIVisited;
     }
     #endregion
 

@@ -107,6 +107,9 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
+            <ui:VisualElement name="OnTourEnd" style="flex-grow: 1; justify-content: space-around; position: absolute; top: 10%; left: 20%; right: 20%; bottom: 60%; display: none;">
+                <ui:Label text="&#161;Tour completado!" class="header" style="-unity-text-align: upper-center;"/>
+            </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="ContextualPanel" style="width: 35%; background-color: rgba(0, 0, 0, 0.78); border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; display: none; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; position: absolute; top: 0; right: 0; bottom: 0; flex-grow: 1; justify-content: space-between; visibility: visible;">
             <ui:VisualElement name="InformationArea" style="flex-grow: 1;">

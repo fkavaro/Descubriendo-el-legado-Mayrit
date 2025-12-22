@@ -196,7 +196,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
             _spectatorHUDState.ContextualPanelHiddenEvent += OnContextualPanelHidden;
             _spectatorHUDState.PlayCharacterEvent += OnPlayCharacterClicked;
             _spectatorHUDState.OnModernSuperpositionEvent += OnModernSuperpositionToggled;
-            _tourManager.TourPOIVisitedEvent += OnTourPOIVisited;
+            _tourManager.POIVisitedEvent += OnTourPOIVisited;
         }
         else if (SceneManager.GetActiveScene().name == "MainMenuScene")
         {
@@ -204,7 +204,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
 
             // Unsubscribe from events
             if (_tourManager != null)
-                _tourManager.TourPOIVisitedEvent -= OnTourPOIVisited;
+                _tourManager.POIVisitedEvent -= OnTourPOIVisited;
 
             _playerHUDState.ContextualPanelHiddenEvent -= OnContextualPanelHidden;
             _spectatorHUDState.ContextualPanelHiddenEvent -= OnContextualPanelHidden;

@@ -4,13 +4,17 @@ using UnityEngine.UIElements;
 public class PlayerHUD_UIState : AHUDState
 {
     #region  PROPERTIES
+    Tour _currentTour;
+
     Button _pauseButton;
-    VisualElement _tourArea;
+    VisualElement _tourArea,
+        _onTourEndVisual;
     Label _tourName,
         _tourDescription;
 
     // Dependency Injection
     TourManager _tourManager;
+    ProgressManager _progressManager;
     #endregion
 
     #region CONSTRUCTOR
@@ -27,6 +31,7 @@ public class PlayerHUD_UIState : AHUDState
         _tourArea = _screen.Q<VisualElement>("TourArea");
         _tourName = _tourArea.Q<Label>("Name");
         _tourDescription = _tourArea.Q<Label>("Description");
+        _onTourEndVisual = _screen.Q<VisualElement>("OnTourEnd");
 
         if (_pauseButton == null)
             Debug.LogWarning("_pauseButton not found");
@@ -36,6 +41,8 @@ public class PlayerHUD_UIState : AHUDState
             Debug.LogWarning("_tourName not found");
         if (_tourDescription == null)
             Debug.LogWarning("_tourDescription not found");
+        if (_onTourEndVisual == null)
+            Debug.LogWarning("_onTourEndVisual not found");
     }
 
     protected override void RegisterUICallbacksOnAwake()
@@ -48,23 +55,37 @@ public class PlayerHUD_UIState : AHUDState
         base.GetServicesDependenciesOnStart();
 
         _tourManager = ServiceLocator.Instance.Get<TourManager>();
+        _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
+    }
+
+    protected override void SubscribeToServicesEventsOnStart()
+    {
+        base.SubscribeToServicesEventsOnStart();
+        _tourManager.TourCompletedEvent += OnTourEnded;
+        _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
     }
 
     public override void StartState()
     {
         base.StartState();
 
-        // Overwrite HUD info with current tour info
-        Tour currentTour = _tourManager.CurrentTour;
+        if (_currentTour == null)
+            _currentTour = _tourManager.CurrentTour;
 
-        if (currentTour != null)
+        if (_currentTour.IsCompleted)
         {
-            _tourName.text = currentTour.Data.Header;
-            _tourDescription.text = currentTour.Data.SubHeader;
+            _tourArea.style.display = DisplayStyle.None;
+            _onTourEndVisual.style.display = DisplayStyle.Flex;
         }
-
-        if (!_wasContextualPanelShown)
-            _tourArea.style.display = DisplayStyle.Flex;
+        else
+        {
+            if (!_wasContextualPanelShown)
+            {
+                _onTourEndVisual.style.display = DisplayStyle.None;
+                _tourArea.style.display = DisplayStyle.Flex;
+                UpdateTourInfo();
+            }
+        }
     }
     #endregion
 
@@ -72,11 +93,41 @@ public class PlayerHUD_UIState : AHUDState
     protected override void OnContextualPanelShown()
     {
         _tourArea.style.display = DisplayStyle.None;
+        _onTourEndVisual.style.display = DisplayStyle.None;
     }
 
     protected override void OnContextualPanelHidden()
     {
-        _tourArea.style.display = DisplayStyle.Flex;
+        if (_currentTour != null && _currentTour.IsCompleted)
+            _onTourEndVisual.style.display = DisplayStyle.Flex;
+        else
+            _tourArea.style.display = DisplayStyle.Flex;
+    }
+    #endregion
+
+    void UpdateTourInfo()
+    {
+        if (_currentTour == null)
+        {
+            Debug.LogWarning($"{_stateName}: CurrentTour is null on UpdateTourInfo");
+            return;
+        }
+
+        _tourName.text = _currentTour.Data.Header;
+        _tourDescription.text = _currentTour.Data.SubHeader;
+    }
+
+    #region CALLBACK METHODS
+    void OnMilestoneChanged(MilestoneMapping mapping)
+    {
+        _currentTour = _tourManager.CurrentTour;
+        UpdateTourInfo();
+    }
+
+    void OnTourEnded(Tour tour)
+    {
+        _tourArea.style.display = DisplayStyle.None;
+        _onTourEndVisual.style.display = DisplayStyle.Flex;
     }
     #endregion
 }

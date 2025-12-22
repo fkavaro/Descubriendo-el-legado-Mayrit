@@ -27,9 +27,9 @@ public class TourManager : MonoBehaviour
     #endregion
 
     #region INTERNAL PROPERTIES
-    public event Action<PointOfInterest> TourPOIVisitedEvent;
-    public event Action<PointOfInterest> OnTourNextPOIChangeEvent;
-    public event Action<Tour> OnTourCompletedEvent;
+    public event Action<PointOfInterest> POIVisitedEvent;
+    public event Action<PointOfInterest> NextPOIChangeEvent;
+    public event Action<Tour> TourCompletedEvent;
 
     PathVisualizer _pathVisualizer;
 
@@ -124,12 +124,12 @@ public class TourManager : MonoBehaviour
 
     void OnTourPOIVisited(PointOfInterest poi)
     {
-        TourPOIVisitedEvent?.Invoke(poi);
+        POIVisitedEvent?.Invoke(poi);
     }
 
     void OnTourNextPOIChange(PointOfInterest poi)
     {
-        OnTourNextPOIChangeEvent?.Invoke(poi);
+        NextPOIChangeEvent?.Invoke(poi);
         _nextPOI = poi;
     }
 
@@ -138,7 +138,7 @@ public class TourManager : MonoBehaviour
         // Invoke completed event if tour is completed
         if (_currentTour != null && _currentTour.IsCompleted)
         {
-            OnTourCompletedEvent?.Invoke(_currentTour);
+            TourCompletedEvent?.Invoke(_currentTour);
             _soundManager.PlayTourEndSFX();
             DetachFromCurrentTour();
         }
