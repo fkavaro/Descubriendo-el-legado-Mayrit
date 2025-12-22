@@ -3,9 +3,7 @@ using UnityEngine;
 
 public class ModernSuperposition : MonoBehaviour
 {
-    [Header("Settings")]
-    public bool _isActive = false;
-
+    #region PROPERTY HELPERS
     bool IsActive
     {
         get { return _isActive; }
@@ -15,31 +13,49 @@ public class ModernSuperposition : MonoBehaviour
             SetChildrenActive(_isActive);
         }
     }
+    #endregion
+
+    #region EDITOR PROPERTIES
+    [Header("Settings")]
+    public bool _isActive = false;
+
+    // Dependency Injection
+    CameraManager _cameraManager;
+    UIManager _uiManager;
+    #endregion
+
+    #region LIFE CYCLE
+    void Awake()
+    {
+        // Get dependencies from ServiceLocator
+        _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
+        _uiManager = ServiceLocator.Instance.Get<UIManager>();
+    }
 
     void Start()
     {
-        // To know when to deactivate the mode if the camera changes to 3rd person
-        CameraManager.Instance.OnCameraStateChanged += CheckCameraState;
-
-        // To know when the button is pressed in the HUD
-        SpectatorHUD_UIState spectatorHUD = UIManager.Instance._spectatorHUDState;
-        if (spectatorHUD != null)
-            spectatorHUD.OnModernSuperpositionToggled += ToggleMode;
+        // Subscribe to events
+        _cameraManager.CameraStateChangedEvent += OnCameraStateChanged;
+        _uiManager.ModernSuperpositionToggledEvent += ToggleMode;
     }
 
     void OnValidate()
     {
         SetChildrenActive(IsActive);
     }
+    #endregion 
 
+    #region PUBLIC METHODS
     public void ToggleMode()
     {
         IsActive = !IsActive;
     }
+    #endregion
 
-    void CheckCameraState()
+    #region PRIVATE METHODS
+    void OnCameraStateChanged()
     {
-        if (CameraManager.Instance._thirdPersonState.IsCurrentState())
+        if (!_cameraManager.IsInSpectatorState)
             IsActive = false;
     }
 
@@ -48,4 +64,5 @@ public class ModernSuperposition : MonoBehaviour
         foreach (Transform child in transform)
             child.gameObject.SetActive(isActive);
     }
+    #endregion
 }

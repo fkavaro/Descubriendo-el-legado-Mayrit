@@ -10,24 +10,21 @@ public abstract class AAssignedBuilding : ABuilding
     [SerializeField]
     protected List<Villager> _assignedVillagers = new();
     public bool AtMaxCapacity => _assignedVillagers.Count >= _capacity;
+    public bool IsEmpty => _assignedVillagers.Count == 0;
+    #endregion
+
+    #region INTERNAL PROPERTIES
+    protected NPCPoolManager _npcPoolManager;
     #endregion
 
     #region ABSTRACT METHODS
-    public abstract void RegisterBuilding();
-    public abstract void UnregisterBuilding();
-    public abstract void Reassign(List<Villager> residents);
+    public abstract void Reassign(List<Villager> assigned);
     #endregion
 
-    #region MONOBEHAVIOUR
-    public virtual void OnEnable()
+    #region LIFE CYCLE
+    public override void OnDisable()
     {
-        RegisterBuilding();
-    }
-
-    public virtual void OnDisable()
-    {
-        var tm = TownManager.ExistingInstance;
-        if (tm != null)
+        if (_townManager != null)
         {
             UnregisterBuilding();
 
@@ -42,7 +39,7 @@ public abstract class AAssignedBuilding : ABuilding
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogError($"House.OnDisable: Reassign failed: {ex}");
+                    Debug.LogError($"AAssignedBuilding.OnDisable: Reassign failed: {ex}");
                 }
 
                 _assignedVillagers.Clear();
@@ -52,16 +49,17 @@ public abstract class AAssignedBuilding : ABuilding
         else
         {
             // Return assigned to pool if possible, then clear.
-            var pool = NPCPoolManager.ExistingInstance;
+            _npcPoolManager = ServiceLocator.Instance.Get<NPCPoolManager>();
+
             if (_assignedVillagers.Count > 0)
             {
-                if (pool != null)
+                if (_npcPoolManager != null)
                 {
                     // Iterate over a snapshot to avoid collection-modified exceptions:
                     var snapshot = _assignedVillagers.ToArray();
-                    foreach (var v in snapshot)
+                    foreach (var villager in snapshot)
                     {
-                        try { pool.ReturnVillagerToPool(v); } catch { }
+                        try { _npcPoolManager.ReturnVillagerToPool(villager); } catch { }
                     }
                 }
                 _assignedVillagers.Clear();
@@ -85,6 +83,11 @@ public abstract class AAssignedBuilding : ABuilding
     {
         if (_assignedVillagers.Contains(villager))
             _assignedVillagers.Remove(villager);
+    }
+
+    public virtual void IncreaseCapacity(int increase)
+    {
+        _capacity += increase;
     }
     #endregion
 }

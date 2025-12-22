@@ -20,7 +20,7 @@ public class Node : ABehaviourSystem
     public readonly int _priority;
 
     public readonly List<Node> _children = new();
-    protected int _currentChildId;
+    protected int _currentChildIdx;
     public Status _status;
     #endregion
 
@@ -35,28 +35,27 @@ public class Node : ABehaviourSystem
 
     #region INHERITED METHODS  
     /// <summary>
-    /// Resets all children nodes.
+    /// Resets current node index and all its children to their initial state
     /// </summary>
     public override void Reset()
     {
-        _currentChildId = 0;
-        foreach (var child in _children)
-        {
+        _currentChildIdx = 0;
+
+        foreach (Node child in _children)
             child.Reset();
-        }
     }
 
     /// <summary>
     /// Debugs the current node of the behaviour tree.
     /// </summary>
-    protected override void DebugDecision()
+    public override void DebugDecision()
     {
-        if (_currentChildId < _children.Count)
-            _children[_currentChildId].DebugDecision();
+        if (_currentChildIdx < _children.Count)
+            _children[_currentChildIdx].DebugDecision();
     }
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLE
     public override void Update()
     {
 
@@ -82,7 +81,7 @@ public class Node : ABehaviourSystem
     #region TO BE IMPLEMENTED METHODS
     public virtual Status UpdateNode()
     {
-        return _children[_currentChildId].UpdateNode();
+        return _children[_currentChildIdx].UpdateNode();
     }
     #endregion
 }

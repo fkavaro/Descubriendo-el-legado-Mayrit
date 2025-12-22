@@ -8,7 +8,18 @@ public class LandmarkVisual : MonoBehaviour
     Label _nameLabel;
     Button _nameButton;
 
-    public AInformationSO _information;
+    public DataSO _information;
+
+    // Dependency Injection
+    UIManager _uiManager;
+    SoundManager _soundManager;
+
+    void Awake()
+    {
+        // Get dependency from Service Locator
+        _uiManager = ServiceLocator.Instance.Get<UIManager>();
+        _soundManager = ServiceLocator.Instance.Get<SoundManager>();
+    }
 
     void OnEnable()
     {
@@ -40,7 +51,7 @@ public class LandmarkVisual : MonoBehaviour
 
     void OnNameButtonClick(ClickEvent evt)
     {
-        // Open contextual panel with landmark information
-        UIManager.Instance._spectatorHUDState.ShowContextualPanel(_information);
+        _uiManager.ShowContextualPanel(_information);
+        _soundManager.PlayButtonClickSFX();
     }
 }

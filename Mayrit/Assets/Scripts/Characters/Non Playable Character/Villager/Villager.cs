@@ -3,20 +3,28 @@ using UnityEngine;
 
 public class Villager : ANPC<BehaviourTree>
 {
+    public Stall MarketStall
+    {
+        get => _marketStall;
+        set => _marketStall = value;
+    }
+
     #region EDIROR PROPERTIES
-    [Header("Villager Properties")]
-    public GameObject _model;
-    public House _home;
-    public Workplace _workplace;
-    public Sanctuary _sanctuary;
+    [Header("Villager")]
+    [SerializeField] protected House _home;
+    [SerializeField] protected Workplace _workplace;
+    [SerializeField] protected Sanctuary _sanctuary;
+    [SerializeField] protected Market _market;
+    [SerializeField] protected Stall _marketStall;
     #endregion
 
-    #region PROPERTIES
+    #region INTERNAL PROPERTIES
     BehaviourTree _villagerBT;
+    NPCPoolManager _npcPoolManager;
     #endregion
 
     #region INHERITED
-    public override BehaviourTree InitializeBehaviourSystem()
+    public override BehaviourTree DefineBehaviourSystemOnAwake()
     {
         // Get entrance spots
         Spot sanctuaryEntrance = null;
@@ -27,72 +35,83 @@ public class Villager : ANPC<BehaviourTree>
         if (_workplace != null)
             workplaceEntrance = _workplace.GetRandomWorkingSpot();
 
-        Market market = null;
-        if (TownManager.ExistingInstance != null)
-            market = TownManager.ExistingInstance.GetRandomMarket();
-
         Spot homeEntrance = null;
         if (_home != null)
             homeEntrance = _home.GetRandomAccessSpot();
 
-        // Interact sequence
-        ConditionStrategy isInStreet = new(this, IsInStreet);
-        ConditionStrategy isOtherNearby = new(this, IsOtherNearby);
-        ConditionStrategy isEnoughSinceLastInteraction = new(this, IsEnoughTimeSinceLastInteraction);
-        InteractStrategy interactStrategy = new(this);
+        // Conversation sequence
+        ConditionStrategy canTalkStrategy = new(() => CanTalk);
+        ConditionStrategy isFollowingConversationStrategy = new(IsFollowingConversation);
+        GoToMiddlePointStrategy<Villager> goToMiddlePointStrategyForFollower = new(this);
+        GoToMiddlePointStrategy<Villager> goToMiddlePointStrategyForInitiator = new(this);
+        ConversationFollowerStrategy<Villager> followConversationStrategy = new(this);
+        ConditionStrategy canSomeoneNearbyTalkStrategy = new(CanSomeoneNearbyTalk);
+        ConversationInitiatorStrategy<Villager> initiateConversationStrategy = new(this);
 
-        SequenceNode interactSequence = new(this);
-        LeafNode isInStreetLeaf = new(this, "IsInStreet?", isInStreet);
-        LeafNode isOtherNearbyLeaf = new(this, "IsOtherNearby?", isOtherNearby);
-        LeafNode isEnoughSinceLastInteractionLeaf = new(this, "IsEnoughSinceLastInteraction?", isEnoughSinceLastInteraction);
-        LeafNode talkLeaf = new(this, "Talking", interactStrategy);
-        interactSequence.AddChild(isInStreetLeaf);
-        interactSequence.AddChild(isOtherNearbyLeaf);
-        interactSequence.AddChild(isEnoughSinceLastInteractionLeaf);
-        interactSequence.AddChild(talkLeaf);
+        CooldownDecorator conversationCooldown = new(this, _conversationCooldown);
+        SequenceNode conversationSequence = new(this);
+        SelectorNode roleSelector = new(this);
+        SequenceNode followConversationSequence = new(this);
+        SequenceNode initiateConversationSequence = new(this);
+
+        LeafNode canTalkLeaf = new(this, "Can talk?", canTalkStrategy);
+        LeafNode isBeingTalkedToLeaf = new(this, "Is following conversation?", isFollowingConversationStrategy);
+        LeafNode goToMiddlePointLeafForFollower = new(this, "Going to middle point", goToMiddlePointStrategyForFollower);
+        LeafNode goToMiddlePointLeafForInitiator = new(this, "Going to middle point", goToMiddlePointStrategyForInitiator);
+        LeafNode followConversationLeaf = new(this, "Talking", followConversationStrategy);
+        LeafNode isOtherNearbyLeaf = new(this, "Can someone nearby talk?", canSomeoneNearbyTalkStrategy);
+        LeafNode initiateConversationLeafCheck = new(this, "Talking", initiateConversationStrategy);
+
+        conversationCooldown.AddChild(conversationSequence);
+        conversationSequence.AddChild(canTalkLeaf);
+        conversationSequence.AddChild(roleSelector);
+        roleSelector.AddChild(followConversationSequence);
+        followConversationSequence.AddChild(isBeingTalkedToLeaf);
+        followConversationSequence.AddChild(goToMiddlePointLeafForFollower);
+        followConversationSequence.AddChild(followConversationLeaf);
+        roleSelector.AddChild(initiateConversationSequence);
+        initiateConversationSequence.AddChild(isOtherNearbyLeaf);
+        initiateConversationSequence.AddChild(goToMiddlePointLeafForInitiator);
+        initiateConversationSequence.AddChild(initiateConversationLeafCheck);
 
         // Routine sequence
         SequenceNode routineSequence = new(this);
 
         if (sanctuaryEntrance != null)
         {
-            GoToDestinationStrategy goToSanctuaryStrategy = new(this, sanctuaryEntrance);
-            InInteriorStrategy prayingStrategy = new(this, _model);
+            GoToDestinationStrategy<Villager> goToSanctuaryStrategy = new(this, sanctuaryEntrance);
+            InInteriorStrategy<Villager> prayingStrategy = new(this);
 
             SequenceNode prayingSequence = new(this);
-            LeafNode goToSanctuaryLeaf = new(this, "GoingToSanctuary", goToSanctuaryStrategy);
+            LeafNode goToSanctuaryLeaf = new(this, "Going to sanctuary", goToSanctuaryStrategy);
             LeafNode prayLeaf = new(this, "Praying", prayingStrategy);
             prayingSequence.AddChild(goToSanctuaryLeaf);
             prayingSequence.AddChild(prayLeaf);
 
             routineSequence.AddChild(prayingSequence);
         }
-        else
-            Debug.LogWarning("Villager " + name + " doesn't pray.");
 
         if (workplaceEntrance != null)
         {
-            GoToDestinationStrategy goToWorkStrategy = new(this, workplaceEntrance, true);
-            Working_VillagerStrategy workingStrategy = new(this);
+            GoToDestinationStrategy<Villager> goToWorkStrategy = new(this, workplaceEntrance, true);
+            Working_VillagerStrategy workingStrategy = new(this, _workplace, 60, 180);
 
             SequenceNode workingSequence = new(this);
-            LeafNode goToWorkLeaf = new(this, "GoingToWork", goToWorkStrategy);
+            LeafNode goToWorkLeaf = new(this, "Going to work", goToWorkStrategy);
             LeafNode workLeaf = new(this, "Working", workingStrategy);
             workingSequence.AddChild(goToWorkLeaf);
             workingSequence.AddChild(workLeaf);
 
             routineSequence.AddChild(workingSequence);
         }
-        else
-            Debug.LogWarning("Villager " + name + " doesn't have a job.");
 
-        if (market != null)
+        if (_market != null)
         {
-            GoToMarketStrategy goToMarketStrategy = new(this, market);
-            Shopping_VillagerStrategy shoppingStrategy = new(this);
+            GoToMarket_VillagerStrategy goToMarketStrategy = new(this, _market);
+            Shopping_VillagerStrategy shoppingStrategy = new(this, 15, 45);
 
             SequenceNode shoppingSequence = new(this);
-            LeafNode goToMarketStallLeaf = new(this, "GoingToMarket", goToMarketStrategy);
+            LeafNode goToMarketStallLeaf = new(this, "Going to market", goToMarketStrategy);
             LeafNode shopLeaf = new(this, "Shopping", shoppingStrategy);
             shoppingSequence.AddChild(goToMarketStallLeaf);
             shoppingSequence.AddChild(shopLeaf);
@@ -100,36 +119,46 @@ public class Villager : ANPC<BehaviourTree>
             int randomRepetitions = UnityEngine.Random.Range(2, 5);
             RepetitionNode shoppingRepetition = new(this, randomRepetitions, shoppingSequence);
 
-            routineSequence.AddChild(shoppingRepetition);
+            // So that in case of failure (e.g., market closed), routine continues
+            SuccederNode shoppingSucceeder = new(this);
+            shoppingSucceeder.AddChild(shoppingRepetition);
+
+            routineSequence.AddChild(shoppingSucceeder);
         }
-        else
-            Debug.LogWarning("Villager " + name + " doesn't shop.");
 
         if (homeEntrance != null)
         {
-            GoToDestinationStrategy goToHomeStrategy = new(this, homeEntrance);
+            GoToDestinationStrategy<Villager> goToHomeStrategy = new(this, homeEntrance);
             AtHome_VillagerStrategy atHomeStrategy = new(this);
 
             SequenceNode atHomeSequence = new(this);
-            LeafNode goHomeLeaf = new(this, "GoingHome", goToHomeStrategy);
+            LeafNode goHomeLeaf = new(this, "Going home", goToHomeStrategy);
             LeafNode restLeaf = new(this, "Resting", atHomeStrategy);
             atHomeSequence.AddChild(goHomeLeaf);
             atHomeSequence.AddChild(restLeaf);
 
             routineSequence.AddChild(atHomeSequence);
         }
-        else
-            Debug.LogWarning("Villager " + name + " doesn't rest.");
 
         // Behaviour sequence
         SelectorNode behaviourSelector = new(this);
-        behaviourSelector.AddChild(interactSequence);
+        behaviourSelector.AddChild(conversationCooldown); // First: higher priority
         behaviourSelector.AddChild(routineSequence);
 
         InfiniteLoopNode infiniteLoop = new(this, behaviourSelector);
         _villagerBT = new(this, infiniteLoop);
 
         return _villagerBT;
+    }
+    #endregion
+
+    #region LIFE CYCLE
+    protected override void Awake()
+    {
+        base.Awake();
+
+        // Get dependency from Service Locator
+        _npcPoolManager = ServiceLocator.Instance.Get<NPCPoolManager>();
     }
     #endregion
 
@@ -166,6 +195,12 @@ public class Villager : ANPC<BehaviourTree>
             _sanctuary = sanctuary;
     }
 
+    public void AssignMarket(Market randomMarket)
+    {
+        if (randomMarket != null)
+            _market = randomMarket;
+    }
+
     public void OnReleasedFromPool()
     {
         gameObject.SetActive(false);
@@ -174,27 +209,66 @@ public class Villager : ANPC<BehaviourTree>
         if (_home != null)
             _home.RemoveAssigned(this);
 
+        if (_workplace != null)
+            _workplace.RemoveAssigned(this);
+
         _home = null;
+        _workplace = null;
+        _sanctuary = null;
+        _market = null;
     }
     #endregion
 
-    #region PRIVATE METHODS
-    private bool IsEnoughTimeSinceLastInteraction()
+    #region CONDITIONAL STRATEGIES METHODS
+    bool IsFollowingConversation()
     {
-        // TODO
-        return false;
+        return _conversationRole.Equals(INPC.RoleInConversation.Follower);
     }
 
-    private bool IsOtherNearby()
+    bool CanSomeoneNearbyTalk()
     {
-        // TODO
-        return false;
-    }
+        // Return if already talking
+        if (!_conversationRole.Equals(INPC.RoleInConversation.None))
+        {
+            if (DebugMode)
+                Debug.LogWarning($"[CanSomeoneNearbyTalk()] {Name} cannot look for someone to talk to because is already in conversation.");
 
-    private bool IsInStreet()
-    {
-        // TODO
-        return false;
+            return false;
+        }
+
+        // Get a villager in the interaction range from this position
+        Villager someoneNearby = _npcPoolManager.GetAnyNearbyVillager(transform.position, _interactionRange, this);
+
+        // If no candidate found, return false
+        if (someoneNearby == null)
+        {
+            // if (DebugMode)
+            //     Debug.Log($"[CanSomeoneNearbyTalk()] {Name} found no one nearby to talk to.");
+            return false;
+        }
+
+        // Conversation is accepted by the target
+        if (someoneNearby.CanAcceptConversation(this))
+        {
+            // Set other as current interaction target
+            _currentConversationTarget = someoneNearby;
+            _currentConversationTargetGO = someoneNearby.GO;
+
+            // This is the initiator
+            _conversationRole = INPC.RoleInConversation.Initiator;
+
+            if (DebugMode)
+                Debug.Log($"[CanSomeoneNearbyTalk()] {Name} can talk to {_currentConversationTarget.Name}.");
+
+            return true;
+        }
+        // Conversation is denied
+        else
+        {
+            // if (DebugMode)
+            //     Debug.Log($"[CanSomeoneNearbyTalk()] {Name} found {someoneNearby.Name} to talk to, but the conversation was denied.");
+            return false;
+        }
     }
     #endregion
 }

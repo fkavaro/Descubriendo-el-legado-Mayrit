@@ -1,17 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
 /// Abstract class for a state machine that handles the states of a controller.
 /// </summary>
-public abstract class AStateMachine<TStateMachineType> : ABehaviourSystem
-where TStateMachineType : AStateMachine<TStateMachineType>
+public abstract class AStateMachine<StateType> : ABehaviourSystem
+where StateType : AState
 {
     #region PROPERTIES
-    public AState<TStateMachineType> CurrentState => _currentState;
-    protected AState<TStateMachineType> _currentState, _initialState;
-    protected List<AState<TStateMachineType>> _statesSequence = new();
+    public StateType CurrentState => _currentState;
+    protected StateType _currentState, _initialState;
+    protected List<StateType> _statesSequence = new();
+
+    public event Action OnStateSwitchEvent;
     #endregion
 
     #region CONSTRUCTOR
@@ -20,7 +23,10 @@ where TStateMachineType : AStateMachine<TStateMachineType>
     #endregion
 
     #region TO BE IMPLEMENTED METHODS
-    public abstract void SwitchState(AState<TStateMachineType> state);
+    public virtual void SwitchState(StateType newState)
+    {
+        OnStateSwitchEvent?.Invoke();
+    }
     #endregion
 
     #region INHERITED METHODS
@@ -35,26 +41,26 @@ where TStateMachineType : AStateMachine<TStateMachineType>
     /// <summary>
     /// Debugs the current state of the state machine.
     /// </summary>
-    protected override void DebugDecision()
+    public override void DebugDecision()
     {
         _behaviourEntity.CurrentActionInfo = _currentState.StateName;
     }
     #endregion
 
     #region PUBLIC METHODS
-    public virtual void SetInitialState(AState<TStateMachineType> state)
+    public virtual void SetInitialState(StateType state)
     {
         if (state == _currentState) return;
 
         _initialState = state;
     }
 
-    public bool IsCurrentState(AState<TStateMachineType> state)
+    public bool IsCurrentState(StateType state)
     {
-        return _currentState == state;
+        return _currentState == state && _currentState != null;
     }
 
-    public virtual void ForceState(AState<TStateMachineType> newState)
+    public virtual void ForceState(StateType newState)
     {
         if (newState == _currentState) return;
 
@@ -64,7 +70,31 @@ where TStateMachineType : AStateMachine<TStateMachineType>
         _currentState.StartState();
     }
 
-    public void AddStateToSequence(AState<TStateMachineType> state)
+    /// <summary>
+    /// Coroutine to wait for a random amount of time before switching to the next state.
+    /// </summary>
+    public IEnumerator SwitchStateAfterRandomTime(StateType nextState, int min = 5, int max = 21)
+    {
+        int waitTime = UnityEngine.Random.Range(min, max);
+        return SwitchStateAfterCertainTime(nextState, waitTime);
+    }
+
+    /// <summary>
+    /// Coroutine to wait for a specified amount of time before switching to the next state.
+    /// </summary>
+    public virtual IEnumerator SwitchStateAfterCertainTime(StateType nextState, float waitTime)
+    {
+        _behaviourEntity.IsExecutionPaused = true;
+
+        yield return new WaitForSeconds(waitTime);
+
+        SwitchState(nextState);
+        _behaviourEntity.IsExecutionPaused = false;
+    }
+    #endregion
+
+    #region STATE SEQUENCE METHODS
+    public void AddStateToSequence(StateType state)
     {
         if (_statesSequence.Contains(state)) return;
         _statesSequence.Add(state);
@@ -83,7 +113,7 @@ where TStateMachineType : AStateMachine<TStateMachineType>
         if (currentIndex <= 0) // First state
             return false;
 
-        AState<TStateMachineType> previousState = _statesSequence[currentIndex - 1];
+        StateType previousState = _statesSequence[currentIndex - 1];
 
         SwitchState(previousState);
         return true;
@@ -101,15 +131,25 @@ where TStateMachineType : AStateMachine<TStateMachineType>
         if (currentIndex >= _statesSequence.Count - 1) // Last state
             return false;
 
-        AState<TStateMachineType> nextState = _statesSequence[currentIndex + 1];
+        StateType nextState = _statesSequence[currentIndex + 1];
 
         SwitchState(nextState);
         return true;
     }
+
+    public bool AtFistStateInSequence()
+    {
+        return _currentState == _statesSequence[0];
+    }
+
+    public bool AtLastStateInSequence()
+    {
+        return _currentState == _statesSequence[^1];
+    }
     #endregion
 
-    #region MONOBEHAVIOUR EQUIVALENTS: DERIVED TO CURRENT STATE
-    public override void Awake()
+    #region LIFE CYCLE: DERIVED TO CURRENT STATE
+    public override void Start()
     {
         if (_initialState == null)
         {
@@ -117,26 +157,19 @@ where TStateMachineType : AStateMachine<TStateMachineType>
             return;
         }
 
-        _currentState = _initialState;
-        DebugDecision();
-        _currentState?.AwakeState();
-    }
-
-    public override void Start()
-    {
-        _currentState?.StartState();
+        SwitchState(_initialState);
     }
 
     public override void Update()
     {
         if (!_behaviourEntity.IsExecutionPaused)
-            _currentState?.OnUpdateState();
+            _currentState?.UpdateState();
     }
 
     public override void LateUpdate()
     {
         if (!_behaviourEntity.IsExecutionPaused)
-            _currentState?.OnLateUpdateState();
+            _currentState?.LateUpdateState();
     }
 
     public override void OnCollisionEnter(Collision collision)

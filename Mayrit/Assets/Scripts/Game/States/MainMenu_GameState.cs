@@ -5,13 +5,15 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MainMenu_GameState : AState<FiniteStateMachine>
+public class MainMenu_GameState : AGameState
 {
-    public MainMenu_GameState(FiniteStateMachine stateMachine)
-    : base("Main menu", stateMachine) { }
+    public MainMenu_GameState()
+    : base("Main menu") { }
 
     public override void StartState()
     {
+        base.StartState();
+
         if (SceneManager.GetActiveScene().name != "MainMenuScene")
             SceneManager.LoadScene("MainMenuScene");
     }

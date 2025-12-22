@@ -1,5 +1,5 @@
 using System;
-using UnityEditor.Experimental.GraphView;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -7,351 +7,170 @@ using UnityEngine.AI;
 /// Abstract base class for NPC (Non-Playable Character).
 /// </summary>
 [RequireComponent(typeof(NavMeshAgent))]
-public abstract class ANPC<T> : ABehaviourEntity<T>, INPC
-where T : ABehaviourSystem
+public abstract class ANPC<BehaviourSystemType> : ACharacter<BehaviourSystemType>, INPC
+where BehaviourSystemType : ABehaviourSystem
 {
+    #region PROPERTIES HELPERS
+    public NavMeshAgent Agent => _agent;
+    public NPCMovementController MovementController => _movementController;
+    public float AvoidanceRadius => _avoidanceRadius;
+    public float MaxSamplingDistance => _maxSamplingDistance;
+    public int BaseAvoidancePriority => _baseAvoidancePriority;
+    public int AvoidancePriorityVariance => _avoidancePriorityVariance;
+    public float WalkSpeedVariance => _walkSpeedVariance;
+    public bool IsStopped
+    {
+        get => _isStopped;
+        set => _isStopped = value;
+    }
+    public string GivenName => _givenName;
+    public string FamilyName => _familyName;
+
+    public INPC.RoleInConversation ConversationRole
+    {
+        get => _conversationRole;
+        set => _conversationRole = value;
+    }
+
+    public bool CanTalk
+    {
+        get => _canTalk;
+        set => _canTalk = value;
+    }
+
+    public bool IsReadyToTalk
+    {
+        get => _isReadyToTalk;
+        set => _isReadyToTalk = value;
+    }
+    public INPC CurrentConversationTarget
+    {
+        get => _currentConversationTarget;
+        set => _currentConversationTarget = value;
+    }
+    public INPC LastConversationTarget
+    {
+        get => _lastConversationTarget;
+        set => _lastConversationTarget = value;
+    }
+    #endregion
+
     #region EDITOR PROPERTIES
-    [Header("Movement settings")]
-    [Tooltip("Walking speed of the agent")]
-    public float _walkSpeed = 2f;
-    [Tooltip("Sprinting speed of the agent")]
-    public float _sprintSpeed = 3f;
-    [Tooltip("Rotation speed of the agent")]
-    public float _rotationSpeed = 3f;
+    // Character information
+    [SerializeField] protected string _givenName = "";
+    [SerializeField] protected string _familyName = "";
+
+    [Header("Conversation")]
+    [Tooltip("Cooldown time between interactions with other NPCs")]
+    [SerializeField] protected float _conversationCooldown = 0f;
+    [SerializeField] protected INPC.RoleInConversation _conversationRole = INPC.RoleInConversation.None;
+    [SerializeField] protected GameObject _currentConversationTargetGO;
+    [SerializeField] protected GameObject _lastConversationTargetGO;
+
+    [Header("NavMeshAgent")]
     [Tooltip("Distance to which the agent will avoid other agents"), Range(0.5f, 2f)]
-    public float _avoidanceRadius = 0.7f;
+    [SerializeField] protected float _avoidanceRadius = 0.7f;
     [Tooltip("Max distance from the random point to a point on the navmesh, for target position sampling")]
-    public float _maxSamplingDistance = 1f;
-    [Tooltip("Distance to which it's considered as arrived at destination")]
-    public float _horizontalStoppingDistance = 0.3f;
-    [Tooltip("Vertical margin (Y axis) to consider arrival")]
-    public float _verticalStoppingDistance = 1.5f;
-    [Tooltip("Distance to which it's close to the destination")]
-    public float _nearDistance = 2f;
-    public bool _isStopped = false;
-
-    [Header("Avoidance")]
+    [SerializeField] protected float _maxSamplingDistance = 1f;
+    [SerializeField] protected bool _isStopped = false;
     [Tooltip("Base avoidance priority (0 = most important, 99 = least)")]
-    public int _baseAvoidancePriority = 50;
+    [SerializeField] protected int _baseAvoidancePriority = 50;
     [Tooltip("Random +/- variance applied to base avoidance priority")]
-    public int _avoidancePriorityVariance = 10;
-
-    [Header("Energy Properties")]
-    [Tooltip("Energy value"), Range(0, 100)]
-    public float _energy = 100;
-
-    [Header("Animation")]
-    public Animator _animator;
+    [SerializeField] protected int _avoidancePriorityVariance = 10;
+    [Tooltip("Random +/- variance applied to walk speed")]
+    [SerializeField] protected float _walkSpeedVariance = 0.5f;
     #endregion
 
     #region INTERNAL PROPERTIES
+    public event Action ConversationFinishedEvent;
+
+    NPCMovementController _movementController;
     NavMeshAgent _agent;
-    public AnimationController _animationController;
-    Spot _destinationSpot = null;
-    public NavMeshAgent Agent => _agent;
-    public AnimationController AnimationController => _animationController;
+    bool _canTalk = true;
+    bool _isReadyToTalk = false;
+    public INPC _currentConversationTarget, _lastConversationTarget;
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLE
     protected override void Awake()
     {
         base.Awake();
 
-        _animationController = new(this, this, _animator);
-
+        AnimationController = new(this, this, CharacterAnimator);
         _agent = GetComponent<NavMeshAgent>();
-        _agent.speed = _walkSpeed;
-        _agent.angularSpeed = _rotationSpeed * 100f;
-        _agent.stoppingDistance = _horizontalStoppingDistance;
-        _agent.radius = _avoidanceRadius;
-
-        // Assign a randomized avoidance priority to reduce symmetric deadlocks between agents
-        int offset = UnityEngine.Random.Range(-_avoidancePriorityVariance, _avoidancePriorityVariance + 1);
-        _agent.avoidancePriority = Mathf.Clamp(_baseAvoidancePriority + offset, 0, 99);
-
-        // Deactivate agent initially
-        _agent.enabled = false;
+        _movementController = new(this);
     }
 
     protected override void Update()
     {
         base.Update();
 
-        if (!_agent.isOnNavMesh)
-            return;
-
-        // Stop moving if execution is paused
-        if (IsExecutionPaused)
-            _agent.isStopped = true;
-        else
-        {
-            if (_isStopped)
-                _agent.isStopped = true;
-            else
-                _agent.isStopped = false;
-        }
-
-        if (_agent.speed != _walkSpeed)
-            _agent.speed = _walkSpeed;
+        _movementController.CheckBehaviourExecution();
     }
     #endregion
 
-    #region PUBLIC METHODS
-    public void SetDestination(Vector3 destinationPos)
+    #region CHARACTER INFORMATION METHODS
+    public void SetFullName(string given, string family)
     {
-        if (_agent.destination == destinationPos) return;
-
-        if (_destinationSpot != null)
+        _givenName = given;
+        _familyName = family;
+        try
         {
-            _destinationSpot.SetOccupied(false); // Leave free current target spot
-            _destinationSpot = null; // Reset the target spot
+            gameObject.name = string.IsNullOrEmpty(_familyName) ?
+                _givenName :
+                $"{_givenName} {_familyName}";
         }
-
-        _agent.updateRotation = true;
-        _agent.SetDestination(destinationPos);
-
-        if (HasArrivedAtDestination()) return;
-        else _animationController.ChangeToWalk();
-    }
-
-    public void SetDestinationSpot(Spot destinationSpot)
-    {
-        if (_destinationSpot == destinationSpot) return;
-
-        SetDestination(destinationSpot.transform.position); // Set the target position for the NavMeshAgent
-
-        _destinationSpot = destinationSpot;
-    }
-
-    public bool DestinationSpotIsOccupied()
-    {
-        if (_destinationSpot == null)
-            return false;
-        else
-            return _destinationSpot.IsOccupied();
-    }
-
-    public bool IsCloseTo(Vector3 destination, float checkingDistance = 2f, bool fixRotation = false)
-    {
-        if (checkingDistance <= _nearDistance)
-            checkingDistance = _nearDistance;
-
-        if (Vector3.Distance(_agent.transform.position, destination) < checkingDistance)
-        {
-            if (fixRotation)
-                _agent.transform.LookAt(destination);
-
-            return true;
-        }
-        else
-            return false;
-    }
-
-    public bool IsCloseTo(Spot spot, float checkingDistance = 2f, bool lookAtDestination = false)
-    {
-        return IsCloseTo(spot.transform.position, checkingDistance, lookAtDestination);
-    }
-
-    public bool IsCloseToDestination(float checkingDistance = 2f, bool fixRotation = false)
-    {
-        return IsCloseTo(_agent.destination, checkingDistance, fixRotation);
-    }
-
-    public bool HasArrivedAtDestination(bool fixRotation = false, bool fixPosition = false)
-    {
-        return HasArrivedAt(_agent.destination, fixRotation, fixPosition);
-    }
-
-    public bool HasArrivedAt(Spot spot, bool fixRotation = false, bool fixPosition = false)
-    {
-        return HasArrivedAt(spot.transform.position, fixRotation, fixPosition);
-    }
-
-    public bool HasArrivedAt(Vector3 destination, bool fixRotation = false, bool fixPosition = false)
-    {
-        // Compare horizontal (XZ) distance and allow a bigger vertical margin.
-        Vector3 agentPos = _agent.transform.position;
-        Vector3 destPos = destination;
-
-        // Horizontal distance on XZ plane
-        Vector2 agentXZ = new(agentPos.x, agentPos.z);
-        Vector2 destXZ = new(destPos.x, destPos.z);
-        float horizontalDist = Vector2.Distance(agentXZ, destXZ);
-
-        // Vertical distance on Y axis
-        float verticalDist = Mathf.Abs(agentPos.y - destPos.y);
-
-        // Check if within stopping distances
-        if (horizontalDist < _horizontalStoppingDistance && verticalDist < _verticalStoppingDistance)
-        {
-            if (_destinationSpot != null)
-            {
-                _destinationSpot.SetOccupied(true);
-
-                if (fixRotation)
-                    ForceRotation(_destinationSpot.DirectionVector); // Fix rotation to the target position
-                if (fixPosition)
-                    _agent.transform.position = _destinationSpot.transform.position;
-            }
-
-            return true;
-        }
-        else return false;
-    }
-
-    public void ForceRotation(Vector3 lookDirection)
-    {
-        if (_agent.isOnNavMesh)
-            _agent.updateRotation = false; // Disable automatic rotation
-
-        _agent.transform.rotation = Quaternion.Euler(lookDirection);
-    }
-    public void ForceRotation(Quaternion rotation)
-    {
-        if (_agent.isOnNavMesh)
-            _agent.updateRotation = false; // Disable automatic rotation
-
-        _agent.transform.rotation = rotation;
-    }
-
-    public bool CanReachPosition(Vector3 targetPos, out Vector3 reachablePos)
-    {
-        NavMeshHit hitLocation;
-
-        if (NavMesh.SamplePosition(targetPos, out hitLocation, _maxSamplingDistance, NavMesh.AllAreas))
-        {
-            reachablePos = hitLocation.position;
-            return true;
-        }
-        else
-        {
-            reachablePos = Vector3.zero;
-            return false;
-        }
-    }
-
-    public bool CalculateRandomDestination(int samplingIterations, float areaRadious, Transform centerPoint, out Vector3 destination)
-    {
-        // Repeat until a random position in the navmesh is found
-        for (int i = 0; i < samplingIterations; i++)
-        {
-            // Random point inside a circular area
-            Vector3 randomPoint = centerPoint.position + UnityEngine.Random.insideUnitSphere * areaRadious;
-
-            // Try to find a position in the navmesh area sampled from the random position
-            if (CanReachPosition(randomPoint, out destination))
-                return true;
-        }
-
-        // Hasn't found any reachable point in the navmesh
-        destination = Vector3.zero;
-        return false;
-    }
-
-    public void SetIfStopped(bool isStopped)
-    {
-        if (!_agent.isOnNavMesh)
-        {
-            Debug.LogError("IsStopped(): NavMeshAgent is not on a NavMesh.");
-            return;
-        }
-
-        _agent.isStopped = isStopped;
-    }
-
-    public bool IsPathPending()
-    {
-        return _agent.pathPending;
-    }
-
-    public Vector3 GetDestinationPos()
-    {
-        return _agent.destination;
-    }
-
-    public Spot GetDestinationSpot()
-    {
-        return _destinationSpot;
-    }
-
-    public bool IsDestination(Vector3 position)
-    {
-        return _agent.destination == position;
-    }
-
-    public bool IsDestination(Spot spot)
-    {
-        if (spot == null) return false;
-        return _destinationSpot == spot;
-    }
-
-    public void PlaceAt(Spot spot)
-    {
-        if (spot == null)
-        {
-            Debug.LogError("PlaceAt(): destinationSpot is null.");
-            return;
-        }
-
-        PlaceAt(spot.transform.position);
-
-        // Set spot as occupied
-        spot.SetOccupied(true);
-        _destinationSpot = spot;
-    }
-
-    public void PlaceAt(Vector3 position)
-    {
-        // Place at position
-        _agent.transform.position = position;
-
-        // Leave free current target spot
-        if (_destinationSpot != null)
-        {
-            _destinationSpot.SetOccupied(false);
-            _destinationSpot = null;
-        }
-    }
-
-    public void PlaceAtDestination()
-    {
-        PlaceAt(_agent.destination);
+        catch { }
     }
     #endregion
 
-    #region ENERGY METHODS
-    public void ReduceEnergy(float amount)
+    #region CONVERSATION METHODS
+    public virtual bool IsAvailableForConversation()
     {
-        if (_energy > 0)
-            _energy -= amount;
+        return _canTalk && CharacterModel.activeInHierarchy;
     }
 
-    public void IncreaseEnergy(float amount)
+    public virtual bool IsStillInConversation(INPC otherNpc)
     {
-        if (_energy < 100)
-            _energy += amount;
-
-        if (_energy > 100)
-            _energy = 100;
+        return IsAvailableForConversation()
+            && _currentConversationTarget == otherNpc
+            && Vector3.Distance(GO.transform.position, otherNpc.GO.transform.position) < 5f;
     }
 
-    public bool IsEnergyLow()
+    public virtual bool CanAcceptConversation(INPC initiator)
     {
-        if (_energy <= 0)
+        if (IsAvailableForConversation()
+            && _conversationRole.Equals(INPC.RoleInConversation.None)
+            && _lastConversationTarget != initiator)
         {
-            _energy = 0;
+            _currentConversationTargetGO = initiator.GO;
+            _currentConversationTarget = initiator;
+
+            // This is the follower
+            _conversationRole = INPC.RoleInConversation.Follower;
+
             return true;
         }
         else
-        {
             return false;
-        }
     }
 
-    public bool IsEnergyAtMax()
+    public virtual void Talk()
     {
-        return _energy >= 100;
+        AnimationController.ChangeToTalk();
+    }
+
+    public virtual void EndConversation()
+    {
+        ConversationFinishedEvent?.Invoke();
+
+        _isReadyToTalk = false;
+        _lastConversationTarget = _currentConversationTarget;
+        _lastConversationTargetGO = _currentConversationTargetGO;
+        _currentConversationTarget = null;
+        _currentConversationTargetGO = null;
+
+        _conversationRole = INPC.RoleInConversation.None;
     }
     #endregion
 }
-

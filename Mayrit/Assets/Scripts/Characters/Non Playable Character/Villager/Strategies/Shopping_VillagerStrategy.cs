@@ -1,59 +1,53 @@
 using UnityEngine;
 
-// TODO: implement with a repetition node in the behavior tree?
-public class Shopping_VillagerStrategy : ATimerStrategy
+public class Shopping_VillagerStrategy : ATimedNPCStrategy<Villager>
 {
-
-    public Shopping_VillagerStrategy(INPC npc, float min = 30, float max = 120)
+    public Shopping_VillagerStrategy(Villager npc, float min = 30, float max = 120)
     : base(npc, min, max)
     { }
 
-    // Start
+    public override Node.Status Start()
+    {
+        if (_npc.MarketStall == null)
+        {
+            if (_npc.DebugMode)
+                Debug.LogWarning($"[Shopping_VillagerStrategy.Start()] {_npc.Name} has no assigned stall to shop from. Ending shopping.");
 
+            return Node.Status.Failure;
+        }
 
-    // Update
+        _npc.AnimationController.ChangeToTalk();
+        return Node.Status.Success;
+    }
 
+    public override Node.Status Update()
+    {
+        // No assigned stall
+        if (_npc.MarketStall == null)
+        {
+            if (_npc.DebugMode)
+                Debug.LogWarning($"[Shopping_VillagerStrategy.Update()] {_npc.Name} has no assigned stall to shop from. Ending shopping.");
 
-    // /// <summary>
-    // /// Number of purchases to make during shopping.
-    // /// </summary>
-    // readonly int _puchasesNum;
-    // int _purchasesMade;
+            return Node.Status.Failure;
+        }
 
-    // Spot _stall;
+        // Stall is closed
+        if (!_npc.MarketStall.IsWorkplaceOpen)
+        {
+            if (_npc.DebugMode)
+                Debug.LogWarning($"[Shopping_VillagerStrategy.Update()] {_npc.Name} found that stall {_npc.MarketStall.name} is closed. Ending shopping.");
 
-    // public Shopping_VillagerStrategy(INPC npc, int minItems = 2, int maxItems = 10)
-    // : base(npc, minItems, maxItems)
-    // {
-    //     _puchasesNum = Random.Range(minItems, maxItems);
-    //     _purchasesMade = 0;
-    //     _stall = null;
-    // }
+            _npc.MarketStall = null;
 
-    // public override Node.Status Update()
-    // {
-    //     if (_purchasesMade < _puchasesNum)
-    //     {
-    //         if (_stall == null)
-    //         {
-    //             _stall = TownManager.Instance.GetRandomMarketStallSpot();
+            return Node.Status.Failure;
+        }
 
-    //             _npc.SetDestinationSpot(_stall);
+        return base.Update();
+    }
 
-    //             if (_npc.HasArrivedAt(_stall))
-    //             {
-    //                 _stall = null;
-    //                 _purchasesMade++;
-    //             }
-    //         }
-
-    //         return Node.Status.Running;
-    //     }
-    //     else
-    //     {
-    //         // Reset for next shopping trip
-    //         _purchasesMade = 0;
-    //         return Node.Status.Success;
-    //     }
-    // }
+    public override void OnTimerComplete()
+    {
+        // Finished shopping, clear shopping stall
+        _npc.MarketStall = null;
+    }
 }

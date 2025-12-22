@@ -6,6 +6,7 @@ using UnityEngine;
 /// <summary>
 /// SequenceNode is a composite node that executes its children in sequence.
 /// Like a logical AND operation, it will return success only if all its children return success.
+/// Continues to the next child if a child succeeds.
 /// </summary>
 public class SequenceNode : Node
 {
@@ -17,22 +18,24 @@ public class SequenceNode : Node
     #region INHERITED METHODS
     public override Status UpdateNode()
     {
-        // Execute every child
-        if (_currentChildId < _children.Count)
+        while (_currentChildIdx < _children.Count)
         {
-            switch (_children[_currentChildId].UpdateNode())
+            Status status = _children[_currentChildIdx].UpdateNode();
+
+            if (status == Status.Running)
+                return Status.Running;
+
+            if (status == Status.Failure)
             {
-                case Status.Running:
-                    return Status.Running;
-                case Status.Failure:
-                    Reset();
-                    return Status.Failure;
-                default: // Success
-                    _currentChildId++; // Next one
-                    // Success if it was the last, if not continue
-                    return _currentChildId == _children.Count ? Status.Success : Status.Running;
+                Reset();
+                return Status.Failure;
             }
+
+            // status == Success -> advance to next child
+            _currentChildIdx++;
         }
+
+        // All children succeeded
         Reset();
         return Status.Success;
     }

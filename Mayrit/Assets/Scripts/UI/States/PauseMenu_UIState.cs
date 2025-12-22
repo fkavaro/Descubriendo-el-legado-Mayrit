@@ -1,63 +1,96 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityEngine.InputSystem;
 
 public class PauseMenu_UIState : AUIState
 {
-    #region PUBLIC PROPERTIES
+    #region  PROPERTIES
+    Button _playButton,
+        _mainMenuButton,
+        _settingsButton,
+        _quitButton;
+
+    CameraManager _cameraManager;
     #endregion
 
-    #region PRIVATE PROPERTIES
-    Button _playButton, _mainMenuButton, _quitButton;
+    #region CONSTRUCTOR
+    public PauseMenu_UIState(UIDocument uiDocument)
+    : base("PauseMenu", uiDocument) { }
     #endregion
 
-    // Constructor
-    public PauseMenu_UIState(StackFiniteStateMachine stateMachine, UIDocument uiDocument)
-    : base("PauseMenu", stateMachine, uiDocument) { }
-
-    #region INHERITED
-    public override void StartState()
+    #region INHERITED METHODS
+    protected override void ConfigureUIElementsOnAwake()
     {
         _screen = _UIDocument.rootVisualElement.Q<VisualElement>("PauseMenu");
         _playButton = _screen.Q<Button>("PlayButton");
         _mainMenuButton = _screen.Q<Button>("MainMenuButton");
+        _settingsButton = _screen.Q<Button>("SettingsButton");
         _quitButton = _screen.Q<Button>("QuitButton");
 
-        _playButton.RegisterCallback<ClickEvent>(SwitchToHUDState);
-        _mainMenuButton.RegisterCallback<ClickEvent>(SwitchToMainMenuState);
-        _quitButton.RegisterCallback<ClickEvent>(QuitGame);
-
-        _screen.style.display = DisplayStyle.Flex; // Show pause menu
-
-        // Game pause state
-        GameManager.Instance.BehaviourSystem.SwitchState(GameManager.Instance._pauseState);
+        if (_playButton == null)
+            Debug.LogWarning("_playButton not found");
+        if (_mainMenuButton == null)
+            Debug.LogWarning("_mainMenuButton not found");
+        if (_settingsButton == null)
+            Debug.LogWarning("_settingsButton not found");
+        if (_quitButton == null)
+            Debug.LogWarning("_quitButton not found");
     }
 
-    public override void ExitState()
+    protected override void RegisterUICallbacksOnAwake()
     {
-        _screen.style.display = DisplayStyle.None; // Hide HUD
+        _playButton.RegisterCallback<ClickEvent>(OnPlayClicked);
+        _mainMenuButton.RegisterCallback<ClickEvent>(OnMainMenuClicked);
+        _settingsButton.RegisterCallback<ClickEvent>(OnSettingsClicked);
+        _quitButton.RegisterCallback<ClickEvent>(OnQuitClicked);
+    }
+
+    protected override void GetServicesDependenciesOnStart()
+    {
+        base.GetServicesDependenciesOnStart();
+
+        if (_cameraManager == null)
+            _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
+    }
+
+    public override void StartState()
+    {
+        base.StartState();
+        _gameManager.SwitchToPauseState();
     }
     #endregion
 
-    #region PUBLIC METHODS
-
-    #endregion
-
-    #region PRIVATE METHODS
-    void SwitchToHUDState(ClickEvent evt)
+    #region CALLBACK METHODS
+    void OnPlayClicked(ClickEvent evt)
     {
-        _stateMachine.SwitchToPreviousStateInStack(); // Switch to previous state: player or spectator HUD
-        GameManager.Instance.BehaviourSystem.SwitchState(GameManager.Instance._gamePlayState);
+        _gameManager.SwitchToGamePlayState();
+        _soundManager.PlayButtonClickSFX();
+
+        if (_cameraManager.IsInSpectatorState || _cameraManager.IsInOrbitalState)
+            _uiManager.SwitchToSpectatorHUDState();
+        else // Third Person or POI cameras
+        {
+            if (_gameManager.PlayableCharacter != null && _gameManager.PlayableCharacter.IsBeingControlled)
+                _uiManager.SwitchToPlayerHUDState();
+            else
+                Debug.LogWarning($"{StateName}: No playable character is being controlled when resuming from pause.");
+        }
     }
 
-    void SwitchToMainMenuState(ClickEvent evt)
+    void OnMainMenuClicked(ClickEvent evt)
     {
-        //_stateMachine.SwitchState(UIManager.Instance._mainMenuState); // Switch to Main Menu state
-        GameManager.Instance.BehaviourSystem.SwitchState(GameManager.Instance._mainMenuState);
+        _gameManager.SwitchToMainMenuState();
+        _soundManager.PlayButtonClickSFX();
     }
 
-    void QuitGame(ClickEvent evt)
+    void OnSettingsClicked(ClickEvent evt)
     {
+        _uiManager.SwitchToSettingsMenuState();
+        _soundManager.PlayButtonClickSFX();
+    }
+
+    void OnQuitClicked(ClickEvent evt)
+    {
+        _soundManager.PlayButtonClickSFX();
         Application.Quit();
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false; // For convenience in the editor

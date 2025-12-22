@@ -6,7 +6,8 @@ using UnityEngine;
 /// <summary>
 /// Finite State Machine implementation for controlling a behaviour.
 /// </summary>
-public class FiniteStateMachine : AStateMachine<FiniteStateMachine>
+public class FiniteStateMachine<StateType> : AStateMachine<StateType>
+where StateType : AState
 {
     #region CONSTRUCTOR
     public FiniteStateMachine(IBehaviourEntity entity)
@@ -17,14 +18,25 @@ public class FiniteStateMachine : AStateMachine<FiniteStateMachine>
     /// <summary>
     /// Switchs to another state after exiting the current.
     /// </summary>
-    public override void SwitchState(AState<FiniteStateMachine> state)
+    public override void SwitchState(StateType newState)
     {
-        if (state == _currentState) return;
+        if (newState == _currentState)
+        {
+            if (_behaviourEntity.DebugMode)
+                Debug.LogWarning($"{_behaviourEntity.GO.name} tried to switch to the same state: {newState?.StateName}");
+            return;
+        }
 
-        _currentState?.OnExitState();
-        _currentState = state;
+        // if (_behaviourEntity.DebugMode)
+        //     Debug.Log($"{_behaviourEntity.GO.name} switching state from {_currentState?.StateName} to {newState?.StateName}");
+
+        _currentState?.ExitState();
+        _currentState = newState;
         DebugDecision();
         _currentState?.StartState();
+
+        // Invoke switch event
+        base.SwitchState(newState);
     }
     #endregion
 }

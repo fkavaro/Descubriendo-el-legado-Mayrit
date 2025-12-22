@@ -8,6 +8,30 @@ public abstract class ABuilding : MonoBehaviour
     [SerializeField] List<Spot> _accessSpots;
     #endregion
 
+    #region INTERNAL PROPERTIES
+    protected TownManager _townManager;
+    #endregion
+
+    #region ABSTRACT METHODS
+    public abstract void RegisterBuilding();
+    public abstract void UnregisterBuilding();
+    #endregion
+
+    #region LIFE CYCLE
+    public virtual void OnEnable()
+    {
+        // Get from ServiceLocator
+        _townManager = ServiceLocator.Instance.Get<TownManager>();
+
+        RegisterBuilding();
+    }
+
+    public virtual void OnDisable()
+    {
+        UnregisterBuilding();
+    }
+    #endregion
+
     #region PUBLIC METHODS
     public void PlaceAtRandomEntrance(INPC npc)
     {
@@ -20,12 +44,12 @@ public abstract class ABuilding : MonoBehaviour
         Spot entranceSpot = GetRandomAccessSpot();
         if (entranceSpot != null)
         {
-            npc.Agent.transform.position = entranceSpot.transform.position;
-            npc.ForceRotation(entranceSpot.DirectionWorldQuaternion);
+            npc.MovementController.PlaceAt(entranceSpot.transform.position);
+            npc.MovementController.ForceRotation(entranceSpot.WorldDirection);
         }
         else
         {
-            npc.Agent.transform.position = transform.position;
+            npc.MovementController.PlaceAt(transform.position);
             Debug.LogWarning($"No entrance spots defined for building {gameObject.name}. Placing villager at building position.");
         }
     }

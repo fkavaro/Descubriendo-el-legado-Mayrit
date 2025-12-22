@@ -1,28 +1,28 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using UnityEngine;
 
-public class Pause_GameState : AState<FiniteStateMachine>
+public class Pause_GameState : AGameState
 {
-    public Pause_GameState(FiniteStateMachine stateMachine)
-    : base("Pause", stateMachine) { }
+    // Dependency Injection
+    protected TimeManager _timeManager;
+
+    public Pause_GameState()
+    : base("Pause") { }
+
+    protected override void GetServicesDependenciesOnStart()
+    {
+        _timeManager = ServiceLocator.Instance.Get<TimeManager>();
+    }
 
     public override void StartState()
     {
+        base.StartState();
+
         Time.timeScale = 0f;
-        GameManager.Instance._inputActions.Camera.Disable();
-    }
-
-    public override void UpdateState()
-    {
-
     }
 
     public override void ExitState()
     {
-        Time.timeScale = 1f;
-        GameManager.Instance._inputActions.Camera.Enable();
+        Time.timeScale = _timeManager.SimulationSpeed;
     }
 }

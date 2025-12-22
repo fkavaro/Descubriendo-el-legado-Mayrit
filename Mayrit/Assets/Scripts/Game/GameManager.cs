@@ -2,39 +2,53 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
 /// <summary>
 /// Manages the game states and data. Singleton.
 /// </summary>
-public class GameManager : ASingletonBehaviourEntity<GameManager, FiniteStateMachine>
+public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
 {
+    #region PROPERTY HELPERS
+    public PlayableCharacter PlayableCharacter => _playableCharacter;
+    public GameInputActions InputActions => _inputActions;
+    public bool IsInMainMenuState => _fsm.IsCurrentState(_mainMenuState);
+    public bool IsInGamePlayState => _fsm.IsCurrentState(_gamePlayState);
+    public bool IsInPauseState => _fsm.IsCurrentState(_pauseState);
+    #endregion
+
     #region EDITOR PROPERTIES
     [Header("Player")]
-    public PlayableCharacter _currentPlayableCharacter;
+    [SerializeField] PlayableCharacter _playableCharacter;
     #endregion
 
     #region INTERNAL PROPERTIES
-    FiniteStateMachine _fsm;
-    public MainMenu_GameState _mainMenuState;
-    public GamePlay_GameState _gamePlayState;
-    public Pause_GameState _pauseState;
+    GameInputActions _inputActions;
+    FiniteStateMachine<AGameState> _fsm;
+    MainMenu_GameState _mainMenuState;
+    GamePlay_GameState _gamePlayState;
+    Pause_GameState _pauseState;
 
-    public GameInputActions _inputActions;
+    // Dependency Injection
+    ProgressManager _progressManager;
+    SoundManager _soundManager;
     #endregion
 
     #region INHERITED
-    public override FiniteStateMachine InitializeBehaviourSystem()
+    public override FiniteStateMachine<AGameState> DefineBehaviourSystemOnAwake()
     {
         _fsm = new(this);
 
         // States initialization
-        _mainMenuState = new(_fsm);
-        _gamePlayState = new(_fsm);
-        _pauseState = new(_fsm);
+        _mainMenuState = new();
+        _gamePlayState = new();
+        _pauseState = new();
+
+        // State AwakeState calls
+        _mainMenuState.AwakeState();
+        _gamePlayState.AwakeState();
+        _pauseState.AwakeState();
 
         // Set initial state based on scene name
-        string sceneName = SceneManager.GetActiveScene().name;
-        if (sceneName == "GameScene")
+        if (SceneManager.GetActiveScene().name == "GameScene")
             _fsm.SetInitialState(_gamePlayState);
         else
             _fsm.SetInitialState(_mainMenuState);
@@ -43,31 +57,75 @@ public class GameManager : ASingletonBehaviourEntity<GameManager, FiniteStateMac
     }
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLE
     protected override void Awake()
     {
-        base.Awake();
+        // Subscribe to scene change event
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
+        _soundManager = ServiceLocator.Instance.Get<SoundManager>();
 
         _inputActions = new();
 
-        // Subscribe to milestone change event
-        ProgressManager.Instance.OnMilestoneChanged += UpdatePlayableCharacter;
-
-        // Find the playable character
-        _currentPlayableCharacter = FindFirstObjectByType<PlayableCharacter>();
+        base.Awake();
     }
 
-    private void OnDestroy()
+    void OnDestroy()
     {
-        _inputActions?.Disable(); // Disables all action maps. To avoid errors
+        // Unsubscribe from scene change event
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+
+        _inputActions = null;
     }
     #endregion
 
-    #region PRIVATE METHODS
-    void UpdatePlayableCharacter(ProgressManager.Milestone milestone)
+    #region PUBLIC METHODS
+    public void SwitchToMainMenuState()
     {
-        // Find the playable character
-        _currentPlayableCharacter = FindFirstObjectByType<PlayableCharacter>();
+        _fsm.SwitchState(_mainMenuState);
+    }
+
+    public void SwitchToGamePlayState()
+    {
+        _fsm.SwitchState(_gamePlayState);
+    }
+
+    public void SwitchToPauseState()
+    {
+        _fsm.SwitchState(_pauseState);
+    }
+    #endregion
+
+    #region CALLBACK METHODS
+    void OnMilestoneChanged(MilestoneMapping milestoneMapping)
+    {
+        _playableCharacter = milestoneMapping.PlayableCharacter;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (_soundManager == null)
+            _soundManager = ServiceLocator.Instance.Get<SoundManager>();
+
+        // In main menu scene
+        if (SceneManager.GetActiveScene().name == "MainMenuScene")
+        {
+            // Play menu music
+            _soundManager.PlayMenuMusic();
+            return;
+        }
+        // In game play scene
+        else if (SceneManager.GetActiveScene().name == "GameScene")
+        {
+            // Play gameplay music
+            _soundManager.PlayGameplayMusic();
+
+            // Get dependencies from ServiceLocator
+            _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
+
+            // Subscribe to events
+            _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
+        }
     }
     #endregion
 }

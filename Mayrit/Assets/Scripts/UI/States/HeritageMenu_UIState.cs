@@ -1,48 +1,44 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityEngine.InputSystem;
 
 public class HeritageMenu_UIState : AUIState
 {
-    #region PUBLIC PROPERTIES
-    #endregion
-
-    #region PRIVATE PROPERTIES
+    #region PROPERTIES
     Button _playButton;
     #endregion
 
-    // Constructor
-    public HeritageMenu_UIState(StackFiniteStateMachine stateMachine, UIDocument uiDocument)
-    : base("HeritageMenu", stateMachine, uiDocument) { }
+    #region CONSTRUCTOR
+    public HeritageMenu_UIState(UIDocument uiDocument)
+    : base("HeritageMenu", uiDocument) { }
+    #endregion
 
-    #region INHERITED
-    public override void StartState()
+    #region INHERITED METHODS
+    protected override void ConfigureUIElementsOnAwake()
     {
-        _screen = _UIDocument.rootVisualElement.Q<VisualElement>("HeritageMenu");
         _playButton = _screen.Q<Button>("PlayButton");
 
-        _playButton.RegisterCallback<ClickEvent>(SwitchToHUDState);
-
-        _screen.style.display = DisplayStyle.Flex; // Show 
-
-        // Game pause state
-        GameManager.Instance.BehaviourSystem.SwitchState(GameManager.Instance._pauseState);
+        if (_playButton == null)
+            Debug.LogWarning("_playButton not found");
     }
-    public override void ExitState()
+
+    protected override void RegisterUICallbacksOnAwake()
     {
-        _screen.style.display = DisplayStyle.None; // Hide
+        _playButton.RegisterCallback<ClickEvent>(OnPlayClicked);
+    }
+
+    public override void StartState()
+    {
+        base.StartState();
+        _gameManager.SwitchToPauseState();
     }
     #endregion
 
-    #region PUBLIC METHODS
-
-    #endregion
-
-    #region PRIVATE METHODS
-    void SwitchToHUDState(ClickEvent evt)
+    #region CALLBACK METHODS
+    void OnPlayClicked(ClickEvent evt)
     {
-        _stateMachine.SwitchToPreviousStateInStack(); // Switch to previous state: player or spectator HUD
-        GameManager.Instance.BehaviourSystem.SwitchState(GameManager.Instance._gamePlayState);
+        _uiManager.BehaviourSystem.SwitchToPreviousStateInStack(); // Player or spectator HUD
+        _gameManager.SwitchToGamePlayState();
+        _soundManager.PlayButtonClickSFX();
     }
     #endregion
 }

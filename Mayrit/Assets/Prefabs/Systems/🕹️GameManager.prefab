@@ -46,5 +46,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _debugMode: 0
   _isExecutionPaused: 0
-  _dontDestroyOnLoad: 0
-  _currentPlayableCharacter: {fileID: 0}
+  _currentActionInfo: 
+  _playableCharacter: {fileID: 0}

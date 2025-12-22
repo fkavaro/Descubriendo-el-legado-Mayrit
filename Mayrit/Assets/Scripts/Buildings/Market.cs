@@ -5,7 +5,20 @@ using UnityEngine;
 public class Market : ABuilding
 {
     #region EDITOR PROPERTIES
+    [Header("Market Properties")]
     [SerializeField] List<Stall> _stalls = new();
+    #endregion
+
+    #region INHERITED METHODS
+    public override void RegisterBuilding()
+    {
+        _townManager.RegisterMarket(this);
+    }
+
+    public override void UnregisterBuilding()
+    {
+        _townManager.UnregisterMarket(this);
+    }
     #endregion
 
     #region PUBLIC METHODS
@@ -30,11 +43,46 @@ public class Market : ABuilding
         return _stalls[randomIndex];
     }
 
+
+    /// <returns>A random opened stall from the market</returns>
+    public Stall GetRandomOpenedStall()
+    {
+        if (_stalls == null || _stalls.Count == 0) return null;
+
+        List<Stall> openedStalls = new();
+
+        foreach (var stall in _stalls)
+        {
+            if (stall.IsWorkplaceOpen)
+                openedStalls.Add(stall);
+        }
+
+        if (openedStalls.Count == 0) return null;
+
+        int randomIndex = UnityEngine.Random.Range(0, openedStalls.Count);
+        return openedStalls[randomIndex];
+    }
+
+    /// <returns>The access spot of a random opened stall in the market
     public Spot GetRandomStallSpot()
     {
+        Spot spot = null;
         Stall stall = GetRandomStall();
-        if (stall == null) return null;
-        return stall.GetRandomAccessSpot();
+
+        if (stall != null)
+            spot = stall.GetRandomAccessSpot();
+
+        return spot;
+    }
+
+    public bool IsOpen()
+    {
+        foreach (var stall in _stalls)
+        {
+            if (stall.IsWorkplaceOpen)
+                return true;
+        }
+        return false;
     }
     #endregion
 }

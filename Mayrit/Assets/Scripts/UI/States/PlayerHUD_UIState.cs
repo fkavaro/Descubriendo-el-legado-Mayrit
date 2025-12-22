@@ -1,57 +1,133 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityEngine.InputSystem;
 
-public class PlayerHUD_UIState : AUIState
+public class PlayerHUD_UIState : AHUDState
 {
-    #region PUBLIC PROPERTIES
-    #endregion
+    #region  PROPERTIES
+    Tour _currentTour;
 
-    #region PRIVATE PROPERTIES
     Button _pauseButton;
-    VisualElement _activityArea;
+    VisualElement _tourArea,
+        _onTourEndVisual;
+    Label _tourName,
+        _tourDescription;
+
+    // Dependency Injection
+    TourManager _tourManager;
+    ProgressManager _progressManager;
     #endregion
 
-    #region INHERITED
-    public PlayerHUD_UIState(StackFiniteStateMachine stateMachine, UIDocument uiDocument)
-    : base("PlayerHUD", stateMachine, uiDocument) { }
+    #region CONSTRUCTOR
+    public PlayerHUD_UIState(UIDocument uiDocument)
+    : base("PlayerHUD", uiDocument) { }
+    #endregion
 
-    public override void StartState()
+    #region UI STATE INHERITED METHODS
+    protected override void ConfigureUIElementsOnAwake()
     {
-        _screen = _UIDocument.rootVisualElement.Q<VisualElement>("PlayerHUD");
+        base.ConfigureUIElementsOnAwake();
 
         _pauseButton = _screen.Q<Button>("PauseButton");
-        _activityArea = _screen.Q<VisualElement>("ActivityArea");
+        _tourArea = _screen.Q<VisualElement>("TourArea");
+        _tourName = _tourArea.Q<Label>("Name");
+        _tourDescription = _tourArea.Q<Label>("Description");
+        _onTourEndVisual = _screen.Q<VisualElement>("OnTourEnd");
 
         if (_pauseButton == null)
             Debug.LogWarning("_pauseButton not found");
-        if (_activityArea == null)
-            Debug.LogWarning("_activityArea not found");
-
-        _pauseButton.RegisterCallback<ClickEvent>(SwitchToPauseState);
-
-        _screen.style.display = DisplayStyle.Flex; // Show HUD
+        if (_tourArea == null)
+            Debug.LogWarning("TourArea not found");
+        if (_tourName == null)
+            Debug.LogWarning("_tourName not found");
+        if (_tourDescription == null)
+            Debug.LogWarning("_tourDescription not found");
+        if (_onTourEndVisual == null)
+            Debug.LogWarning("_onTourEndVisual not found");
     }
 
-    public override void UpdateState()
+    protected override void RegisterUICallbacksOnAwake()
     {
-
+        _pauseButton.RegisterCallback<ClickEvent>(OnPauseClicked);
     }
 
-    public override void ExitState()
+    protected override void GetServicesDependenciesOnStart()
     {
-        _screen.style.display = DisplayStyle.None; // Hide HUD
+        base.GetServicesDependenciesOnStart();
+
+        _tourManager = ServiceLocator.Instance.Get<TourManager>();
+        _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
     }
 
+    protected override void SubscribeToServicesEventsOnStart()
+    {
+        base.SubscribeToServicesEventsOnStart();
+        _tourManager.TourCompletedEvent += OnTourEnded;
+        _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
+    }
+
+    public override void StartState()
+    {
+        base.StartState();
+
+        if (_currentTour == null)
+            _currentTour = _tourManager.CurrentTour;
+
+        if (_currentTour.IsCompleted)
+        {
+            _tourArea.style.display = DisplayStyle.None;
+            _onTourEndVisual.style.display = DisplayStyle.Flex;
+        }
+        else
+        {
+            if (!_wasContextualPanelShown)
+            {
+                _onTourEndVisual.style.display = DisplayStyle.None;
+                _tourArea.style.display = DisplayStyle.Flex;
+                UpdateTourInfo();
+            }
+        }
+    }
     #endregion
 
-    #region PUBLIC METHODS
+    #region HUD STATE INHERITED METHODS
+    protected override void OnContextualPanelShown()
+    {
+        _tourArea.style.display = DisplayStyle.None;
+        _onTourEndVisual.style.display = DisplayStyle.None;
+    }
+
+    protected override void OnContextualPanelHidden()
+    {
+        if (_currentTour != null && _currentTour.IsCompleted)
+            _onTourEndVisual.style.display = DisplayStyle.Flex;
+        else
+            _tourArea.style.display = DisplayStyle.Flex;
+    }
     #endregion
 
-    #region PRIVATE METHODS
-    void SwitchToPauseState(ClickEvent evt)
+    void UpdateTourInfo()
     {
-        _stateMachine.SwitchState(UIManager.Instance._pauseState);
+        if (_currentTour == null)
+        {
+            Debug.LogWarning($"{_stateName}: CurrentTour is null on UpdateTourInfo");
+            return;
+        }
+
+        _tourName.text = _currentTour.Data.Header;
+        _tourDescription.text = _currentTour.Data.SubHeader;
+    }
+
+    #region CALLBACK METHODS
+    void OnMilestoneChanged(MilestoneMapping mapping)
+    {
+        _currentTour = _tourManager.CurrentTour;
+        UpdateTourInfo();
+    }
+
+    void OnTourEnded(Tour tour)
+    {
+        _tourArea.style.display = DisplayStyle.None;
+        _onTourEndVisual.style.display = DisplayStyle.Flex;
     }
     #endregion
 }

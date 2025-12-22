@@ -7,25 +7,28 @@ public class Workplace : AAssignedBuilding
     #region EDITOR PROPERTIES
     [Header("Workplace Properties")]
     [SerializeField] List<Spot> _workSpots;
+    [SerializeField] bool _isOpen = false;
+    public bool IsWorkplaceOpen
+    {
+        get { return _isOpen; }
+        set { _isOpen = value; }
+    }
     #endregion
 
     #region INHERITED METHODS
     public override void RegisterBuilding()
     {
-        var tm = TownManager.ExistingInstance;
-        if (tm != null) tm.RegisterWorkplace(this);
+        _townManager.RegisterWorkplace(this);
     }
 
     public override void UnregisterBuilding()
     {
-        var tm = TownManager.ExistingInstance;
-        if (tm != null) tm.UnregisterWorkplace(this);
+        _townManager.UnregisterWorkplace(this);
     }
 
-    public override void Reassign(List<Villager> residents)
+    public override void Reassign(List<Villager> employees)
     {
-        var tm = TownManager.ExistingInstance;
-        if (tm != null) tm.ReassignEmployees(this, residents);
+        _townManager.ReassignEmployees(this, employees);
     }
     #endregion
 

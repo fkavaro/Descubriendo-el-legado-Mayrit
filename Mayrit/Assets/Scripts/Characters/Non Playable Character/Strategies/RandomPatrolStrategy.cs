@@ -6,7 +6,8 @@ using UnityEngine;
 /// <summary>
 /// RandomPatrolStrategy is a strategy for moving constantly between random points using a NavMeshAgent.
 /// </summary>
-public class RandomPatrolStrategy : AStrategy
+public class RandomPatrolStrategy<NPCtype> : ANPCStrategy<NPCtype>
+where NPCtype : INPC
 {
     #region PROPERTIES
     protected readonly Transform _centerPoint;
@@ -15,7 +16,7 @@ public class RandomPatrolStrategy : AStrategy
     #endregion
 
     #region CONSTRUCTOR
-    public RandomPatrolStrategy(INPC npc, Transform centerPoint, int samplingIterations = 30, float areaRadious = 10f)
+    public RandomPatrolStrategy(NPCtype npc, Transform centerPoint, int samplingIterations = 30, float areaRadious = 10f)
     : base(npc)
     {
         _centerPoint = centerPoint;
@@ -27,11 +28,11 @@ public class RandomPatrolStrategy : AStrategy
     #region INHERITED METHODS
     public override Node.Status Update()
     {
-        if (_npc.HasArrivedAtDestination())
+        if (_npc.MovementController.HasArrivedAtDestination())
         {
             // Random destination is reachable
-            if (_npc.CalculateRandomDestination(_samplingIterations, _areaRadious, _centerPoint, out Vector3 randomDestination))
-                _npc.SetDestination(randomDestination);
+            if (_npc.MovementController.CalculateRandomDestination(_samplingIterations, _areaRadious, _centerPoint, out Vector3 randomDestination))
+                _npc.MovementController.SetDestination(randomDestination);
             // It's not
             else
                 return Node.Status.Failure;

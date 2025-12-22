@@ -1,83 +1,82 @@
 using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 /// <summary>
 /// Manages the time in game and data. Singleton.
 /// </summary>
-public class TimeManager : Singleton<TimeManager>
+public class TimeManager : MonoBehaviour
 {
+    #region PROPERTIES HELPERS
+    public float SimulationSpeed => _gameSimulationSpeed;
+    public float CurrentTime => _currentTime;
+    #endregion
+
     #region EDITOR PROPERTIES
     [Header("Time Settings")]
     [Tooltip("Game simulation speed multiplier. Set by Camera states.")]
-    [Range(0.1f, 5f)]
-    public float _gameSimulationSpeed = 1f;
+    [Range(0.1f, 10f)]
+    [SerializeField] float _gameSimulationSpeed = 1f;
     [Tooltip("Whether the time will advance automatically or just to reach a wanted time")]
-    public bool _isDynamic = false;
-
+    [SerializeField] bool _isDynamic = false;
     [Tooltip("Wanted time in hours to be reached. If dynamic time is enabled, this will be ignored")]
     [Range(0f, 24f)]
-    public float _wantedTime = 10f;
-
+    [SerializeField] float _wantedTime = 10f;
     [Tooltip("Current time in hours since the start of the game")]
     [Range(0f, 24f)]
-    public float _currentTime;
-
+    [SerializeField] float _currentTime;
     [Tooltip("Time cycle speed multiplier")]
-    public float _timeSpeed = 1f;
+    [SerializeField] float _timeSpeed = 1f;
 
     [Header("Sun Light Settings")]
-    public Light _sunSource;
-    public float _sunAngle;
+    [SerializeField] Light _sunSource;
+    [SerializeField] float _sunAngle;
     [Range(0f, 90f)]
-    public float _sunLatitude = 20f;
+    [SerializeField] float _sunLatitude = 20f;
     [Range(-180f, 180f)]
-    public float _sunLongitude = -90;
-    public float _sunMaxIntensity;
-    public AnimationCurve _sunIntensityCurve;
-    public AnimationCurve _sunTemperatureCurve;
+    [SerializeField] float _sunLongitude = -90;
+    [SerializeField] float _sunMaxIntensity;
+    [SerializeField] AnimationCurve _sunIntensityCurve;
+    [SerializeField] AnimationCurve _sunTemperatureCurve;
 
     [Header("Moon Light Settings")]
-    public Light _moonSource;
+    [SerializeField] Light _moonSource;
     [Range(0f, 90f)]
-    public float _moonLatitude = 40f;
+    [SerializeField] float _moonLatitude = 40f;
     [Range(-180f, 180f)]
-    public float _moonLongitude = 90;
-    public float _moonMaxIntensity;
-    public AnimationCurve _moonIntensityCurve;
+    [SerializeField] float _moonLongitude = 90;
+    [SerializeField] float _moonMaxIntensity;
+    [SerializeField] AnimationCurve _moonIntensityCurve;
     #endregion
 
-    #region PROPERTIES
+    #region INTERNAL PROPERTIES
     [HideInInspector] public bool _isDayTime = true; // Whether current time is between 6 and 18 hours or not
     bool _isWantedTimeReached, // Whether the current time is close enough to the wanted time
         _increaseTime; // Whether the time should be increased or decreased
     float _normalisedTime; // Normalised time value between 0 and 1, where 0 is midnight and 1 is the next midnight
+
+    // Dependency Injection
+    ProgressManager _progressManager;
     #endregion
 
-    #region MONOBEHAVIOUR
-    // Awake is called when the script instance is being loaded
-    protected override void Awake()
-    {
-        // Singleton
-        base.Awake();
-
-        // Subscribe to ProgressManager event to set the wanted time when the game starts
-        ProgressManager.Instance.OnTimeSet += (time) => { _wantedTime = time; };
-    }
+    #region LIFE CYCLE
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _currentTime = ProgressManager.Instance.GetCurrentMilestoneInfo().WantedTime;
+        // Get dependencies from ServiceLocator
+        _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
+
+        // Subscribe to ProgressManager event to set the wanted time when the game starts
+        _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
+
+        _currentTime = _progressManager.CurrentMilestoneMapping.WantedTime;
         UpdateLighting();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Ensure time scale matches the desired game simulation speed
-        if (Time.timeScale != _gameSimulationSpeed)
-            SetSimulationSpeed(_gameSimulationSpeed);
-
         // Difference between current time and wanted time is less than threshold of 0.1f
         _isWantedTimeReached = Mathf.Abs(_currentTime - _wantedTime) < 0.1f;
 
@@ -96,6 +95,11 @@ public class TimeManager : Singleton<TimeManager>
             UpdateTimeOfDay();
             UpdateLighting();
             CheckActiveLightSource();
+        }
+
+        if (_gameSimulationSpeed != Time.timeScale && Time.timeScale != 0f)
+        {
+            SetSimulationSpeed(_gameSimulationSpeed);
         }
     }
 
@@ -119,7 +123,7 @@ public class TimeManager : Singleton<TimeManager>
 
         // Keep inside sensible bounds (aligns with inspector limits but slightly more permissive for safety)
         const float minSpeed = 0.01f;
-        const float maxSpeed = 5f;
+        const float maxSpeed = 10f;
         float clamped = Mathf.Clamp(speed, minSpeed, maxSpeed);
         if (!Mathf.Approximately(clamped, speed))
             Debug.LogWarning($"TimeManager: requested simulation speed {speed} was clamped to {clamped}.");
@@ -208,6 +212,14 @@ public class TimeManager : Singleton<TimeManager>
         bool shouldMoonBeActive = !(_currentTime >= 6f - hysteresis && _currentTime < 17f + hysteresis);
         if (_moonSource.gameObject.activeSelf != shouldMoonBeActive)
             _moonSource.gameObject.SetActive(shouldMoonBeActive);
+    }
+    #endregion
+
+    #region EVENT METHODS
+    void OnMilestoneChanged(MilestoneMapping mapping)
+    {
+        if (mapping != null)
+            _wantedTime = mapping.WantedTime;
     }
     #endregion
 }

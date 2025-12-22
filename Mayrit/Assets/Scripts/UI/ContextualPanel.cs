@@ -4,9 +4,11 @@ using UnityEngine.UIElements;
 
 public class ContextualPanel
 {
-    public event Action OnClosePanel;
+    #region PROPERTIES
+    public event Action PlayCharacterClickedEvent;
+    public event Action ShownEvent;
+    public event Action ClosedEvent;
 
-    #region PRIVATE PROPERTIES
     readonly Label _header,
         _subHeader,
         _description,
@@ -18,9 +20,12 @@ public class ContextualPanel
     readonly VisualElement _root,
         _icon,
         _image;
+
+    // Dependency Injection
+    SoundManager _soundManager;
     #endregion
 
-    // Constructor
+    #region CONSTRUCTOR
     public ContextualPanel(VisualElement contextualPanelRoot)
     {
         _root = contextualPanelRoot;
@@ -51,64 +56,55 @@ public class ContextualPanel
         if (_playCharacterButton == null)
             Debug.LogWarning("_playCharacterButton button not found");
 
-        _closeButton.RegisterCallback<ClickEvent>(CloseContextualPanel);
-        _playCharacterButton.RegisterCallback<ClickEvent>(PlayCharacter);
+        _closeButton.RegisterCallback<ClickEvent>(OnCloseButton);
+        _playCharacterButton.RegisterCallback<ClickEvent>(OnPlayCharacter);
+
+        // Get SoundManager dependency from Service Locator
+        _soundManager = ServiceLocator.Instance.Get<SoundManager>();
     }
+    #endregion
 
     #region PUBLIC METHODS
-    public void ShowInfo(AInformationSO objectInfo)
+    public void ShowInfo(DataSO data, bool isCharacterData)
     {
         Reset();
 
         // Overwrite panel information
-        _header.text = objectInfo.Header;
-        _subHeader.text = objectInfo.SubHeader;
-        _description.text = objectInfo.Description;
+        _header.text = data.Header;
+        _subHeader.text = data.SubHeader;
+        _description.text = data.Description;
 
         // Theres is an icon
-        if (objectInfo.Icon != null)
+        if (data.Icon != null)
         {
-            _icon.style.backgroundImage = new StyleBackground(objectInfo.Icon.texture);
+            _icon.style.backgroundImage = new StyleBackground(data.Icon.texture);
             _icon.style.display = DisplayStyle.Flex;
         }
 
         // There is an image
-        if (objectInfo.Image != null)
+        if (data.Image != null)
         {
-            _image.style.backgroundImage = new StyleBackground(objectInfo.Image.texture);
+            _image.style.backgroundImage = new StyleBackground(data.Image.texture);
             _image.style.display = DisplayStyle.Flex;
-            _imageCaption.text = objectInfo.ImageCaption;
+            _imageCaption.text = data.ImageCaption;
             _imageCaption.style.display = DisplayStyle.Flex;
         }
 
         // If the information type is Character, show the play button
-        if (objectInfo is Character_InformationSO)
+        if (isCharacterData)
             _playCharacterButton.style.display = DisplayStyle.Flex;
 
-        // Show panel
-        _root.style.display = DisplayStyle.Flex;
-    }
+        _root.style.display = DisplayStyle.Flex; // Show
 
-    public void Hide()
-    {
-        // Hide panel
-        _root.style.display = DisplayStyle.None;
-
-        Reset();
-
-        OnClosePanel?.Invoke();
+        ShownEvent?.Invoke();
     }
     #endregion
 
     #region PRIVATE METHODS
-    void CloseContextualPanel(ClickEvent evt)
+    void Hide()
     {
-        Hide();
-    }
-
-    void PlayCharacter(ClickEvent evt)
-    {
-        CameraManager.Instance.SwitchToThirdPersonCamera();
+        _root.style.display = DisplayStyle.None; // Hide
+        Reset();
     }
 
     void Reset()
@@ -122,6 +118,25 @@ public class ContextualPanel
         _image.style.display = DisplayStyle.None;
         _imageCaption.style.display = DisplayStyle.None;
         _playCharacterButton.style.display = DisplayStyle.None;
+    }
+    #endregion
+
+    #region CALLBACK METHODS
+    void OnCloseButton(ClickEvent evt)
+    {
+        Hide();
+        ClosedEvent?.Invoke();
+
+        if (_soundManager == null)
+            _soundManager = ServiceLocator.Instance.Get<SoundManager>();
+
+        _soundManager.PlayButtonClickSFX();
+    }
+
+    void OnPlayCharacter(ClickEvent evt)
+    {
+        Hide();
+        PlayCharacterClickedEvent?.Invoke();
     }
     #endregion
 }

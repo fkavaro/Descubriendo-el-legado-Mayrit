@@ -2,50 +2,86 @@ using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 /// <summary>
 /// Manages the user interface states and data. Singleton.
 /// </summary>
 [RequireComponent(typeof(UIDocument))]
-public class UIManager : ASingletonBehaviourEntity<UIManager, StackFiniteStateMachine>
+public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
 {
-    #region EDITOR PROPERTIES
-    [Header("User Interface Document")]
-    public UIDocument _UIDocument;
+    #region PROPERTY HELPERS
+    public bool IsInMainMenuState => _sfsm.IsCurrentState(_mainMenuState);
+    public bool IsInSpectatorHUDState => _sfsm.IsCurrentState(_spectatorHUDState);
+    public bool IsInPlayerHUDState => _sfsm.IsCurrentState(_playerHUDState);
+    public bool IsInPauseState => _sfsm.IsCurrentState(_pauseState);
+    public bool IsInHeritageState => _sfsm.IsCurrentState(_heritageState);
+    public Vector2 TooltipOffset => _tooltipOffset;
+    public bool EdgeScrollingValueSet => _edgeScrollingValueSet;
+    public bool ControlsVisibilityValueSet => _controlsVisibilityValueSet;
+    public float MusicVolumeValueSet => _musicVolumeValueSet;
+    public float SFXVolumeValueSet => _sfxVolumeValueSet;
+    #endregion
 
-    [Header("Tooltip Settings")]
-    public Vector2 _tooltipOffset = new(-30, -30);
+    #region EDITOR PROPERTIES
+    [SerializeField] Vector2 _tooltipOffset = new(-30, -30);
+    [SerializeField] bool _edgeScrollingValueSet = true;
+    [SerializeField] bool _controlsVisibilityValueSet = true;
+    [SerializeField] float _musicVolumeValueSet = 1f;
+    [SerializeField] float _sfxVolumeValueSet = 1f;
     #endregion
 
     #region INTERNAL PROPERTIES
-    StackFiniteStateMachine _sfsm;
-    public MainMenu_UIState _mainMenuState;
-    public SpectatorHUD_UIState _spectatorHUDState;
-    public PlayerHUD_UIState _playerHUDState;
-    public PauseMenu_UIState _pauseState;
-    public HeritageMenu_UIState _heritageState;
+    UIDocument _uiDocument;
+
+    // Events
+    public event Action<DataSO, bool> ShowContextualPanelEvent;
+    public event Action OnContextualPanelHiddenEvent;
+    public event Action<DataSO> ShowTooltipEvent;
+    public event Action HideTooltipEvent;
+    public event Action PlayCharacterClickedEvent;
+    public event Action ModernSuperpositionToggledEvent;
+    public event Action<bool> EdgeScrollingToggledEvent;
+    public event Action<float> MusicVolumeChangedEvent;
+    public event Action<float> SFXVolumeChangedEvent;
+
+    // Stack FSM
+    StackFiniteStateMachine<AUIState> _sfsm;
+    MainMenu_UIState _mainMenuState;
+    SpectatorHUD_UIState _spectatorHUDState;
+    PlayerHUD_UIState _playerHUDState;
+    PauseMenu_UIState _pauseState;
+    HeritageMenu_UIState _heritageState;
+    SettingsMenu_UIState _settingsMenuState;
+
+    // Dependency Injection
+    TourManager _tourManager;
     #endregion
 
     #region INHERITED
-    public override StackFiniteStateMachine InitializeBehaviourSystem()
+    public override StackFiniteStateMachine<AUIState> DefineBehaviourSystemOnAwake()
     {
         _sfsm = new(this);
 
-        UIDocument uiDocument = GetComponent<UIDocument>();
+        _uiDocument = GetComponent<UIDocument>();
 
         // States initialization
-        _mainMenuState = new(_sfsm, uiDocument);
-        _spectatorHUDState = new(_sfsm, uiDocument);
-        _playerHUDState = new(_sfsm, uiDocument);
-        _pauseState = new(_sfsm, uiDocument);
-        _heritageState = new(_sfsm, uiDocument);
+        _mainMenuState = new(_uiDocument);
+        _spectatorHUDState = new(_uiDocument);
+        _playerHUDState = new(_uiDocument);
+        _pauseState = new(_uiDocument);
+        _heritageState = new(_uiDocument);
+        _settingsMenuState = new(_uiDocument);
+
+        // State AwakeState calls
+        _mainMenuState.AwakeState();
+        _spectatorHUDState.AwakeState();
+        _playerHUDState.AwakeState();
+        _pauseState.AwakeState();
+        _heritageState.AwakeState();
+        _settingsMenuState.AwakeState();
 
         // Set initial state based on scene name
-        string sceneName = SceneManager.GetActiveScene().name;
-        if (sceneName == "GameScene")
+        if (SceneManager.GetActiveScene().name == "GameScene")
             _sfsm.SetInitialState(_spectatorHUDState);
         else
             _sfsm.SetInitialState(_mainMenuState);
@@ -54,91 +90,148 @@ public class UIManager : ASingletonBehaviourEntity<UIManager, StackFiniteStateMa
     }
     #endregion
 
-    #region DEBUG OVERLAY
-    [Header("Debug Overlay")]
-    [Tooltip("Show debug overlay (toggle from the inspector at runtime)")]
-    public bool _showDebugOverlay = true;
-    [Tooltip("Collapse the debug overlay to a small header")]
-    public bool _debugCollapsed = false;
-
-    void OnGUI()
+    #region LIFE CYCLE
+    protected override void Awake()
     {
-        if (!_showDebugOverlay) return;
+        // Subscribe to scene change event
+        SceneManager.sceneLoaded += OnSceneLoaded;
 
-        // Smaller box positioned at bottom-left
-        const int width = 320;
-        float fullHeight = Mathf.Min(235f, Screen.height - 40f);
-        float height = _debugCollapsed ? 28f : fullHeight;
-        float x = 10f;
-        float y = Screen.height - height - 10f; // 10px margin from bottom
-        GUILayout.BeginArea(new Rect(x, y, width, height), GUI.skin.box);
+        base.Awake();
+    }
 
-        // Collapsed header: show minimal button that toggles expansion
-        if (_debugCollapsed)
+    void OnDestroy()
+    {
+        // Unsubscribe from scene change event
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    #endregion
+
+    #region STATE HANDLING
+    public void SwitchToMainMenuState()
+    {
+        _sfsm?.SwitchState(_mainMenuState);
+    }
+
+    public void SwitchToSpectatorHUDState()
+    {
+        _sfsm?.SwitchState(_spectatorHUDState);
+    }
+
+    public void SwitchToPlayerHUDState()
+    {
+        _sfsm?.SwitchState(_playerHUDState);
+    }
+
+    public void SwitchToPauseState()
+    {
+        _sfsm?.SwitchState(_pauseState);
+    }
+
+    public void SwitchToHeritageState()
+    {
+        _sfsm?.SwitchState(_heritageState);
+    }
+
+    public void SwitchToSettingsMenuState()
+    {
+        _sfsm?.SwitchState(_settingsMenuState);
+    }
+    #endregion
+
+    #region PUBLIC METHODS
+    public bool IsCursorOverUI()
+    {
+        return BehaviourSystem.CurrentState.IsCursorOverUI();
+    }
+
+    public void ShowContextualPanel(DataSO data, bool isCharacterData = false)
+    {
+        ShowContextualPanelEvent?.Invoke(data, isCharacterData);
+    }
+
+    public void ShowTooltip(DataSO data)
+    {
+        ShowTooltipEvent?.Invoke(data);
+    }
+
+    public void HideTooltip()
+    {
+        HideTooltipEvent?.Invoke();
+    }
+
+    public void SetControlsVisibility(bool newValue)
+    {
+        _controlsVisibilityValueSet = newValue;
+    }
+
+    public void InvokeEdgeScrollingToggledEvent(bool newValue)
+    {
+        EdgeScrollingToggledEvent?.Invoke(newValue);
+        _edgeScrollingValueSet = newValue;
+    }
+
+    public void InvokeMusicVolumeChangedEvent(float newValue)
+    {
+        MusicVolumeChangedEvent?.Invoke(newValue);
+    }
+
+    public void InvokeSFXVolumeChangedEvent(float newValue)
+    {
+        SFXVolumeChangedEvent?.Invoke(newValue);
+    }
+    #endregion
+
+    #region CALLBACK METHODS
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (SceneManager.GetActiveScene().name == "GameScene")
         {
-            if (GUILayout.Button("Debug Overlay ▶", GUILayout.Height(24)))
-                _debugCollapsed = false;
+            SwitchToSpectatorHUDState();
 
-            GUILayout.EndArea();
-            return;
+            // Get dependencies from ServiceLocator
+            _tourManager = ServiceLocator.Instance.Get<TourManager>();
+
+            // Subscribe to events
+            _playerHUDState.ContextualPanelHiddenEvent += OnContextualPanelHidden;
+            _spectatorHUDState.ContextualPanelHiddenEvent += OnContextualPanelHidden;
+            _spectatorHUDState.PlayCharacterEvent += OnPlayCharacterClicked;
+            _spectatorHUDState.OnModernSuperpositionEvent += OnModernSuperpositionToggled;
+            _tourManager.POIVisitedEvent += OnTourPOIVisited;
         }
-
-        // Expanded header with a collapse button on the right
-        GUILayout.BeginHorizontal();
-        GUILayout.Label("Debug Overlay", GUI.skin.box);
-        if (GUILayout.Button("▼", GUILayout.Width(28)))
+        else if (SceneManager.GetActiveScene().name == "MainMenuScene")
         {
-            _debugCollapsed = true;
-            GUILayout.EndHorizontal();
-            GUILayout.EndArea();
-            return;
+            SwitchToMainMenuState();
+
+            // Unsubscribe from events
+            if (_tourManager != null)
+                _tourManager.POIVisitedEvent -= OnTourPOIVisited;
+
+            _playerHUDState.ContextualPanelHiddenEvent -= OnContextualPanelHidden;
+            _spectatorHUDState.ContextualPanelHiddenEvent -= OnContextualPanelHidden;
+            _spectatorHUDState.PlayCharacterEvent -= OnPlayCharacterClicked;
+            _spectatorHUDState.OnModernSuperpositionEvent -= OnModernSuperpositionToggled;
         }
-        GUILayout.EndHorizontal();
-        GUILayout.Space(4);
+    }
 
-        if (_sfsm != null)
-            GUILayout.Label($"UIManager state: {_sfsm.CurrentState.StateName}");
-        else
-            GUILayout.Label("UIManager: <null>");
+    void OnPlayCharacterClicked()
+    {
+        SwitchToPlayerHUDState();
+        PlayCharacterClickedEvent?.Invoke();
+    }
 
-        if (GameManager.Instance != null && GameManager.Instance.BehaviourSystem != null)
-            GUILayout.Label($"GameManager state: {GameManager.Instance.BehaviourSystem.CurrentState.StateName}");
-        else
-            GUILayout.Label("GameManager: <null>");
+    void OnModernSuperpositionToggled()
+    {
+        ModernSuperpositionToggledEvent?.Invoke();
+    }
 
-        if (ProgressManager.Instance != null && ProgressManager.Instance.BehaviourSystem != null)
-            GUILayout.Label($"ProgressManager state: {ProgressManager.Instance.BehaviourSystem.CurrentState.StateName}");
-        else
-            GUILayout.Label("ProgressManager: <null>");
+    void OnTourPOIVisited(PointOfInterest poi)
+    {
+        ShowContextualPanel(poi.Data);
+    }
 
-        if (CameraManager.Instance != null && CameraManager.Instance.BehaviourSystem != null)
-            GUILayout.Label($"CameraManager state: {CameraManager.Instance.BehaviourSystem.CurrentState.StateName}");
-        else
-            GUILayout.Label("CameraManager: <null>");
-
-        if (GameManager.Instance != null && GameManager.Instance._currentPlayableCharacter != null)
-            GUILayout.Label($"PlayableCharacter state: {GameManager.Instance._currentPlayableCharacter.BehaviourSystem.CurrentState.StateName}");
-        else
-            GUILayout.Label("PlayableCharacter: <null>");
-
-        if (TimeManager.Instance != null)
-            GUILayout.Label($"TimeManager current time: {TimeManager.Instance._currentTime:F0}h");
-        else
-            GUILayout.Label("TimeManager: <null>");
-
-        // Town Manager (use ExistingInstance to avoid creating objects during scene teardown)
-        var town = TownManager.Instance;
-        if (town != null)
-            GUILayout.Label($"TownManager population: {town._population}");
-        else
-            GUILayout.Label("TownManager: <null>");
-
-        if (NPCPoolManager.Instance != null)
-            GUILayout.Label($"NPCPoolManager max villagers: {NPCPoolManager.Instance._maxActiveVillagers}");
-        else
-            GUILayout.Label("NPCPoolManager: <null>");
-
-        GUILayout.EndArea();
+    void OnContextualPanelHidden()
+    {
+        OnContextualPanelHiddenEvent?.Invoke();
     }
     #endregion
 }

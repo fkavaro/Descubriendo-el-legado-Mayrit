@@ -35,13 +35,13 @@ public class UtilitySystem : ABehaviourSystem
     /// <summary>
     /// Debugs the current action of the utility system.
     /// </summary>
-    protected override void DebugDecision()
+    public override void DebugDecision()
     {
         _behaviourEntity.CurrentActionInfo = _currentAction.DebugAction();
     }
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLE
     public override void Start()
     {
         CalculateActionsUtilities();

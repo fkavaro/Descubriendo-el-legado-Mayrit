@@ -1,20 +1,27 @@
 using UnityEngine;
+using System.Collections;
 
 /// <summary>
 /// Abstract behaviour entity class with a generic behaviour system.
 /// </summary>
-/// <typeparam name="T"> The type of the behaviour system.</typeparam>
-public abstract class ABehaviourEntity<T> : MonoBehaviour, IBehaviourEntity
-where T : ABehaviourSystem
+public abstract class ABehaviourEntity<BehaviourSystemType> : MonoBehaviour, IBehaviourEntity
+where BehaviourSystemType : ABehaviourSystem
 {
-    #region INTERFACE IMPLEMENTATION
+    #region PROPERTIES HELPERS
     public string Name => gameObject.name;
     public GameObject GO => gameObject;
+    public BehaviourSystemType BehaviourSystem => _behaviourSystem;
 
     public bool IsExecutionPaused
     {
         get => _isExecutionPaused;
         set => _isExecutionPaused = value;
+    }
+
+    public bool DebugMode
+    {
+        get => _debugMode;
+        set => _debugMode = value;
     }
 
     public string CurrentActionInfo
@@ -25,13 +32,17 @@ where T : ABehaviourSystem
     #endregion
 
     #region EDITOR PROPERTIES
-    [Header("Behaviour System settings")]
+    [Header("Behaviour System")]
     [Tooltip("Whether to show debug messages in the console or not")]
-    public bool _debugMode;
+    [SerializeField] protected bool _debugMode = false;
     [Tooltip("Whether to pause the execution of the behaviour system or not")]
-    public bool _isExecutionPaused;
+    [SerializeField] protected bool _isExecutionPaused;
     [SerializeField, ReadOnly]
     protected string _currentActionInfo = "";
+    #endregion
+
+    #region INTERNAL PROPERTIES
+    BehaviourSystemType _behaviourSystem;
     #endregion
 
     #region TO BE IMPLEMENTED METHODS
@@ -39,64 +50,65 @@ where T : ABehaviourSystem
     /// Returned value will be assigned to the BehaviourSystem property.
     /// Is executed in Awake().
     /// </summary>
-    public abstract T InitializeBehaviourSystem();
-
-    /// <summary>
-    /// The behaviour system of the entity.
-    /// </summary>
-    public T BehaviourSystem;
+    public abstract BehaviourSystemType DefineBehaviourSystemOnAwake();
     #endregion
 
-    #region MONOBEHAVIOUR: DERIVED TO BEHAVIOUR SYSTEM
+    #region LIFE CYCLE: DERIVED TO BEHAVIOUR SYSTEM
     protected virtual void Awake()
     {
-        BehaviourSystem = InitializeBehaviourSystem();
-        BehaviourSystem?.Awake();
+        if (DebugMode)
+            Debug.Log($"Awaking {Name} behaviour entity...");
+        _behaviourSystem = DefineBehaviourSystemOnAwake();
     }
 
     protected virtual void Start()
     {
-        BehaviourSystem?.Start();
+        _behaviourSystem?.Start();
     }
 
     protected virtual void Update()
     {
-        BehaviourSystem?.Update();
+        _behaviourSystem?.Update();
     }
 
     protected virtual void LateUpdate()
     {
-        BehaviourSystem?.LateUpdate();
+        _behaviourSystem?.LateUpdate();
     }
 
     protected virtual void OnCollisionEnter(Collision collision)
     {
-        BehaviourSystem?.OnCollisionEnter(collision);
+        _behaviourSystem?.OnCollisionEnter(collision);
     }
 
     protected virtual void OnCollisionStay(Collision collision)
     {
-        BehaviourSystem?.OnCollisionStay(collision);
+        _behaviourSystem?.OnCollisionStay(collision);
     }
 
     protected virtual void OnCollisionExit(Collision collision)
     {
-        BehaviourSystem?.OnCollisionExit(collision);
+        _behaviourSystem?.OnCollisionExit(collision);
     }
 
     protected virtual void OnTriggerEnter(Collider other)
     {
-        BehaviourSystem?.OnTriggerEnter(other);
+        _behaviourSystem?.OnTriggerEnter(other);
     }
 
     protected virtual void OnTriggerStay(Collider other)
     {
-        BehaviourSystem?.OnTriggerStay(other);
+        _behaviourSystem?.OnTriggerStay(other);
     }
 
     protected virtual void OnTriggerExit(Collider other)
     {
-        BehaviourSystem?.OnTriggerExit(other);
+        _behaviourSystem?.OnTriggerExit(other);
+    }
+
+    void IBehaviourEntity.StartCoroutine(IEnumerator enumerator)
+    {
+        StartCoroutine(enumerator);
     }
     #endregion
 }

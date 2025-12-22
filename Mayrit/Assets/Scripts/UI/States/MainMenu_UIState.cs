@@ -1,51 +1,57 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityEngine.InputSystem;
 
 public class MainMenu_UIState : AUIState
 {
-    #region PUBLIC PROPERTIES
-
+    #region PROPERTIES
+    Button _playButton,
+        _settingsButton,
+        _quitButton;
     #endregion
 
-    #region PRIVATE PROPERTIES
-    Button _playButton, _mainMenuButton, _quitButton;
+    #region CONSTRUCTOR
+    public MainMenu_UIState(UIDocument uiDocument)
+    : base("MainMenu", uiDocument) { }
     #endregion
 
-    public MainMenu_UIState(StackFiniteStateMachine stateMachine, UIDocument uiDocument)
-    : base("MainMenu", stateMachine, uiDocument) { }
-
-    #region INHERITED PROPERTIES
-    public override void StartState()
+    #region INHERITED METHODS
+    protected override void ConfigureUIElementsOnAwake()
     {
-        _screen = _UIDocument.rootVisualElement;//.Q<VisualElement>("MainMenu");
         _playButton = _screen.Q<Button>("PlayButton");
-        _mainMenuButton = _screen.Q<Button>("SettingsButton");
+        _settingsButton = _screen.Q<Button>("SettingsButton");
         _quitButton = _screen.Q<Button>("QuitButton");
 
-        _playButton.RegisterCallback<ClickEvent>(SwitchToGamePlayState);
-        _mainMenuButton.RegisterCallback<ClickEvent>(SwitchToSettingsState);
-        _quitButton.RegisterCallback<ClickEvent>(QuitGame);
+        if (_playButton == null)
+            Debug.LogWarning("_playButton not found");
+        if (_settingsButton == null)
+            Debug.LogWarning("_settingsButton not found");
+        if (_quitButton == null)
+            Debug.LogWarning("_quitButton not found");
+    }
+    protected override void RegisterUICallbacksOnAwake()
+    {
+        _playButton.RegisterCallback<ClickEvent>(OnPlayClicked);
+        _settingsButton.RegisterCallback<ClickEvent>(OnSettingsClicked);
+        _quitButton.RegisterCallback<ClickEvent>(OnQuitClicked);
     }
     #endregion
 
-    #region PUBLIC METHODS
-
-    #endregion
-
-    #region PRIVATE METHODS
-    void SwitchToGamePlayState(ClickEvent evt)
+    #region CALLBACK METHODS
+    void OnPlayClicked(ClickEvent evt)
     {
-        GameManager.Instance.BehaviourSystem.SwitchState(GameManager.Instance._gamePlayState);
+        _gameManager.SwitchToGamePlayState();
+        _soundManager.PlayButtonClickSFX();
     }
 
-    void SwitchToSettingsState(ClickEvent evt)
+    void OnSettingsClicked(ClickEvent evt)
     {
-        // TODO: settings menu
+        _uiManager.SwitchToSettingsMenuState();
+        _soundManager.PlayButtonClickSFX();
     }
 
-    void QuitGame(ClickEvent evt)
+    void OnQuitClicked(ClickEvent evt)
     {
+        _soundManager.PlayButtonClickSFX();
         Application.Quit();
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false; // For convenience in the editor

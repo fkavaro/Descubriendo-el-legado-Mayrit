@@ -7,15 +7,21 @@ public class PlayerVisual : Billboard
 {
     UIDocument _uiDocument;
     Button _playerButton;
-    public PlayableCharacter _playableCharacter;
+    PlayableCharacter _playableCharacter;
 
+    // Dependency Injectionq
+    ProgressManager _progressManager;
+    UIManager _uiManager;
+    CameraManager _cameraManager;
+    SoundManager _soundManager;
+
+    #region LIFE CYCLLE
     void Awake()
     {
         // Try to get the UIDocument component from the same GameObject
         _uiDocument = GetComponent<UIDocument>();
         var root = _uiDocument.rootVisualElement;
 
-        // Try to find a Label with name 'Name' in the document
         _playerButton = root.Q<Button>(name: "PlayerButton");
         if (_playerButton == null)
         {
@@ -25,29 +31,37 @@ public class PlayerVisual : Billboard
 
         _playerButton.visible = false;
 
-        // Subscribe to milestone change event
-        ProgressManager.Instance.OnMilestoneChanged += UpdatePlayerButtonVisual;
+        // Get dependencies from Service Locator
+        _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
+        _uiManager = ServiceLocator.Instance.Get<UIManager>();
+        _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
+        _soundManager = ServiceLocator.Instance.Get<SoundManager>();
 
-        // Register click event
+        // Subscribe to events and callbacks
+        _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
+        _cameraManager.CameraStateChangedEvent += OnCameraStateChanged;
         _playerButton.RegisterCallback<ClickEvent>(OnPlayerButtonClick);
-    }
-
-    void Start()
-    {
-        // Update current playable character
-        _playableCharacter = GameManager.Instance._currentPlayableCharacter;
     }
 
     void LateUpdate()
     {
-        CheckButtonVisibility();
+        UpdateScreenPosition();
+    }
+    #endregion
+
+    #region PRIVATE METHODS
+    void UpdateTransformPosition()
+    {
+        if (_playableCharacter != null)
+            transform.position = _playableCharacter.transform.position + 10 * Vector3.up;
     }
 
-    void CheckButtonVisibility()
+    void UpdateScreenPosition()
     {
-        // Hide button if not in spectator HUD state or if orbital camera is active
-        if (!UIManager.Instance._spectatorHUDState.IsCurrentState() ||
-            CameraManager.Instance._orbitalState.IsCurrentState())
+        // Hide if no playable character is set and not in spectator HUD nor camera
+        if (_playableCharacter == null &&
+            !_uiManager.IsInSpectatorHUDState &&
+            !_cameraManager.IsInSpectatorState)
         {
             _playerButton.visible = false;
             return;
@@ -69,26 +83,27 @@ public class PlayerVisual : Billboard
         else
             _playerButton.visible = false;
     }
+    #endregion
 
-    void UpdatePlayerButtonVisual(ProgressManager.Milestone milestone)
+    #region CALLBACK METHODS
+    void OnMilestoneChanged(MilestoneMapping milestoneMapping)
     {
         // Update current playable character
-        _playableCharacter = GameManager.Instance._currentPlayableCharacter;
+        _playableCharacter = milestoneMapping.PlayableCharacter;
 
-        // Set this transform as player child
-        transform.SetParent(_playableCharacter.transform);
+        UpdateTransformPosition();
+    }
 
-        // Fix position
-        transform.position = _playableCharacter.transform.position + 10 * Vector3.up;
+    void OnCameraStateChanged()
+    {
+        if (_cameraManager.IsInSpectatorState)
+            UpdateTransformPosition();
     }
 
     void OnPlayerButtonClick(ClickEvent evt)
     {
-        // Spectator camera
-        if (CameraManager.Instance._spectatorState.IsCurrentState())
-            CameraManager.Instance.SwitchToOrbitalCamera(_playableCharacter.transform, _playableCharacter._information);
-        // Third person camera
-        else if (CameraManager.Instance._thirdPersonState.IsCurrentState())
-            CameraManager.Instance.SwitchToSpectatorCamera();
+        _cameraManager.SwitchToOrbitalCamera(_playableCharacter.GetComponent<SelectableObject>());
+        _soundManager.PlayButtonClickSFX();
     }
+    #endregion
 }

@@ -7,11 +7,13 @@ using UnityEngine.SceneManagement;
 
 public class GamePlay_GameState : AGameState
 {
-    public GamePlay_GameState(FiniteStateMachine stateMachine)
-    : base("Gameplay", stateMachine) { }
+    public GamePlay_GameState()
+    : base("Gameplay") { }
 
     public override void StartState()
     {
+        base.StartState();
+
         if (SceneManager.GetActiveScene().name != "GameScene")
             SceneManager.LoadScene("GameScene");
     }

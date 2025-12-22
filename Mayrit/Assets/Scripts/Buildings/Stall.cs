@@ -9,7 +9,7 @@ public class Stall : Workplace
     [SerializeField] Market _parentMarket;
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLE
     public override void OnEnable()
     {
         base.OnEnable();

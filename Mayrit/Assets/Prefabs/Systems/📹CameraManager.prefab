@@ -374,7 +374,7 @@ GameObject:
   m_Layer: 0
   m_Name: Third Person Camera target
   m_TagString: Untagged
-  m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -405,7 +405,7 @@ GameObject:
   m_Layer: 0
   m_Name: Spectator camera target
   m_TagString: Untagged
-  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 7866945982896999795, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -418,7 +418,7 @@ Transform:
   m_GameObject: {fileID: 3259724525116924492}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -40, y: 120, z: -100}
+  m_LocalPosition: {x: -857.5, y: 120, z: -558.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -443,7 +443,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3814782983823893589
 Transform:
   m_ObjectHideFlags: 0
@@ -452,13 +452,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3503623948957655158}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.38238075, y: 0.38595867, z: -0.17997551, w: 0.8200181}
-  m_LocalPosition: {x: -238.13913, y: 426.4178, z: -263.8567}
+  m_LocalRotation: {x: 0.08418599, y: 0.2578342, z: -0.022557568, w: 0.96225023}
+  m_LocalPosition: {x: -896.89233, y: 133.89185, z: -626.32947}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3768097708187529351}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 50, y: 7.616, z: 0}
 --- !u!114 &5488014350122742170
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -536,7 +536,7 @@ MonoBehaviour:
     SplineCurvature: 0.5
   RecenteringTarget: 2
   HorizontalAxis:
-    Value: 50.41
+    Value: 30
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -546,7 +546,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   VerticalAxis:
-    Value: 50
+    Value: 10
     Center: 17.5
     Range: {x: 10, y: 50}
     Wrap: 0
@@ -556,7 +556,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   RadialAxis:
-    Value: 1
+    Value: 0.2
     Center: 1
     Range: {x: 0.1, y: 1}
     Wrap: 0
@@ -646,12 +646,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _debugMode: 0
   _isExecutionPaused: 0
-  _dontDestroyOnLoad: 0
-  _spectatorSimSpeed: 3
+  _currentActionInfo: 
+  _spectatorSimSpeed: 5
   _spectatorCamera: {fileID: 5488014350122742170}
-  _edgeScrolling: 0
-  _edgeScrollingMargin: 30
-  _moveSpeed: 500
+  _edgeScrolling: 1
+  _edgeScrollingMargin: 100
+  _moveSpeed: 300
   _moveSpeedZoomCurve:
     serializedVersion: 2
     m_Curve:
@@ -676,8 +676,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _acceleration: 200
-  _deceleration: 250
+  _acceleration: 700
+  _deceleration: 1000
   _sprintSpeedMultiplier: 2
   _movementLimitsX: {x: -1000, y: 700}
   _movementLimitsY: {x: 120, y: 400}
@@ -692,12 +692,6 @@ MonoBehaviour:
   _spectatorTargetFixingSpeed: 50
   _orbitalSimSpeed: 1
   _orbitalCamera: {fileID: 1263816906637668818}
-  _orbitalBuildingOrbitSpeed: 30
-  _orbitalBuildingZoom: 70
-  _orbitalBuildingOffset: 20
-  _orbitalCharacterOrbitSpeed: 15
-  _orbitalCharacterZoom: 7
-  _orbitalCharacterOffset: 2
   _thirdPersonSimSpeed: 1
   _thirdPersonCamera: {fileID: 412980351691204597}
   _3rdPersonCameraOrbitSpeed: 3
@@ -1124,8 +1118,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6859964358207550459}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.3823808, y: 0.38595864, z: -0.1799755, w: 0.8200181}
-  m_LocalPosition: {x: -238.13913, y: 426.4178, z: -263.8567}
+  m_LocalRotation: {x: 0.08418599, y: 0.2578342, z: -0.022557568, w: 0.96225023}
+  m_LocalPosition: {x: -896.89233, y: 133.89185, z: -626.32947}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []

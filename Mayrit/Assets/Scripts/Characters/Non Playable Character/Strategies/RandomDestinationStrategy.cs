@@ -6,7 +6,8 @@ using UnityEngine;
 /// <summary>
 /// RandomDestinationStrategy is a strategy for moving constantly between random points using a NavMeshAgent.
 /// </summary>
-public class RandomDestinationStrategy : RandomPatrolStrategy
+public class RandomDestinationStrategy<NPCtype> : RandomPatrolStrategy<NPCtype>
+where NPCtype : INPC
 {
     #region PROPERTIES
     bool _destinationIsSet = false; // Dirty flag
@@ -14,7 +15,7 @@ public class RandomDestinationStrategy : RandomPatrolStrategy
 
     #region CONSTRUCTOR
     // Center point is the controller transform
-    public RandomDestinationStrategy(INPC npc, int samplingIterations = 30, float areaRadious = 10f)
+    public RandomDestinationStrategy(NPCtype npc, int samplingIterations = 30, float areaRadious = 10f)
     : base(npc, npc.GO.transform, samplingIterations, areaRadious) { }
     #endregion
 
@@ -25,9 +26,9 @@ public class RandomDestinationStrategy : RandomPatrolStrategy
         if (!_destinationIsSet)
         {
             // Random destination is reachable, calculated from controller position
-            if (_npc.CalculateRandomDestination(_samplingIterations, _areaRadious, _centerPoint, out Vector3 randomDestination))
+            if (_npc.MovementController.CalculateRandomDestination(_samplingIterations, _areaRadious, _centerPoint, out Vector3 randomDestination))
             {
-                _npc.SetDestination(randomDestination);
+                _npc.MovementController.SetDestination(randomDestination);
                 _destinationIsSet = true;
             }
             // It's not
@@ -36,17 +37,12 @@ public class RandomDestinationStrategy : RandomPatrolStrategy
         }
 
         // Is close to destination
-        if (_npc.IsCloseToDestination(1f))
+        if (_npc.MovementController.IsCloseToDestination(1f))
         {
             return Node.Status.Success;
         }
         else // Hasn't arrived
-        {
-            // Reduce energy
-            _npc.ReduceEnergy(Time.deltaTime);
-
             return Node.Status.Running;
-        }
     }
 
     public override void Reset()

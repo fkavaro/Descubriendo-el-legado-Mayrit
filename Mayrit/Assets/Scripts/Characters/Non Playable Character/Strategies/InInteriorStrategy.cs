@@ -1,13 +1,14 @@
 using UnityEngine;
 
-public class InInteriorStrategy : ATimerStrategy
+public class InInteriorStrategy<NPCtype> : ATimedNPCStrategy<NPCtype>
+where NPCtype : INPC
 {
     readonly GameObject _model;
 
-    public InInteriorStrategy(INPC npc, GameObject model, float min = 30, float max = 120)
+    public InInteriorStrategy(NPCtype npc, float min = 30, float max = 120)
     : base(npc, min, max)
     {
-        _model = model;
+        _model = npc.CharacterModel;
     }
 
     public override Node.Status Start()

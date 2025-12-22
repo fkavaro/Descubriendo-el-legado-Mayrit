@@ -6,15 +6,23 @@ using Unity.Cinemachine;
 /// <summary>
 /// Manages the camera states and data. Singleton.
 /// </summary>
-public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStateMachine>
+public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
 {
+    #region PROPERTY HELPERS
+    public bool IsInSpectatorState => _fsm.IsCurrentState(_spectatorState);
+    public bool IsInOrbitalState => _fsm.IsCurrentState(_orbitalState);
+    public bool IsInThirdPersonState => _fsm.IsCurrentState(_thirdPersonState);
+    public bool IsInPOIState => _fsm.IsCurrentState(_poiState);
+    public bool EdgeScrolling => _edgeScrolling;
+    #endregion
+
     #region EDITOR PROPERTIES
     [Header("Spectator camera")]
-    [Range(0.1f, 5f)]
+    [Range(0.1f, 10f)]
     public float _spectatorSimSpeed = 3f;
     public CinemachineCamera _spectatorCamera;
     [Tooltip("Wether to move camera at screen margins or not.")]
-    public bool _edgeScrolling = false;
+    [SerializeField] bool _edgeScrolling = false;
     public int _edgeScrollingMargin = 30;
     public float _moveSpeed = 500f;
     public AnimationCurve _moveSpeedZoomCurve = AnimationCurve.Linear(0f, 0.1f, 1f, 1f);
@@ -39,18 +47,12 @@ public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStat
     public float _spectatorTargetFixingSpeed = 40f;
 
     [Header("Orbital camera")]
-    [Range(0.1f, 5f)]
+    [Range(0.1f, 10f)]
     public float _orbitalSimSpeed = 1f;
     public CinemachineCamera _orbitalCamera;
-    public float _orbitalBuildingOrbitSpeed = 30f;
-    public float _orbitalBuildingZoom;
-    public float _orbitalBuildingOffset = 20f;
-    public float _orbitalCharacterOrbitSpeed = 15f;
-    public float _orbitalCharacterZoom;
-    public float _orbitalCharacterOffset = 10f;
 
     [Header("Third Person Camera")]
-    [Range(0.1f, 5f)]
+    [Range(0.1f, 10f)]
     public float _thirdPersonSimSpeed = 1f;
     public CinemachineCamera _thirdPersonCamera;
     public float _3rdPersonCameraOrbitSpeed = 3f,
@@ -60,23 +62,32 @@ public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStat
     #endregion
 
     #region INTERNAL PROPERTIES
-    public event Action OnCameraStateChanged;
+    public event Action CameraStateChangedEvent;
 
-    FiniteStateMachine _fsm;
-    public Spectator_CameraState _spectatorState;
-    public ThirdPerson_CameraState _thirdPersonState;
-    public Orbital_CameraState _orbitalState;
+    // Finiste State Machine and states
+    FiniteStateMachine<ACameraState> _fsm;
+    Spectator_CameraState _spectatorState;
+    ThirdPerson_CameraState _thirdPersonState;
+    Orbital_CameraState _orbitalState;
+    POI_CameraState _poiState;
+
+    // Dependency Injection
+    UIManager _uiManager;
+    TourManager _tourManager;
+    GameManager _gameManager;
+    SoundManager _soundManager;
     #endregion
 
     #region INHERITED
-    public override FiniteStateMachine InitializeBehaviourSystem()
+    public override FiniteStateMachine<ACameraState> DefineBehaviourSystemOnAwake()
     {
         _fsm = new(this);
 
         // States initialization
-        _spectatorState = new(_fsm, _spectatorCamera, _spectatorSimSpeed);
-        _orbitalState = new(_fsm, _orbitalCamera, _orbitalSimSpeed);
-        _thirdPersonState = new(_fsm, _thirdPersonCamera, _thirdPersonSimSpeed);
+        _spectatorState = new(_spectatorCamera, _spectatorSimSpeed);
+        _orbitalState = new(_orbitalCamera, _orbitalSimSpeed);
+        _thirdPersonState = new(_thirdPersonCamera, _thirdPersonSimSpeed);
+        _poiState = new(_thirdPersonSimSpeed);
 
         _fsm.SetInitialState(_spectatorState);
 
@@ -84,10 +95,24 @@ public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStat
     }
     #endregion
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLE
     protected override void Start()
     {
         base.Start();
+
+        // Get dependencies from ServiceLocator
+        _uiManager = ServiceLocator.Instance.Get<UIManager>();
+        _tourManager = ServiceLocator.Instance.Get<TourManager>();
+        _gameManager = ServiceLocator.Instance.Get<GameManager>();
+        _soundManager = ServiceLocator.Instance.Get<SoundManager>();
+
+        // Subscribe to events
+        _spectatorState.ObjectSelectedEvent += SwitchToOrbitalCamera;
+        _thirdPersonState.ExitThirdPersonCameraEvent += OnExitThirdPersonCamera;
+        _uiManager.OnContextualPanelHiddenEvent += OnContextualPanelHidden;
+        _uiManager.PlayCharacterClickedEvent += OnPlayCharacterClicked;
+        _uiManager.EdgeScrollingToggledEvent += OnEdgeScrollingToggled;
+        _tourManager.POIVisitedEvent += OnTourPOIVisited;
 
         // Set camera target at min height
         CinemachineOrbitalFollow _orbitalFollow = _spectatorCamera.GetComponent<CinemachineOrbitalFollow>();
@@ -101,14 +126,29 @@ public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStat
                 _movementLimitsY.x,
                 _spectatorCamera.LookAt.position.z);
         }
+
+        // Check edge scrolling initial state
+        _edgeScrolling = _uiManager.EdgeScrollingValueSet;
+    }
+
+    void OnDestroy()
+    {
+        // Unsubscribe from events
+        _spectatorState.ObjectSelectedEvent -= SwitchToOrbitalCamera;
+        _thirdPersonState.ExitThirdPersonCameraEvent -= OnExitThirdPersonCamera;
+        _uiManager.OnContextualPanelHiddenEvent -= OnContextualPanelHidden;
+        _uiManager.PlayCharacterClickedEvent -= OnPlayCharacterClicked;
+        _tourManager.POIVisitedEvent -= OnTourPOIVisited;
     }
     #endregion
 
-    #region PUBLIC METHODS
+    #region STATE HANDLING
     public void SwitchToSpectatorCamera()
     {
-        if (_thirdPersonState.IsCurrentState())
+        if (IsInThirdPersonState)
         {
+            _soundManager.PlayCameraTransitionSFX();
+
             _spectatorCamera.LookAt.position = _thirdPersonCamera.LookAt.position;
 
             // Fix to look at target height
@@ -121,9 +161,16 @@ public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStat
             _fsm.SwitchState(_spectatorState);
 
             SmoothMoveCoroutine(_spectatorCamera.LookAt, fixedSpectatorLookAt, _spectatorTargetFixingSpeed);
+
+            if (DebugMode)
+                Debug.Log("Switched to spectator camera from third person.");
+
+            CameraStateChangedEvent?.Invoke();
         }
-        else if (_orbitalState.IsCurrentState())
+        else if (IsInOrbitalState)
         {
+            _soundManager.PlayCameraTransitionSFX();
+
             _spectatorCamera.LookAt.position = _orbitalCamera.LookAt.position;
 
             // Same orbit values as orbital camera
@@ -142,19 +189,19 @@ public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStat
             _spectatorCamera.LookAt.position = fixedSpectatorLookAt;
 
             _fsm.SwitchState(_spectatorState);
-        }
 
-        OnCameraStateChanged?.Invoke();
+            if (DebugMode)
+                Debug.Log("Switched to spectator camera from orbital.");
+
+            CameraStateChangedEvent?.Invoke();
+        }
     }
 
-    public void SwitchToOrbitalCamera(Transform objectToOrbitAround, AInformationSO information)
+    public void SwitchToOrbitalCamera(SelectableObject selectedElement)
     {
-        // Hide contextual panel
-        UIManager.Instance._spectatorHUDState._contextualPanel.Hide();
+        _orbitalState.SelectedObject = selectedElement;
 
-        _orbitalState._information = information;
-        _orbitalCamera.Follow = objectToOrbitAround;
-        _orbitalCamera.LookAt = objectToOrbitAround;
+        _soundManager.PlayCameraTransitionSFX();
 
         // Same orbit values as spectator camera
         _orbitalCamera.GetComponent<CinemachineOrbitalFollow>().HorizontalAxis.Value =
@@ -164,32 +211,60 @@ public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStat
 
         _fsm.SwitchState(_orbitalState);
 
-        OnCameraStateChanged?.Invoke();
+        if (DebugMode)
+            Debug.Log($"Switched to orbital camera around '{selectedElement.name}'.");
+
+        CameraStateChangedEvent?.Invoke();
     }
 
     public void SwitchToThirdPersonCamera()
     {
-        // Update third person camera target to current playable character
-        Transform playerTranform = GameManager.Instance._currentPlayableCharacter.transform;
+        // if (_thirdPersonCamera == null)
+        // {
+        //     Debug.LogError("Cannot switch to third person camera: third person camera is missing or destroyed.");
+        //     return;
+        // }
 
-        // Set camera follow and look at targets
+        // Update third person camera target to current playable character
+        Transform playerTranform;
+
+        if (_gameManager.PlayableCharacter != null)
+            playerTranform = _gameManager.PlayableCharacter.transform;
+        else
+        {
+            Debug.LogError("Cannot switch to third person camera: PlayableCharacter is null.");
+            return;
+        }
+
+        // Set camera follow and look at target
         _thirdPersonCamera.LookAt.position = playerTranform.position;
 
         _fsm.SwitchState(_thirdPersonState);
 
-        OnCameraStateChanged?.Invoke();
+        CameraStateChangedEvent?.Invoke();
+
+        if (DebugMode)
+            Debug.Log("Switched to third person camera.");
     }
 
-    /// <summary>
-    /// Moves smoothly the given transform to the new position in given duration.
-    /// </summary>
-    public void SmoothMoveCoroutine(Transform lookAt, Vector3 newPosition, float speed, Action onComplete = null)
+    public void SwitchToPoiCamera(CinemachineCamera camera)
     {
-        StartCoroutine(SmoothMove(lookAt, newPosition, speed, onComplete));
+        _soundManager.PlayCameraTransitionSFX();
+        _poiState.Camera = camera;
+        _fsm.SwitchState(_poiState);
+        CameraStateChangedEvent?.Invoke();
     }
     #endregion
 
     #region PRIVATE METHODS
+    /// <summary>
+    /// Moves smoothly the given transform to the new position in given duration.
+    /// </summary>
+    void SmoothMoveCoroutine(Transform lookAt, Vector3 newPosition, float speed, Action onComplete = null)
+    {
+        StartCoroutine(SmoothMove(lookAt, newPosition, speed, onComplete));
+    }
+
     /// <summary>
     /// Smoothly moves the given transform to the new position in given speed.
     /// </summary>
@@ -219,6 +294,42 @@ public class CameraManager : ASingletonBehaviourEntity<CameraManager, FiniteStat
 
         transform.position = newPosition;
         onComplete?.Invoke();
+    }
+    #endregion
+
+    #region CALLBACK METHODS
+    void OnExitThirdPersonCamera()
+    {
+        SwitchToSpectatorCamera();
+    }
+
+    void OnPlayCharacterClicked()
+    {
+        SwitchToThirdPersonCamera();
+    }
+
+    void OnContextualPanelHidden()
+    {
+        if (IsInOrbitalState)
+            SwitchToSpectatorCamera();
+        else if (IsInPOIState)
+            SwitchToThirdPersonCamera();
+    }
+
+    void OnTourPOIVisited(PointOfInterest poi)
+    {
+        if (poi.gameObject.activeInHierarchy == false)
+        {
+            Debug.LogWarning($"POI '{poi.name}' is not active in hierarchy.");
+            return;
+        }
+
+        SwitchToPoiCamera(poi.Camera);
+    }
+
+    void OnEdgeScrollingToggled(bool value)
+    {
+        _edgeScrolling = value;
     }
     #endregion
 }

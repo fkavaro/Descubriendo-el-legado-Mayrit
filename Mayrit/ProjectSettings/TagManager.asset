@@ -8,13 +8,13 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Selectable Object
+  - SelectableObject
   - Water
   - UI
   - Terrain
-  - 
-  - 
-  - 
+  - NonPlayableCharacter
+  - PlayableCharacter
+  - NoTalkZone
   - 
   - 
   - 

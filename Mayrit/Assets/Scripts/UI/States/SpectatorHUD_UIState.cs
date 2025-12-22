@@ -3,14 +3,13 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.InputSystem;
 
-public class SpectatorHUD_UIState : AUIState
+public class SpectatorHUD_UIState : AHUDState
 {
-    #region PUBLIC PROPERTIES
-    public event Action OnModernSuperpositionToggled;
-    public ContextualPanel _contextualPanel;
-    #endregion
+    #region PROPERTIES
+    public event Action OnModernSuperpositionEvent;
 
-    #region PRIVATE PROPERTIES
+    Tour _currentTour;
+
     Label _tooltip,
         _milestoneName,
         _milestoneDate;
@@ -20,24 +19,27 @@ public class SpectatorHUD_UIState : AUIState
         _nextMilestoneButton,
         _previousMilestoneButton,
         _modernSuperpositionButton;
-    VisualElement _milestoneArea,
-        _contextualPanelRoot;
-    Vector2 _cursorScreenPos;
+    VisualElement _milestoneArea;
+
+    // Dependency Injection
+    CameraManager _cameraManager;
+    ProgressManager _progressManager;
     #endregion
 
-    public SpectatorHUD_UIState(StackFiniteStateMachine stateMachine, UIDocument uiDocument)
-    : base("SpectatorHUD", stateMachine, uiDocument) { }
+    #region CONSTRUCTOR
+    public SpectatorHUD_UIState(UIDocument uiDocument)
+    : base("SpectatorHUD", uiDocument) { }
+    #endregion
 
-    #region INHERITED
-    public override void StartState()
+    #region UI STATE INHERITED METHODS
+    protected override void ConfigureUIElementsOnAwake()
     {
-        _screen = _UIDocument.rootVisualElement.Q<VisualElement>("SpectatorHUD");
+        base.ConfigureUIElementsOnAwake();
 
         _pauseButton = _screen.Q<Button>("PauseButton");
         _heritageButton = _screen.Q<Button>("HeritageButton");
         _tooltip = _screen.Q<Label>("Tooltip");
         _milestoneArea = _screen.Q<VisualElement>("MilestoneArea");
-        _contextualPanelRoot = _screen.Q<VisualElement>("ContextualPanel");
         _milestoneInfoButton = _milestoneArea.Q<Button>("InfoButton");
         _milestoneName = _milestoneArea.Q<Label>("Name");
         _milestoneDate = _milestoneArea.Q<Label>("Date");
@@ -51,8 +53,6 @@ public class SpectatorHUD_UIState : AUIState
             Debug.LogWarning("_tooltip not found");
         if (_milestoneArea == null)
             Debug.LogWarning("_milestoneArea not found");
-        if (_contextualPanelRoot == null)
-            Debug.LogWarning("_contextualPanel not found");
         if (_milestoneInfoButton == null)
             Debug.LogWarning("_eventInfoButton button not found");
         if (_milestoneName == null)
@@ -66,166 +66,152 @@ public class SpectatorHUD_UIState : AUIState
         if (_modernSuperpositionButton == null)
             Debug.LogWarning("_modernSuperpositionButton button not found");
 
-        _contextualPanel = new(_contextualPanelRoot);
+        // Disable next milestone button until tour is completed
+        _nextMilestoneButton.SetEnabled(false);
+    }
 
-        _contextualPanel.OnClosePanel += OnContextualPanelClosed;
-        _pauseButton.RegisterCallback<ClickEvent>(SwitchToPauseState);
-        _heritageButton.RegisterCallback<ClickEvent>(SwitchToHeritageState);
-        _milestoneInfoButton.RegisterCallback<ClickEvent>(ShowMilestoneInfo);
-        _nextMilestoneButton.RegisterCallback<ClickEvent>(SwitchToNextMilestone);
-        _previousMilestoneButton.RegisterCallback<ClickEvent>(SwitchToPreviousMilestone);
-        _modernSuperpositionButton.RegisterCallback<ClickEvent>(evt => OnModernSuperpositionToggled?.Invoke());
+    protected override void RegisterUICallbacksOnAwake()
+    {
+        _pauseButton.RegisterCallback<ClickEvent>(OnPauseClicked);
+        _heritageButton.RegisterCallback<ClickEvent>(OnHeritageClicked);
+        _milestoneInfoButton.RegisterCallback<ClickEvent>(OnMilestoneClicked);
+        _nextMilestoneButton.RegisterCallback<ClickEvent>(OnNextMilestoneClicked);
+        _previousMilestoneButton.RegisterCallback<ClickEvent>(OnPreviousMilestoneClicked);
+        _modernSuperpositionButton.RegisterCallback<ClickEvent>(OnModerSuperpositionToggled);
+    }
 
-        _screen.style.display = DisplayStyle.Flex; // Show HUD
+    protected override void GetServicesDependenciesOnStart()
+    {
+        base.GetServicesDependenciesOnStart();
 
-        CheckMilestoneButtonsActivation();
-        HideTooltip();
-        OverwriteMilestoneArea();
+        _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
+        _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
+    }
 
-        var previousState = _stateMachine.GetPreviousState();
+    protected override void SubscribeToServicesEventsOnStart()
+    {
+        base.SubscribeToServicesEventsOnStart();
 
-        // To avoid showing the milestone info when switching from other state 
-        // (PlayerHUD for example)
-        if (previousState == null)
-            ShowMilestoneInfo();
+        _uiManager.ShowTooltipEvent += OnShowTooltip;
+        _uiManager.HideTooltipEvent += OnHideTooltip;
+        _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
+    }
+
+    public override void StartState()
+    {
+        base.StartState();
+
+        _currentTour = _progressManager.CurrentMilestoneMapping.Tour;
+
+        if (_wasContextualPanelShown)
+            _milestoneArea.style.display = DisplayStyle.None;
         else
-            _contextualPanel.Hide();
-    }
+            _milestoneArea.style.display = DisplayStyle.Flex;
 
-    public override void UpdateState()
-    {
-        _cursorScreenPos = Mouse.current.position.ReadValue();
-
-        if (_tooltip != null &&
-            _tooltip.style.display == DisplayStyle.Flex)
+        if (_currentTour.IsCompleted)
         {
-            // UI Toolkit's Y axis is from top to bottom, while screen coordinates are from bottom to top
-            _tooltip.style.left = _cursorScreenPos.x + UIManager.Instance._tooltipOffset.x; ;
-            _tooltip.style.top = Screen.height - _cursorScreenPos.y + UIManager.Instance._tooltipOffset.y;
+            // Enable next milestone button after tour is completed
+            if (!_progressManager.AtLastMilestone())
+                _nextMilestoneButton.SetEnabled(true);
         }
-
-        // Hide tooltip if camera is not spectator
-        if (!CameraManager.Instance._spectatorState.IsCurrentState())
-            HideTooltip();
     }
 
-    public override void ExitState()
+    protected override void UnsubscribeToServicesEventsOnExit()
     {
-        _screen.style.display = DisplayStyle.None; // Hide HUD
-    }
+        base.UnsubscribeToServicesEventsOnExit();
 
+        _uiManager.ShowTooltipEvent -= OnShowTooltip;
+        _uiManager.HideTooltipEvent -= OnHideTooltip;
+        _progressManager.MilestoneChangedEvent -= OnMilestoneChanged;
+    }
     #endregion
 
-    #region PUBLIC METHODS
-    public void ShowTooltip(SelectableObject objectHovered)
+    #region HUD STATE INHERITED METHODS
+    protected override void OnContextualPanelShown()
     {
-        if (_tooltip == null) return;
-
-        // Overwrite and show tooltip
-        _tooltip.text = objectHovered._information.Header;
-        _tooltip.style.display = DisplayStyle.Flex;
-    }
-
-    public void HideTooltip()
-    {
-        if (_tooltip == null) return;
-
-        _tooltip.style.display = DisplayStyle.None;
-    }
-
-    public void ShowContextualPanel(AInformationSO objectInfo)
-    {
-        if (IsCursorOverUI()) return;
-
         _milestoneArea.style.display = DisplayStyle.None;
-
-        _contextualPanel.ShowInfo(objectInfo);
     }
 
-    public void OnContextualPanelClosed()
+    protected override void OnContextualPanelHidden()
     {
         _milestoneArea.style.display = DisplayStyle.Flex;
-
-        // Switch to spectator camera state if it's not current state
-        if (CameraManager.Instance.BehaviourSystem.IsCurrentState(CameraManager.Instance._orbitalState))
-            CameraManager.Instance.SwitchToSpectatorCamera();
     }
     #endregion
 
-    #region PRIVATE METHODS
-    void ShowMilestoneInfo()
+    #region CALLBACK METHODS
+    void OnHeritageClicked(ClickEvent evt)
     {
-        _milestoneArea.style.display = DisplayStyle.None;
-
-        AProgressState currentProgressState = (AProgressState)ProgressManager.Instance.BehaviourSystem.CurrentState;
-
-        _contextualPanel.ShowInfo(currentProgressState._informationSO);
+        _uiManager.SwitchToHeritageState();
+        _soundManager.PlayButtonClickSFX();
     }
 
-    void OverwriteMilestoneArea()
+    void OnMilestoneClicked(ClickEvent evt)
     {
-        AProgressState currentProgressState = (AProgressState)ProgressManager.Instance.BehaviourSystem.CurrentState;
+        ShowContextualPanel(_progressManager.CurrentMilestoneMapping.Data);
+        _soundManager.PlayButtonClickSFX();
+    }
 
-        if (currentProgressState == null || currentProgressState._informationSO == null)
+    void OnPreviousMilestoneClicked(ClickEvent evt)
+    {
+        _progressManager.SwitchToPreviousMilestone();
+        _soundManager.PlayButtonClickSFX();
+    }
+
+    void OnNextMilestoneClicked(ClickEvent evt)
+    {
+        _progressManager.SwitchToNextMilestone();
+        _soundManager.PlayButtonClickSFX();
+    }
+
+    void OnModerSuperpositionToggled(ClickEvent evt)
+    {
+        OnModernSuperpositionEvent?.Invoke();
+        _soundManager.PlayButtonClickSFX();
+    }
+
+    void OnMilestoneChanged(MilestoneMapping mapping)
+    {
+        _currentTour = mapping.Tour;
+
+        // Overwrite milestone area
+        _milestoneName.text = mapping.Data.Header;
+        _milestoneDate.text = mapping.Data.SubHeader;
+
+        // Next milestone according to tour completion
+        _nextMilestoneButton.SetEnabled(_currentTour.HasBeenCompleted);
+
+        // First milestone
+        if (_progressManager.AtFirstMilestone())
+            // Disable previous button
+            _previousMilestoneButton.SetEnabled(false);
+        else
+            _previousMilestoneButton.SetEnabled(true);
+
+        ShowContextualPanel(mapping.Data);
+    }
+
+    void OnShowTooltip(DataSO data)
+    {
+        if (!_cameraManager.IsInSpectatorState)
         {
-            Debug.LogWarning("Current progress state or its informationSO is null");
+            OnHideTooltip();
             return;
         }
 
-        _milestoneName.text = currentProgressState._informationSO.Header;
-        _milestoneDate.text = currentProgressState._informationSO.SubHeader;
+        _tooltip.text = data.Header;
+        _tooltip.style.display = DisplayStyle.Flex;
+
+        Vector2 _cursorScreenPos = Mouse.current.position.ReadValue();
+
+        // UI Toolkit's Y axis is from top to bottom, 
+        // while screen coordinates are from bottom to top
+        _tooltip.style.left = _cursorScreenPos.x + _uiManager.TooltipOffset.x; ;
+        _tooltip.style.top = Screen.height - _cursorScreenPos.y + _uiManager.TooltipOffset.y;
     }
 
-    void CheckMilestoneButtonsActivation()
+    void OnHideTooltip()
     {
-        // Last milestone
-        if (ProgressManager.Instance.AtLastMilestone())
-        {
-            // Disable next button
-            _nextMilestoneButton.SetEnabled(false);
-        }
-        else
-            _nextMilestoneButton.SetEnabled(true);
-
-        // First milestone
-        if (ProgressManager.Instance.AtFirstMilestone())
-        {
-            // Disable previous button
-            _previousMilestoneButton.SetEnabled(false);
-        }
-        else
-            _previousMilestoneButton.SetEnabled(true);
-    }
-
-    void SwitchToPauseState(ClickEvent evt)
-    {
-        _stateMachine.SwitchState(UIManager.Instance._pauseState);
-    }
-
-    void SwitchToHeritageState(ClickEvent evt)
-    {
-        _stateMachine.SwitchState(UIManager.Instance._heritageState);
-    }
-
-    void ShowMilestoneInfo(ClickEvent evt)
-    {
-        ShowMilestoneInfo();
-    }
-
-    void SwitchToPreviousMilestone(ClickEvent evt)
-    {
-        ProgressManager.Instance.SwitchToPreviousMilestone();
-        OverwriteMilestoneArea();
-        CheckMilestoneButtonsActivation();
-        ShowMilestoneInfo();
-    }
-
-    void SwitchToNextMilestone(ClickEvent evt)
-    {
-        ProgressManager.Instance.SwitchToNextMilestone();
-        OverwriteMilestoneArea();
-        CheckMilestoneButtonsActivation();
-        ShowMilestoneInfo();
+        _tooltip.style.display = DisplayStyle.None;
     }
     #endregion
 }

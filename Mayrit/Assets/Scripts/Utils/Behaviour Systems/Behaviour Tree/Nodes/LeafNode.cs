@@ -9,12 +9,12 @@ using UnityEngine;
 public class LeafNode : Node
 {
     #region PROPERTIES
-    readonly AStrategy _strategy;
+    readonly IStrategy _strategy;
     bool _started;
     #endregion
 
     #region CONSTRUCTOR
-    public LeafNode(IBehaviourEntity entity, string name, AStrategy strategy, int priority = 0)
+    public LeafNode(IBehaviourEntity entity, string name, IStrategy strategy, int priority = 0)
     : base(entity, name, priority)
     {
         _strategy = strategy;
@@ -56,7 +56,7 @@ public class LeafNode : Node
         _started = false;
     }
 
-    protected override void DebugDecision()
+    public override void DebugDecision()
     {
         _behaviourEntity.CurrentActionInfo = _nodeName;
     }

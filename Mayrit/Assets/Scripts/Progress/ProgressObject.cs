@@ -10,9 +10,10 @@ using UnityEngine;
 /// </summary>
 public class ProgressObject : MonoBehaviour
 {
-    public List<ProgressManager.Milestone> milestonesActivated;
+    [Tooltip("Range of milestones where this object is active")]
+    public Vector2 milestonesActivated;
 
-    #region MONOBEHAVIOUR
+    #region LIFE CYCLE
     void OnEnable()
     {
         SubscribeToRuntimeEvents();
@@ -20,7 +21,7 @@ public class ProgressObject : MonoBehaviour
 
     void OnDisable()
     {
-        UnsubscribeToRuntimeEvents();
+        UnsubscribeFromRuntimeEvents();
     }
 
     void OnValidate()
@@ -28,35 +29,6 @@ public class ProgressObject : MonoBehaviour
 #if UNITY_EDITOR
         if (!Application.isPlaying)
             SubscribeToRuntimeEvents();
-#endif
-    }
-    #endregion
-
-    #region EVENTS
-    void OnMilestoneChanged(ProgressManager.Milestone entry)
-    {
-        if (this == null) return;
-
-        SetChildrenActive(milestonesActivated.Contains(entry));
-    }
-
-    private void OnEditorUpdateChanged(bool updateInEditor)
-    {
-#if UNITY_EDITOR
-        if (Application.isPlaying)
-            return;
-
-        if (this == null) return;
-        if (!updateInEditor)
-            SetChildrenActive(true);
-        else
-        {
-            var pm = FindAnyObjectByType<ProgressManager>();
-            if (pm == null) return;
-            var milestone = pm._currentMilestone;
-            SetChildrenActive(milestonesActivated.Contains(milestone));
-        }
-
 #endif
     }
     #endregion
@@ -80,20 +52,57 @@ public class ProgressObject : MonoBehaviour
 
         if (progressManager != null)
         {
-            progressManager.OnMilestoneChanged += OnMilestoneChanged;
-            progressManager.OnEditorUpdateChanged += OnEditorUpdateChanged;
+            progressManager.MilestoneChangedEvent += OnMilestoneChanged;
+            progressManager.OnEditorUpdateChangedEvent += OnEditorUpdateChanged;
         }
     }
 
-    void UnsubscribeToRuntimeEvents()
+    void UnsubscribeFromRuntimeEvents()
     {
         ProgressManager progressManager = FindAnyObjectByType<ProgressManager>();
 
         if (progressManager != null)
         {
-            progressManager.OnMilestoneChanged -= OnMilestoneChanged;
-            progressManager.OnEditorUpdateChanged -= OnEditorUpdateChanged;
+            progressManager.MilestoneChangedEvent -= OnMilestoneChanged;
+            progressManager.OnEditorUpdateChangedEvent -= OnEditorUpdateChanged;
         }
     }
     #endregion
+
+    #region EVENTS METHODS
+    void OnMilestoneChanged(MilestoneMapping milestoneMapping)
+    {
+        int milestoneIndex = milestoneMapping.Index;
+
+        if (this == null) return;
+
+        int min = Mathf.Min((int)milestonesActivated.x, (int)milestonesActivated.y);
+        int max = Mathf.Max((int)milestonesActivated.x, (int)milestonesActivated.y);
+        SetChildrenActive(milestoneIndex >= min && milestoneIndex <= max);
+    }
+
+    void OnEditorUpdateChanged(bool updateInEditor)
+    {
+#if UNITY_EDITOR
+        if (Application.isPlaying)
+            return;
+
+        if (this == null) return;
+        if (!updateInEditor)
+        {
+            SetChildrenActive(true);
+            return;
+        }
+
+        var progressManager = FindAnyObjectByType<ProgressManager>();
+        if (progressManager == null) return;
+        int milestone = progressManager.CurrentMilestoneIndex;
+
+        int min = Mathf.Min((int)milestonesActivated.x, (int)milestonesActivated.y);
+        int max = Mathf.Max((int)milestonesActivated.x, (int)milestonesActivated.y);
+        SetChildrenActive(milestone >= min && milestone <= max);
+#endif
+    }
 }
+#endregion
+

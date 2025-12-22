@@ -4,8 +4,12 @@ using System.Collections;
 /// <summary>
 /// Abstract class for behaviour decision systems.
 /// </summary>
-public abstract class ABehaviourSystem
+public abstract class ABehaviourSystem : IBehaviourSystem
 {
+    #region PROPERTIES HELPERS
+    public IBehaviourEntity BehaviourEntity => _behaviourEntity;
+    #endregion
+
     #region PROPERTIES
     public IBehaviourEntity _behaviourEntity;
     #endregion
@@ -24,15 +28,15 @@ public abstract class ABehaviourSystem
     /// <summary>
     /// Debugs the current decision of the system.
     /// </summary>
-    protected abstract void DebugDecision();
+    public abstract void DebugDecision();
+
     /// <summary>
     /// Resets the decision system to its initial state.
     /// </summary>
     public abstract void Reset();
     #endregion
 
-    #region MONOBEHAVIOUR EQUIVALENTS: OPTIONAL
-    public virtual void Awake() { }
+    #region LIFE CYCLE: OPTIONAL
     public virtual void Start() { }
     public virtual void Update() { }
     public virtual void LateUpdate() { }
