@@ -179,8 +179,13 @@ public class PlayableCharacterMovementController
         // Hasn't arrived
         if (horizontalDist > ArrivedHorizontalDistance)
         {
-            // Calculate direction to destination
+            // Calculate direction to destination (XZ plane only)
             Vector3 direction = (destinationPos - playerPos).normalized;
+            direction.y = 0f;  // Only rotate around vertical axis
+            direction.Normalize();
+
+            // Rotate player to face destination
+            _player.transform.forward = Vector3.Slerp(_player.transform.forward, direction, Time.deltaTime * _player.RotationSpeed);
 
             // Apply forces to movement vector
             Vector3 finalMovement = new(direction.x * _player.WalkSpeed, // Apply walk speed

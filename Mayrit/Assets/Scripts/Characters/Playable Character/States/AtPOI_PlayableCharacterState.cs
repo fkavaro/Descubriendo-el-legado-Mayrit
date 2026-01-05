@@ -28,6 +28,7 @@ public class AtPOI_PlayableCharacterState : APlayableCharacterState
     {
         // Reset flag
         _hasArrived = false;
+        _isRotated = false;
     }
 
     public override void UpdateState()
