@@ -35,7 +35,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!120 &2205850838238336329
 LineRenderer:
-  serializedVersion: 2
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -81,6 +81,7 @@ LineRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 1}
@@ -153,11 +154,10 @@ LineRenderer:
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
-    textureMode: 0
+    textureMode: 1
     textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
-  m_MaskInteraction: 0
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
@@ -173,10 +173,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b7ace6a186710947b76b99699c13100, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TourManager
-  _dontDestroyOnLoad: 0
   _currentTour: {fileID: 0}
-  _sampleSpacing: 0.5
-  _sampleDistance: 2
-  _projSampleDistance: 1
-  _renderYOffset: 0.03
-  _maxPoints: 2000
+  _nextPOI: {fileID: 0}
+  _pointSpacing: 0.2
+  _endpointSnapDistance: 2
+  _terrainProjectionDistance: 1
+  _heightOffset: 0.1
+  _maxPointCount: 1000
+  _maxTrailLength: 50

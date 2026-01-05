@@ -14,16 +14,18 @@ public class TourManager : MonoBehaviour
     [SerializeField] PointOfInterest _nextPOI;
 
     [Header("Path visualizer settings")]
-    [Tooltip("Meters between samples along segments")]
-    [SerializeField] float _sampleSpacing = 0.5f;
-    [Tooltip("Max distance to snap start/end to NavMesh")]
-    [SerializeField] float _sampleDistance = 2f;
-    [Tooltip("Max distance to project samples to NavMesh")]
-    [SerializeField] float _projSampleDistance = 1f;
-    [Tooltip("How much to lift the rendered line above navmesh")]
-    [SerializeField] float _renderYOffset = 0.03f;
-    [Tooltip("Safety cap for points to render")]
-    [SerializeField] int _maxPoints = 2000;
+    [Tooltip("Meters between samples along segments. Lower = smoother")]
+    [SerializeField] float _pointSpacing = 0.5f;
+    [Tooltip("Max distance to snap player/POI to NavMesh")]
+    [SerializeField] float _endpointSnapDistance = 2f;
+    [Tooltip("Max distance to project points down to NavMesh terrain")]
+    [SerializeField] float _terrainProjectionDistance = 1f;
+    [Tooltip("Vertical offset to lift line above ground (prevents z-fighting)")]
+    [SerializeField] float _heightOffset = 0.03f;
+    [Tooltip("Hard limit on total points for performance")]
+    [SerializeField] int _maxPointCount = 2000;
+    [Tooltip("Maximum distance from start to render (trail cutoff)")]
+    [SerializeField] int _maxTrailLength = 100;
     #endregion
 
     #region INTERNAL PROPERTIES
@@ -54,9 +56,14 @@ public class TourManager : MonoBehaviour
         _uiManager.OnContextualPanelHiddenEvent += OnContextualPanelHidden;
         _uiManager.PlayCharacterClickedEvent += OnPlayCharacterClicked;
 
-        _pathVisualizer = new PathVisualizer(GetComponent<LineRenderer>(),
-            _sampleSpacing, _sampleDistance, _projSampleDistance,
-            _renderYOffset, _maxPoints);
+        _pathVisualizer = new PathVisualizer(
+            GetComponent<LineRenderer>(),
+            _pointSpacing,
+            _endpointSnapDistance,
+            _terrainProjectionDistance,
+            _heightOffset,
+            _maxPointCount,
+            _maxTrailLength);
         _pathVisualizer.Initialize();
     }
 

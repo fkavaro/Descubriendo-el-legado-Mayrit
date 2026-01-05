@@ -11,11 +11,12 @@ public class PathVisualizer
     #region FIELDS
     // Configuration
     readonly LineRenderer _lineRenderer;
-    readonly float _sampleSpacing;       // Distance between samples along segments
-    readonly float _sampleDistance;      // Max distance to snap start/end to NavMesh
-    readonly float _projSampleDistance;  // Max distance to project samples to NavMesh
-    readonly float _renderYOffset;       // Vertical offset to lift the rendered line above navmesh
-    readonly int _maxPoints;             // Maximum number of points allowed on the LineRenderer
+    readonly float _pointSpacing;           // Distance between sample points along path segments
+    readonly float _endpointSnapDistance;   // Max distance to snap player/POI to NavMesh
+    readonly float _terrainProjectionDistance; // Max distance to project points down to NavMesh terrain
+    readonly float _heightOffset;           // Vertical offset to lift line above ground (prevents z-fighting)
+    readonly int _maxPointCount;            // Hard limit on total points for performance
+    readonly float _maxTrailLength;         // Maximum distance from start to render (trail cutoff)
 
     // Runtime state
     Transform _player;
@@ -29,18 +30,20 @@ public class PathVisualizer
     #region CONSTRUCTOR
     public PathVisualizer(
         LineRenderer lineRenderer,
-        float sampleSpacing,
-        float sampleDistance,
-        float projSampleDistance,
-        float renderYOffset,
-        int maxPoints)
+        float pointSpacing,
+        float endpointSnapDistance,
+        float terrainProjectionDistance,
+        float heightOffset,
+        int maxPointCount,
+        float maxTrailLength)
     {
         _lineRenderer = lineRenderer;
-        _sampleSpacing = Mathf.Max(0.01f, sampleSpacing);
-        _sampleDistance = Mathf.Max(0.01f, sampleDistance);
-        _projSampleDistance = Mathf.Max(0.01f, projSampleDistance);
-        _renderYOffset = renderYOffset;
-        _maxPoints = Mathf.Max(16, maxPoints);
+        _pointSpacing = Mathf.Max(0.01f, pointSpacing);
+        _endpointSnapDistance = Mathf.Max(0.01f, endpointSnapDistance);
+        _terrainProjectionDistance = Mathf.Max(0.01f, terrainProjectionDistance);
+        _heightOffset = heightOffset;
+        _maxPointCount = Mathf.Max(16, maxPointCount);
+        _maxTrailLength = Mathf.Max(1f, maxTrailLength);
 
         // Get dependencies from Service Locator
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
@@ -132,96 +135,130 @@ public class PathVisualizer
         // No path found
         if (!pathFound || navPath.corners == null || navPath.corners.Length == 0)
         {
+            Debug.LogWarning("PathVisualizer: No path found between start and end. Clearing path.");
             Clear();
             return;
         }
 
-        // Build sample points along the path
-        List<Vector3> points = BuildSamplePoints(navPath.corners);
+        // Build sample points along the path, starting from player position
+        List<Vector3> points = BuildSamplePoints(navPath.corners, start);
 
         if (points == null || points.Count == 0)
         {
+            Debug.LogWarning("PathVisualizer: No sample points generated for path. Clearing path.");
             Clear();
             return;
         }
 
-        // Downsample if exceeding max points
-        if (points.Count > _maxPoints)
-            points = Downsample(points, _maxPoints);
+        // Reduce point count if exceeding performance limit
+        if (points.Count > _maxPointCount)
+            points = Downsample(points, _maxPointCount);
 
         ApplyToLineRenderer(points);
     }
     #endregion
 
     #region SAMPLING HELPERS
-    // Try to snap the start and end points to the NavMesh within configured distance.
-    bool TryGetSnappedEndpoints(Vector3 start, Vector3 end, out Vector3 startPos, out Vector3 endPos)
+    /// <summary>
+    /// Attempts to snap both player and POI positions to the nearest NavMesh surface.
+    /// </summary>
+    bool TryGetSnappedEndpoints(Vector3 playerPos, Vector3 poiPos, out Vector3 snappedStart, out Vector3 snappedEnd)
     {
-        startPos = start;
-        endPos = end;
+        snappedStart = playerPos;
+        snappedEnd = poiPos;
 
-        bool hasStart = NavMesh.SamplePosition(start, out NavMeshHit startHit, _sampleDistance, NavMesh.AllAreas);
-        bool hasEnd = NavMesh.SamplePosition(end, out NavMeshHit endHit, _sampleDistance, NavMesh.AllAreas);
+        bool playerOnNavMesh = NavMesh.SamplePosition(playerPos, out NavMeshHit startHit, _endpointSnapDistance, NavMesh.AllAreas);
+        bool poiOnNavMesh = NavMesh.SamplePosition(poiPos, out NavMeshHit endHit, _endpointSnapDistance, NavMesh.AllAreas);
 
-        if (!hasStart || !hasEnd)
+        if (!playerOnNavMesh || !poiOnNavMesh)
             return false;
 
-        startPos = startHit.position;
-        endPos = endHit.position;
+        snappedStart = startHit.position;
+        snappedEnd = endHit.position;
         return true;
     }
 
-    // Build dense sample points along the path corners, projecting samples to NavMesh and applying Y offset.
-    List<Vector3> BuildSamplePoints(Vector3[] baseCorners)
+    /// <summary>
+    /// Generates densely sampled points along the path, projected to terrain.
+    /// Trail always starts from player position and extends maxTrailLength forward.
+    /// </summary>
+    List<Vector3> BuildSamplePoints(Vector3[] pathCorners, Vector3 playerPosition)
     {
-        var points = new List<Vector3>(baseCorners.Length * 2);
+        List<Vector3> samplePoints = new(pathCorners.Length * 2);
+        Vector3 trailOrigin = playerPosition;  // Use actual player position as origin
+        float accumulatedDistance = 0f;  // Track distance along path from player
 
-        for (int i = 0; i < baseCorners.Length - 1; i++)
+        // Sample points along each path segment
+        for (int cornerIndex = 0; cornerIndex < pathCorners.Length - 1; cornerIndex++)
         {
-            Vector3 a = baseCorners[i];
-            Vector3 b = baseCorners[i + 1];
-            float segLen = Vector3.Distance(a, b);
-            int steps = Mathf.Max(1, Mathf.CeilToInt(segLen / _sampleSpacing));
+            Vector3 segmentStart = pathCorners[cornerIndex];
+            Vector3 segmentEnd = pathCorners[cornerIndex + 1];
+            float segmentLength = Vector3.Distance(segmentStart, segmentEnd);
+            int sampleCount = Mathf.Max(1, Mathf.CeilToInt(segmentLength / _pointSpacing));
 
-            for (int s = 0; s < steps; s++)
+            for (int sampleIndex = 0; sampleIndex < sampleCount; sampleIndex++)
             {
-                float t = (float)s / steps;
-                Vector3 samplePoint = Vector3.Lerp(a, b, t);
+                float segmentProgress = (float)sampleIndex / sampleCount;
+                Vector3 interpolatedPoint = Vector3.Lerp(segmentStart, segmentEnd, segmentProgress);
 
-                if (NavMesh.SamplePosition(samplePoint, out NavMeshHit hit, _projSampleDistance, NavMesh.AllAreas))
-                    samplePoint = hit.position;
+                // Calculate distance along path from player
+                if (samplePoints.Count > 0)
+                    accumulatedDistance += Vector3.Distance(samplePoints[^1], interpolatedPoint);
+                else
+                    accumulatedDistance = Vector3.Distance(trailOrigin, interpolatedPoint);
 
-                samplePoint.y += _renderYOffset;
+                // Stop if trail length limit is exceeded
+                if (accumulatedDistance > _maxTrailLength)
+                    return samplePoints;
 
-                if (points.Count == 0 || (points[^1] - samplePoint).sqrMagnitude > 0.0001f)
-                    points.Add(samplePoint);
+                // Project point down to terrain surface
+                if (NavMesh.SamplePosition(interpolatedPoint, out NavMeshHit terrainHit, _terrainProjectionDistance, NavMesh.AllAreas))
+                    interpolatedPoint = terrainHit.position;
+
+                // Lift above terrain to prevent z-fighting
+                interpolatedPoint.y += _heightOffset;
+
+                // Add if not duplicate (avoid redundant points)
+                if (samplePoints.Count == 0 || (samplePoints[^1] - interpolatedPoint).sqrMagnitude > 0.0001f)
+                    samplePoints.Add(interpolatedPoint);
             }
         }
 
-        // Add last corner (ensure projection)
-        Vector3 last = baseCorners[^1];
-        if (NavMesh.SamplePosition(last, out NavMeshHit lastHit, _projSampleDistance, NavMesh.AllAreas))
-            last = lastHit.position;
+        // Try to add final corner if within trail length
+        Vector3 finalCorner = pathCorners[^1];
+        if (samplePoints.Count > 0)
+            accumulatedDistance += Vector3.Distance(samplePoints[^1], finalCorner);
 
-        last.y += _renderYOffset;
-        if (points.Count == 0 || (points[^1] - last).sqrMagnitude > 0.0001f)
-            points.Add(last);
+        if (accumulatedDistance <= _maxTrailLength)
+        {
+            if (NavMesh.SamplePosition(finalCorner, out NavMeshHit terrainHit, _terrainProjectionDistance, NavMesh.AllAreas))
+                finalCorner = terrainHit.position;
 
-        return points;
+            finalCorner.y += _heightOffset;
+            if (samplePoints.Count == 0 || (samplePoints[^1] - finalCorner).sqrMagnitude > 0.0001f)
+                samplePoints.Add(finalCorner);
+        }
+
+        return samplePoints;
     }
 
-    // Uniformly downsample if there are more points than allowed by _maxPoints.
-    List<Vector3> Downsample(List<Vector3> points, int maxPoints)
+    /// <summary>
+    /// Reduces point count by uniform sampling when exceeding performance limit.
+    /// Always preserves the final point to maintain trail endpoint.
+    /// </summary>
+    List<Vector3> Downsample(List<Vector3> fullPoints, int targetPointCount)
     {
-        List<Vector3> sampled = new(maxPoints + 1);
-        int step = Mathf.CeilToInt((float)points.Count / maxPoints);
-        for (int i = 0; i < points.Count; i += step)
-            sampled.Add(points[i]);
+        List<Vector3> reducedPoints = new(targetPointCount + 1);
+        int skipInterval = Mathf.CeilToInt((float)fullPoints.Count / targetPointCount);
 
-        if (sampled[^1] != points[^1])
-            sampled.Add(points[^1]);
+        for (int i = 0; i < fullPoints.Count; i += skipInterval)
+            reducedPoints.Add(fullPoints[i]);
 
-        return sampled;
+        // Ensure final point is included
+        if (reducedPoints[^1] != fullPoints[^1])
+            reducedPoints.Add(fullPoints[^1]);
+
+        return reducedPoints;
     }
 
     void ApplyToLineRenderer(List<Vector3> points)
