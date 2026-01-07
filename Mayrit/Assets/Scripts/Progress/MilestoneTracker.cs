@@ -8,7 +8,7 @@ using UnityEngine;
 /// operations (OnValidate, import callbacks) and avoids accessing singletons that may
 /// not be initialized during editor import.
 /// </summary>
-public class ProgressObject : MonoBehaviour
+public class MilestoneTracker : MonoBehaviour
 {
     public bool _isActive = true;
 

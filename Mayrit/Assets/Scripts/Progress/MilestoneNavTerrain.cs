@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshSurface))]
-public class MilestoneNavTerrain : ProgressObject
+public class MilestoneNavTerrain : MilestoneTracker
 {
     #region EDITOR PROPERTIES
     [Header("References")]
