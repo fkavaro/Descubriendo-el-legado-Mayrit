@@ -10,6 +10,8 @@ using UnityEngine;
 /// </summary>
 public class ProgressObject : MonoBehaviour
 {
+    public bool _isActive = true;
+
     [Tooltip("Range of milestones where this object is active")]
     public Vector2 milestonesActivated;
 
@@ -34,9 +36,11 @@ public class ProgressObject : MonoBehaviour
     #endregion
 
     #region PRIVATE METHODS
-    void SetChildrenActive(bool isActive)
+    protected virtual void SetChildrenActive(bool isActive)
     {
         if (this == null) return;
+
+        _isActive = isActive;
 
         foreach (Transform child in transform)
         {
@@ -81,7 +85,7 @@ public class ProgressObject : MonoBehaviour
         SetChildrenActive(milestoneIndex >= min && milestoneIndex <= max);
     }
 
-    void OnEditorUpdateChanged(bool updateInEditor)
+    protected virtual void OnEditorUpdateChanged(bool updateInEditor)
     {
 #if UNITY_EDITOR
         if (Application.isPlaying)
