@@ -68,6 +68,8 @@ public class NPCMovementController
 
     public void SetIfStopped(bool isStopped)
     {
+        if (_agent.isStopped == isStopped) return;
+
         if (_agent == null)
         {
             Debug.LogError(_npc.Name + ", IsStopped(): NavMeshAgent is null.");
@@ -157,10 +159,9 @@ public class NPCMovementController
 
         _destinationPos = targetPosition;
         _agent.updateRotation = true;
+        SetIfStopped(false);
         _agent.SetPath(path);
-
-        if (HasArrivedAtDestination()) return;
-        else _npc.AnimationController.ChangeToWalk();
+        _npc.AnimationController.ChangeToWalk();
     }
 
     public void SetDestinationSpot(Spot targetSpot)
@@ -211,15 +212,34 @@ public class NPCMovementController
     #region HAS ARRIVED METHODS
     public bool HasArrivedAtDestination(bool fixRotation = false, bool fixPosition = false)
     {
-        return HasArrivedAt(_destinationPos, fixRotation, fixPosition);
+        if (HasArrivedAt(_destinationPos))
+        {
+            if (_destinationSpot != null)
+            {
+                _destinationSpot.SetOccupied(true);
+
+                if (fixRotation)
+                    ForceRotation(_destinationSpot.WorldDirection);
+                if (fixPosition)
+                    _agent.transform.position = _destinationSpot.transform.position;
+            }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public bool HasArrivedAt(Spot spot, bool fixRotation = false, bool fixPosition = false)
     {
-        return HasArrivedAt(spot.transform.position, fixRotation, fixPosition);
+        if (spot == null) return false;
+        if (spot != _destinationSpot) return false;
+
+        return HasArrivedAtDestination(fixRotation, fixPosition);
     }
 
-    public bool HasArrivedAt(Vector3 destination, bool fixRotation = false, bool fixPosition = false)
+    public bool HasArrivedAt(Vector3 destination)
     {
         Vector3 agentPos = _agent.transform.position;
 
@@ -232,21 +252,7 @@ public class NPCMovementController
         float verticalDist = Mathf.Abs(agentPos.y - destination.y);
 
         // Check if within stopping distances
-        if (horizontalDist < ArrivedHorizontalDistance && verticalDist < ArrivedVerticalDistance)
-        {
-            if (_destinationSpot != null)
-            {
-                _destinationSpot.SetOccupied(true);
-
-                if (fixRotation)
-                    ForceRotation(_destinationSpot.WorldDirection);
-                if (fixPosition)
-                    _agent.transform.position = _destinationSpot.transform.position;
-            }
-
-            return true;
-        }
-        else return false;
+        return horizontalDist < ArrivedHorizontalDistance && verticalDist < ArrivedVerticalDistance;
     }
     #endregion
 

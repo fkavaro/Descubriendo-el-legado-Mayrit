@@ -32,7 +32,6 @@ public class NPCPoolManager : MonoBehaviour
 
     #region INTERNAL PROPERTIES
     public ObjectPool<Villager> _villagerPool;
-    // TODO: soldier pool
 
     Collider[] _overlapResults; // Cached buffer for OverlapSphereNonAlloc
     Dictionary<Collider, Villager> _colliderToVillager; // Cache to avoid GetComponent calls on colliders returned by physics queries
@@ -288,6 +287,7 @@ public class NPCPoolManager : MonoBehaviour
         randomFreeHouse.PlaceAtRandomEntrance(villager);
         villager.BehaviourSystem.Reset();
         villager.MovementController.Reset();
+        villager.AnimationController.Reset();
         villager.Agent.enabled = true; // Activated once its placed
     }
 

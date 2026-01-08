@@ -45,17 +45,14 @@ where NPCtype : INPC
         if (!_npc.MovementController.IsDestination(_destinationSpot))
         {
             if (_npc.DebugMode)
-                Debug.Log($"[GoToDestinationStrategy.Update()] {_npc.Name} fixing destination");
+                Debug.LogWarning($"[GoToDestinationStrategy.Update()] {_npc.Name} fixing destination", _npc.GO);
 
             _npc.MovementController.SetDestinationSpot(_destinationSpot);
         }
 
         // Success if arrived at destination
-        if (_npc.MovementController.HasArrivedAt(_destinationSpot, _fixRotation, _fixPosition))
-        {
-            _npc.AnimationController.ChangeToIdle();
+        if (_npc.MovementController.HasArrivedAtDestination(_fixRotation, _fixPosition))
             return Node.Status.Success;
-        }
         // Continue if not
         else
             return Node.Status.Running;

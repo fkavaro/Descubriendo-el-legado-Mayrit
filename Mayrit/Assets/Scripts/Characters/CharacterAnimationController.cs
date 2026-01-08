@@ -20,7 +20,7 @@ public class CharacterAnimationController
         , _afterJumpAnim = Animator.StringToHash("AfterJump")
         ;
 
-    int _lastPlayedAnimation, _lastRequestedAnimation;
+    int _lastPlayedAnimation;
     #endregion
 
     #region CONSTRUCTOR
@@ -33,6 +33,11 @@ public class CharacterAnimationController
     #endregion
 
     #region PUBLIC METHODS
+    public void Reset()
+    {
+        _lastPlayedAnimation = -1;
+    }
+
     /// <summary>
     /// Crossfade to new animation.
     /// </summary>
@@ -54,16 +59,11 @@ public class CharacterAnimationController
         AnimatorStateInfo currentState = _animator.GetCurrentAnimatorStateInfo(0);
         int currentAnimation = currentState.shortNameHash;
 
-        // Return if requested animation was already requested
-        if (_lastRequestedAnimation == requestedAnimation)
-            return;
-
         // Change to requested animation if is not already playing
         if (currentAnimation != requestedAnimation)
         {
             // Update bookkeeping
             _lastPlayedAnimation = currentAnimation;
-            _lastRequestedAnimation = requestedAnimation;
 
             // Interpolate transition to new animation
             _animator.CrossFade(requestedAnimation, duration);
