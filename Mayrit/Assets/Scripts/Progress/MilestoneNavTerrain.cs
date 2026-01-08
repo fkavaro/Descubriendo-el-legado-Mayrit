@@ -62,18 +62,6 @@ public class MilestoneNavTerrain : MilestoneTracker
     #endregion
 
     #region PUBLIC METHODS
-    [ContextMenu("Extract, Bake, and Delete")]
-    public void ExtractBakeDelete()
-    {
-        if (!ValidateActivation()) return;
-
-        int count = ExtractTreeModifiers();
-        BakeNavMesh();
-        DestroyCachedObjects();
-
-        Debug.Log($"<color=#99ff99>Successfully created {count} modifiers, baked the NavMesh, and cleaned up!</color>");
-    }
-
     [ContextMenu("Extract Tree Modifiers")]
     public int ExtractTreeModifiers()
     {
@@ -93,16 +81,7 @@ public class MilestoneNavTerrain : MilestoneTracker
         return _createdObjects.Count;
     }
 
-    [ContextMenu("Bake NavMesh")]
-    public void BakeNavMesh()
-    {
-        if (!ValidateActivation() || !ValidateReferences()) return;
-
-        _navMeshSurface.BuildNavMesh();
-        Debug.Log($"<color=#99ff99>Baked NavMesh for {gameObject.name}</color>");
-    }
-
-    [ContextMenu("Delete Modifier Objects")]
+    [ContextMenu("Delete Tree Modifiers")]
     public void DestroyCachedObjects()
     {
         foreach (var obj in _createdObjects)
