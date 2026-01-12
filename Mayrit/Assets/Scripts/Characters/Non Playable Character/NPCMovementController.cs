@@ -161,6 +161,7 @@ public class NPCMovementController
         _agent.updateRotation = true;
         SetIfStopped(false);
         _agent.SetPath(path);
+        _npc.CharacterModel.SetActive(true);
         _npc.AnimationController.ChangeToWalk();
     }
 

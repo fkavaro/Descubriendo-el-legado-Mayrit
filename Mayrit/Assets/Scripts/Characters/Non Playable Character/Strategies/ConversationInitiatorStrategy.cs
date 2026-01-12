@@ -36,9 +36,12 @@ where NPCtype : INPC
         if (!IsOtherStillInConversation())
             return Node.Status.Failure;
 
-        // Continue conversation during certain time
         _npc.Talk();
-        _npc.GO.transform.LookAt(_otherNPC.GO.transform.position);
+
+        // Keep facing other NPC (XZ plane only)
+        Vector3 targetPosition = _otherNPC.GO.transform.position;
+        targetPosition.y = _npc.GO.transform.position.y;
+        _npc.GO.transform.LookAt(targetPosition);
 
         // Continue timing
         return base.Update();

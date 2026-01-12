@@ -3,21 +3,16 @@ using UnityEngine;
 public class InInteriorStrategy<NPCtype> : ATimedNPCStrategy<NPCtype>
 where NPCtype : INPC
 {
-    readonly GameObject _model;
-
     public InInteriorStrategy(NPCtype npc, float min = 30, float max = 120)
-    : base(npc, min, max)
-    {
-        _model = npc.CharacterModel;
-    }
+    : base(npc, min, max) { }
 
     public override Node.Status Start()
     {
-        // Deactivated but not returned to pool
-        _model.SetActive(false);
+        // Deactivate model and agent
+        _npc.CharacterModel.SetActive(false);
         _npc.Agent.enabled = false;
 
-        if (_model.activeSelf == false && !_npc.Agent.enabled)
+        if (_npc.CharacterModel.activeSelf == false && !_npc.Agent.enabled)
             return Node.Status.Success;
         else
             return Node.Status.Failure;
@@ -25,8 +20,8 @@ where NPCtype : INPC
 
     public override void OnTimerComplete()
     {
-        // Reactivate NPC
-        _model.SetActive(true);
+        // Reactivate model and agent
+        _npc.CharacterModel.SetActive(true);
         _npc.Agent.enabled = true;
     }
 }

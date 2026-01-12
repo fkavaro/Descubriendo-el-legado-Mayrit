@@ -47,14 +47,17 @@ where NPCtype : INPC
         if (!IsOtherStillInConversation())
             return Node.Status.Failure;
 
-        // Success if arrived at middle point
         if (_npc.MovementController.HasArrivedAt(_middlePoint))
         {
             _npc.AnimationController.ChangeToIdle();
             _npc.IsReadyToTalk = true;
         }
+        else
+        {
+            _npc.AnimationController.ChangeToWalk();
+        }
 
-        // Both are ready to talk
+        // Success if both are ready to talk
         if (_npc.IsReadyToTalk && _otherNPC.IsReadyToTalk)
             return Node.Status.Success;
 

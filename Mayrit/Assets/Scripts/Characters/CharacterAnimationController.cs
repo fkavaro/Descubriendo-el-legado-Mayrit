@@ -18,6 +18,7 @@ public class CharacterAnimationController
         , _preJumpAnim = Animator.StringToHash("PreJump")
         , _jumpAnim = Animator.StringToHash("Jump")
         , _afterJumpAnim = Animator.StringToHash("AfterJump")
+        , _talkAnim = Animator.StringToHash("Talk") // TODO: import talk animation
         ;
 
     int _lastPlayedAnimation;
@@ -43,17 +44,10 @@ public class CharacterAnimationController
     /// </summary>
     public virtual void ChangeAnimationTo(int requestedAnimation, float duration = 0.2f)
     {
-        // Safely get the current animation from the Animator to avoid desync
-        if (_animator == null)
+        if (!IsAnimatorAvailable())
         {
-            Debug.LogWarning($"AnimationController.ChangeAnimationTo: Animator is null for {_behaviourEntity.Name}.");
-            return;
-        }
-
-        if (!AnimatorAvailable())
-        {
-            // Animator or GameObject is inactive/disabled — skip animation change
-            return;
+            if (_behaviourEntity.DebugMode)
+                Debug.LogWarning($"[AnimationController.ChangeAnimationTo()] {_behaviourEntity.Name}: Animator not available", _behaviourEntity.GO);
         }
 
         AnimatorStateInfo currentState = _animator.GetCurrentAnimatorStateInfo(0);
@@ -81,7 +75,7 @@ public class CharacterAnimationController
     /// <returns> True if the current animation is finished, false otherwise.</returns>
     public virtual bool IsCurrentAnimationFinished()
     {
-        if (!AnimatorAvailable() || _animator == null)
+        if (!IsAnimatorAvailable())
             return true;
 
         // Get current animation state info
@@ -93,21 +87,6 @@ public class CharacterAnimationController
 
         // For non-looping animations, check if normalizedTime >= 1
         return currentStateInfo.normalizedTime >= 1f;
-    }
-
-    public bool IsAnimationFinished(int animation)
-    {
-        if (!AnimatorAvailable() || _animator == null)
-            return true;
-
-        // Get current animation state info
-        AnimatorStateInfo currentStateInfo = _animator.GetCurrentAnimatorStateInfo(0);
-
-        // Given animation is the current one
-        if (currentStateInfo.shortNameHash == animation)
-            return IsCurrentAnimationFinished();
-        else
-            return false;
     }
 
     public void PlayAnimationCertainTime(float waitTime, int animation, string animationName, Action onComplete = null)
@@ -166,12 +145,11 @@ public class CharacterAnimationController
         ChangeAnimationTo(_afterJumpAnim);
     }
 
-    internal void ChangeToTalk()
+    public void ChangeToTalk()
     {
-        ChangeAnimationTo(_idleAnim); // TODO: talk animation
+        ChangeAnimationTo(_talkAnim);
     }
-
-
+    //|||||||||||||||||||||||||||||||||||||||||
     public bool IsIdleAnimationFinished()
     {
         return IsAnimationFinished(_idleAnim);
@@ -206,12 +184,70 @@ public class CharacterAnimationController
     {
         return IsAnimationFinished(_idleAnim); // TODO: talk animation
     }
+    //|||||||||||||||||||||||||||||||||||||||||
+    public bool IsIdling()
+    {
+        return IsCurrentAnimation(_idleAnim);
+    }
+
+    public bool IsWalking()
+    {
+        return IsCurrentAnimation(_walkAnim);
+    }
+
+    public bool IsRunning()
+    {
+        return IsCurrentAnimation(_runAnim);
+    }
+
+    public bool IsPreJumping()
+    {
+        return IsCurrentAnimation(_preJumpAnim);
+    }
+
+    public bool IsJumping()
+    {
+        return IsCurrentAnimation(_jumpAnim);
+    }
+
+    public bool IsAfterJumping()
+    {
+        return IsCurrentAnimation(_afterJumpAnim);
+    }
+
+    public bool IsTalking()
+    {
+        return IsCurrentAnimation(_talkAnim);
+    }
     #endregion
 
     #region PRIVATE METHODS
-    bool AnimatorAvailable()
+    bool IsAnimatorAvailable()
     {
-        return _animator != null && _animator.isActiveAndEnabled && _animator.gameObject.activeInHierarchy;
+        return _animator != null && _animator.isActiveAndEnabled;
+    }
+
+    bool IsCurrentAnimation(int animation)
+    {
+        if (!IsAnimatorAvailable())
+            return false;
+
+        // Get current animation state info
+        AnimatorStateInfo currentStateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+
+        // Given animation is the current one
+        return currentStateInfo.shortNameHash == animation;
+    }
+
+    bool IsAnimationFinished(int animation)
+    {
+        if (!IsAnimatorAvailable())
+            return true;
+
+        if (!IsCurrentAnimation(animation))
+            return false;
+
+        return IsCurrentAnimationFinished();
     }
     #endregion
 }

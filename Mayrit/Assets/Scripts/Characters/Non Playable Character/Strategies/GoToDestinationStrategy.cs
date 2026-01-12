@@ -50,6 +50,14 @@ where NPCtype : INPC
             _npc.MovementController.SetDestinationSpot(_destinationSpot);
         }
 
+        // // Ensure walking animation while moving
+        // if (!_npc.AnimationController.IsWalking())
+        // {
+        //     if (_npc.DebugMode)
+        //         Debug.Log($"[GoToDestinationStrategy.Update()] {_npc.Name} ensuring walk animation.", _npc.GO);
+        //     _npc.AnimationController.ChangeToWalk();
+        // }
+
         // Success if arrived at destination
         if (_npc.MovementController.HasArrivedAtDestination(_fixRotation, _fixPosition))
             return Node.Status.Success;

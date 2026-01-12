@@ -92,6 +92,7 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
                 else
                 {
                     _npc.MovementController.SetIfStopped(false);
+                    _npc.AnimationController.ChangeToWalk();
 
                     // Has arrived
                     if (_npc.MovementController.HasArrivedAt(_marketStallSpot, true, false))
@@ -122,5 +123,13 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
         _marketStall = _market.GetRandomStall();
         _marketStallSpot = _marketStall.GetRandomAccessSpot();
         _npc.MovementController.SetDestinationSpot(_marketStallSpot);
+
+        // // Ensure walking animation while moving
+        // if (!_npc.AnimationController.IsWalking())
+        // {
+        //     if (_npc.DebugMode)
+        //         Debug.Log($"[GoToDestinationStrategy.Update()] {_npc.Name} ensuring walk animation.", _npc.GO);
+        //     _npc.AnimationController.ChangeToWalk();
+        // }
     }
 }

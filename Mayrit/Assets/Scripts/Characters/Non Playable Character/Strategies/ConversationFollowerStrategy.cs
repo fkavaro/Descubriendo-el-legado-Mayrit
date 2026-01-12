@@ -51,9 +51,13 @@ where NPCtype : INPC
             return Node.Status.Success;
         }
 
-        // Follow conversation
         _npc.Talk();
-        _npc.GO.transform.LookAt(_otherNPC.GO.transform.position);
+
+        // Keep facing other NPC (XZ plane only)
+        Vector3 targetPosition = _otherNPC.GO.transform.position;
+        targetPosition.y = _npc.GO.transform.position.y;
+        _npc.GO.transform.LookAt(targetPosition);
+
         return Node.Status.Running;
     }
 
