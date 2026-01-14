@@ -4,6 +4,17 @@ using UnityEngine.AI;
 
 public class NPCMovementController
 {
+    #region CONSTANTS
+    private const float POSITION_TOLERANCE = 0.1f;
+    private const float POSITION_ZERO_THRESHOLD = 0.0001f;
+    private const float MIN_SEPARATION = 0.5f;
+    private const float DIRECTION_ZERO_THRESHOLD = 0.0001f;
+    private const float NAVMESH_SAMPLE_DISTANCE = 2f;
+    private const float ROTATION_COMPLETION_ANGLE = 0.5f;
+    private const float DEFAULT_CLOSE_DISTANCE = 2f;
+    private const int MIDDLE_POINT_SAMPLES = 9;
+    #endregion
+
     #region PROPERTIES
     readonly INPC _npc;
     readonly NavMeshAgent _agent;
@@ -17,6 +28,7 @@ public class NPCMovementController
     public Spot DestinationSpot => _destinationSpot;
     public Vector3 DestinationPos => _destinationPos;
     public bool IsAgentValid => _agent != null && _agent.isOnNavMesh;
+    public bool HasDestination => _destinationSpot != null || _destinationPos.sqrMagnitude >= POSITION_ZERO_THRESHOLD;
     #endregion
 
     #region CONSTRUCTOR
@@ -65,14 +77,11 @@ public class NPCMovementController
     /// </summary>
     public void CheckBehaviourExecution()
     {
-        if (!_agent.isOnNavMesh)
+        if (!IsAgentValid)
             return;
 
-        // Stop moving if execution is paused
-        if (_npc.IsExecutionPaused)
-            _agent.isStopped = true;
-        else
-            _agent.isStopped = _npc.IsStopped;
+        // Stop moving if execution is paused, otherwise respect NPC stopped state
+        _agent.isStopped = _npc.IsExecutionPaused || _npc.IsStopped;
     }
 
     public void SetIfStopped(bool isStopped)
@@ -84,14 +93,21 @@ public class NPCMovementController
         }
 
         if (_agent.isStopped != isStopped)
+        {
+            _agent.isStopped = isStopped;
             _npc.IsStopped = isStopped;
+        }
     }
     #endregion
 
     #region DESTINATION METHODS
     public bool IsDestination(Vector3 position)
     {
-        float tolerance = Mathf.Max(0.1f, _positionLeniency);
+        // No destination set if destination spot is null and position is zero
+        if (_destinationSpot == null && _destinationPos.sqrMagnitude < POSITION_ZERO_THRESHOLD)
+            return false;
+
+        float tolerance = Mathf.Max(POSITION_TOLERANCE, _positionLeniency);
         return Vector3.Distance(_destinationPos, position) < tolerance;
     }
 
@@ -100,9 +116,25 @@ public class NPCMovementController
         if (spot == null) return false;
         return _destinationSpot == spot;
     }
+
+    /// <summary>
+    /// Clears the current destination spot and marks it as unoccupied.
+    /// </summary>
+    private void ClearDestinationSpot()
+    {
+        if (_destinationSpot != null)
+        {
+            _destinationSpot.SetOccupied(false);
+            _destinationSpot = null;
+        }
+    }
     #endregion
 
     #region SET DESTINATION METHODS
+    /// <summary>
+    /// Sets the destination to a specific spot.
+    /// </summary>
+    /// <returns>True if the destination was successfully set.</returns>
     public bool SetDestinationSpot(Spot targetSpot)
     {
         if (!IsAgentValid)
@@ -117,9 +149,11 @@ public class NPCMovementController
             return false;
         }
 
+        // Already at this destination
         if (IsDestinationSpot(targetSpot))
             return true;
 
+        // Set the position destination
         bool success = SetDestination(targetSpot.transform.position);
         if (success)
             _destinationSpot = targetSpot;
@@ -127,6 +161,11 @@ public class NPCMovementController
         return success;
     }
 
+    /// <summary>
+    /// Sets the destination to a specific world position.
+    /// Handles NavMesh sampling, path calculation, and movement state updates.
+    /// </summary>
+    /// <returns>True if the destination was successfully set.</returns>
     public bool SetDestination(Vector3 targetPos)
     {
         if (!IsAgentValid)
@@ -135,110 +174,159 @@ public class NPCMovementController
             return false;
         }
 
+        // Already at destination
         if (IsDestination(targetPos))
             return true;
 
-        NavMeshPath path = new();
-
-        if (_positionLeniency != 0f)
-        {
-            if (NavMesh.SamplePosition(targetPos, out NavMeshHit hit, _positionLeniency, _queryFilter))
-                targetPos = hit.position; // Adjust destination to sampled position
-            else
-            {
-                Debug.LogWarning($"[SetDestination()] {_npc.Name} could not sample a valid NavMesh position near the target destination.", _npc.GO);
-                return false;
-            }
-        }
-
-        bool canSetPath = NavMesh.CalculatePath(_agent.transform.position, targetPos, _queryFilter, path);
-
-        if (!canSetPath)
-        {
-            Debug.LogWarning($"[SetDestination()] {_npc.Name} could not calculate a valid path to the target destination.", _npc.GO);
+        // Sample and validate NavMesh position
+        if (!TrySampleNavMeshPosition(ref targetPos))
             return false;
-        }
 
-        if (_destinationSpot != null)
-        {
-            _destinationSpot.SetOccupied(false);
-            _destinationSpot = null;
-        }
+        // Calculate and validate path
+        NavMeshPath path = new();
+        if (!TryCalculatePath(targetPos, path))
+            return false;
 
+        // Clear previous destination spot
+        ClearDestinationSpot();
+
+        // Update destination position
         _destinationPos = targetPos;
+
+        // Apply movement configuration
+        ApplyMovementState(path);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Attempts to sample a valid NavMesh position near the target.
+    /// </summary>
+    /// <returns>True if a valid NavMesh position was sampled or leniency is disabled.</returns>
+    private bool TrySampleNavMeshPosition(ref Vector3 targetPos)
+    {
+        // Skip sampling if leniency is not configured
+        if (_positionLeniency <= 0f)
+            return true;
+
+        if (NavMesh.SamplePosition(targetPos, out NavMeshHit hit, _positionLeniency, _queryFilter))
+        {
+            targetPos = hit.position;
+            return true;
+        }
+
+        Debug.LogWarning($"[SetDestination] {_npc.Name} could not sample NavMesh position near target.", _npc.GO);
+        return false;
+    }
+
+    /// <summary>
+    /// Attempts to calculate a valid path to the target position.
+    /// </summary>
+    /// <returns>True if a valid path was calculated.</returns>
+    private bool TryCalculatePath(Vector3 targetPos, NavMeshPath path)
+    {
+        if (NavMesh.CalculatePath(_agent.transform.position, targetPos, _queryFilter, path))
+            return true;
+
+        Debug.LogWarning($"[SetDestination] {_npc.Name} could not calculate a valid path to target.", _npc.GO);
+        return false;
+    }
+
+    /// <summary>
+    /// Applies movement configuration to the agent and NPC.
+    /// Enables walking, sets path, and updates visual state.
+    /// </summary>
+    private void ApplyMovementState(NavMeshPath path)
+    {
         _agent.updateRotation = true;
-        SetIfStopped(false);
+        _agent.isStopped = false;
+        _npc.IsStopped = false;
         _agent.SetPath(path);
+
+        // Update visuals
         _npc.CharacterModel.SetActive(true);
         _npc.AnimationController.ChangeToWalk();
-        return true;
     }
     #endregion
 
     #region IS CLOSE METHODS
-    public bool IsCloseToSpot(Spot targetSpot, float checkingDistance = 2f)
+    /// <summary>
+    /// Checks if the NPC is close to a specific destination spot.
+    /// </summary>
+    /// <returns>True if close to the destination spot and the spot is the current destination.</returns>
+    public bool IsCloseToSpot(Spot targetSpot, float checkingDistance = DEFAULT_CLOSE_DISTANCE)
     {
-        if (!IsAgentValid)
+        if (!IsAgentValid || targetSpot == null)
             return false;
 
-        if (targetSpot == null)
-            return false;
-
+        // Must be tracking this spot as destination
         if (!IsDestinationSpot(targetSpot))
         {
             if (_npc.DebugMode)
-                Debug.LogWarning($"[IsCloseToSpot] {_npc.Name} checking close distance at unset destination spot.", _npc.GO);
+                Debug.LogWarning($"[IsCloseToSpot] {_npc.Name} checking distance to untracked spot.", _npc.GO);
             return false;
         }
 
         return IsCloseToDestination(checkingDistance);
     }
 
-    public bool IsCloseToDestination(float checkingDistance = 2f)
+    /// <summary>
+    /// Checks if the NPC is close to its current destination.
+    /// </summary>
+    /// <returns>True if close to the destination and path is calculated.</returns>
+    public bool IsCloseToDestination(float checkingDistance = DEFAULT_CLOSE_DISTANCE)
     {
-        if (!IsAgentValid)
+        if (!IsAgentValid || _agent.pathPending)
             return false;
 
-        if (_agent.pathPending)
-            return false;
+        float effectiveDistance = GetEffectiveCheckingDistance(checkingDistance);
+        return _agent.remainingDistance <= effectiveDistance;
+    }
 
-        float distance = Mathf.Max(checkingDistance, _npc.NearDistance);
-        return _agent.remainingDistance <= distance;
+    /// <summary>
+    /// Calculates the effective checking distance using the larger of provided distance or NPC's near distance.
+    /// </summary>
+    private float GetEffectiveCheckingDistance(float checkingDistance)
+    {
+        return Mathf.Max(checkingDistance, _npc.NearDistance);
     }
     #endregion
 
     #region HAS ARRIVED METHODS
+    /// <summary>
+    /// Checks if the NPC has arrived at a specific destination spot.
+    /// Marks the spot as occupied and optionally fixes rotation upon arrival.
+    /// </summary>
+    /// <returns>True if arrived at the spot and (if fixRotation) rotation is completed.</returns>
     public bool HasArrivedAtSpot(Spot targetSpot, bool fixRotation = false)
     {
-        if (!IsAgentValid)
+        // Validate agent and spot
+        if (!IsAgentValid || targetSpot == null)
             return false;
 
-        if (targetSpot == null)
-            return false;
-
+        // Must be tracking this spot as destination
         if (!IsDestinationSpot(targetSpot))
         {
             if (_npc.DebugMode)
-                Debug.LogWarning($"[HasArrivedAtSpot] {_npc.Name} checking arrival at unset destination spot.", _npc.GO);
+                Debug.LogWarning($"[HasArrivedAtSpot] {_npc.Name} checking arrival at untracked spot.", _npc.GO);
             return false;
         }
 
-        if (HasArrivedAtDestination())
-        {
-            targetSpot.SetOccupied(true);
+        // Check if arrived at destination
+        if (!HasArrivedAtDestination())
+            return false;
 
-            if (fixRotation && !HasRotationCompleted(targetSpot.WorldDirection))
-            {
-                SmoothRotation(targetSpot.WorldDirection);
-                return false;
-            }
+        // Arrived - mark spot as occupied
+        targetSpot.SetOccupied(true);
 
-            return true;
-        }
-
-        return false;
+        // Handle rotation if required
+        return !fixRotation || HandleRotationAtArrival(targetSpot.WorldDirection);
     }
 
+    /// <summary>
+    /// Checks if the NPC has reached its current destination.
+    /// </summary>
+    /// <returns>True if the agent has reached its destination within stopping distance.</returns>
     public bool HasArrivedAtDestination()
     {
         if (!IsAgentValid || _agent.pathPending)
@@ -246,34 +334,53 @@ public class NPCMovementController
 
         return _agent.remainingDistance <= _agent.stoppingDistance;
     }
+
+    /// <summary>
+    /// Handles rotation at arrival point.
+    /// Applies smooth rotation and returns true only when rotation is complete.
+    /// </summary>
+    /// <returns>True if rotation is already completed, false if still rotating.</returns>
+    private bool HandleRotationAtArrival(Quaternion targetDirection)
+    {
+        if (HasRotationCompleted(targetDirection))
+            return true;
+
+        SmoothRotation(targetDirection);
+        return false;
+    }
     #endregion
 
     #region ROTATION METHODS
     public void ForceRotation(Quaternion rotation)
     {
-        if (_agent.isOnNavMesh)
-            _agent.updateRotation = false; // Disable automatic rotation
+        if (!IsAgentValid)
+            return;
 
+        _agent.updateRotation = false;
         _agent.transform.rotation = rotation;
     }
 
     public bool HasRotationCompleted(Quaternion targetRotation)
     {
+        if (!IsAgentValid)
+            return false;
+
         float currentYaw = _agent.transform.eulerAngles.y;
         float targetYaw = targetRotation.eulerAngles.y;
         float angleDifference = Mathf.Abs(Mathf.DeltaAngle(currentYaw, targetYaw));
-        return angleDifference < 0.5f; // Threshold for rotation completion
+        return angleDifference < ROTATION_COMPLETION_ANGLE;
     }
 
     public void SmoothRotation(Quaternion direction)
     {
-        if (_agent.isOnNavMesh)
-            _agent.updateRotation = false; // Disable automatic rotation
+        if (!IsAgentValid)
+            return;
 
-        // Rotate only in the XZ plane (Y-axis rotation only)
+        _agent.updateRotation = false;
+
+        // Rotate only on Y-axis (XZ plane)
         float currentYaw = _agent.transform.eulerAngles.y;
         float targetYaw = direction.eulerAngles.y;
-
         float newYaw = Mathf.MoveTowardsAngle(currentYaw, targetYaw, _npc.RotationSpeed * Time.deltaTime);
 
         Vector3 eulerAngles = _agent.transform.eulerAngles;
@@ -297,30 +404,34 @@ public class NPCMovementController
 
     public void PlaceAt(Vector3 position)
     {
-        Vector3 placementPos;
-        bool sampled = false;
+        // Try to sample a valid NavMesh position
+        bool sampled = NavMesh.SamplePosition(position, out NavMeshHit hit, NAVMESH_SAMPLE_DISTANCE, NavMesh.AllAreas);
+        Vector3 placementPos = sampled ? hit.position : position;
 
-        if (NavMesh.SamplePosition(position, out NavMeshHit hit, 2f, NavMesh.AllAreas))
-        {
-            placementPos = hit.position;
-            sampled = true;
-        }
-        else
-        {
-            placementPos = position;
-        }
-
+        // Place transform
         _npc.GO.transform.position = placementPos;
 
-        _npc.Agent.enabled = true;
+        // Enable agent and warp if on NavMesh
+        try
+        {
+            if (!_npc.Agent.enabled)
+                _npc.Agent.enabled = true;
 
-        if (sampled)
-            _npc.Agent.Warp(placementPos);
+            if (sampled && _npc.Agent.isOnNavMesh)
+                _npc.Agent.Warp(placementPos);
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning($"[PlaceAt] {_npc.Name} failed to enable/warp agent: {e.Message}", _npc.GO);
+        }
     }
     #endregion
 
     #region GO TO MIDDLE POINT
-
+    /// <summary>
+    /// Commands the NPC to move to the middle point between itself and another NPC, adjusted for separation.
+    /// </summary>
+    /// <returns>The destination position that was set.</returns>
     public Vector3 GoToMiddlePoint(INPC otherNPC)
     {
         if (!IsAgentValid)
@@ -335,75 +446,64 @@ public class NPCMovementController
             return _agent.transform.position;
         }
 
-        // Compute midpoint and safe target positions offset so NPCs don't overlap
+        Vector3 destination = FindMidpointDestination(otherNPC);
+        SetDestination(destination);
+        return destination;
+    }
+
+    /// <summary>
+    /// Finds the best reachable midpoint destination between two NPCs.
+    /// </summary>
+    private Vector3 FindMidpointDestination(INPC otherNPC)
+    {
         Vector3 posA = _npc.GO.transform.position;
         Vector3 posB = otherNPC.GO.transform.position;
         Vector3 midPoint = (posA + posB) * 0.5f;
 
+        // Calculate direction between NPCs
         Vector3 direction = posB - posA;
-        if (direction.sqrMagnitude < 0.0001f)
+        if (direction.sqrMagnitude < DIRECTION_ZERO_THRESHOLD)
             direction = _npc.GO.transform.forward;
         direction.Normalize();
 
-        // Determine a comfortable separation using avoidance radii
-        float separation = Mathf.Max(0.5f, _npc.AvoidanceRadius + otherNPC.AvoidanceRadius);
-        float half = separation * 0.5f;
+        // Calculate separation offset
+        float separation = Mathf.Max(MIN_SEPARATION, _npc.AvoidanceRadius + otherNPC.AvoidanceRadius);
+        Vector3 correctedMidPoint = midPoint - direction * (separation * 0.5f);
 
-        Vector3 correctedMidPoint = midPoint - direction * half;
-
-        // Prefer a reachable point on the NavMesh. Try corrected midpoint first,
-        // then raw midpoint, then sample along the segment between the two NPCs.
-        Vector3 destination = correctedMidPoint;
-
+        // Try reachable positions in order of preference
         if (CanReachPosition(correctedMidPoint, out Vector3 reachablePos))
-        {
-            destination = reachablePos;
-        }
-        else if (CanReachPosition(midPoint, out reachablePos))
-        {
-            destination = reachablePos;
-        }
-        else
-        {
-            bool found = false;
-            // Sample several points along the line between the two NPCs to find a reachable spot
-            for (int i = 1; i <= 9; i++)
-            {
-                float t = i / 10f;
-                Vector3 sample = Vector3.Lerp(posA, posB, t);
-                if (CanReachPosition(sample, out reachablePos))
-                {
-                    destination = reachablePos;
-                    found = true;
-                    break;
-                }
-            }
+            return reachablePos;
 
-            if (!found)
-            {
-                // As a last resort, remain in place (avoid commanding unreachable destination)
-                destination = _agent != null ? _agent.transform.position : correctedMidPoint;
-            }
+        if (CanReachPosition(midPoint, out reachablePos))
+            return reachablePos;
+
+        // Sample along the line between NPCs
+        for (int i = 1; i <= MIDDLE_POINT_SAMPLES; i++)
+        {
+            float t = i / (float)(MIDDLE_POINT_SAMPLES + 1);
+            Vector3 sample = Vector3.Lerp(posA, posB, t);
+            if (CanReachPosition(sample, out reachablePos))
+                return reachablePos;
         }
 
-        // Command movement to the chosen reachable destination
-        SetDestination(destination);
-
-        return destination;
+        // Last resort: stay in place
+        return _agent.transform.position;
     }
 
-    public bool CanReachPosition(Vector3 targetPos, out Vector3 reachablePos)
+    /// <summary>
+    /// Checks if a position is reachable on the NavMesh.
+    /// </summary>
+    /// <returns>True if the position is reachable.</returns>
+    private bool CanReachPosition(Vector3 targetPos, out Vector3 reachablePos)
     {
         if (NavMesh.SamplePosition(targetPos, out NavMeshHit hitLocation, _npc.MaxSamplingDistance, NavMesh.AllAreas))
         {
             reachablePos = hitLocation.position;
             return true;
         }
-        else
-        {
-            reachablePos = Vector3.zero;
-            return false;
-        }
+
+        reachablePos = Vector3.zero;
+        return false;
     }
     #endregion
 }

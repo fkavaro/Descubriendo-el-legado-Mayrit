@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61fe6012eefc0c24f8fb01bc39327cdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Villager
-  _debugMode: 1
+  _debugMode: 0
   _isExecutionPaused: 0
   _currentActionInfo: 
   _walkSpeed: 1.5
@@ -100,8 +100,8 @@ MonoBehaviour:
   _rotationSpeed: 3
   _jumpForce: 2
   _gravityForce: 9
-  _arrivedDistance: {x: 0.3, y: 1.5}
-  _nearDistance: {x: 5, y: 7}
+  _stoppingDistance: 0.2
+  _nearDistance: 2
   _animator: {fileID: 6016149073480954882}
   _interactionRange: 5
   _gender: 0
@@ -118,6 +118,7 @@ MonoBehaviour:
   _baseAvoidancePriority: 50
   _avoidancePriorityVariance: 10
   _walkSpeedVariance: 0.5
+  _destinationSpot: {fileID: 0}
   _home: {fileID: 0}
   _workplace: {fileID: 0}
   _sanctuary: {fileID: 0}
