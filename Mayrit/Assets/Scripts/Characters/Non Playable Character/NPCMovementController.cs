@@ -13,6 +13,7 @@ public class NPCMovementController
     private const float ROTATION_COMPLETION_ANGLE = 0.5f;
     private const float DEFAULT_CLOSE_DISTANCE = 2f;
     private const int MIDDLE_POINT_SAMPLES = 9;
+    private const float SEPARATION_BUFFER = 0.2f;
     #endregion
 
     #region PROPERTIES
@@ -467,14 +468,17 @@ public class NPCMovementController
         direction.Normalize();
 
         // Calculate separation offset
-        float separation = Mathf.Max(MIN_SEPARATION, _npc.AvoidanceRadius + otherNPC.AvoidanceRadius);
-        Vector3 correctedMidPoint = midPoint - direction * (separation * 0.5f);
+        float desiredSeparation = Mathf.Max(
+            MIN_SEPARATION,
+            _npc.AvoidanceRadius + otherNPC.AvoidanceRadius + _npc.StoppingDistance + otherNPC.StoppingDistance + SEPARATION_BUFFER);
+
+        Vector3 correctedMidPoint = midPoint - direction * (desiredSeparation * 0.5f);
 
         // Try reachable positions in order of preference
-        if (CanReachPosition(correctedMidPoint, out Vector3 reachablePos))
+        if (CanReachPosition(correctedMidPoint, otherNPC, desiredSeparation, out Vector3 reachablePos))
             return reachablePos;
 
-        if (CanReachPosition(midPoint, out reachablePos))
+        if (CanReachPosition(midPoint, otherNPC, desiredSeparation, out reachablePos))
             return reachablePos;
 
         // Sample along the line between NPCs
@@ -482,7 +486,7 @@ public class NPCMovementController
         {
             float t = i / (float)(MIDDLE_POINT_SAMPLES + 1);
             Vector3 sample = Vector3.Lerp(posA, posB, t);
-            if (CanReachPosition(sample, out reachablePos))
+            if (CanReachPosition(sample, otherNPC, desiredSeparation, out reachablePos))
                 return reachablePos;
         }
 
@@ -494,10 +498,19 @@ public class NPCMovementController
     /// Checks if a position is reachable on the NavMesh.
     /// </summary>
     /// <returns>True if the position is reachable.</returns>
-    private bool CanReachPosition(Vector3 targetPos, out Vector3 reachablePos)
+    private bool CanReachPosition(Vector3 targetPos, INPC otherNPC, float requiredSeparation, out Vector3 reachablePos)
     {
         if (NavMesh.SamplePosition(targetPos, out NavMeshHit hitLocation, _npc.MaxSamplingDistance, NavMesh.AllAreas))
         {
+            // Reject positions that would place this NPC inside the other agent's avoidance area
+            float minDistanceToOther = otherNPC.AvoidanceRadius + _npc.AvoidanceRadius + SEPARATION_BUFFER;
+            float distanceToOther = Vector3.Distance(hitLocation.position, otherNPC.GO.transform.position);
+            if (distanceToOther < Mathf.Max(minDistanceToOther, requiredSeparation * 0.5f))
+            {
+                reachablePos = Vector3.zero;
+                return false;
+            }
+
             reachablePos = hitLocation.position;
             return true;
         }

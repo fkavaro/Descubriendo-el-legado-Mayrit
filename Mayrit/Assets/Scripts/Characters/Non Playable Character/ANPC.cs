@@ -89,6 +89,7 @@ where BehaviourSystemType : ABehaviourSystem
     NavMeshAgent _agent;
     bool _canTalk = true;
     bool _isReadyToTalk = false;
+    int _originalAvoidancePriority;
     protected INPC _currentConversationTarget, _lastConversationTarget;
     #endregion
 
@@ -159,12 +160,24 @@ where BehaviourSystemType : ABehaviourSystem
 
     public virtual void Talk()
     {
+        // Save original priority and set to minimum (0 = most important) so no other agent can push
+        if (_agent != null)
+        {
+            _originalAvoidancePriority = _agent.avoidancePriority;
+            _agent.avoidancePriority = 0;  // Highest priority - won't be pushed by others
+        }
+
+        MovementController.SetIfStopped(true);
         AnimationController.ChangeToTalk();
     }
 
     public virtual void EndConversation()
     {
         ConversationFinishedEvent?.Invoke();
+
+        // Restore original avoidance priority
+        if (_agent != null)
+            _agent.avoidancePriority = _originalAvoidancePriority;
 
         _isReadyToTalk = false;
         _lastConversationTarget = _currentConversationTarget;

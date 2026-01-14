@@ -100,27 +100,25 @@ MonoBehaviour:
   _rotationSpeed: 3
   _jumpForce: 2
   _gravityForce: 9
-  _arrivedDistance: {x: 0.3, y: 1.5}
-  _nearDistance: {x: 5, y: 7}
+  _stoppingDistance: 0.2
+  _nearDistance: 2
   _animator: {fileID: 8442105521708024458}
   _interactionRange: 5
   _gender: 1
   _characterModel: {fileID: 2919351008931398218}
   _givenName: 
   _familyName: 
-  _conversationCooldown: 60
+  _conversationCooldown: 180
   _conversationRole: 2
   _currentConversationTargetGO: {fileID: 0}
   _lastConversationTargetGO: {fileID: 0}
-  _noTalkLayerMask:
-    serializedVersion: 2
-    m_Bits: 512
   _avoidanceRadius: 0.7
   _maxSamplingDistance: 1
   _isStopped: 0
   _baseAvoidancePriority: 50
   _avoidancePriorityVariance: 10
   _walkSpeedVariance: 0.5
+  _destinationSpot: {fileID: 0}
   _home: {fileID: 0}
   _workplace: {fileID: 0}
   _sanctuary: {fileID: 0}

@@ -20,7 +20,7 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
         if (_marketStallSpot == null)
         {
             if (_npc.DebugMode)
-                Debug.Log($"[GoToMarket_VillagerStrategy.Update()] {_npc.Name} could not find an available stall spot in the market.");
+                Debug.Log($"[GoToMarket_VillagerStrategy.Update()] {_npc.Name} could not find an available stall spot in the market.", _npc.GO);
 
             return Node.Status.Failure;
         }
@@ -30,7 +30,7 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
             if (_npc.CurrentConversationTarget != null || _npc.ConversationRole != INPC.RoleInConversation.None)
             {
                 if (_npc.DebugMode)
-                    Debug.Log($"[GoToDestinationStrategy.Start()] {_npc.Name} is going to {_marketStallSpot.name}. Ending conversation with {_npc.CurrentConversationTarget.Name}.");
+                    Debug.Log($"[GoToDestinationStrategy.Start()] {_npc.Name} is going to {_marketStallSpot.name}. Ending conversation with {_npc.CurrentConversationTarget.Name}.", _npc.GO);
 
                 _npc.EndConversation();
             }
@@ -81,7 +81,7 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
                     {
                         // Stop and idle
                         if (_npc.DebugMode)
-                            Debug.Log($"[GoToMarket_VillagerStrategy.Update()] {_npc.Name} is near market stall spot but it's occupied. Stopping.");
+                            Debug.Log($"[GoToMarket_VillagerStrategy.Update()] {_npc.Name} is near market stall spot but it's occupied. Stopping.", _npc.GO);
                         _alreadyWaiting = true;
                     }
 

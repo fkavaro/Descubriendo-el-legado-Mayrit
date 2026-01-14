@@ -1822,7 +1822,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6547628267696245721}
-  - component: {fileID: 4068021555266557117}
   - component: {fileID: 3294773380141302466}
   m_Layer: 0
   m_Name: Church
@@ -1844,27 +1843,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 2062623636518982340}
   - {fileID: 3708429989393880734}
   - {fileID: 4425852744896267917}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4068021555266557117
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8490685972417487510}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifierVolume
-  m_SerializedVersion: 0
-  m_Size: {x: 13, y: 19, z: 18}
-  m_Center: {x: 0, y: 5.5, z: 0.5}
-  m_Area: 1
-  m_AffectedAgents: ffffffff
 --- !u!114 &3294773380141302466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1879,6 +1862,55 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Sanctuary
   _accessSpots:
   - {fileID: 7939598496968618665}
+--- !u!1 &9098696999430273911
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2062623636518982340}
+  - component: {fileID: 4512518676025971956}
+  m_Layer: 3
+  m_Name: NavMeshModifierVolume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2062623636518982340
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9098696999430273911}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 6547628267696245721}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4512518676025971956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9098696999430273911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifierVolume
+  m_SerializedVersion: 0
+  m_Size: {x: 10, y: 18, z: 15}
+  m_Center: {x: 0, y: 5.5, z: 0}
+  m_Area: 1
+  m_AffectedAgents: ffffffff
 --- !u!1001 &2189283130113966664
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1933,7 +1965,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3292912815265278760, guid: 1b402a69ccbccf144bc66f703b8f08d7, type: 3}
       propertyPath: m_Size.x
-      value: 10
+      value: 12.9526615
+      objectReference: {fileID: 0}
+    - target: {fileID: 3292912815265278760, guid: 1b402a69ccbccf144bc66f703b8f08d7, type: 3}
+      propertyPath: m_Size.z
+      value: 18.799923
+      objectReference: {fileID: 0}
+    - target: {fileID: 3292912815265278760, guid: 1b402a69ccbccf144bc66f703b8f08d7, type: 3}
+      propertyPath: m_Center.x
+      value: -0.022035599
+      objectReference: {fileID: 0}
+    - target: {fileID: 3292912815265278760, guid: 1b402a69ccbccf144bc66f703b8f08d7, type: 3}
+      propertyPath: m_Center.z
+      value: -8.538506
       objectReference: {fileID: 0}
     - target: {fileID: 5026753730120425781, guid: 1b402a69ccbccf144bc66f703b8f08d7, type: 3}
       propertyPath: m_IsActive

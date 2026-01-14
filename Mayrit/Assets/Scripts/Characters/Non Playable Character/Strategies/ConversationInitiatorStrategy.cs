@@ -24,6 +24,8 @@ where NPCtype : INPC
         if (!IsOtherStillInConversation())
             return Node.Status.Failure;
 
+        _npc.Talk();
+
         if (_npc.DebugMode)
             Debug.Log($"[ConversationInitiatorStrategy.Start()] {_npc.Name} initiating conversation with {_otherNPC.Name}", _npc.GO);
 
@@ -35,8 +37,6 @@ where NPCtype : INPC
         // Failure if other NPC is no longer in conversation
         if (!IsOtherStillInConversation())
             return Node.Status.Failure;
-
-        _npc.Talk();
 
         // Keep facing other NPC (XZ plane only)
         Vector3 targetPosition = _otherNPC.GO.transform.position;

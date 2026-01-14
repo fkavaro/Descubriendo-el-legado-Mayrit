@@ -108,7 +108,7 @@ MonoBehaviour:
   _characterModel: {fileID: 1069142897698092226}
   _givenName: 
   _familyName: 
-  _conversationCooldown: 60
+  _conversationCooldown: 180
   _conversationRole: 2
   _currentConversationTargetGO: {fileID: 0}
   _lastConversationTargetGO: {fileID: 0}

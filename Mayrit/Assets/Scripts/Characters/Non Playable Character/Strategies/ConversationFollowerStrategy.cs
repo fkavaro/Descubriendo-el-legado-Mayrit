@@ -27,6 +27,9 @@ where NPCtype : INPC
 
         // Subscribe to conversation end event
         _otherNPC.ConversationFinishedEvent += OnConversationFinished;
+        _otherFinishedTalking = false;
+
+        _npc.Talk();
 
         if (_npc.DebugMode)
             Debug.Log($"[ConversationFollowerStrategy.Start()] {_npc.Name} is being talked to by {_otherNPC.Name}", _npc.GO);
@@ -50,8 +53,6 @@ where NPCtype : INPC
 
             return Node.Status.Success;
         }
-
-        _npc.Talk();
 
         // Keep facing other NPC (XZ plane only)
         Vector3 targetPosition = _otherNPC.GO.transform.position;

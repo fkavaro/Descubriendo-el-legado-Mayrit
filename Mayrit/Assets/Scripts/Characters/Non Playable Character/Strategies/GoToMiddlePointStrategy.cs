@@ -6,6 +6,9 @@ where NPCtype : INPC
 {
     private const float MIDPOINT_RECALC_DISTANCE = 1f; // Recalculate if NPCs drift apart
     private const float UPDATE_INTERVAL = 0.5f; // Check every 0.5 seconds
+    private const float MAX_MIDPOINT_DISTANCE_FACTOR = 1.5f; // Fail if midpoint ends too far from partner
+    private const float MIN_SEPARATION = 0.5f; // Minimum separation distance
+    private const float SEPARATION_BUFFER = 0.2f; // Extra buffer distance
 
     INPC _otherNPC;
     Vector3 _lastMiddlePoint;
@@ -32,16 +35,17 @@ where NPCtype : INPC
 
         _lastMiddlePoint = _npc.MovementController.GoToMiddlePoint(_otherNPC);
 
-        if (_lastMiddlePoint == Vector3.zero)
+        if (_lastMiddlePoint == Vector3.zero || IsMiddlePointTooFar(_lastMiddlePoint))
         {
             if (_npc.DebugMode)
-                Debug.LogWarning($"[GoToMiddlePointStrategy.Start()] {_npc.Name} could not calculate middle point to {_otherNPC.Name}", _npc.GO);
+                Debug.LogWarning($"[GoToMiddlePointStrategy.Start()] {_npc.Name} could not calculate a valid middle point to {_otherNPC.Name}", _npc.GO);
 
             return Node.Status.Failure;
         }
 
         _isMoving = true;
         _timeSinceLastUpdate = 0f;
+        _npc.IsReadyToTalk = false;
 
         if (_npc.DebugMode)
             Debug.Log($"[GoToMiddlePointStrategy.Start()] {_npc.Name} moving to talk to {_otherNPC.Name} as {_npc.ConversationRole}", _npc.GO);
@@ -63,10 +67,11 @@ where NPCtype : INPC
 
         if (hasArrived)
         {
-            // Handle arrival - set idle animation once
+            // Handle arrival - set idle animation and stop movement once
             if (_isMoving)
             {
                 _npc.AnimationController.ChangeToIdle();
+                _npc.MovementController.SetIfStopped(true);
                 _isMoving = false;
             }
 
@@ -82,9 +87,19 @@ where NPCtype : INPC
             }
 
             // Periodically recalculate middle point if NPCs have drifted apart
+            // Only recalculate while moving (not when both are ready)
             if (_timeSinceLastUpdate >= UPDATE_INTERVAL)
             {
                 Vector3 newMiddlePoint = _npc.MovementController.GoToMiddlePoint(_otherNPC);
+
+                if (IsMiddlePointTooFar(newMiddlePoint))
+                {
+                    if (_npc.DebugMode)
+                        Debug.LogWarning($"[GoToMiddlePointStrategy.Update()] {_npc.Name} midpoint too far from {_otherNPC.Name}; aborting conversation.", _npc.GO);
+
+                    _npc.EndConversation();
+                    return Node.Status.Failure;
+                }
 
                 // If middle point changed significantly, update destination
                 if (Vector3.Distance(_lastMiddlePoint, newMiddlePoint) > MIDPOINT_RECALC_DISTANCE)
@@ -117,5 +132,15 @@ where NPCtype : INPC
         }
 
         return true;
+    }
+
+    bool IsMiddlePointTooFar(Vector3 candidate)
+    {
+        float desiredSeparation = Mathf.Max(
+            MIN_SEPARATION,
+            _npc.AvoidanceRadius + _otherNPC.AvoidanceRadius + _npc.StoppingDistance + _otherNPC.StoppingDistance + SEPARATION_BUFFER);
+
+        float distanceToOther = Vector3.Distance(candidate, _otherNPC.GO.transform.position);
+        return distanceToOther > desiredSeparation * MAX_MIDPOINT_DISTANCE_FACTOR;
     }
 }
