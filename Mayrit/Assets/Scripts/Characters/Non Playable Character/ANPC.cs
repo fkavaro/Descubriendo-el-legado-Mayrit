@@ -79,6 +79,7 @@ where BehaviourSystemType : ABehaviourSystem
     [SerializeField] protected int _avoidancePriorityVariance = 10;
     [Tooltip("Random +/- variance applied to walk speed")]
     [SerializeField] protected float _walkSpeedVariance = 0.5f;
+    [SerializeField] protected Spot _destinationSpot;
     #endregion
 
     #region INTERNAL PROPERTIES
@@ -88,7 +89,7 @@ where BehaviourSystemType : ABehaviourSystem
     NavMeshAgent _agent;
     bool _canTalk = true;
     bool _isReadyToTalk = false;
-    public INPC _currentConversationTarget, _lastConversationTarget;
+    protected INPC _currentConversationTarget, _lastConversationTarget;
     #endregion
 
     #region LIFE CYCLE
@@ -105,6 +106,7 @@ where BehaviourSystemType : ABehaviourSystem
     {
         base.Update();
 
+        _destinationSpot = _movementController.DestinationSpot;
         _movementController.CheckBehaviourExecution();
     }
     #endregion

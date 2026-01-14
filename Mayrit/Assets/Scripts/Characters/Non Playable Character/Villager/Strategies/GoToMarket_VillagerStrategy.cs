@@ -5,6 +5,7 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
     readonly Market _market;
     Stall _marketStall;
     Spot _marketStallSpot;
+    bool _alreadyWaiting = false;
 
     public GoToMarket_VillagerStrategy(Villager npc, Market market)
     : base(npc)
@@ -24,7 +25,7 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
             return Node.Status.Failure;
         }
 
-        if (_npc.MovementController.IsDestination(_marketStallSpot))
+        if (_npc.MovementController.IsDestinationSpot(_marketStallSpot))
         {
             if (_npc.CurrentConversationTarget != null || _npc.ConversationRole != INPC.RoleInConversation.None)
             {
@@ -45,13 +46,13 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
         if (_marketStallSpot == null)
         {
             if (_npc.DebugMode)
-                Debug.Log($"[GoToMarket_VillagerStrategy.Update()] {_npc.Name} could not find an available stall spot in the market.");
+                Debug.Log($"[GoToMarket_VillagerStrategy.Update()] {_npc.Name} could not find an available stall spot in the market.", _npc.GO);
 
             return Node.Status.Failure;
         }
 
         // Fix destination if needed
-        if (!_npc.MovementController.IsDestination(_marketStallSpot))
+        if (!_npc.MovementController.IsDestinationSpot(_marketStallSpot))
         {
             if (_npc.DebugMode)
                 Debug.LogWarning($"[GoToMarket_VillagerStrategy.Update()] {_npc.Name} fixing destination", _npc.GO);
@@ -60,12 +61,12 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
         }
 
         // Is close to destination stall spot
-        if (_npc.MovementController.IsCloseTo(_marketStallSpot, 1f))
+        if (_npc.MovementController.IsCloseToSpot(_marketStallSpot, 1f))
         {
             if (!_market.IsOpen())
             {
                 if (_npc.DebugMode)
-                    Debug.Log($"[GoToMarket_VillagerStrategy.Update()] {_npc.Name} found that no stalls are open in the market.");
+                    Debug.Log($"[GoToMarket_VillagerStrategy.Update()] {_npc.Name} found that no stalls are open in the market.", _npc.GO);
 
                 return Node.Status.Failure;
             }
@@ -76,9 +77,13 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
                 // Is occupied
                 if (_marketStallSpot.IsOccupied())
                 {
-                    // Stop and idle
-                    if (_npc.DebugMode)
-                        Debug.Log($"[GoToMarket_VillagerStrategy.Update()] {_npc.Name} is near market stall spot but it's occupied. Stopping.");
+                    if (!_alreadyWaiting)
+                    {
+                        // Stop and idle
+                        if (_npc.DebugMode)
+                            Debug.Log($"[GoToMarket_VillagerStrategy.Update()] {_npc.Name} is near market stall spot but it's occupied. Stopping.");
+                        _alreadyWaiting = true;
+                    }
 
                     _npc.MovementController.SetIfStopped(true);
                     _npc.AnimationController.ChangeToIdle();
@@ -91,11 +96,13 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
                 // Is not occupied
                 else
                 {
+                    _alreadyWaiting = false;
+
                     _npc.MovementController.SetIfStopped(false);
                     _npc.AnimationController.ChangeToWalk();
 
                     // Has arrived
-                    if (_npc.MovementController.HasArrivedAt(_marketStallSpot, true, false))
+                    if (_npc.MovementController.HasArrivedAtSpot(_marketStallSpot, true))
                     {
                         _npc.MarketStall = _marketStall;
 
@@ -122,14 +129,7 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
     {
         _marketStall = _market.GetRandomStall();
         _marketStallSpot = _marketStall.GetRandomAccessSpot();
+        _alreadyWaiting = false;
         _npc.MovementController.SetDestinationSpot(_marketStallSpot);
-
-        // // Ensure walking animation while moving
-        // if (!_npc.AnimationController.IsWalking())
-        // {
-        //     if (_npc.DebugMode)
-        //         Debug.Log($"[GoToDestinationStrategy.Update()] {_npc.Name} ensuring walk animation.", _npc.GO);
-        //     _npc.AnimationController.ChangeToWalk();
-        // }
     }
 }

@@ -231,7 +231,7 @@ public class Villager : ANPC<BehaviourTree>
         if (!_conversationRole.Equals(INPC.RoleInConversation.None))
         {
             if (DebugMode)
-                Debug.LogWarning($"[CanSomeoneNearbyTalk()] {Name} cannot look for someone to talk to because is already in conversation.");
+                Debug.LogWarning($"[CanSomeoneNearbyTalk()] {Name} cannot look for someone to talk to because is already in conversation.", this);
 
             return false;
         }
@@ -258,7 +258,7 @@ public class Villager : ANPC<BehaviourTree>
             _conversationRole = INPC.RoleInConversation.Initiator;
 
             if (DebugMode)
-                Debug.Log($"[CanSomeoneNearbyTalk()] {Name} can talk to {_currentConversationTarget.Name}.");
+                Debug.Log($"[CanSomeoneNearbyTalk()] {Name} can talk to {_currentConversationTarget.Name}.", this);
 
             return true;
         }

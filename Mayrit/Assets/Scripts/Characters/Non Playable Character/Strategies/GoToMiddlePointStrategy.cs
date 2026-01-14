@@ -17,7 +17,7 @@ where NPCtype : INPC
         if (_otherNPC == null)
         {
             if (_npc.DebugMode)
-                Debug.LogWarning($"[GoToMiddlePointStrategy.Start()] {_npc.Name} trying to talk to null NPC");
+                Debug.LogWarning($"[GoToMiddlePointStrategy.Start()] {_npc.Name} trying to talk to null NPC", _npc.GO);
             return Node.Status.Failure;
         }
 
@@ -27,16 +27,16 @@ where NPCtype : INPC
 
         _middlePoint = _npc.MovementController.GoToMiddlePoint(_otherNPC);
 
-        if (_middlePoint == null)
+        if (_middlePoint == Vector3.zero)
         {
             if (_npc.DebugMode)
-                Debug.LogWarning($"[GoToMiddlePointStrategy.Start()] {_npc.Name} could not calculate middle point to {_otherNPC.Name}");
+                Debug.LogWarning($"[GoToMiddlePointStrategy.Start()] {_npc.Name} could not calculate middle point to {_otherNPC.Name}", _npc.GO);
 
             return Node.Status.Failure;
         }
 
         if (_npc.DebugMode)
-            Debug.Log($"[GoToMiddlePointStrategy.Start()] {_npc.Name} moving to talk to {_otherNPC.Name} as {_npc.ConversationRole}");
+            Debug.Log($"[GoToMiddlePointStrategy.Start()] {_npc.Name} moving to talk to {_otherNPC.Name} as {_npc.ConversationRole}", _npc.GO);
 
         return Node.Status.Success;
     }
@@ -47,7 +47,7 @@ where NPCtype : INPC
         if (!IsOtherStillInConversation())
             return Node.Status.Failure;
 
-        if (_npc.MovementController.HasArrivedAt(_middlePoint))
+        if (_npc.MovementController.HasArrivedAtDestination())
         {
             _npc.AnimationController.ChangeToIdle();
             _npc.IsReadyToTalk = true;
@@ -69,7 +69,7 @@ where NPCtype : INPC
         if (!_otherNPC.IsStillInConversation(_npc))
         {
             if (_npc.DebugMode)
-                Debug.Log($"[GoToMiddlePointStrategy] {_npc.Name} found that {_otherNPC.Name} is no longer in conversation.");
+                Debug.Log($"[GoToMiddlePointStrategy] {_npc.Name} found that {_otherNPC.Name} is no longer in conversation.", _npc.GO);
 
             _npc.EndConversation();
             return false;

@@ -3,13 +3,6 @@ using UnityEngine;
 
 public class PlayableCharacterMovementController
 {
-    #region PROPERTY HELPERS
-    float ArrivedHorizontalDistance => _player.ArrivedDistance.x;
-    float ArrivedVerticalDistance => _player.ArrivedDistance.y;
-    float NearHorizontalDistance => _player.NearDistance.x;
-    float NearVerticalDistance => _player.NearDistance.y;
-    #endregion
-
     #region PROPERTIES
     readonly PlayableCharacter _player;
     readonly CharacterController _playerCharacterController;
@@ -177,7 +170,7 @@ public class PlayableCharacterMovementController
         float horizontalDist = Vector2.Distance(playerXZ, destXZ);
 
         // Hasn't arrived
-        if (horizontalDist > ArrivedHorizontalDistance)
+        if (horizontalDist > _player.StoppingDistance)
         {
             // Calculate direction to destination (XZ plane only)
             Vector3 direction = (destinationPos - playerPos).normalized;

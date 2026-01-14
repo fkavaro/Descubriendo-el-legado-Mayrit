@@ -16,7 +16,7 @@ where NPCtype : INPC
         if (_otherNPC == null)
         {
             if (_npc.DebugMode)
-                Debug.LogWarning($"[ConversationFollowerStrategy.Start()] {_npc.Name} is being talked to by null NPC");
+                Debug.LogWarning($"[ConversationFollowerStrategy.Start()] {_npc.Name} is being talked to by null NPC", _npc.GO);
 
             return Node.Status.Failure;
         }
@@ -29,7 +29,7 @@ where NPCtype : INPC
         _otherNPC.ConversationFinishedEvent += OnConversationFinished;
 
         if (_npc.DebugMode)
-            Debug.Log($"[ConversationFollowerStrategy.Start()] {_npc.Name} is being talked to by {_otherNPC.Name}");
+            Debug.Log($"[ConversationFollowerStrategy.Start()] {_npc.Name} is being talked to by {_otherNPC.Name}", _npc.GO);
 
         return Node.Status.Success;
     }
@@ -66,7 +66,7 @@ where NPCtype : INPC
         if (!_otherNPC.IsStillInConversation(_npc))
         {
             if (_npc.DebugMode)
-                Debug.Log($"[ConversationFollowerStrategy] {_npc.Name} found that {_otherNPC.Name} is no longer in conversation.");
+                Debug.Log($"[ConversationFollowerStrategy] {_npc.Name} found that {_otherNPC.Name} is no longer in conversation.", _npc.GO);
 
             _npc.EndConversation();
             return false;

@@ -19,7 +19,7 @@ public interface ICharacter : IBehaviourEntity
     float RotationSpeed { get; }
     float JumpForce { get; }
     float GravityForce { get; }
-    Vector2 ArrivedDistance { get; }
-    Vector2 NearDistance { get; }
+    float StoppingDistance { get; }
+    float NearDistance { get; }
     #endregion
 }

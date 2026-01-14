@@ -160,7 +160,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.13333334
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: 513c1b686e0943a4d888de6c10d8bf85, type: 2}
   m_BuildHeightMesh: 0
 --- !u!114 &6018295896267001286
 MonoBehaviour:
@@ -939,7 +939,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.13333334
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: 14c6014fa781f3b478f086a42d67ce55, type: 2}
   m_BuildHeightMesh: 0
 --- !u!114 &8439379509136951240
 MonoBehaviour:
@@ -953,7 +953,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6ab4b6032fd36548af6fdaa96160a04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TerrainNavMeshSurface
-  _isActive: 0
+  _isActive: 1
   milestonesActivated: {x: 3, y: 3}
   _terrains:
   - {fileID: 7618270733618141055}
@@ -1121,7 +1121,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.13333334
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: 408d198b185bee145a2a677e54737841, type: 2}
   m_BuildHeightMesh: 0
 --- !u!114 &582233156482545690
 MonoBehaviour:
@@ -1135,7 +1135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6ab4b6032fd36548af6fdaa96160a04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TerrainNavMeshSurface
-  _isActive: 0
+  _isActive: 1
   milestonesActivated: {x: 1, y: 1}
   _terrains:
   - {fileID: 4131220451621317394}
@@ -1210,7 +1210,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.13333334
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: 924a898fc837b084f8fa79906b7a7a43, type: 2}
   m_BuildHeightMesh: 0
 --- !u!114 &5792292907949960756
 MonoBehaviour:
@@ -1224,7 +1224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6ab4b6032fd36548af6fdaa96160a04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TerrainNavMeshSurface
-  _isActive: 0
+  _isActive: 1
   milestonesActivated: {x: 4, y: 4}
   _terrains:
   - {fileID: 7126846272313122088}
@@ -2322,7 +2322,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.13333334
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: cafced053bdfb79438fed93255a0c9b4, type: 2}
   m_BuildHeightMesh: 0
 --- !u!114 &2672252464848323921
 MonoBehaviour:
@@ -2336,7 +2336,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6ab4b6032fd36548af6fdaa96160a04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TerrainNavMeshSurface
-  _isActive: 0
+  _isActive: 1
   milestonesActivated: {x: 5, y: 5}
   _terrains:
   - {fileID: 1738230481128882764}
@@ -2690,7 +2690,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.13333334
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: 0d8889a0e3175a541a1be0f6009b340d, type: 2}
   m_BuildHeightMesh: 0
 --- !u!114 &2332946037682463170
 MonoBehaviour:
@@ -2704,7 +2704,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6ab4b6032fd36548af6fdaa96160a04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TerrainNavMeshSurface
-  _isActive: 0
+  _isActive: 1
   milestonesActivated: {x: 6, y: 6}
   _terrains:
   - {fileID: 5905806038830537598}
@@ -2779,7 +2779,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.13333334
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: db6410c57af32044793996a6da96c9be, type: 2}
   m_BuildHeightMesh: 0
 --- !u!114 &1501934598322607301
 MonoBehaviour:
@@ -3278,6 +3278,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MilestoneNavTerrain
       objectReference: {fileID: 0}
+    - target: {fileID: 6523894389781172690, guid: 2765ebcf8ba9b7b4db5a740405b38832, type: 3}
+      propertyPath: m_NavMeshData
+      value: 
+      objectReference: {fileID: 23800000, guid: 2602d4de8a42a3d47a32f0d55244de53, type: 2}
     - target: {fileID: 6740527589547768464, guid: 2765ebcf8ba9b7b4db5a740405b38832, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

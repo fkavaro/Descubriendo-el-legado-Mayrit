@@ -19,8 +19,8 @@ where BehaviourSystemType : ABehaviourSystem
     public float RotationSpeed => _rotationSpeed;
     public float JumpForce => _jumpForce;
     public float GravityForce => _gravityForce;
-    public Vector2 ArrivedDistance => _arrivedDistance;
-    public Vector2 NearDistance => _nearDistance;
+    public float StoppingDistance => _stoppingDistance;
+    public float NearDistance => _nearDistance;
     #endregion
 
     #region EDITOR PROPERTIES
@@ -31,9 +31,9 @@ where BehaviourSystemType : ABehaviourSystem
     [SerializeField] protected float _jumpForce = 2f;
     [SerializeField] protected float _gravityForce = 9f;
     [Tooltip("Distance to which it's considered as arrived at destination (horizontal, vertical)")]
-    [SerializeField] protected Vector2 _arrivedDistance = new(0.3f, 1.5f);
+    [SerializeField] protected float _stoppingDistance = 0.2f;
     [Tooltip("Distance to which it's considered as 'near' to a target (horizontal, vertical)")]
-    [SerializeField] protected Vector2 _nearDistance = new(5f, 7f);
+    [SerializeField] protected float _nearDistance = 2f;
 
     [Header("Animation")]
     [SerializeField] protected Animator _animator;

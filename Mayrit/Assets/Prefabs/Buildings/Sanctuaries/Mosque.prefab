@@ -4242,6 +4242,10 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 1932
       objectReference: {fileID: 0}
+    - target: {fileID: 1739903349626167979, guid: 1b402a69ccbccf144bc66f703b8f08d7, type: 3}
+      propertyPath: m_Name
+      value: Mosque entrance
+      objectReference: {fileID: 0}
     - target: {fileID: 3249092066781205718, guid: 1b402a69ccbccf144bc66f703b8f08d7, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0

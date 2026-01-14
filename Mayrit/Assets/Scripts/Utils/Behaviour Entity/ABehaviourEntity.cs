@@ -57,7 +57,7 @@ where BehaviourSystemType : ABehaviourSystem
     protected virtual void Awake()
     {
         if (DebugMode)
-            Debug.Log($"Awaking {Name} behaviour entity...");
+            Debug.Log($"Awaking {Name} behaviour entity...", GO);
         _behaviourSystem = DefineBehaviourSystemOnAwake();
     }
 
