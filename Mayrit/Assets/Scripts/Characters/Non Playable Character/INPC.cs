@@ -25,7 +25,7 @@ public interface INPC : ICharacter
     public string GivenName { get; }
     public string FamilyName { get; }
     RoleInConversation ConversationRole { get; set; }
-    bool NotInAccessZone { get; set; }
+    bool InAccessZone { get; set; }
     bool HasArrivedToMiddlePoint { get; set; }
     public INPC CurrentConversationTarget { get; set; }
     public INPC LastConversationTarget { get; set; }

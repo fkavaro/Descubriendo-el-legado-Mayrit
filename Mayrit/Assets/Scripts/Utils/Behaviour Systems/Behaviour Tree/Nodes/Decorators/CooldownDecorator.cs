@@ -13,6 +13,8 @@ public class CooldownDecorator : Node
     private readonly float _cooldown;
     private float _lastUse = -Mathf.Infinity;
 
+    public bool IsCooldownActive => Time.time - _lastUse < _cooldown;
+
     public CooldownDecorator(IBehaviourEntity entity, float cooldown, int priority = 0)
     : base(entity, "Cooldown(" + cooldown + ")", priority)
     {
@@ -25,7 +27,7 @@ public class CooldownDecorator : Node
             return Status.Failure;
 
         // If cooldown not elapsed, don't run the child (allow other branches)
-        if (Time.time - _lastUse < _cooldown)
+        if (IsCooldownActive)
             return Status.Failure;
 
         // Run the child

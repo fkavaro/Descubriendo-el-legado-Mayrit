@@ -32,10 +32,10 @@ where BehaviourSystemType : ABehaviourSystem
         set => _conversationRole = value;
     }
 
-    public bool NotInAccessZone
+    public bool InAccessZone
     {
-        get => _notInAccessZone;
-        set => _notInAccessZone = value;
+        get => _inAccessZone;
+        set => _inAccessZone = value;
     }
 
     public bool HasArrivedToMiddlePoint
@@ -94,10 +94,11 @@ where BehaviourSystemType : ABehaviourSystem
 
     NPCMovementController _movementController;
     NavMeshAgent _agent;
-    bool _notInAccessZone = true;
+    bool _inAccessZone = true;
     bool _hasArrivedToMiddlePoint = false;
     int _originalAvoidancePriority;
     protected INPC _currentConversationTarget, _lastConversationTarget;
+    protected CooldownDecorator _conversationCooldownNode;
     #endregion
 
     #region LIFE CYCLE
@@ -134,16 +135,33 @@ where BehaviourSystemType : ABehaviourSystem
     }
     #endregion
 
-    #region CONVERSATION METHODS
+    #region CONVERSATION STATE CHECKING METHODS
     public virtual bool IsAvailableForConversation()
     {
-        return _notInAccessZone && CharacterModel.activeInHierarchy;
+        // Check if in access zone and model is active
+        if (_inAccessZone || !CharacterModel.activeInHierarchy)
+            return false;
+
+        // Check if conversation cooldown has finished
+        if (_conversationCooldownNode == null || _conversationCooldownNode.IsCooldownActive)
+        {
+            // if (DebugMode)
+            //     Debug.LogWarning($"[{Name}.IsAvailableForConversation()] not available for conversation: cooldown active.", GO);
+
+            return false;
+        }
+
+        return true;
     }
 
     public virtual bool IsTalking()
     {
-        return IsAvailableForConversation()
-            && (_currentConversationTarget != null || _conversationRole != INPC.RoleInConversation.None);
+        return _currentConversationTarget != null || _conversationRole != INPC.RoleInConversation.None;
+    }
+
+    public virtual bool IsFollowingConversation()
+    {
+        return IsTalking() && _conversationRole == INPC.RoleInConversation.Follower;
     }
 
     public virtual bool IsStillTalkingWith(INPC otherNpc)
@@ -151,7 +169,11 @@ where BehaviourSystemType : ABehaviourSystem
         if (!IsTalking())
         {
             if (DebugMode)
-                Debug.Log($"[{Name}.IsStillInConversationWith()] is not talking: {_notInAccessZone}, {CharacterModel.activeInHierarchy}, {_currentConversationTarget != null}, {_conversationRole != INPC.RoleInConversation.None}", GO);
+                Debug.Log($"[{Name}.IsStillInConversationWith()] is not talking: " +
+                $"inAccessZone = {_inAccessZone}, " +
+                $"isActive = {CharacterModel.activeInHierarchy}, " +
+                $"notNullTarget = {_currentConversationTarget != null}, " +
+                $"notNoneRole = {_conversationRole != INPC.RoleInConversation.None}", GO);
             return false;
         }
 
@@ -178,12 +200,9 @@ where BehaviourSystemType : ABehaviourSystem
             return false;
         }
     }
+    #endregion
 
-    public virtual bool IsFollowingConversation()
-    {
-        return IsTalking() && _conversationRole == INPC.RoleInConversation.Follower;
-    }
-
+    #region CONVERSATION PERFORMING METHODS
     public virtual bool TryInitiateConversationWith(INPC target)
     {
         // False if target is null or already talking, or if self is already talking
@@ -223,7 +242,7 @@ where BehaviourSystemType : ABehaviourSystem
             return false;
         }
 
-        // Reject if not available for conversation (in access zone or model inactive)
+        // Reject if not available for conversation
         if (!IsAvailableForConversation())
         {
             // if (DebugMode)
@@ -259,7 +278,9 @@ where BehaviourSystemType : ABehaviourSystem
         MovementController.SetIfStopped(true);
         AnimationController.ChangeToTalk();
     }
+    #endregion
 
+    #region END CONVERSATION METHODS
     public virtual void EndConversationAsInitiator()
     {
         if (_conversationRole != INPC.RoleInConversation.Initiator)
@@ -276,11 +297,17 @@ where BehaviourSystemType : ABehaviourSystem
     public virtual void ConversationSucceeded()
     {
         UpdateConversationState(_currentConversationTarget, _currentConversationTargetGO);
+
+        if (DebugMode)
+            Debug.Log($"[{Name}.ConversationSucceeded()] conversation with {_lastConversationTarget.Name} succeeded", GO);
     }
 
     public virtual void ConversationInterrupted()
     {
         UpdateConversationState(null, null);
+
+        if (DebugMode)
+            Debug.Log($"[{Name}.ConversationInterrupted()] conversation was interrupted", GO);
     }
 
     public virtual void UpdateConversationState(INPC otherNpc, GameObject otherNpcGO)

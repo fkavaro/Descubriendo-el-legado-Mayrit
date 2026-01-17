@@ -43,8 +43,8 @@ public class AccessZone : MonoBehaviour
             return;
         }
 
-        if (npc.NotInAccessZone)
-            npc.NotInAccessZone = false;
+        if (!npc.InAccessZone)
+            npc.InAccessZone = true;
     }
 
     void OnTriggerExit(Collider other)
@@ -57,8 +57,8 @@ public class AccessZone : MonoBehaviour
         if (!other.TryGetComponent<INPC>(out var npc))
             return;
 
-        if (!npc.NotInAccessZone)
-            npc.NotInAccessZone = true;
+        if (npc.InAccessZone)
+            npc.InAccessZone = false;
     }
     #endregion
 

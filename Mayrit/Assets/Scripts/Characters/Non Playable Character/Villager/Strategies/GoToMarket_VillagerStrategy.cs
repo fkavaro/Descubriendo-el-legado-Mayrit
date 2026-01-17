@@ -49,6 +49,14 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
             return Node.Status.Failure;
         }
 
+        // Clean up any stale conversation state
+        if (_npc.IsTalking())
+        {
+            if (_npc.DebugMode)
+                Debug.LogWarning($"{_npc.Name}.GoToMarket.Update()] found stale conversation state - cleaning up", _npc.GO);
+            _npc.ConversationInterrupted();
+        }
+
         // Fix destination if needed
         if (!_npc.MovementController.IsDestinationSpot(_marketStallSpot))
         {

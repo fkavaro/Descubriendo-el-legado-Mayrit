@@ -440,14 +440,14 @@ public class NPCMovementController
         if (!IsAgentValid)
         {
             if (_npc.DebugMode)
-                Debug.LogWarning($"[GoToMiddlePoint] {_npc.Name} agent is not valid.", _npc.GO);
+                Debug.LogWarning($"[{_npc.Name}.GoToMiddlePoint] agent is not valid.", _npc.GO);
             return false;
         }
 
         if (otherNPC == null)
         {
             if (_npc.DebugMode)
-                Debug.LogWarning($"[GoToMiddlePoint] {_npc.Name} other NPC is null.", _npc.GO);
+                Debug.LogWarning($"[{_npc.Name}.GoToMiddlePoint] other NPC is null.", _npc.GO);
             return false;
         }
 
@@ -455,12 +455,7 @@ public class NPCMovementController
 
         // Failure if middle point too far
         if (IsMiddlePointTooFar(midPoint, otherNPC))
-        {
-            if (_npc.DebugMode)
-                Debug.LogWarning($"[GoToMiddlePoint] {_npc.Name} could not find valid middle point to {otherNPC.Name}.", _npc.GO);
-
             return false;
-        }
 
         SetDestination(midPoint);
         return true;
@@ -492,11 +487,20 @@ public class NPCMovementController
         Vector3 centerPoint = (posA + posB) * 0.5f;
         Vector3 correctedMidPoint = centerPoint - directVector * (desiredSeparation * 0.5f);
         if (CanReachPosition(correctedMidPoint, otherNPC, out Vector3 reachablePos))
+        {
+            if (_npc.DebugMode)
+                Debug.Log($"[{_npc.Name}.FindMidpointTo] using corrected midpoint.", _npc.GO);
             return reachablePos;
+        }
+
 
         // Secondary: Try pure midpoint
         if (CanReachPosition(centerPoint, otherNPC, out reachablePos))
+        {
+            if (_npc.DebugMode)
+                Debug.LogWarning($"[{_npc.Name}.FindMidpointTo] using center midpoint.", _npc.GO);
             return reachablePos;
+        }
 
         // Tertiary: Sample along the line between NPCs for alternative positions
         int sampleCount = Mathf.Min(MIDDLE_POINT_SAMPLES, Mathf.CeilToInt(distanceBetweenNPCs / 0.5f));
@@ -506,16 +510,26 @@ public class NPCMovementController
             Vector3 sample = Vector3.Lerp(posA, posB, t);
 
             if (CanReachPosition(sample, otherNPC, out reachablePos))
+            {
+                if (_npc.DebugMode)
+                    Debug.LogWarning($"[{_npc.Name}.FindMidpointTo] using sampled midpoint.", _npc.GO);
                 return reachablePos;
+            }
         }
 
         // Quaternary: Try offset perpendicular to the line between NPCs
         Vector3 perpendicular = new(-directVector.z, directVector.y, directVector.x);
         Vector3 offsetPoint = centerPoint + perpendicular * (desiredSeparation * 0.5f);
         if (CanReachPosition(offsetPoint, otherNPC, out reachablePos))
+        {
+            if (_npc.DebugMode)
+                Debug.LogWarning($"[{_npc.Name}.FindMidpointTo] using perpendicular offset midpoint.", _npc.GO);
             return reachablePos;
+        }
 
         // Final fallback: Current position if nothing else works
+        if (_npc.DebugMode)
+            Debug.LogWarning($"[{_npc.Name}.FindMidpointTo] falling back to current position.", _npc.GO);
         return _agent.transform.position;
     }
 
@@ -577,7 +591,11 @@ public class NPCMovementController
     private bool IsMiddlePointTooFar(Vector3 candidate, INPC otherNPC)
     {
         if (otherNPC == null)
+        {
+            if (_npc.DebugMode)
+                Debug.LogWarning($"[{_npc.Name}.IsMiddlePointTooFar] other NPC is null.", _npc.GO);
             return true;
+        }
 
         float desiredSeparation = Mathf.Max(
             MIN_SEPARATION,
@@ -586,7 +604,14 @@ public class NPCMovementController
         float distanceToOther = Vector3.Distance(candidate, otherNPC.GO.transform.position);
         float maxAllowedDistance = desiredSeparation * MAX_MIDPOINT_DISTANCE_FACTOR;
 
-        return distanceToOther > maxAllowedDistance;
+        if (distanceToOther > maxAllowedDistance)
+        {
+            if (_npc.DebugMode)
+                Debug.LogWarning($"[{_npc.Name}.IsMiddlePointTooFar] candidate midpoint is too far from {otherNPC.Name}.", _npc.GO);
+            return true;
+        }
+        else
+            return false;
     }
     #endregion
 }

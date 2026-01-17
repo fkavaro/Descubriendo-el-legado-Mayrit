@@ -40,7 +40,7 @@ public class Villager : ANPC<BehaviourTree>
             homeEntrance = _home.GetRandomAccessSpot();
 
         // Conversation sequence
-        ConditionStrategy notInAccessZoneStrategy = new(() => NotInAccessZone);
+        ConditionStrategy notInAccessZoneStrategy = new(() => !InAccessZone);
         ConditionStrategy isFollowingConversationStrategy = new(IsFollowingConversation);
         GoToMiddlePointStrategy<Villager> goToMiddlePointStrategyForFollower = new(this);
         GoToMiddlePointStrategy<Villager> goToMiddlePointStrategyForInitiator = new(this);
@@ -48,7 +48,7 @@ public class Villager : ANPC<BehaviourTree>
         ConditionStrategy canSomeoneNearbyTalkStrategy = new(CanInitiateConversationWithSomeoneNearby);
         ConversationInitiatorStrategy<Villager> initiateConversationStrategy = new(this);
 
-        CooldownDecorator conversationCooldown = new(this, _conversationCooldown);
+        _conversationCooldownNode = new(this, _conversationCooldown);
         SequenceNode conversationSequence = new(this, "Conversation Sequence");
         SelectorNode roleSelector = new(this);
         SequenceNode followConversationSequence = new(this);
@@ -62,7 +62,7 @@ public class Villager : ANPC<BehaviourTree>
         LeafNode isOtherNearbyLeaf = new(this, "Can someone nearby talk?", canSomeoneNearbyTalkStrategy);
         LeafNode initiateConversationLeaf = new(this, "Talking", initiateConversationStrategy);
 
-        conversationCooldown.AddChild(conversationSequence);
+        _conversationCooldownNode.AddChild(conversationSequence);
         conversationSequence.AddChild(notInAccessZoneLeaf);
         conversationSequence.AddChild(roleSelector);
         roleSelector.AddChild(followConversationSequence);
@@ -142,7 +142,7 @@ public class Villager : ANPC<BehaviourTree>
 
         // Behaviour sequence
         SelectorNode behaviourSelector = new(this);
-        behaviourSelector.AddChild(conversationCooldown); // First: higher priority
+        behaviourSelector.AddChild(_conversationCooldownNode); // First: higher priority
         behaviourSelector.AddChild(routineSequence);
 
         InfiniteLoopNode infiniteLoop = new(this, behaviourSelector);
