@@ -29,7 +29,6 @@ public interface INPC : ICharacter
     public INPC LastConversationTarget { get; set; }
     public GameObject LastConversationTargetGO { get; set; }
     public float ConversationDuration { get; set; }
-    public bool IsFollowingConversation { get; }
     #endregion
 
     #region METHODS

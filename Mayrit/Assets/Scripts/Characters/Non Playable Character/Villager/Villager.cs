@@ -38,7 +38,7 @@ public class Villager : ANPC<BehaviourTree>
 
         // Conversation sequence
         ConditionStrategy notInAccessZoneStrategy = new(() => !InAccessZone);
-        ConditionStrategy isFollowingConversationStrategy = new(() => IsFollowingConversation);
+        ConditionStrategy isFollowingConversationStrategy = new(() => _interactionController.IsFollowingConversation());
         GoToMiddlePointStrategy<Villager> goToMiddlePointStrategyForFollower = new(this);
         GoToMiddlePointStrategy<Villager> goToMiddlePointStrategyForInitiator = new(this);
         ConversationFollowerStrategy<Villager> followConversationStrategy = new(this);

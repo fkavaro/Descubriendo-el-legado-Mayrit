@@ -183,7 +183,7 @@ public class NPCInteractionController
             return false;
         }
 
-        // Assign follower role and initiatort as current conversation target
+        // Assign follower role and initiator as current conversation target
         _npc.ConversationRole = INPC.RoleInConversation.Follower;
         _npc.CurrentConversationTargetGO = initiator.GO;
         _npc.CurrentConversationTarget = initiator;

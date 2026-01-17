@@ -52,8 +52,11 @@ where NPCtype : INPC
             return Node.Status.Failure;
         }
 
-        // Arrived at middle point (first time)
-        if (_npc.MovementController.HasArrivedAtDestination() && !_npc.HasArrivedToMiddlePoint)
+        // Check if close enough to OTHER NPC (avoids avoidance radius collision issues)
+        float distanceToOther = Vector3.Distance(_npc.GO.transform.position, _otherNPC.GO.transform.position);
+        float closeEnoughDistance = _npc.AvoidanceRadius + _otherNPC.AvoidanceRadius + _npc.NearDistance;
+
+        if (distanceToOther <= closeEnoughDistance && !_npc.HasArrivedToMiddlePoint)
         {
             _npc.AnimationController.ChangeToIdle();
             _npc.MovementController.SetIfStopped(true);

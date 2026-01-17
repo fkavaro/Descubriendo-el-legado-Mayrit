@@ -66,8 +66,6 @@ where BehaviourSystemType : ABehaviourSystem
         get => _conversationDuration;
         set => _conversationDuration = value;
     }
-
-    public bool IsFollowingConversation => _interactionController.IsFollowingConversation();
     #endregion
 
     #region EDITOR PROPERTIES
