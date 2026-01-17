@@ -27,7 +27,7 @@ where NPCtype : INPC
         _npc.InteractionController.Talk();
 
         if (_npc.DebugMode)
-            Debug.Log($"[{_npc.Name}.ConversationInitiatorStrategy.Start()] initiating conversation with {_otherNPC.Name}", _npc.GO);
+            Debug.Log($"{_npc.Name} initiated conversation with {_otherNPC.Name}", _npc.GO);
 
         return base.Start();
     }
@@ -58,5 +58,8 @@ where NPCtype : INPC
     public override void OnTimerComplete()
     {
         _npc.InteractionController.EndConversationAsInitiator();
+
+        if (_npc.DebugMode)
+            Debug.Log($"{_npc.Name} ended conversation with {_otherNPC.Name}", _npc.GO);
     }
 }

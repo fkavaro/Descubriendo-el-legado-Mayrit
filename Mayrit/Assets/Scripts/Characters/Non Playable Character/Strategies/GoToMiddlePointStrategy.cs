@@ -34,8 +34,8 @@ where NPCtype : INPC
             return Node.Status.Failure;
         }
 
-        if (_npc.DebugMode)
-            Debug.Log($"[{_npc.Name}.GoToMiddlePointStrategy.Start()] moving to talk to {_otherNPC.Name} as {_npc.ConversationRole}", _npc.GO);
+        // if (_npc.DebugMode)
+        //     Debug.Log($"[{_npc.Name}.GoToMiddlePointStrategy.Start()] moving to talk to {_otherNPC.Name} as {_npc.ConversationRole}", _npc.GO);
 
         return Node.Status.Success;
     }

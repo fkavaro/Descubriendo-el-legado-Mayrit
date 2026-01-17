@@ -82,11 +82,7 @@ public class NPCInteractionController
         if (!IsTalking())
         {
             if (_npc.DebugMode)
-                Debug.Log($"[{_npc.Name}.IsStillInConversationWith()] is not talking: " +
-                $"inAccessZone = {_npc.InAccessZone}, " +
-                $"isActive = {_npc.CharacterModel.activeInHierarchy}, " +
-                $"notNullTarget = {_npc.CurrentConversationTarget != null}, " +
-                $"notNoneRole = {_npc.ConversationRole != INPC.RoleInConversation.None}", _npc.GO);
+                Debug.Log($"[{_npc.Name}.IsStillInConversationWith()] is not talking anymore", _npc.GO);
             return false;
         }
 
@@ -151,8 +147,8 @@ public class NPCInteractionController
         _npc.CurrentConversationTarget = otherNpc;
         _npc.CurrentConversationTargetGO = otherNpc.GO;
 
-        if (_npc.DebugMode)
-            Debug.Log($"[{_npc.Name}.TryInitiateConversation()] successfully engaged in conversation with {otherNpc.Name}", _npc.GO);
+        // if (_npc.DebugMode)
+        //     Debug.Log($"[{_npc.Name}.TryInitiateConversation()] successfully engaged in conversation with {otherNpc.Name}", _npc.GO);
 
         return true;
     }
@@ -223,8 +219,8 @@ public class NPCInteractionController
     {
         UpdateConversationState(_npc.CurrentConversationTarget, _npc.CurrentConversationTargetGO);
 
-        if (_npc.DebugMode)
-            Debug.Log($"[{_npc.Name}.ConversationSucceeded()] conversation with {_npc.LastConversationTarget.Name} succeeded", _npc.GO);
+        // if (_npc.DebugMode)
+        //     Debug.Log($"[{_npc.Name}.ConversationSucceeded()] conversation with {_npc.LastConversationTarget.Name} succeeded", _npc.GO);
     }
 
     public void ConversationInterrupted()

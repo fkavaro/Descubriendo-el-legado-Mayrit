@@ -60,8 +60,8 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
         // Fix destination if needed
         if (!_npc.MovementController.IsDestinationSpot(_marketStallSpot))
         {
-            if (_npc.DebugMode)
-                Debug.Log($"[GoToMarket_VillagerStrategy.Update()] {_npc.Name} fixing destination", _npc.GO);
+            // if (_npc.DebugMode)
+            //     Debug.Log($"[GoToMarket_VillagerStrategy.Update()] {_npc.Name} fixing destination", _npc.GO);
 
             _npc.MovementController.SetDestinationSpot(_marketStallSpot);
         }
