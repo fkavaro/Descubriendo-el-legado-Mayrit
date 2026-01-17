@@ -3,13 +3,15 @@ using UnityEngine;
 
 public class Villager : ANPC<BehaviourTree>
 {
+    #region PROPERTIES HELPERS
     public Stall MarketStall
     {
         get => _marketStall;
         set => _marketStall = value;
     }
+    #endregion
 
-    #region EDIROR PROPERTIES
+    #region EDITOR PROPERTIES
     [Header("Villager")]
     [SerializeField] protected House _home;
     [SerializeField] protected Workplace _workplace;
@@ -18,12 +20,7 @@ public class Villager : ANPC<BehaviourTree>
     [SerializeField] protected Stall _marketStall;
     #endregion
 
-    #region INTERNAL PROPERTIES
-    BehaviourTree _villagerBT;
-    NPCPoolManager _npcPoolManager;
-    #endregion
-
-    #region INHERITED
+    #region BEHAVIOUR SYSTEM DEFINITION
     public override BehaviourTree DefineBehaviourSystemOnAwake()
     {
         // Get entrance spots
@@ -41,11 +38,11 @@ public class Villager : ANPC<BehaviourTree>
 
         // Conversation sequence
         ConditionStrategy notInAccessZoneStrategy = new(() => !InAccessZone);
-        ConditionStrategy isFollowingConversationStrategy = new(IsFollowingConversation);
+        ConditionStrategy isFollowingConversationStrategy = new(() => IsFollowingConversation);
         GoToMiddlePointStrategy<Villager> goToMiddlePointStrategyForFollower = new(this);
         GoToMiddlePointStrategy<Villager> goToMiddlePointStrategyForInitiator = new(this);
         ConversationFollowerStrategy<Villager> followConversationStrategy = new(this);
-        ConditionStrategy canSomeoneNearbyTalkStrategy = new(CanInitiateConversationWithSomeoneNearby);
+        ConditionStrategy canSomeoneNearbyTalkStrategy = new(() => _interactionController.CanInitiateConversationWithSomeoneNearby<Villager>());
         ConversationInitiatorStrategy<Villager> initiateConversationStrategy = new(this);
 
         _conversationCooldownNode = new(this, _conversationCooldown);
@@ -146,19 +143,9 @@ public class Villager : ANPC<BehaviourTree>
         behaviourSelector.AddChild(routineSequence);
 
         InfiniteLoopNode infiniteLoop = new(this, behaviourSelector);
-        _villagerBT = new(this, infiniteLoop);
+        BehaviourTree villagerBT = new(this, infiniteLoop);
 
-        return _villagerBT;
-    }
-    #endregion
-
-    #region LIFE CYCLE
-    protected override void Awake()
-    {
-        base.Awake();
-
-        // Get dependency from Service Locator
-        _npcPoolManager = ServiceLocator.Instance.Get<NPCPoolManager>();
+        return villagerBT;
     }
     #endregion
 
@@ -216,20 +203,6 @@ public class Villager : ANPC<BehaviourTree>
         _workplace = null;
         _sanctuary = null;
         _market = null;
-    }
-    #endregion
-
-    #region CONDITIONAL STRATEGIES METHODS
-    bool CanInitiateConversationWithSomeoneNearby()
-    {
-        // False if already talking
-        if (IsTalking())
-            return false;
-
-        Villager someoneNearby = _npcPoolManager.GetAnyNearbyVillager(transform.position, _interactionRange, this);
-
-        // Return according to handshake
-        return TryInitiateConversationWith(someoneNearby);
     }
     #endregion
 }

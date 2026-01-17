@@ -16,11 +16,11 @@ where NPCtype : INPC
     public override Node.Status Start()
     {
         // Clean up any stale conversation state
-        if (_npc.IsTalking())
+        if (_npc.InteractionController.IsTalking())
         {
             if (_npc.DebugMode)
                 Debug.LogWarning($"{_npc.Name}.GoToDestinationStrategy.Start()] starting routine with stale conversation state - cleaning up", _npc.GO);
-            _npc.ConversationInterrupted();
+            _npc.InteractionController.ConversationInterrupted();
         }
 
         if (_npc.MovementController.SetDestinationSpot(_destinationSpot))
@@ -36,11 +36,11 @@ where NPCtype : INPC
     public override Node.Status Update()
     {
         // Clean up any stale conversation state
-        if (_npc.IsTalking())
+        if (_npc.InteractionController.IsTalking())
         {
             if (_npc.DebugMode)
                 Debug.LogWarning($"{_npc.Name}.GoToDestinationStrategy.Update()] found stale conversation state - cleaning up", _npc.GO);
-            _npc.ConversationInterrupted();
+            _npc.InteractionController.ConversationInterrupted();
         }
 
         // Fix destination if needed

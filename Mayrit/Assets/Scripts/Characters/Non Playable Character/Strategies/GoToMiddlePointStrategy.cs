@@ -15,22 +15,22 @@ where NPCtype : INPC
         _otherNPC = _npc.CurrentConversationTarget;
 
         // Failure if other NPC is null or no longer in conversation
-        if (_otherNPC == null || !_otherNPC.IsStillTalkingWith(_npc))
+        if (_otherNPC == null || !_otherNPC.InteractionController.IsStillTalkingWith(_npc))
         {
             if (_otherNPC == null && _npc.DebugMode)
                 Debug.LogWarning($"[{_npc.Name}.GoToMiddlePointStrategy.Start()] trying to talk to null NPC", _npc.GO);
 
-            if (!_otherNPC.IsStillTalkingWith(_npc) && _npc.DebugMode)
+            if (!_otherNPC.InteractionController.IsStillTalkingWith(_npc) && _npc.DebugMode)
                 Debug.LogWarning($"[{_npc.Name}.GoToMiddlePointStrategy.Start()] other NPC {_otherNPC.Name} is no longer in conversation", _npc.GO);
 
-            _npc.ConversationInterrupted();
+            _npc.InteractionController.ConversationInterrupted();
             return Node.Status.Failure;
         }
 
         // Failure if cannot go to middle point
         if (!_npc.MovementController.GoToMiddlePoint(_otherNPC))
         {
-            _npc.ConversationInterrupted();
+            _npc.InteractionController.ConversationInterrupted();
             return Node.Status.Failure;
         }
 
@@ -43,12 +43,12 @@ where NPCtype : INPC
     public override Node.Status Update()
     {
         // Failure if other NPC is no longer in conversation
-        if (!_otherNPC.IsStillTalkingWith(_npc))
+        if (!_otherNPC.InteractionController.IsStillTalkingWith(_npc))
         {
-            if (!_otherNPC.IsStillTalkingWith(_npc) && _npc.DebugMode)
+            if (!_otherNPC.InteractionController.IsStillTalkingWith(_npc) && _npc.DebugMode)
                 Debug.LogWarning($"[{_npc.Name}.GoToMiddlePointStrategy.Update()] other NPC {_otherNPC.Name} is no longer in conversation", _npc.GO);
 
-            _npc.ConversationInterrupted();
+            _npc.InteractionController.ConversationInterrupted();
             return Node.Status.Failure;
         }
 

@@ -16,11 +16,11 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
     public override Node.Status Start()
     {
         // Clean up any stale conversation state
-        if (_npc.IsTalking())
+        if (_npc.InteractionController.IsTalking())
         {
             if (_npc.DebugMode)
                 Debug.LogWarning($"{_npc.Name}.GoToMarket_VillagerStrategy.Start()] starting routine with stale conversation state - cleaning up", _npc.GO);
-            _npc.ConversationInterrupted();
+            _npc.InteractionController.ConversationInterrupted();
         }
 
         GetStallAndSetDestination();
@@ -50,11 +50,11 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
         }
 
         // Clean up any stale conversation state
-        if (_npc.IsTalking())
+        if (_npc.InteractionController.IsTalking())
         {
             if (_npc.DebugMode)
                 Debug.LogWarning($"{_npc.Name}.GoToMarket.Update()] found stale conversation state - cleaning up", _npc.GO);
-            _npc.ConversationInterrupted();
+            _npc.InteractionController.ConversationInterrupted();
         }
 
         // Fix destination if needed

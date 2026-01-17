@@ -17,7 +17,7 @@ where NPCtype : INPC
         {
             if (_npc.DebugMode)
                 Debug.LogWarning($"[{_npc.Name}.ConversationFollowerStrategy.Start()] is being talked to by null NPC", _npc.GO);
-            _npc.ConversationInterrupted();
+            _npc.InteractionController.ConversationInterrupted();
             return Node.Status.Failure;
         }
 
@@ -26,10 +26,10 @@ where NPCtype : INPC
             return Node.Status.Failure;
 
         // Subscribe to conversation end event
-        _otherNPC.ConversationEndedEvent += OnConversationEnded;
+        _otherNPC.InteractionController.ConversationEndedEvent += OnConversationEnded;
         _otherFinishedTalking = false;
 
-        _npc.Talk();
+        _npc.InteractionController.Talk();
 
         return Node.Status.Success;
     }
@@ -39,15 +39,15 @@ where NPCtype : INPC
         // Success if other finished talking
         if (_otherFinishedTalking)
         {
-            _otherNPC.ConversationEndedEvent -= OnConversationEnded;
-            _npc.ConversationSucceeded();
+            _otherNPC.InteractionController.ConversationEndedEvent -= OnConversationEnded;
+            _npc.InteractionController.ConversationSucceeded();
             return Node.Status.Success;
         }
 
         // Failure if other NPC is no longer in conversation
         if (!IsOtherStillInConversation())
         {
-            _otherNPC.ConversationEndedEvent -= OnConversationEnded;
+            _otherNPC.InteractionController.ConversationEndedEvent -= OnConversationEnded;
             return Node.Status.Failure;
         }
 
@@ -62,10 +62,10 @@ where NPCtype : INPC
 
     bool IsOtherStillInConversation()
     {
-        if (_otherNPC.IsStillTalkingWith(_npc))
+        if (_otherNPC.InteractionController.IsStillTalkingWith(_npc))
             return true;
 
-        _npc.ConversationInterrupted();
+        _npc.InteractionController.ConversationInterrupted();
         return false;
     }
 

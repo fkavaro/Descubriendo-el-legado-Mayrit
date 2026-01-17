@@ -184,6 +184,32 @@ public class NPCPoolManager : MonoBehaviour
     {
         return GetAnyNearbyVillager(position, range, exclude) != null;
     }
+
+    /// <summary>
+    /// Generic version: returns the first nearby NPC of type T within range (or null).
+    /// Filters results to only return NPCs of the specified type.
+    /// </summary>
+    public T GetAnyNearby<T>(Vector3 position, float range, INPC exclude = null) where T : class, INPC
+    {
+        // For Villager type, use the optimized Villager-specific method
+        if (typeof(T) == typeof(Villager))
+        {
+            Villager excludeVillager = exclude as Villager;
+            return GetAnyNearbyVillager(position, range, excludeVillager) as T;
+        }
+
+        // Generic fallback: check all active villagers and filter by type
+        var list = GetNearbyVillagers(position, range, exclude as Villager);
+        if (list != null && list.Count > 0)
+        {
+            foreach (var npc in list)
+            {
+                if (npc is T typedNpc)
+                    return typedNpc;
+            }
+        }
+        return null;
+    }
     #endregion
 
     #region PRIVATE METHODS

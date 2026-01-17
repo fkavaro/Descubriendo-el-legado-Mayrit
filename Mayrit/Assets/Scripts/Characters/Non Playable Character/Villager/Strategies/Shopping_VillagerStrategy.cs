@@ -17,14 +17,14 @@ public class Shopping_VillagerStrategy : ATimedNPCStrategy<Villager>
         }
 
         //Clean up any stale conversation state
-        if (_npc.IsTalking())
+        if (_npc.InteractionController.IsTalking())
         {
             if (_npc.DebugMode)
                 Debug.LogWarning($"{_npc.Name}.Shopping_VillagerStrategy.Start()] starting routine with stale conversation state - cleaning up", _npc.GO);
-            _npc.ConversationInterrupted();
+            _npc.InteractionController.ConversationInterrupted();
         }
 
-        _npc.Talk();
+        _npc.InteractionController.Talk();
         return Node.Status.Success;
     }
 
@@ -40,11 +40,11 @@ public class Shopping_VillagerStrategy : ATimedNPCStrategy<Villager>
         }
 
         //Clean up any stale conversation state
-        if (_npc.IsTalking())
+        if (_npc.InteractionController.IsTalking())
         {
             if (_npc.DebugMode)
                 Debug.LogWarning($"{_npc.Name}.Shopping_VillagerStrategy.Update()] found stale conversation state - cleaning up", _npc.GO);
-            _npc.ConversationInterrupted();
+            _npc.InteractionController.ConversationInterrupted();
         }
 
         // Stall is closed
