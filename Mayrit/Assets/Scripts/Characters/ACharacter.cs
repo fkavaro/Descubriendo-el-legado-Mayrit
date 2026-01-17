@@ -15,7 +15,11 @@ where BehaviourSystemType : ABehaviourSystem
 
     public float WalkSpeed => _walkSpeed;
     public float SprintSpeed => _sprintSpeed;
-    public float RotationSpeed => _rotationSpeed;
+    public float RotationSpeed
+    {
+        get => _rotationSpeed;
+        set => _rotationSpeed = value;
+    }
     public float JumpForce => _jumpForce;
     public float GravityForce => _gravityForce;
     public float StoppingDistance => _stoppingDistance;

@@ -18,7 +18,7 @@ public interface ICharacter : IBehaviourEntity
     public string FamilyName { get; }
     float WalkSpeed { get; }
     float SprintSpeed { get; }
-    float RotationSpeed { get; }
+    float RotationSpeed { get; set; }
     float JumpForce { get; }
     float GravityForce { get; }
     float StoppingDistance { get; }

@@ -52,9 +52,7 @@ where NPCtype : INPC
         }
 
         // Keep facing other NPC (XZ plane only)
-        Vector3 targetPosition = _otherNPC.GO.transform.position;
-        targetPosition.y = _npc.GO.transform.position.y;
-        _npc.GO.transform.LookAt(targetPosition);
+        _npc.MovementController.RotateSmoothlyTowards(_otherNPC.GO);
 
         _npc.ConversationDuration = _otherNPC.ConversationDuration;
         return Node.Status.Running;

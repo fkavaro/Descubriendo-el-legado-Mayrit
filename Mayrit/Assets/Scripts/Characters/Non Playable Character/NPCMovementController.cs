@@ -50,7 +50,8 @@ public class NPCMovementController
         _agent.speed = Mathf.Max(0.1f, _npc.WalkSpeed + speedOffset);
 
         // Set default values
-        _agent.angularSpeed = _npc.RotationSpeed * 100f;
+        _npc.RotationSpeed *= 100f;
+        _agent.angularSpeed = _npc.RotationSpeed;
         _agent.stoppingDistance = _npc.StoppingDistance;
         _agent.radius = _npc.AvoidanceRadius;
 
@@ -323,7 +324,7 @@ public class NPCMovementController
         targetSpot.SetOccupied(true);
 
         // Handle rotation if required
-        return !fixRotation || HandleRotationAtArrival(targetSpot.WorldDirection);
+        return !fixRotation || RotateSmoothlyTowards(targetSpot.WorldDirection);
     }
 
     /// <summary>
@@ -337,30 +338,16 @@ public class NPCMovementController
 
         return _agent.remainingDistance <= _agent.stoppingDistance;
     }
-
-    /// <summary>
-    /// Handles rotation at arrival point.
-    /// Applies smooth rotation and returns true only when rotation is complete.
-    /// </summary>
-    /// <returns>True if rotation is already completed, false if still rotating.</returns>
-    private bool HandleRotationAtArrival(Quaternion targetDirection)
-    {
-        if (HasRotationCompleted(targetDirection))
-            return true;
-
-        SmoothRotation(targetDirection);
-        return false;
-    }
     #endregion
 
     #region ROTATION METHODS
-    public void ForceRotation(Quaternion rotation)
+    public void ForceRotation(Quaternion targetRotation)
     {
         if (!IsAgentValid)
             return;
 
         _agent.updateRotation = false;
-        _agent.transform.rotation = rotation;
+        _agent.transform.rotation = targetRotation;
     }
 
     public bool HasRotationCompleted(Quaternion targetRotation)
@@ -374,21 +361,44 @@ public class NPCMovementController
         return angleDifference < ROTATION_COMPLETION_ANGLE;
     }
 
-    public void SmoothRotation(Quaternion direction)
+    public bool RotateSmoothlyTowards(GameObject GO)
     {
         if (!IsAgentValid)
-            return;
+            return false;
+
+        if (GO == null)
+            return false;
+
+        Vector3 directionToOther = GO.transform.position - _agent.transform.position;
+        directionToOther.y = 0f; // Keep only horizontal direction
+
+        if (directionToOther.sqrMagnitude < DIRECTION_ZERO_THRESHOLD)
+            return true;
+
+        directionToOther.Normalize();
+        return RotateSmoothlyTowards(Quaternion.LookRotation(directionToOther));
+    }
+
+    public bool RotateSmoothlyTowards(Quaternion targetRotation)
+    {
+        if (!IsAgentValid)
+            return false;
+
+        if (HasRotationCompleted(targetRotation))
+            return true;
 
         _agent.updateRotation = false;
 
         // Rotate only on Y-axis (XZ plane)
         float currentYaw = _agent.transform.eulerAngles.y;
-        float targetYaw = direction.eulerAngles.y;
+        float targetYaw = targetRotation.eulerAngles.y;
         float newYaw = Mathf.MoveTowardsAngle(currentYaw, targetYaw, _npc.RotationSpeed * Time.deltaTime);
 
         Vector3 eulerAngles = _agent.transform.eulerAngles;
         eulerAngles.y = newYaw;
         _agent.transform.eulerAngles = eulerAngles;
+
+        return false;
     }
     #endregion
 
