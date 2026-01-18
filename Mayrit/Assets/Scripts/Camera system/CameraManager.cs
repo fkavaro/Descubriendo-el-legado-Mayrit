@@ -55,8 +55,8 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     [Range(0.1f, 10f)]
     public float _thirdPersonSimSpeed = 1f;
     public CinemachineCamera _thirdPersonCamera;
-    public float _3rdPersonCameraOrbitSpeed = 3f,
-        _3rdPersonCameraFollowSpeed = 3f,
+    public float _3rdPersonCameraOrbitSpeed = 1.5f,
+        _3rdPersonCameraFollowSpeed = 1.5f,
         _bottomClamp = -30f,
         _topClamp = 40f;
     #endregion

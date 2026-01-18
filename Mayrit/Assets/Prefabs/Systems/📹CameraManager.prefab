@@ -694,8 +694,8 @@ MonoBehaviour:
   _orbitalCamera: {fileID: 1263816906637668818}
   _thirdPersonSimSpeed: 1
   _thirdPersonCamera: {fileID: 412980351691204597}
-  _3rdPersonCameraOrbitSpeed: 3
-  _3rdPersonCameraFollowSpeed: 3
+  _3rdPersonCameraOrbitSpeed: 1.5
+  _3rdPersonCameraFollowSpeed: 1.5
   _bottomClamp: -30
   _topClamp: 40
 --- !u!1 &4272530639498313931
