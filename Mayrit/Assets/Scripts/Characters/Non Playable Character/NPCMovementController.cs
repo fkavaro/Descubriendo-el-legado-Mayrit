@@ -322,11 +322,15 @@ public class NPCMovementController
         if (!HasArrivedAtDestination())
             return false;
 
-        // Arrived - mark spot as occupied
-        targetSpot.SetOccupied(true);
-
         // Handle rotation if required
-        return !fixRotation || RotateSmoothlyTowards(targetSpot.WorldDirection);
+        if (!fixRotation || RotateSmoothlyTowards(targetSpot.WorldDirection))
+        {
+            // Arrived - mark spot as occupied
+            targetSpot.SetOccupied(true);
+            return true;
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -360,7 +364,7 @@ public class NPCMovementController
         float currentYaw = _agent.transform.eulerAngles.y;
         float targetYaw = targetRotation.eulerAngles.y;
         float angleDifference = Mathf.Abs(Mathf.DeltaAngle(currentYaw, targetYaw));
-        return angleDifference < 0.5f;
+        return angleDifference < 2.0f;
     }
 
     public bool RotateSmoothlyTowards(GameObject GO)

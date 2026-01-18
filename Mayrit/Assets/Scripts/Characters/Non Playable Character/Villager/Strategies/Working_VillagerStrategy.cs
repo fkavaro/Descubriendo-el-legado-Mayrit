@@ -12,6 +12,14 @@ public class Working_VillagerStrategy : ATimedNPCStrategy<Villager>
 
     public override Node.Status Start()
     {
+        //Clean up any stale conversation state
+        if (_npc.InteractionController.IsTalking())
+        {
+            if (_npc.DebugMode)
+                Debug.LogWarning($"{_npc.Name}.Working_VillagerStrategy.Start()] starting routine with stale conversation state - cleaning up", _npc.GO);
+            _npc.InteractionController.ConversationInterrupted();
+        }
+
         if (_workplace == null)
         {
             if (_npc.DebugMode)
@@ -34,8 +42,8 @@ public class Working_VillagerStrategy : ATimedNPCStrategy<Villager>
 
         _workplace._isOpen = true;
 
-        if (_npc.DebugMode)
-            Debug.Log($"{_npc.Name} started working", _npc.GO);
+        // if (_npc.DebugMode)
+        //     Debug.Log($"{_npc.Name} started working", _npc.GO);
 
         return Node.Status.Success;
     }

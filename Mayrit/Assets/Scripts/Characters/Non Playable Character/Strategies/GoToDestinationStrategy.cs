@@ -44,21 +44,6 @@ where NPCtype : INPC
 
     public override Node.Status Update()
     {
-        // Clean up any stale conversation state
-        if (_npc.InteractionController.IsTalking())
-        {
-            if (_npc.DebugMode)
-                Debug.LogWarning($"{_npc.Name}.GoToDestinationStrategy.Update()] found stale conversation state - cleaning up", _npc.GO);
-            _npc.InteractionController.ConversationInterrupted();
-        }
-
-        if (_destinationSpot == null)
-        {
-            if (_npc.DebugMode)
-                Debug.LogWarning($"[{_npc.Name}.GoToDestinationStrategy.Start()] destination spot is null", _npc.GO);
-            return Node.Status.Failure;
-        }
-
         // Fix destination if needed; fail if it cannot be reachable
         if (!_npc.MovementController.IsDestinationSpot(_destinationSpot))
         {

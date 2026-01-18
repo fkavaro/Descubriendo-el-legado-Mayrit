@@ -63,9 +63,7 @@ where NPCtype : INPC
             _npc.HasArrivedToMiddlePoint = true;
         }
         else
-        {
             _npc.AnimationController.ChangeToWalk();
-        }
 
         // Success if both have arrived at middle point
         if (_npc.HasArrivedToMiddlePoint && _otherNPC.HasArrivedToMiddlePoint)
