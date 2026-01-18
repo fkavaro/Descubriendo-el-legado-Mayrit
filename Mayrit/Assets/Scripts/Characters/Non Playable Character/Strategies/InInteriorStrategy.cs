@@ -9,8 +9,7 @@ where NPCtype : INPC
     public override Node.Status Start()
     {
         // Deactivate model and agent
-        _npc.CharacterModel.SetActive(false);
-        _npc.Agent.enabled = false;
+        _npc.SetCharacterAndAgentActive(false);
 
         if (_npc.CharacterModel.activeSelf == false && !_npc.Agent.enabled)
             return Node.Status.Success;
@@ -21,7 +20,6 @@ where NPCtype : INPC
     public override void OnTimerComplete()
     {
         // Reactivate model and agent
-        _npc.CharacterModel.SetActive(true);
-        _npc.Agent.enabled = true;
+        _npc.SetCharacterAndAgentActive(true);
     }
 }

@@ -156,6 +156,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door
       objectReference: {fileID: 0}
+    - target: {fileID: 8092682297460453601, guid: 1b402a69ccbccf144bc66f703b8f08d7, type: 3}
+      propertyPath: _showGizmo
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

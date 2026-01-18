@@ -11,6 +11,7 @@ public class Workplace : AAssignedBuilding
     public bool _isOpen = false;
 
     public bool IsInterior => _isInterior;
+    public List<Spot> WorkSpots => _workSpots;
     #endregion
 
     #region INHERITED METHODS

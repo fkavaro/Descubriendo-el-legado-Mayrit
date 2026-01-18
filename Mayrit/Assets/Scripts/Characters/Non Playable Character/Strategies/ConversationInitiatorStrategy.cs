@@ -43,7 +43,7 @@ where NPCtype : INPC
             _npc.MovementController.RotateSmoothlyTowards(_otherNPC.GO);
 
         // Continue timing
-        _npc.ConversationDuration = _strategyRemainingTime;
+        _npc.ConversationDuration = StrategyRemainingTime;
         return base.Update();
     }
 

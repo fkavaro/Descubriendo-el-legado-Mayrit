@@ -5,7 +5,7 @@ where NPCtype : INPC
 {
     readonly float _strategyDuration;
     float _strategyElapsedTime;
-    protected float _strategyRemainingTime => _strategyDuration - _strategyElapsedTime;
+    protected float StrategyRemainingTime => _strategyDuration - _strategyElapsedTime;
 
     public ATimedNPCStrategy(NPCtype npc, float min = 30, float max = 120)
     : base(npc)

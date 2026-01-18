@@ -19,7 +19,7 @@ public class Working_VillagerStrategy : ATimedNPCStrategy<Villager>
             return Node.Status.Failure;
         }
 
-        if (!_npc.MovementController.IsCloseToAnyAccessOf(_workplace))
+        if (!_npc.MovementController.IsCloseToAnyWorkSpotOf(_workplace))
         {
             if (_npc.DebugMode)
                 Debug.LogWarning($"[{_npc.Name}.Working_VillagerStrategy.Start()] not in workplace", _npc.GO);
@@ -27,19 +27,24 @@ public class Working_VillagerStrategy : ATimedNPCStrategy<Villager>
         }
 
         if (_workplace.IsInterior)
-            _npc.GO.SetActive(false);
+            // Deactivate model and agent
+            _npc.SetCharacterAndAgentActive(false);
         else
             _npc.AnimationController.ChangeToIdle();
 
         _workplace._isOpen = true;
+
+        if (_npc.DebugMode)
+            Debug.Log($"{_npc.Name} started working", _npc.GO);
 
         return Node.Status.Success;
     }
 
     public override void OnTimerComplete()
     {
-        if (_npc.GO.activeSelf == false)
-            _npc.gameObject.SetActive(true);
+        if (!_npc.CharacterModel.activeSelf)
+            // Reactivate model and agent
+            _npc.SetCharacterAndAgentActive(true);
 
         _workplace._isOpen = false;
     }

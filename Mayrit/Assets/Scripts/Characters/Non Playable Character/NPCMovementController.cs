@@ -283,12 +283,12 @@ public class NPCMovementController
         return _agent.remainingDistance <= effectiveDistance;
     }
 
-    public bool IsCloseToAnyAccessOf(ABuilding building)
+    public bool IsCloseToAnyWorkSpotOf(Workplace worplace)
     {
-        if (building == null)
+        if (worplace == null)
             return false;
 
-        foreach (Spot spot in building.AccessSpots)
+        foreach (Spot spot in worplace.WorkSpots)
         {
             if (IsCloseToSpot(spot))
                 return true;

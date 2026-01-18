@@ -119,4 +119,25 @@ where BehaviourSystemType : ABehaviourSystem
             _destinationSpot = _movementController.DestinationSpot;
     }
     #endregion
+
+    public void SetCharacterAndAgentActive(bool isActive)
+    {
+        if (_characterModel == null)
+        {
+            Debug.LogWarning($"[{gameObject.name}.ACharacter.SetCharacterActive()] Character Model reference is missing", gameObject);
+            return;
+        }
+
+        if (_agent == null)
+        {
+            Debug.LogWarning($"[{gameObject.name}.ANPC.SetCharacterActive()] NavMeshAgent component is missing", gameObject);
+            return;
+        }
+
+        if (_characterModel.activeSelf != isActive)
+        {
+            _characterModel.SetActive(isActive);
+            _agent.enabled = isActive;
+        }
+    }
 }

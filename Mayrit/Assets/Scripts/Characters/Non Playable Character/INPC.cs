@@ -32,9 +32,6 @@ public interface INPC : ICharacter
     #endregion
 
     #region METHODS
-    /// <summary>
-    /// Sets the NPC's full name.
-    /// </summary>
-    public void SetFullName(string given, string family);
+    public void SetCharacterAndAgentActive(bool isActive);
     #endregion
 }

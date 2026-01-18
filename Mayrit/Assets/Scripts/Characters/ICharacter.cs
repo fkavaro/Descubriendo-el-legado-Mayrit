@@ -24,4 +24,7 @@ public interface ICharacter : IBehaviourEntity
     float StoppingDistance { get; }
     float NearDistance { get; }
     #endregion
+    #region METHODS
+    public void SetFullName(string given, string family);
+    #endregion
 }
