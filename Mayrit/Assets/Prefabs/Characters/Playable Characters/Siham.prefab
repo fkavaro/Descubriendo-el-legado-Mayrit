@@ -80,12 +80,14 @@ MonoBehaviour:
   _rotationSpeed: 4
   _jumpForce: 2
   _gravityForce: 9
-  _arrivedDistance: {x: 0.3, y: 1.5}
-  _nearDistance: {x: 5, y: 7}
+  _stoppingDistance: 0.2
+  _nearDistance: 2
   _animator: {fileID: 1639577397424246107}
   _interactionRange: 3
   _gender: 1
   _characterModel: {fileID: 5434453373518007707}
+  _givenName: 
+  _familyName: 
 --- !u!114 &59659429370565961
 MonoBehaviour:
   m_ObjectHideFlags: 0
