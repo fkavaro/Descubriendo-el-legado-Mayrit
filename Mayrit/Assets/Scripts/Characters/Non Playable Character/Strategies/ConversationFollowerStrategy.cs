@@ -52,7 +52,8 @@ where NPCtype : INPC
         }
 
         // Keep facing other NPC (XZ plane only)
-        _npc.MovementController.RotateSmoothlyTowards(_otherNPC.GO);
+        if (_otherNPC?.GO != null)
+            _npc.MovementController.RotateSmoothlyTowards(_otherNPC.GO);
 
         _npc.ConversationDuration = _otherNPC.ConversationDuration;
         return Node.Status.Running;

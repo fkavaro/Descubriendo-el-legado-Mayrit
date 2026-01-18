@@ -39,7 +39,8 @@ where NPCtype : INPC
             return Node.Status.Failure;
 
         // Keep facing other NPC (XZ plane only)
-        _npc.MovementController.RotateSmoothlyTowards(_otherNPC.GO);
+        if (_otherNPC?.GO != null)
+            _npc.MovementController.RotateSmoothlyTowards(_otherNPC.GO);
 
         // Continue timing
         _npc.ConversationDuration = _strategyRemainingTime;
