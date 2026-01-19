@@ -53,5 +53,19 @@ public class Stall : Workplace
         _clientsWaiting.Remove(npc);
         _currentClientsWaiting = _clientsWaiting.Count;
     }
+
+    public bool IsThereAnyClient()
+    {
+        if (_accessSpots == null || _accessSpots.Count == 0)
+            return false;
+
+        foreach (Spot spot in _accessSpots)
+        {
+            if (spot != null && spot.IsOccupied())
+                return true;
+        }
+
+        return false;
+    }
     #endregion
 }

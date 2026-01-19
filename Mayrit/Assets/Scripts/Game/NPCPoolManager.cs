@@ -263,6 +263,10 @@ public class NPCPoolManager : MonoBehaviour
             transform
             ).GetComponent<Villager>();
 
+        string given = _namesDatabase.GetRandomGiven(villager.IsFemale);
+        string family = _namesDatabase.GetRandomFamily();
+        villager.SetFullName(given, family);
+
         villager.gameObject.SetActive(false);
 
         // Register all colliders found in this villager's hierarchy to the collider->villager map
@@ -286,15 +290,6 @@ public class NPCPoolManager : MonoBehaviour
         // Track active
         if (!_activeVillagers.Contains(villager))
             _activeVillagers.Add(villager);
-
-        // Pool assigns a name accordingly to its gender
-        try
-        {
-            string given = _namesDatabase.GetRandomGiven(villager.IsFemale);
-            string family = _namesDatabase.GetRandomFamily();
-            villager.SetFullName(given, family);
-        }
-        catch { }
 
         House randomFreeHouse = _townManager.GetHouse();
         villager.AssignHome(randomFreeHouse);

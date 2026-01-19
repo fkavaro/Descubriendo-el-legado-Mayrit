@@ -6,6 +6,8 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
     Spot _marketStallSpot;
     bool _isWaitingForAccess;
 
+    const float STALL_CHECK_DISTANCE = 5f;
+
     public GoToMarket_VillagerStrategy(Villager npc, Market market)
     : base(npc)
     {
@@ -14,59 +16,29 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
 
     public override Node.Status Start()
     {
-        // Clean up any stale conversation state
-        if (_npc.InteractionController.IsTalking())
+        CleanupStaleConversation();
+
+        if (!TrySetStallDestination(preferOpen: false))
         {
             if (_npc.DebugMode)
-                Debug.LogWarning($"[{_npc.Name}.GoToMarket_VillagerStrategy.Start()] starting routine with stale conversation state - cleaning up", _npc.GO);
-            _npc.InteractionController.ConversationInterrupted();
-        }
-
-        if (!GetOpenStallAndSetDestination())
-        {
-            if (_npc.DebugMode)
-                Debug.Log($"[{_npc.Name}.GoToMarket_VillagerStrategy.Update()] could not go to any open stall in the market.", _npc.GO);
-
+                Debug.LogWarning($"[{_npc.Name}.GoToMarket_VillagerStrategy.Start()] can't go to market.", _npc.GO);
             return Node.Status.Failure;
         }
-
-        if (_npc.DebugMode)
-            Debug.Log($"[{_npc.Name}.GoToMarket_VillagerStrategy.Start()] heading to market stall spot", _npc.GO);
 
         return Node.Status.Success;
     }
 
     public override Node.Status Update()
     {
-        // Guard: validate market/stall/spot state
-        if (_market == null || _npc.MarketStall == null || _marketStallSpot == null)
-        {
-            if (_npc.DebugMode)
-                Debug.LogWarning($"[{_npc.Name}.GoToMarket_VillagerStrategy.Update()] invalid market state", _npc.GO);
+        if (!ValidateMarketState())
             return Node.Status.Failure;
-        }
 
-        // Fix destination if needed; fail if unreachable
-        if (!_npc.MovementController.IsDestinationSpot(_marketStallSpot))
-        {
-            if (!_npc.MovementController.SetDestinationSpot(_marketStallSpot))
-                return Node.Status.Failure;
-        }
+        if (!EnsureCorrectDestination())
+            return Node.Status.Failure;
 
-        // NOT CLOSE TO STALL SPOT YET
-        if (!_npc.MovementController.IsCloseToSpot(_marketStallSpot))
+        if (ShouldSwitchStall())
         {
-            // Keep moving
-            _npc.MovementController.SetIfStopped(false);
-            return Node.Status.Running;
-        }
-
-        // CLOSE TO STALL SPOT
-        // If stall is closed
-        if (!_npc.MarketStall._isOpen)
-        {
-            // Try to get another opened stall; fail if none available
-            if (!GetOpenStallAndSetDestination())
+            if (!TrySetStallDestination(preferOpen: true))
             {
                 if (_npc.DebugMode)
                     Debug.LogWarning($"[{_npc.Name}.GoToMarket_VillagerStrategy.Update()] no available stalls found", _npc.GO);
@@ -75,57 +47,116 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
             return Node.Status.Running;
         }
 
-        // ARRIVED AT STALL SPOT
-        if (_npc.MovementController.HasArrivedAtSpot(_marketStallSpot, true))
+        if (!_npc.Market.IsOpen())
+        {
+            if (_npc.DebugMode)
+                Debug.LogWarning($"[{_npc.Name}.GoToMarket_VillagerStrategy.Update()] market is closed", _npc.GO);
+            return Node.Status.Failure;
+        }
+
+        if (HasArrivedAtStall())
         {
             _npc.MarketStall.UnregisterClientWaiting(_npc);
             return Node.Status.Success;
         }
 
-        // Try get other stall if too many clients are already waiting
-        if (_npc.MarketStall.TooManyClientsWaiting)
+        return HandleApproachingStall();
+    }
+
+    void CleanupStaleConversation()
+    {
+        if (_npc.InteractionController.IsTalking())
         {
-            if (!GetOpenStallAndSetDestination())
-            {
-                if (_npc.DebugMode)
-                    Debug.LogWarning($"[{_npc.Name}.GoToMarket_VillagerStrategy.Update()] no available stalls found when trying to avoid crowd", _npc.GO);
-                return Node.Status.Failure;
-            }
+            if (_npc.DebugMode)
+                Debug.LogWarning($"[{_npc.Name}.GoToMarket_VillagerStrategy.Start()] starting routine with stale conversation state - cleaning up", _npc.GO);
+            _npc.InteractionController.ConversationInterrupted();
+        }
+    }
+
+    bool ValidateMarketState()
+    {
+        if (_market == null || _npc.MarketStall == null || _marketStallSpot == null)
+        {
+            if (_npc.DebugMode)
+                Debug.LogWarning($"[{_npc.Name}.GoToMarket_VillagerStrategy.Update()] invalid market state", _npc.GO);
+            return false;
+        }
+        return true;
+    }
+
+    bool EnsureCorrectDestination()
+    {
+        if (!_npc.MovementController.IsDestinationSpot(_marketStallSpot))
+            return _npc.MovementController.SetDestinationSpot(_marketStallSpot);
+        return true;
+    }
+
+    bool ShouldSwitchStall()
+    {
+        if (!_npc.MovementController.IsCloseToPosition(_marketStallSpot.transform.position, STALL_CHECK_DISTANCE))
+            return false;
+
+        return !_npc.MarketStall.IsOpen || _npc.MarketStall.TooManyClientsWaiting;
+    }
+
+    bool HasArrivedAtStall()
+    {
+        return _npc.MovementController.HasArrivedAtSpot(_marketStallSpot, true);
+    }
+
+    Node.Status HandleApproachingStall()
+    {
+        // Still far from stall
+        if (!_npc.MovementController.IsCloseToSpot(_marketStallSpot))
+        {
+            _npc.MovementController.SetIfStopped(false);
             return Node.Status.Running;
         }
 
-        // NOT ARRIVED AT STALL SPOT YET, but close
-        // If spot is occupied
+        // Close to stall but spot is occupied
         if (_marketStallSpot.IsOccupied())
         {
-            // Wait for spot to become available
-            if (!_isWaitingForAccess)
-            {
-                if (_npc.DebugMode)
-                    Debug.LogWarning($"[{_npc.Name}.GoToMarket_VillagerStrategy.Update()] stall spot occupied, waiting", _npc.GO);
-
-                _npc.MovementController.SetIfStopped(true);
-                _npc.AnimationController.ChangeToIdle();
-                _npc.MarketStall.RegisterClientWaiting(_npc);
-                _isWaitingForAccess = true;
-            }
-
-            _npc.MovementController.RotateSmoothlyTowards(_npc.MarketStall.gameObject);
+            HandleWaitingForSpot();
             return Node.Status.Running;
         }
 
-        // CLOSE TO STALL SPOT AND SPOT IS FREE
-        // Resume movement
-        _isWaitingForAccess = false;
-        _npc.MovementController.SetIfStopped(false);
-        _npc.AnimationController.ChangeToWalk();
-
+        // Close to stall and spot is free - resume movement
+        ResumeMovementToSpot();
         return Node.Status.Running;
     }
 
-    bool GetOpenStallAndSetDestination()
+    void HandleWaitingForSpot()
     {
-        _npc.MarketStall = _market.GetRandomOpenedStall();
+        if (!_isWaitingForAccess)
+        {
+            if (_npc.DebugMode)
+                Debug.LogWarning($"[{_npc.Name}.GoToMarket_VillagerStrategy.Update()] stall spot occupied, waiting", _npc.GO);
+
+            _npc.MovementController.SetIfStopped(true);
+            _npc.AnimationController.ChangeToIdle();
+            _npc.MarketStall.RegisterClientWaiting(_npc);
+            _isWaitingForAccess = true;
+        }
+
+        _npc.MovementController.RotateSmoothlyTowards(_npc.MarketStall.gameObject);
+    }
+
+    void ResumeMovementToSpot()
+    {
+        _isWaitingForAccess = false;
+        _npc.MovementController.SetIfStopped(false);
+        _npc.AnimationController.ChangeToWalk();
+    }
+
+    bool TrySetStallDestination(bool preferOpen)
+    {
+        // Try to get preferred stall type
+        _npc.MarketStall = preferOpen ? _market.GetRandomOpenedStall() : _market.GetRandomStall();
+
+        // Fallback to any stall if preferred type not available
+        if (_npc.MarketStall == null && preferOpen)
+            _npc.MarketStall = _market.GetRandomStall();
+
         if (_npc.MarketStall == null)
             return false;
 

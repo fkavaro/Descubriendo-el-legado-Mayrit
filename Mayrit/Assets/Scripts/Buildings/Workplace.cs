@@ -8,7 +8,7 @@ public class Workplace : AAssignedBuilding
     [Header("Workplace Properties")]
     [SerializeField] List<Spot> _workSpots;
     [SerializeField] protected bool _isInterior = false;
-    public bool _isOpen = false;
+    public bool IsOpen = false;
 
     public bool IsInterior => _isInterior;
     public List<Spot> WorkSpots => _workSpots;

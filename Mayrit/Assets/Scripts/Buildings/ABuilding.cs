@@ -7,7 +7,7 @@ public abstract class ABuilding : MonoBehaviour
 
     #region EDITOR PROPERTIES
     [Header("Building Properties")]
-    [SerializeField] List<Spot> _accessSpots;
+    [SerializeField] protected List<Spot> _accessSpots;
     #endregion
 
     #region INTERNAL PROPERTIES

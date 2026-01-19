@@ -24,8 +24,8 @@ public class Shopping_VillagerStrategy : ATimedNPCStrategy<Villager>
             _npc.InteractionController.ConversationInterrupted();
         }
 
-        if (_npc.DebugMode)
-            Debug.Log($"[{_npc.Name}.Shopping_VillagerStrategy.Start()] started shopping.", _npc.GO);
+        // if (_npc.DebugMode)
+        //     Debug.Log($"[{_npc.Name}.Shopping_VillagerStrategy.Start()] started shopping.", _npc.GO);
 
         _npc.InteractionController.Talk();
         return Node.Status.Success;
@@ -43,7 +43,7 @@ public class Shopping_VillagerStrategy : ATimedNPCStrategy<Villager>
         }
 
         // Stall is closed
-        if (!_npc.MarketStall._isOpen)
+        if (!_npc.MarketStall.IsOpen)
         {
             if (_npc.DebugMode)
                 Debug.LogWarning($"[{_npc.Name}.Shopping_VillagerStrategy.Update()] found that stall is closed. Ending shopping.", _npc.GO);

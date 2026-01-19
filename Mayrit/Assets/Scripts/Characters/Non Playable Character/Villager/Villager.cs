@@ -14,6 +14,7 @@ public class Villager : ANPC<BehaviourTree>
     public House Home => _home;
     public Workplace Workplace => _workplace;
     public Sanctuary Sanctuary => _sanctuary;
+    public Market Market => _market;
     #endregion
 
     #region BEHAVIOUR SYSTEM DEFINITION
@@ -79,7 +80,7 @@ public class Villager : ANPC<BehaviourTree>
         if (getWorkplaceEntrance() != null)
         {
             GoToDestinationStrategy<Villager> goToWorkStrategy = new(this, getWorkplaceEntrance, true);
-            Working_VillagerStrategy workingStrategy = new(this, _workplace, 60, 180);
+            Working_VillagerStrategy workingStrategy = new(this, 60, 180);
 
             SequenceNode workingSequence = new(this);
             LeafNode goToWorkLeaf = new(this, "Going to work", goToWorkStrategy);
