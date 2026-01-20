@@ -28,4 +28,17 @@ where NPCtype : INPC
     }
     public virtual void Reset() { }
     #endregion
+
+    protected void CleanupStaleConversation()
+    {
+        if (_npc.InteractionController.IsTalking())
+            _npc.InteractionController.ConversationInterrupted();
+    }
+
+    protected bool TryEnsureDestination(Spot destinationSpot)
+    {
+        if (!_npc.MovementController.IsDestinationSpot(destinationSpot))
+            return _npc.MovementController.TrySetDestinationSpot(destinationSpot);
+        return true;
+    }
 }

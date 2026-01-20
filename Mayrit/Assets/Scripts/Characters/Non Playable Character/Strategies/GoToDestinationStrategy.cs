@@ -17,13 +17,7 @@ where NPCtype : INPC
 
     public override Node.Status Start()
     {
-        // Clean up any stale conversation state
-        if (_npc.InteractionController.IsTalking())
-        {
-            if (_npc.DebugMode)
-                Debug.LogWarning($"{_npc.Name}.GoToDestinationStrategy.Start()] starting routine with stale conversation state - cleaning up", _npc.GO);
-            _npc.InteractionController.ConversationInterrupted();
-        }
+        CleanupStaleConversation();
 
         _destinationSpot = _destinationResolver?.Invoke();
 
@@ -34,22 +28,20 @@ where NPCtype : INPC
             return Node.Status.Failure;
         }
 
-        if (_npc.MovementController.TrySetDestinationSpot(_destinationSpot))
-            return Node.Status.Success;
+        if (!_npc.MovementController.TrySetDestinationSpot(_destinationSpot))
+        {
+            if (_npc.DebugMode)
+                Debug.LogWarning($"[{_npc.Name}.GoToDestinationStrategy.Start()] could not set destination", _npc.GO);
+            return Node.Status.Failure;
+        }
 
-        if (_npc.DebugMode)
-            Debug.LogWarning($"[{_npc.Name}.GoToDestinationStrategy.Start()] could not set destination", _npc.GO);
-        return Node.Status.Failure;
+        return Node.Status.Success;
     }
 
     public override Node.Status Update()
     {
-        // Fix destination if needed; fail if it cannot be reachable
-        if (!_npc.MovementController.IsDestinationSpot(_destinationSpot))
-        {
-            if (!_npc.MovementController.TrySetDestinationSpot(_destinationSpot))
-                return Node.Status.Failure;
-        }
+        if (!TryEnsureDestination(_destinationSpot))
+            return Node.Status.Failure;
 
         // Success if arrived at destination
         return _npc.MovementController.HasArrivedAtDestinationSpot(_destinationSpot, _fixRotation)

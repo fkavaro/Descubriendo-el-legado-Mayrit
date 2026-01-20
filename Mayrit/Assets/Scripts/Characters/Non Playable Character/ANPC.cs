@@ -18,6 +18,16 @@ where BehaviourSystemType : ABehaviourSystem
     public int BaseAvoidancePriority => _baseAvoidancePriority;
     public int AvoidancePriorityVariance => _avoidancePriorityVariance;
     public float WalkSpeedVariance => _walkSpeedVariance;
+    public House Home => _home;
+    public Workplace Workplace => _workplace;
+    public Sanctuary Sanctuary => _sanctuary;
+    public Market Market => _market;
+    public Stall MarketStall
+    {
+        get => _marketStall;
+        set => _marketStall = value;
+    }
+
     public bool IsStopped
     {
         get => _isStopped;
@@ -66,6 +76,12 @@ where BehaviourSystemType : ABehaviourSystem
         get => _conversationDuration;
         set => _conversationDuration = value;
     }
+
+    public bool IsWaitingForAccess
+    {
+        get => _isWaitingForAccess;
+        set => _isWaitingForAccess = value;
+    }
     #endregion
 
     #region EDITOR PROPERTIES
@@ -90,6 +106,13 @@ where BehaviourSystemType : ABehaviourSystem
     [Tooltip("Random +/- variance applied to walk speed")]
     [SerializeField] protected float _walkSpeedVariance = 0.5f;
     [SerializeField] protected Spot _destinationSpot;
+    [Header("NPC References")]
+    [SerializeField] protected House _home;
+    [SerializeField] protected Workplace _workplace;
+    [SerializeField] protected Sanctuary _sanctuary;
+    [SerializeField] protected Market _market;
+    [SerializeField] protected Stall _marketStall;
+    [SerializeField] protected bool _isWaitingForAccess;
     #endregion
 
     #region INTERNAL PROPERTIES

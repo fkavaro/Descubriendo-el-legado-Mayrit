@@ -11,7 +11,7 @@ public interface INPC : ICharacter
         None
     }
 
-    #region PROPERTIES HELPERS
+    #region PROPERTIES
     public NavMeshAgent Agent { get; }
     NPCMovementController MovementController { get; }
     NPCInteractionController InteractionController { get; }
@@ -29,6 +29,12 @@ public interface INPC : ICharacter
     public INPC LastConversationTarget { get; set; }
     public GameObject LastConversationTargetGO { get; set; }
     public float ConversationDuration { get; set; }
+    public House Home { get; }
+    public Workplace Workplace { get; }
+    public Sanctuary Sanctuary { get; }
+    public Market Market { get; }
+    public Stall MarketStall { get; set; }
+    public bool IsWaitingForAccess { get; set; }
     #endregion
 
     #region METHODS

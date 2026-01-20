@@ -8,20 +8,14 @@ public class Shopping_VillagerStrategy : ATimedNPCStrategy<Villager>
 
     public override Node.Status Start()
     {
+        CleanupStaleConversation();
+
         if (_npc.MarketStall == null)
         {
             if (_npc.DebugMode)
                 Debug.LogWarning($"[ {_npc.Name}.Shopping_VillagerStrategy.Start()] has no assigned stall to shop from. Ending shopping.", _npc.GO);
 
             return Node.Status.Failure;
-        }
-
-        //Clean up any stale conversation state
-        if (_npc.InteractionController.IsTalking())
-        {
-            if (_npc.DebugMode)
-                Debug.LogWarning($"[{_npc.Name}.Shopping_VillagerStrategy.Start()] starting routine with stale conversation state - cleaning up", _npc.GO);
-            _npc.InteractionController.ConversationInterrupted();
         }
 
         // if (_npc.DebugMode)
@@ -46,7 +40,7 @@ public class Shopping_VillagerStrategy : ATimedNPCStrategy<Villager>
         if (!_npc.MarketStall.IsOpen)
         {
             if (_npc.DebugMode)
-                Debug.LogWarning($"[{_npc.Name}.Shopping_VillagerStrategy.Update()] found that stall is closed. Ending shopping.", _npc.GO);
+                Debug.Log($"[{_npc.Name}.Shopping_VillagerStrategy.Update()] found that stall is closed. Ending shopping.", _npc.GO);
 
             _npc.MarketStall = null;
 

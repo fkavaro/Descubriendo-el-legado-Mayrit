@@ -9,13 +9,7 @@ public class Working_VillagerStrategy : ATimedNPCStrategy<Villager>
 
     public override Node.Status Start()
     {
-        //Clean up any stale conversation state
-        if (_npc.InteractionController.IsTalking())
-        {
-            if (_npc.DebugMode)
-                Debug.LogWarning($"{_npc.Name}.Working_VillagerStrategy.Start()] starting routine with stale conversation state - cleaning up", _npc.GO);
-            _npc.InteractionController.ConversationInterrupted();
-        }
+        CleanupStaleConversation();
 
         if (_npc.Workplace == null)
         {
@@ -58,7 +52,7 @@ public class Working_VillagerStrategy : ATimedNPCStrategy<Villager>
             if (TryFinishWorkIfClientSpotFree())
             {
                 if (_npc.DebugMode)
-                    Debug.LogWarning($"{_npc.Name} finished working after client left", _npc.GO);
+                    Debug.Log($"[{_npc.Name}.Working_VillagerStrategy.Update()] client spot cleared, finishing work", _npc.GO);
                 return Node.Status.Success;
             }
 
@@ -80,8 +74,8 @@ public class Working_VillagerStrategy : ATimedNPCStrategy<Villager>
         // Wait for client to leave if working at an stall
         if (_npc.Workplace is Stall stall && stall.IsThereAnyClient())
         {
-            if (_npc.DebugMode)
-                Debug.LogWarning($"[{_npc.Name}.OnTimerComplete()] waiting for client to leave before finishing work", _npc.GO);
+            // if (_npc.DebugMode)
+            //     Debug.LogWarning($"[{_npc.Name}.OnTimerComplete()] waiting for client to leave before finishing work", _npc.GO);
             _waitingForClientSpotClear = true;
             return;
         }

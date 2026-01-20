@@ -3,26 +3,12 @@ using UnityEngine;
 
 public class Villager : ANPC<BehaviourTree>
 {
-    #region EDITOR PROPERTIES
-    [Header("Villager")]
-    [SerializeField] protected House _home;
-    [SerializeField] protected Workplace _workplace;
-    [SerializeField] protected Sanctuary _sanctuary;
-    [SerializeField] protected Market _market;
-    public Stall MarketStall;
-
-    public House Home => _home;
-    public Workplace Workplace => _workplace;
-    public Sanctuary Sanctuary => _sanctuary;
-    public Market Market => _market;
-    #endregion
-
     #region BEHAVIOUR SYSTEM DEFINITION
     public override BehaviourTree DefineBehaviourSystemOnAwake()
     {
         // Lazy spot getters
         Spot getSanctuaryEntrance() => _sanctuary != null ? _sanctuary.GetRandomAccessSpot() : null;
-        Spot getWorkplaceEntrance() => _workplace != null ? _workplace.GetRandomWorkingSpot() : null;
+        Spot getWorkingSpot() => _workplace != null ? _workplace.GetRandomWorkingSpot() : null;
         Spot getHomeEntrance() => _home != null ? _home.GetRandomAccessSpot() : null;
 
         // Conversation sequence
@@ -77,9 +63,9 @@ public class Villager : ANPC<BehaviourTree>
             routineSequence.AddChild(prayingSequence);
         }
 
-        if (getWorkplaceEntrance() != null)
+        if (getWorkingSpot() != null)
         {
-            GoToDestinationStrategy<Villager> goToWorkStrategy = new(this, getWorkplaceEntrance, true);
+            GoToDestinationStrategy<Villager> goToWorkStrategy = new(this, getWorkingSpot, true);
             Working_VillagerStrategy workingStrategy = new(this, 60, 180);
 
             SequenceNode workingSequence = new(this);
@@ -93,7 +79,7 @@ public class Villager : ANPC<BehaviourTree>
 
         if (_market != null)
         {
-            GoToMarket_VillagerStrategy goToMarketStrategy = new(this, _market);
+            GoToMarket_VillagerStrategy goToMarketStrategy = new(this);
             Shopping_VillagerStrategy shoppingStrategy = new(this, 15, 45);
 
             SequenceNode shoppingSequence = new(this);

@@ -236,6 +236,40 @@ public class NPCMovementController
         _npc.CharacterModel.SetActive(true);
         _npc.AnimationController.ChangeToWalk();
     }
+
+    public bool TrySetDestinationStall(out Spot stallSpot, bool onlyOpen = false)
+    {
+        // Fist try to get an open stall
+        Stall newStall = _npc.Market.TryGetRandomStall(preferOpen: true, excludedStall: _npc.MarketStall);
+
+        // If allowed, try to find any stall if no open stall found
+        if (newStall == null && !onlyOpen)
+            newStall = _npc.Market.TryGetRandomStall(preferOpen: false, excludedStall: _npc.MarketStall);
+
+        if (newStall == null)
+        {
+            stallSpot = null;
+            return false;
+        }
+
+        Spot newDestinationSpot = newStall.GetRandomAccessSpot();
+        if (newDestinationSpot == null)
+        {
+            stallSpot = null;
+            return false;
+        }
+
+        if (!_npc.MovementController.TrySetDestinationSpot(newDestinationSpot))
+        {
+            stallSpot = null;
+            return false;
+        }
+
+        _npc.MarketStall = newStall;
+        stallSpot = newDestinationSpot;
+        _npc.IsWaitingForAccess = false;
+        return true;
+    }
     #endregion
 
     #region IS WITHIN DISTANCE METHODS

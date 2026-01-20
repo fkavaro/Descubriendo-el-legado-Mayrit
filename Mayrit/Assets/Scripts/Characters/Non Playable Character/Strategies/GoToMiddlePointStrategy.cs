@@ -54,7 +54,7 @@ where NPCtype : INPC
 
         // Check if close enough to OTHER NPC (avoids avoidance radius collision issues)
         float distanceToOther = Vector3.Distance(_npc.GO.transform.position, _otherNPC.GO.transform.position);
-        float closeEnoughDistance = _npc.AvoidanceRadius + _otherNPC.AvoidanceRadius + _npc.NearDistance;
+        float closeEnoughDistance = _npc.AvoidanceRadius + _npc.NearDistance;
 
         if (distanceToOther <= closeEnoughDistance && !_npc.HasArrivedToMiddlePoint)
         {
