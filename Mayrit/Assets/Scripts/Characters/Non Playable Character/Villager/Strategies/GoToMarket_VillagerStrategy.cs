@@ -6,7 +6,7 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
     Spot _marketStallSpot;
     bool _isWaitingForAccess;
 
-    const float STALL_CHECK_DISTANCE = 5f;
+    const float STALL_CHECK_DISTANCE = 15f;
 
     public GoToMarket_VillagerStrategy(Villager npc, Market market)
     : base(npc)
@@ -18,12 +18,15 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
     {
         CleanupStaleConversation();
 
-        if (!TrySetStallDestination(preferOpen: false))
+        if (!TrySetStallDestination(onlyOpen: false))
         {
             if (_npc.DebugMode)
                 Debug.LogWarning($"[{_npc.Name}.GoToMarket_VillagerStrategy.Start()] can't go to market.", _npc.GO);
             return Node.Status.Failure;
         }
+
+        // if (_npc.DebugMode)
+        //     Debug.Log($"[{_npc.Name}.GoToMarket_VillagerStrategy.Start()] going to market stall.", _npc.GO);
 
         return Node.Status.Success;
     }
@@ -36,22 +39,16 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
         if (!EnsureCorrectDestination())
             return Node.Status.Failure;
 
-        if (ShouldSwitchStall())
+        if (ShouldSwitchStallWhenClose())
         {
-            if (!TrySetStallDestination(preferOpen: true))
+            // No open stall found: failure
+            if (!TrySetStallDestination(onlyOpen: true))
             {
                 if (_npc.DebugMode)
-                    Debug.LogWarning($"[{_npc.Name}.GoToMarket_VillagerStrategy.Update()] no available stalls found", _npc.GO);
+                    Debug.LogWarning($"[{_npc.Name}.GoToMarket_VillagerStrategy.Update()] no open stalls available", _npc.GO);
                 return Node.Status.Failure;
             }
             return Node.Status.Running;
-        }
-
-        if (!_npc.Market.IsOpen())
-        {
-            if (_npc.DebugMode)
-                Debug.LogWarning($"[{_npc.Name}.GoToMarket_VillagerStrategy.Update()] market is closed", _npc.GO);
-            return Node.Status.Failure;
         }
 
         if (HasArrivedAtStall())
@@ -87,11 +84,11 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
     bool EnsureCorrectDestination()
     {
         if (!_npc.MovementController.IsDestinationSpot(_marketStallSpot))
-            return _npc.MovementController.SetDestinationSpot(_marketStallSpot);
+            return _npc.MovementController.TrySetDestinationSpot(_marketStallSpot);
         return true;
     }
 
-    bool ShouldSwitchStall()
+    bool ShouldSwitchStallWhenClose()
     {
         if (!_npc.MovementController.IsCloseToPosition(_marketStallSpot.transform.position, STALL_CHECK_DISTANCE))
             return false;
@@ -148,25 +145,27 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
         _npc.AnimationController.ChangeToWalk();
     }
 
-    bool TrySetStallDestination(bool preferOpen)
+    bool TrySetStallDestination(bool onlyOpen = false)
     {
-        // Try to get preferred stall type
-        _npc.MarketStall = preferOpen ? _market.GetRandomOpenedStall() : _market.GetRandomStall();
+        // Fist try to get an open stall
+        Stall newStall = _market.TryGetRandomStall(preferOpen: true, excludedStall: _npc.MarketStall);
 
-        // Fallback to any stall if preferred type not available
-        if (_npc.MarketStall == null && preferOpen)
-            _npc.MarketStall = _market.GetRandomStall();
+        // If allowed, try to find any stall if no open stall found
+        if (newStall == null && !onlyOpen)
+            newStall = _market.TryGetRandomStall(preferOpen: false, excludedStall: _npc.MarketStall);
 
-        if (_npc.MarketStall == null)
+        if (newStall == null)
             return false;
 
-        _marketStallSpot = _npc.MarketStall.GetRandomAccessSpot();
-        if (_marketStallSpot == null)
+        Spot newDestination = newStall.GetRandomAccessSpot();
+        if (newDestination == null)
             return false;
 
-        if (!_npc.MovementController.SetDestinationSpot(_marketStallSpot))
+        if (!_npc.MovementController.TrySetDestinationSpot(newDestination))
             return false;
 
+        _npc.MarketStall = newStall;
+        _marketStallSpot = newDestination;
         _isWaitingForAccess = false;
         return true;
     }

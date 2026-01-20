@@ -128,7 +128,7 @@ public class NPCMovementController
     /// Sets the destination to a specific spot.
     /// </summary>
     /// <returns>True if the destination was successfully set.</returns>
-    public bool SetDestinationSpot(Spot targetSpot)
+    public bool TrySetDestinationSpot(Spot targetSpot)
     {
         if (!IsAgentValid)
         {
@@ -147,7 +147,7 @@ public class NPCMovementController
             return true;
 
         // Set the position destination
-        bool success = SetDestination(targetSpot.transform.position);
+        bool success = TrySetDestination(targetSpot.transform.position);
         if (success)
             _destinationSpot = targetSpot;
 
@@ -159,7 +159,7 @@ public class NPCMovementController
     /// Handles NavMesh sampling, path calculation, and movement state updates.
     /// </summary>
     /// <returns>True if the destination was successfully set.</returns>
-    public bool SetDestination(Vector3 targetPos)
+    public bool TrySetDestination(Vector3 targetPos)
     {
         if (!IsAgentValid)
         {
@@ -480,7 +480,7 @@ public class NPCMovementController
         }
 
         Vector3 midPoint = FindMidpointTo(otherNPC);
-        return SetDestination(midPoint);
+        return TrySetDestination(midPoint);
     }
 
     /// <summary>

@@ -34,7 +34,7 @@ where NPCtype : INPC
             return Node.Status.Failure;
         }
 
-        if (_npc.MovementController.SetDestinationSpot(_destinationSpot))
+        if (_npc.MovementController.TrySetDestinationSpot(_destinationSpot))
             return Node.Status.Success;
 
         if (_npc.DebugMode)
@@ -47,7 +47,7 @@ where NPCtype : INPC
         // Fix destination if needed; fail if it cannot be reachable
         if (!_npc.MovementController.IsDestinationSpot(_destinationSpot))
         {
-            if (!_npc.MovementController.SetDestinationSpot(_destinationSpot))
+            if (!_npc.MovementController.TrySetDestinationSpot(_destinationSpot))
                 return Node.Status.Failure;
         }
 
