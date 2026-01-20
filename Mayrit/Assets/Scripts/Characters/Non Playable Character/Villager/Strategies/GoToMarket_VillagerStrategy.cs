@@ -12,14 +12,10 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
         CleanupStaleConversation();
 
         if (!_npc.MovementController.TrySetDestinationStall(out _marketStallSpot, onlyOpen: false))
-        {
-            if (_npc.DebugMode)
-                Debug.LogWarning($"[{_npc.Name}.GoToMarket_VillagerStrategy.Start()] can't go to market.", _npc.GO);
             return Node.Status.Failure;
-        }
 
-        // if (_npc.DebugMode)
-        //     Debug.Log($"[{_npc.Name}.GoToMarket_VillagerStrategy.Start()] going to market stall.", _npc.GO);
+        if (_npc.DebugMode)
+            Debug.Log($"[{_npc.Name}.GoToMarket_VillagerStrategy.Start()] going to market.", _npc.GO);
 
         return Node.Status.Success;
     }
@@ -32,16 +28,12 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
         if (!TryEnsureDestination(_marketStallSpot))
             return Node.Status.Failure;
 
-        if (ShouldSwitchStallWhenNear())
+        if (ShouldSwitchStallWhenNearStall())
         {
-            // No open stall found: failure
-            if (!_npc.MovementController.TrySetDestinationStall(out _marketStallSpot, onlyOpen: true))
-            {
-                if (_npc.DebugMode)
-                    Debug.Log($"[{_npc.Name}.GoToMarket_VillagerStrategy.Update()] no stalls available. Ending...", _npc.GO);
+            if (_npc.MovementController.TrySetDestinationStall(out _marketStallSpot, onlyOpen: true))
+                return Node.Status.Running;
+            else
                 return Node.Status.Failure;
-            }
-            return Node.Status.Running;
         }
 
         if (HasArrivedAtStall())
@@ -64,7 +56,7 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
         return true;
     }
 
-    bool ShouldSwitchStallWhenNear()
+    bool ShouldSwitchStallWhenNearStall()
     {
         if (!_npc.MovementController.IsFarFromPosition(_marketStallSpot.transform.position))
             return false;
@@ -102,8 +94,8 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
     {
         if (!_npc.IsWaitingForAccess)
         {
-            if (_npc.DebugMode)
-                Debug.Log($"[{_npc.Name}.GoToMarket_VillagerStrategy.Update()] stall spot occupied, waiting", _npc.GO);
+            // if (_npc.DebugMode)
+            //     Debug.Log($"[{_npc.Name}.GoToMarket_VillagerStrategy.Update()] stall spot occupied, waiting", _npc.GO);
 
             _npc.MovementController.SetIfStopped(true);
             _npc.AnimationController.ChangeToIdle();
@@ -118,5 +110,13 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
         _npc.IsWaitingForAccess = false;
         _npc.MovementController.SetIfStopped(false);
         _npc.AnimationController.ChangeToWalk();
+    }
+
+    public override void Reset()
+    {
+        if (_npc.MarketStall != null)
+            _npc.MarketStall.UnregisterClientWaiting(_npc);
+        _npc.IsWaitingForAccess = false;
+        _marketStallSpot = null;
     }
 }

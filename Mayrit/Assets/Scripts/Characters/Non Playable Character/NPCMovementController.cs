@@ -255,12 +255,18 @@ public class NPCMovementController
 
         if (newStall == null)
         {
+            if (_npc.DebugMode && onlyOpen)
+                Debug.LogWarning($"[{_npc.Name}.TrySetDestinationStall] no open stalls available in market.", _npc.GO);
+            else if (_npc.DebugMode)
+                Debug.LogWarning($"[{_npc.Name}.TrySetDestinationStall] no stalls available in market.", _npc.GO);
             stallSpot = null;
             return false;
         }
 
         if (newStall.TooManyClientsWaiting)
         {
+            if (_npc.DebugMode)
+                Debug.LogWarning($"[{_npc.Name}.TrySetDestinationStall] selected stall has too many clients waiting.", _npc.GO);
             stallSpot = null;
             return false;
         }
@@ -268,15 +274,25 @@ public class NPCMovementController
         Spot newDestinationSpot = newStall.GetRandomAccessSpot();
         if (newDestinationSpot == null)
         {
+            if (_npc.DebugMode)
+                Debug.LogWarning($"[{_npc.Name}.TrySetDestinationStall] selected stall has no available access spots.", _npc.GO);
             stallSpot = null;
             return false;
         }
 
+        Stall previousStall = _npc.MarketStall;
+
         if (!_npc.MovementController.TrySetDestinationSpot(newDestinationSpot))
         {
+            if (_npc.DebugMode)
+                Debug.LogWarning($"[{_npc.Name}.TrySetDestinationStall] could not set destination to selected stall spot.", _npc.GO);
             stallSpot = null;
             return false;
         }
+
+        // Prevent inflating waiting counts when switching stalls mid-routine
+        if (previousStall != null && previousStall != newStall)
+            previousStall.UnregisterClientWaiting(_npc);
 
         _npc.MarketStall = newStall;
         stallSpot = newDestinationSpot;
