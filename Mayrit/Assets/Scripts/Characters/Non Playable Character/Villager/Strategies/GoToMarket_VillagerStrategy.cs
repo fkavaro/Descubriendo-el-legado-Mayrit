@@ -90,7 +90,7 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
 
     bool ShouldSwitchStallWhenClose()
     {
-        if (!_npc.MovementController.IsCloseToPosition(_marketStallSpot.transform.position, STALL_CHECK_DISTANCE))
+        if (!_npc.MovementController.IsFarFromPosition(_marketStallSpot.transform.position))
             return false;
 
         return !_npc.MarketStall.IsOpen || _npc.MarketStall.TooManyClientsWaiting;
@@ -98,13 +98,13 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
 
     bool HasArrivedAtStall()
     {
-        return _npc.MovementController.HasArrivedAtSpot(_marketStallSpot, true);
+        return _npc.MovementController.HasArrivedAtDestinationSpot(_marketStallSpot, true);
     }
 
     Node.Status HandleApproachingStall()
     {
         // Still far from stall
-        if (!_npc.MovementController.IsCloseToSpot(_marketStallSpot))
+        if (!_npc.MovementController.IsNearDestinationSpot(_marketStallSpot))
         {
             _npc.MovementController.SetIfStopped(false);
             return Node.Status.Running;

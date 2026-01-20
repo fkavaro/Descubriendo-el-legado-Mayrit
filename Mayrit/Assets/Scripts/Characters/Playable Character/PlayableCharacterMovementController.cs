@@ -170,7 +170,7 @@ public class PlayableCharacterMovementController
         float horizontalDist = Vector2.Distance(playerXZ, destXZ);
 
         // Hasn't arrived
-        if (horizontalDist > _player.StoppingDistance)
+        if (horizontalDist > _player.ArrivingDistance)
         {
             // Calculate direction to destination (XZ plane only)
             Vector3 direction = (destinationPos - playerPos).normalized;

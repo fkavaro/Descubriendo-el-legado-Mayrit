@@ -52,7 +52,7 @@ where NPCtype : INPC
         }
 
         // Success if arrived at destination
-        return _npc.MovementController.HasArrivedAtSpot(_destinationSpot, _fixRotation)
+        return _npc.MovementController.HasArrivedAtDestinationSpot(_destinationSpot, _fixRotation)
             ? Node.Status.Success
             : Node.Status.Running;
     }

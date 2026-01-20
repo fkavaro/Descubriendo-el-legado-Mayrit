@@ -24,7 +24,7 @@ public class Working_VillagerStrategy : ATimedNPCStrategy<Villager>
             return Node.Status.Failure;
         }
 
-        if (!_npc.MovementController.IsCloseToAnyWorkSpotOf(_npc.Workplace))
+        if (!_npc.MovementController.IsNearAnyWorkSpotPositionOf(_npc.Workplace))
         {
             if (_npc.DebugMode)
                 Debug.LogWarning($"[{_npc.Name}.Working_VillagerStrategy.Start()] not in workplace", _npc.GO);

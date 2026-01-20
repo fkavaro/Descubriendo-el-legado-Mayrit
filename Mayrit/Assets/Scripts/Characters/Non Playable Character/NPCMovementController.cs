@@ -4,10 +4,6 @@ using UnityEngine.AI;
 
 public class NPCMovementController
 {
-    #region CONSTANTS
-    private const float NAVMESH_SAMPLE_DISTANCE = 2f;
-    #endregion
-
     #region PROPERTIES HELPERS
     public Spot DestinationSpot => _destinationSpot;
     public Vector3 DestinationPos => _destinationPos;
@@ -42,7 +38,7 @@ public class NPCMovementController
         // Set default values
         _npc.RotationSpeed *= 100f;
         _agent.angularSpeed = _npc.RotationSpeed;
-        _agent.stoppingDistance = _npc.StoppingDistance;
+        _agent.stoppingDistance = _npc.ArrivingDistance;
         _agent.radius = _npc.AvoidanceRadius;
 
         // Configure NavMesh query filter for pathfinding calculations
@@ -242,12 +238,29 @@ public class NPCMovementController
     }
     #endregion
 
-    #region IS CLOSE METHODS
-    /// <summary>
-    /// Checks if the NPC is close to a specific destination spot.
-    /// </summary>
-    /// <returns>True if close to the destination spot and the spot is the current destination.</returns>
-    public bool IsCloseToSpot(Spot targetSpot, float checkingDistance = -1f)
+    #region IS WITHIN DISTANCE METHODS
+    private bool IsWithinDistanceToDestination(float checkingDistance)
+    {
+        if (!IsAgentValid || _agent.pathPending)
+            return false;
+
+        return _agent.remainingDistance <= checkingDistance;
+    }
+
+    private bool IsWithinDistanceToPosition(Vector3 position, float checkingDistance)
+    {
+        float effectiveDistance = checkingDistance;
+
+        if (checkingDistance < 0f)
+            effectiveDistance = _npc.NearDistance;
+
+        float distanceToPosition = Vector3.Distance(_npc.GO.transform.position, position);
+        return distanceToPosition <= effectiveDistance;
+    }
+    #endregion
+
+    #region IS NEAR METHODS
+    public bool IsNearDestinationSpot(Spot targetSpot)
     {
         if (!IsAgentValid || targetSpot == null)
             return false;
@@ -260,27 +273,20 @@ public class NPCMovementController
             return false;
         }
 
-        return IsCloseToDestination(checkingDistance);
+        return IsNearDestination();
     }
 
-    /// <summary>
-    /// Checks if the NPC is close to its current destination.
-    /// </summary>
-    /// <returns>True if close to the destination and path is calculated.</returns>
-    public bool IsCloseToDestination(float checkingDistance = -1f)
+    public bool IsNearDestination()
     {
-        if (!IsAgentValid || _agent.pathPending)
-            return false;
-
-        float effectiveDistance = checkingDistance;
-
-        if (checkingDistance < 0f)
-            effectiveDistance = _npc.NearDistance;
-
-        return _agent.remainingDistance <= effectiveDistance;
+        return IsWithinDistanceToDestination(_npc.NearDistance);
     }
 
-    public bool IsCloseToAnyWorkSpotOf(Workplace worplace)
+    public bool IsNearPosition(Vector3 position)
+    {
+        return IsWithinDistanceToPosition(position, _npc.NearDistance);
+    }
+
+    public bool IsNearAnyWorkSpotPositionOf(Workplace worplace)
     {
         if (worplace == null)
         {
@@ -291,35 +297,16 @@ public class NPCMovementController
 
         foreach (Spot spot in worplace.WorkSpots)
         {
-            if (IsCloseToPosition(spot.transform.position))
+            if (IsNearPosition(spot.transform.position))
                 return true;
         }
 
-        if (_npc.DebugMode)
-            Debug.LogWarning($"[IsCloseToAnyWorkSpotOf] {_npc.Name} not close to any work spot of workplace.", _npc.GO);
-
         return false;
-    }
-
-    public bool IsCloseToPosition(Vector3 position, float checkingDistance = -1f)
-    {
-        float effectiveDistance = checkingDistance;
-
-        if (checkingDistance < 0f)
-            effectiveDistance = _npc.NearDistance;
-
-        float distanceToPosition = Vector3.Distance(_npc.GO.transform.position, position);
-        return distanceToPosition <= effectiveDistance;
     }
     #endregion
 
     #region HAS ARRIVED METHODS
-    /// <summary>
-    /// Checks if the NPC has arrived at a specific destination spot.
-    /// Marks the spot as occupied and optionally fixes rotation upon arrival.
-    /// </summary>
-    /// <returns>True if arrived at the spot and (if fixRotation) rotation is completed.</returns>
-    public bool HasArrivedAtSpot(Spot targetSpot, bool fixRotation = false)
+    public bool HasArrivedAtDestinationSpot(Spot targetSpot, bool fixRotation = false)
     {
         // Validate agent and spot
         if (!IsAgentValid || targetSpot == null)
@@ -348,16 +335,26 @@ public class NPCMovementController
         return false;
     }
 
-    /// <summary>
-    /// Checks if the NPC has reached its current destination.
-    /// </summary>
-    /// <returns>True if the agent has reached its destination within stopping distance.</returns>
     public bool HasArrivedAtDestination()
     {
-        if (!IsAgentValid || _agent.pathPending)
-            return false;
+        return IsWithinDistanceToDestination(_npc.ArrivingDistance);
+    }
 
-        return _agent.remainingDistance <= _agent.stoppingDistance;
+    public bool HasArrivedAtPosition(Vector3 position)
+    {
+        return IsWithinDistanceToPosition(position, _npc.ArrivingDistance);
+    }
+    #endregion
+
+    #region IS FAR METHODS
+    public bool IsFarFromDestination()
+    {
+        return IsWithinDistanceToDestination(_npc.FarDistance);
+    }
+
+    public bool IsFarFromPosition(Vector3 position)
+    {
+        return IsWithinDistanceToPosition(position, _npc.FarDistance);
     }
     #endregion
 
@@ -369,17 +366,6 @@ public class NPCMovementController
 
         _agent.updateRotation = false;
         _agent.transform.rotation = targetRotation;
-    }
-
-    public bool HasRotationCompleted(Quaternion targetRotation)
-    {
-        if (!IsAgentValid)
-            return false;
-
-        float currentYaw = _agent.transform.eulerAngles.y;
-        float targetYaw = targetRotation.eulerAngles.y;
-        float angleDifference = Mathf.Abs(Mathf.DeltaAngle(currentYaw, targetYaw));
-        return angleDifference < 2.0f;
     }
 
     public bool RotateSmoothlyTowards(GameObject GO)
@@ -418,6 +404,17 @@ public class NPCMovementController
 
         return false;
     }
+
+    public bool HasRotationCompleted(Quaternion targetRotation)
+    {
+        if (!IsAgentValid)
+            return false;
+
+        float currentYaw = _agent.transform.eulerAngles.y;
+        float targetYaw = targetRotation.eulerAngles.y;
+        float angleDifference = Mathf.Abs(Mathf.DeltaAngle(currentYaw, targetYaw));
+        return angleDifference < 2.0f;
+    }
     #endregion
 
     #region PLACEMENT METHODS
@@ -436,7 +433,7 @@ public class NPCMovementController
     public void PlaceAt(Vector3 position)
     {
         // Try to sample a valid NavMesh position
-        bool sampled = NavMesh.SamplePosition(position, out NavMeshHit hit, NAVMESH_SAMPLE_DISTANCE, NavMesh.AllAreas);
+        bool sampled = NavMesh.SamplePosition(position, out NavMeshHit hit, _npc.MaxSamplingDistance, NavMesh.AllAreas);
         Vector3 placementPos = sampled ? hit.position : position;
 
         // Place transform

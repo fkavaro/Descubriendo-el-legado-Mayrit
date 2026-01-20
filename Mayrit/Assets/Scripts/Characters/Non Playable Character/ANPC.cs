@@ -78,11 +78,11 @@ where BehaviourSystemType : ABehaviourSystem
     [SerializeField, ReadOnly] protected float _conversationDuration = 0f;
 
     [Header("NavMeshAgent")]
+    [SerializeField] protected bool _isStopped = false;
     [Tooltip("Distance to which the agent will avoid other agents"), Range(0.5f, 2f)]
     [SerializeField] protected float _avoidanceRadius = 0.7f;
     [Tooltip("Max distance from the random point to a point on the navmesh, for target position sampling")]
     [SerializeField] protected float _maxSamplingDistance = 1f;
-    [SerializeField] protected bool _isStopped = false;
     [Tooltip("Base avoidance priority (0 = most important, 99 = least)")]
     [SerializeField] protected int _baseAvoidancePriority = 50;
     [Tooltip("Random +/- variance applied to base avoidance priority")]

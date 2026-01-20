@@ -21,8 +21,9 @@ public interface ICharacter : IBehaviourEntity
     float RotationSpeed { get; set; }
     float JumpForce { get; }
     float GravityForce { get; }
-    float StoppingDistance { get; }
+    float ArrivingDistance { get; }
     float NearDistance { get; }
+    float FarDistance { get; }
     #endregion
     #region METHODS
     public void SetFullName(string given, string family);
