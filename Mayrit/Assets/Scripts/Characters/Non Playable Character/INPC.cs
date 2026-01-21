@@ -20,7 +20,6 @@ public interface INPC : ICharacter
     int AvoidancePriorityVariance { get; }
     int BaseAvoidancePriority { get; }
     public float WalkSpeedVariance { get; }
-    bool IsStopped { get; set; }
     RoleInConversation ConversationRole { get; set; }
     bool InAccessZone { get; set; }
     bool HasArrivedToMiddlePoint { get; set; }

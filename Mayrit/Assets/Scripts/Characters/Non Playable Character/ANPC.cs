@@ -28,12 +28,6 @@ where BehaviourSystemType : ABehaviourSystem
         set => _marketStall = value;
     }
 
-    public bool IsStopped
-    {
-        get => _isStopped;
-        set => _isStopped = value;
-    }
-
     public INPC.RoleInConversation ConversationRole
     {
         get => _conversationRole;
@@ -94,7 +88,6 @@ where BehaviourSystemType : ABehaviourSystem
     [SerializeField, ReadOnly] protected float _conversationDuration = 0f;
 
     [Header("NavMeshAgent")]
-    [SerializeField] protected bool _isStopped = false;
     [Tooltip("Distance to which the agent will avoid other agents"), Range(0.5f, 2f)]
     [SerializeField] protected float _avoidanceRadius = 0.7f;
     [Tooltip("Max distance from the random point to a point on the navmesh, for target position sampling")]
@@ -136,10 +129,13 @@ where BehaviourSystemType : ABehaviourSystem
     protected override void Update()
     {
         base.Update();
-        _movementController.CheckBehaviourExecution();
 
         if (_destinationSpot != _movementController.DestinationSpot)
             _destinationSpot = _movementController.DestinationSpot;
+
+        // Override agent stopped state if execution is paused
+        if (_isExecutionPaused && _movementController.IsAgentValid && !_agent.isStopped)
+            _agent.isStopped = true;
     }
     #endregion
 

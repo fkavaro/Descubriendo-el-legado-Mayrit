@@ -14,17 +14,13 @@ public class NPCInteractionController
     readonly NPCPoolManager _npcPoolManager;
     #endregion
 
-    #region PROPERTIES HELPERS
-
-    #endregion
-
     #region PROPERTIES
     public bool _inAccessZone = true;
     public bool _hasArrivedToMiddlePoint = false;
     public INPC _currentConversationTarget;
     public INPC _lastConversationTarget;
 
-    int _originalAvoidancePriority;
+    bool _wasStoppedBeforeTalking;
     #endregion
 
     #region CONSTRUCTOR
@@ -189,14 +185,8 @@ public class NPCInteractionController
 
     public void Talk()
     {
-        // Save original priority and set to minimum (0 = most important) so no other agent can push
-        if (_agent != null)
-        {
-            _originalAvoidancePriority = _agent.avoidancePriority;
-            _agent.avoidancePriority = 0;  // Highest priority - won't be pushed by others
-        }
-
-        _npc.MovementController.SetIfStopped(true);
+        _wasStoppedBeforeTalking = _npc.MovementController.IsAgentStopped;
+        _npc.MovementController.IsAgentStopped = true;
         _npc.AnimationController.ChangeToTalk();
     }
     #endregion
@@ -217,7 +207,7 @@ public class NPCInteractionController
 
     public void ConversationSucceeded()
     {
-        UpdateConversationState(_npc.CurrentConversationTarget, _npc.CurrentConversationTargetGO);
+        UpdateConversationState(_npc.CurrentConversationTarget);
 
         // if (_npc.DebugMode)
         //     Debug.Log($"[{_npc.Name}.ConversationSucceeded()] conversation with {_npc.LastConversationTarget.Name} succeeded", _npc.GO);
@@ -225,25 +215,22 @@ public class NPCInteractionController
 
     public void ConversationInterrupted()
     {
-        UpdateConversationState(null, null);
+        UpdateConversationState(null);
 
         if (_npc.DebugMode)
             Debug.Log($"[{_npc.Name}.ConversationInterrupted()] conversation was interrupted", _npc.GO);
     }
 
-    public void UpdateConversationState(INPC otherNpc, GameObject otherNpcGO)
+    public void UpdateConversationState(INPC otherNpc)
     {
-        // Restore original avoidance priority
-        if (_agent != null)
-            _agent.avoidancePriority = _originalAvoidancePriority;
-
         _npc.LastConversationTarget = otherNpc;
-        _npc.LastConversationTargetGO = otherNpcGO;
+        _npc.LastConversationTargetGO = otherNpc?.GO;
         _npc.CurrentConversationTarget = null;
         _npc.CurrentConversationTargetGO = null;
         _npc.HasArrivedToMiddlePoint = false;
         _npc.ConversationDuration = 0f;
         _npc.ConversationRole = INPC.RoleInConversation.None;
+        _npc.MovementController.IsAgentStopped = _wasStoppedBeforeTalking;
     }
     #endregion
 }

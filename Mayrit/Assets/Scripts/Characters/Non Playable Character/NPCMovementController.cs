@@ -8,6 +8,11 @@ public class NPCMovementController
     public Spot DestinationSpot => _destinationSpot;
     public Vector3 DestinationPos => _destinationPos;
     public bool IsAgentValid => _agent != null && _agent.isOnNavMesh;
+    public bool IsAgentStopped
+    {
+        get => _agent.isStopped;
+        set => SetIfAgentIsStopped(value);
+    }
     #endregion
 
     #region PROPERTIES
@@ -18,6 +23,7 @@ public class NPCMovementController
 
     Vector3 _destinationPos;
     Spot _destinationSpot;
+    int _originalAvoidancePriority = -1;
     #endregion
 
     #region CONSTRUCTOR
@@ -61,20 +67,7 @@ public class NPCMovementController
     #endregion
 
     #region IF STOPPED METHODS
-    /// <summary>
-    /// Checks and updates the NPC's NavMeshAgent movement state.
-    /// Should be called regularly to ensure proper movement behavior.
-    /// </summary>
-    public void CheckBehaviourExecution()
-    {
-        if (!IsAgentValid)
-            return;
-
-        // Stop moving if execution is paused, otherwise respect NPC stopped state
-        _agent.isStopped = _npc.IsExecutionPaused || _npc.IsStopped;
-    }
-
-    public void SetIfStopped(bool isStopped)
+    void SetIfAgentIsStopped(bool isStopped)
     {
         if (!IsAgentValid)
         {
@@ -83,10 +76,20 @@ public class NPCMovementController
             return;
         }
 
-        if (_agent.isStopped != isStopped)
+        if (isStopped == _agent.isStopped)
+            return;
+
+        _agent.isStopped = isStopped;
+
+        if (isStopped)
         {
-            _agent.isStopped = isStopped;
-            _npc.IsStopped = isStopped;
+            _originalAvoidancePriority = _agent.avoidancePriority;
+            _agent.avoidancePriority = 0; // Highest priority - won't be pushed by others
+        }
+        else if (_originalAvoidancePriority > -1)
+        {
+            _agent.avoidancePriority = _originalAvoidancePriority;
+            _originalAvoidancePriority = -1;
         }
     }
     #endregion
@@ -235,9 +238,8 @@ public class NPCMovementController
     private void ApplyMovementState(NavMeshPath path)
     {
         _agent.updateRotation = true;
-        _agent.isStopped = false;
-        _npc.IsStopped = false;
         _agent.SetPath(path);
+        IsAgentStopped = false;
 
         // Update visuals
         _npc.CharacterModel.SetActive(true);

@@ -59,7 +59,7 @@ where NPCtype : INPC
         if (distanceToOther <= closeEnoughDistance && !_npc.HasArrivedToMiddlePoint)
         {
             _npc.AnimationController.ChangeToIdle();
-            _npc.MovementController.SetIfStopped(true);
+            _npc.MovementController.IsAgentStopped = true;
             _npc.HasArrivedToMiddlePoint = true;
         }
         else

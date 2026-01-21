@@ -74,14 +74,14 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
         // Still far from stall
         if (!_npc.MovementController.IsNearDestinationSpot(_marketStallSpot))
         {
-            _npc.MovementController.SetIfStopped(false);
+            _npc.MovementController.IsAgentStopped = false;
             return Node.Status.Running;
         }
 
         // Close to stall but spot is occupied
         if (_marketStallSpot.IsOccupied())
         {
-            HandleWaitingForSpot();
+            WaitForFreeSpot();
             return Node.Status.Running;
         }
 
@@ -90,14 +90,14 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
         return Node.Status.Running;
     }
 
-    void HandleWaitingForSpot()
+    void WaitForFreeSpot()
     {
         if (!_npc.IsWaitingForAccess)
         {
             // if (_npc.DebugMode)
             //     Debug.Log($"[{_npc.Name}.GoToMarket_VillagerStrategy.Update()] stall spot occupied, waiting", _npc.GO);
 
-            _npc.MovementController.SetIfStopped(true);
+            _npc.MovementController.IsAgentStopped = true;
             _npc.AnimationController.ChangeToIdle();
             _npc.IsWaitingForAccess = true;
         }
@@ -108,7 +108,7 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
     void ResumeMovementToSpot()
     {
         _npc.IsWaitingForAccess = false;
-        _npc.MovementController.SetIfStopped(false);
+        _npc.MovementController.IsAgentStopped = false;
         _npc.AnimationController.ChangeToWalk();
     }
 

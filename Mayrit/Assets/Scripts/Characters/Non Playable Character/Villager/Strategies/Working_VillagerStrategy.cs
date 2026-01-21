@@ -31,7 +31,7 @@ public class Working_VillagerStrategy : ATimedNPCStrategy<Villager>
         else
         {
             _npc.AnimationController.ChangeToIdle();
-            _npc.MovementController.SetIfStopped(true);
+            _npc.MovementController.IsAgentStopped = true;
         }
 
         _npc.Workplace.IsOpen = true;
