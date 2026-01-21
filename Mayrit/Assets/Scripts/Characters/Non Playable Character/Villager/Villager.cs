@@ -51,7 +51,7 @@ public class Villager : ANPC<BehaviourTree>
 
         if (getSanctuaryEntrance() != null)
         {
-            GoToDestinationStrategy<Villager> goToSanctuaryStrategy = new(this, getSanctuaryEntrance, true);
+            GoToDestinationStrategy<Villager> goToSanctuaryStrategy = new(this, getSanctuaryEntrance);
             InInteriorStrategy<Villager> prayingStrategy = new(this);
 
             SequenceNode prayingSequence = new(this);

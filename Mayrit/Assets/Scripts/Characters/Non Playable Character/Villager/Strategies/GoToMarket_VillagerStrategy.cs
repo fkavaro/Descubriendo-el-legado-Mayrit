@@ -7,6 +7,14 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
     public GoToMarket_VillagerStrategy(Villager npc)
     : base(npc) { }
 
+    public override void Reset()
+    {
+        if (_npc.MarketStall != null)
+            _npc.MarketStall.UnregisterClientWaiting(_npc);
+        _npc.IsWaitingForAccess = false;
+        _marketStallSpot = null;
+    }
+
     public override Node.Status Start()
     {
         CleanupStaleConversation();
@@ -110,13 +118,5 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
         _npc.IsWaitingForAccess = false;
         _npc.MovementController.IsAgentStopped = false;
         _npc.AnimationController.ChangeToWalk();
-    }
-
-    public override void Reset()
-    {
-        if (_npc.MarketStall != null)
-            _npc.MarketStall.UnregisterClientWaiting(_npc);
-        _npc.IsWaitingForAccess = false;
-        _marketStallSpot = null;
     }
 }
