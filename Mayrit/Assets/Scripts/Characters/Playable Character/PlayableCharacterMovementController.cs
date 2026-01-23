@@ -20,10 +20,14 @@ public class PlayableCharacterMovementController
         _right;
 
     Vector2 _movementInput;
+    bool _obstacleAhead;
+    readonly int _obstacleMask;
 
     // Dependency Injection
     readonly CameraManager _cameraManager;
     readonly GameManager _gameManager;
+
+    const float OBSTACLE_CHECK_DISTANCE = 0.25f;
     #endregion
 
     #region CONSTRUCTOR
@@ -35,6 +39,8 @@ public class PlayableCharacterMovementController
         // Get dependencies from ServiceLocator
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
+
+        _obstacleMask = _player.ObstacleLayers.value;
 
         _cameraTarget = _cameraManager._thirdPersonCamera.Camera.LookAt;
     }
@@ -120,7 +126,7 @@ public class PlayableCharacterMovementController
                 _player.AnimationController.ChangeToPreJump();
                 _isJumping = true;
             }
-            else if (_movementInput == Vector2.zero)
+            else if (_movementInput == Vector2.zero || _obstacleAhead)
                 _player.AnimationController.ChangeToIdle();
             else if (_isRunPressed)
                 _player.AnimationController.ChangeToRun();
@@ -145,15 +151,54 @@ public class PlayableCharacterMovementController
         // Speed depending on sprint key
         _movementSpeed = _isRunPressed ? _player.SprintSpeed : _player.WalkSpeed;
 
+        // Prevent pushing into obstacles directly in front of the controller
+        Vector3 horizontalInput = new(_movement3DInput.x, 0f, _movement3DInput.z);
+        if (horizontalInput != Vector3.zero && IsObstacleAhead(horizontalInput))
+        {
+            horizontalInput = Vector3.zero;
+            _obstacleAhead = true;
+        }
+        else
+            _obstacleAhead = false;
+
+
         // Apply forces to movement vector
-        Vector3 finalMovement = new(_movement3DInput.x * _movementSpeed, // Apply movement speed
+        Vector3 finalMovement = new(horizontalInput.x * _movementSpeed, // Apply movement speed
                                     _verticalVelocity, // Apply vertical velocity
-                                    _movement3DInput.z * _movementSpeed); // Apply movement speed
+                                    horizontalInput.z * _movementSpeed); // Apply movement speed
 
         // Moves controller in the movement vector
         _playerCharacterController.Move(Time.deltaTime * finalMovement);
     }
     #endregion
+
+    bool IsObstacleAhead(Vector3 movementDirection)
+    {
+        // Normalize intended horizontal movement (Y already zeroed before calling)
+        Vector3 direction = movementDirection.normalized;
+
+        // Build a capsule that matches the CharacterController volume
+        Vector3 center = _playerCharacterController.bounds.center;
+        float radius = _playerCharacterController.radius - _playerCharacterController.skinWidth;
+        float height = Mathf.Max(_playerCharacterController.height, radius * 2f);
+        Vector3 point1 = center + Vector3.up * (height * 0.5f - radius);  // top sphere center
+        // Raise the bottom point to center height to avoid ground/terrain hits while still detecting obstacles
+        Vector3 point2 = center; // middle sphere center
+
+        // Cast forward a short distance; ignore triggers; only test configured obstacle layers
+        // Use a distance at least as large as the controller radius to avoid missing nearby colliders
+        float checkDistance = Mathf.Max(OBSTACLE_CHECK_DISTANCE, radius + _playerCharacterController.skinWidth + 0.05f);
+
+        bool hit = Physics.CapsuleCast(point1,
+                           point2,
+                           radius,
+                           direction,
+                           out RaycastHit hitInfo,
+                           checkDistance,
+                           _obstacleMask,
+                           QueryTriggerInteraction.Ignore);
+        return hit;
+    }
 
     #region NO INPUT MOVEMENT METHODS
     /// <summary>

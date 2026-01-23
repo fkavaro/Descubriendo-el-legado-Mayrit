@@ -8,12 +8,16 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     #region PROPERTY HELPERS
     public bool IsBeingControlled => _fsm.IsCurrentState(_controlledState);
     public PlayableCharacterMovementController MovementController => _movementController;
+    public LayerMask ObstacleLayers => _obstacleLayers;
     #endregion
 
     #region INTERNAL PROPERTIES
     Vector3 _originalPosition;
     Quaternion _originalRotation;
     PlayableCharacterMovementController _movementController;
+
+    [Header("Playable Character Settings")]
+    [SerializeField] LayerMask _obstacleLayers;
 
     // State machine and states
     FiniteStateMachine<APlayableCharacterState> _fsm;

@@ -89,6 +89,9 @@ MonoBehaviour:
   _characterModel: {fileID: 5434453373518007707}
   _givenName: 
   _familyName: 
+  _obstacleLayers:
+    serializedVersion: 2
+    m_Bits: 193
 --- !u!114 &59659429370565961
 MonoBehaviour:
   m_ObjectHideFlags: 0

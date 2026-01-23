@@ -100,8 +100,9 @@ MonoBehaviour:
   _rotationSpeed: 3
   _jumpForce: 2
   _gravityForce: 9
-  _stoppingDistance: 0.2
+  _arrivingDistance: 0.2
   _nearDistance: 2
+  _farDistance: 15
   _animator: {fileID: 8442105521708024458}
   _interactionRange: 5
   _gender: 1
@@ -112,9 +113,9 @@ MonoBehaviour:
   _conversationRole: 2
   _currentConversationTargetGO: {fileID: 0}
   _lastConversationTargetGO: {fileID: 0}
+  _conversationDuration: 0
   _avoidanceRadius: 0.7
   _maxSamplingDistance: 1
-  _isStopped: 0
   _baseAvoidancePriority: 50
   _avoidancePriorityVariance: 10
   _walkSpeedVariance: 0.5
@@ -124,6 +125,7 @@ MonoBehaviour:
   _sanctuary: {fileID: 0}
   _market: {fileID: 0}
   _marketStall: {fileID: 0}
+  _isWaitingForAccess: 0
 --- !u!1001 &2545030637896681716
 PrefabInstance:
   m_ObjectHideFlags: 0
