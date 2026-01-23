@@ -168,7 +168,7 @@ public class SpectatorCameraController
         // Scale movement speed based on zoom level (slower when zoomed in)
         float zoomSpeedMultiplier = _moveSpeedZoomCurve.Evaluate(ZoomLevel);
         float sprintMultiplier = _sprintPressed ? _sprintSpeedMultiplier : 1f;
-        Vector3 targetVelocity = combinedInput * _moveSpeed * zoomSpeedMultiplier * sprintMultiplier;
+        Vector3 targetVelocity = _moveSpeed * sprintMultiplier * zoomSpeedMultiplier * combinedInput;
 
         // Accelerate or decelerate based on input
         bool hasInput = combinedInput.sqrMagnitude > MIN_INPUT_THRESHOLD;
