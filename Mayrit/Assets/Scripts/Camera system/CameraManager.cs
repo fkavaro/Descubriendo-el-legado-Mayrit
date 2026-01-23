@@ -183,7 +183,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         _spectatorCamera.Camera.LookAt.position = _thirdPersonCamera.Camera.LookAt.position;
         Vector3 spectatorLookAt = GetFixedSpectatorLookAtPosition(_spectatorCamera.Camera.LookAt.position);
         _fsm.SwitchState(_spectatorState);
-        SmoothMoveCoroutine(_spectatorCamera.Camera.LookAt, spectatorLookAt, _spectatorCamera.targetPositionFixSpeed);
+        SmoothVerticalMovementCoroutine(_spectatorCamera.Camera.LookAt, spectatorLookAt, _spectatorCamera.targetPositionFixSpeed);
 
         if (DebugMode)
             Debug.Log("Switched to spectator camera from third person.");
@@ -235,54 +235,48 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     #endregion
 
     #region SMOOTH MOVEMENT
-    void SmoothMoveCoroutine(Transform lookAt, Vector3 newPosition, float speed, Action onComplete = null)
+    void SmoothVerticalMovementCoroutine(Transform lookAt, Vector3 newPosition, float speed, Action onComplete = null)
     {
-        StartCoroutine(SmoothMove(lookAt, newPosition, speed, onComplete));
+        StartCoroutine(SmoothVerticalMovement(lookAt, newPosition, speed, onComplete));
     }
 
-    IEnumerator SmoothMove(Transform transform, Vector3 newPosition, float speed, Action onComplete)
+    IEnumerator SmoothVerticalMovement(Transform transform, Vector3 newPosition, float speed, Action onComplete)
     {
         if (transform == null)
             yield break;
 
-        Vector3 startPosition = transform.position;
-        Vector3 endPosition = newPosition;
-        float distance = Vector3.Distance(startPosition, endPosition);
+        // Only interpolate vertical (Y) movement; horizontal (X, Z) is controlled by input
+        float startHeight = transform.position.y;
+        float endHeight = newPosition.y;
+        float heightDifference = Mathf.Abs(endHeight - startHeight);
 
-        if (distance < 0.001f)
+        if (heightDifference < 0.001f)
         {
             onComplete?.Invoke();
             yield break;
         }
 
-        float totalTime = distance / speed;
+        float totalTime = heightDifference / speed;
         float elapsedTime = 0f;
 
         while (elapsedTime < totalTime)
         {
             elapsedTime += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(elapsedTime / totalTime);
-            Vector3 currentPos = InterpolatePosition(transform.position, startPosition, endPosition, t);
+
+            // Interpolate only the vertical (Y) component; preserve current X and Z from input
+            Vector3 currentPos = transform.position;
+            currentPos.y = Mathf.Lerp(startHeight, endHeight, t);
             transform.position = currentPos;
             yield return null;
         }
 
-        transform.position = endPosition;
+        // Ensure final height is set correctly
+        Vector3 finalPos = transform.position;
+        finalPos.y = endHeight;
+        transform.position = finalPos;
+
         onComplete?.Invoke();
-    }
-
-    Vector3 InterpolatePosition(Vector3 currentPos, Vector3 startPos, Vector3 endPos, float t)
-    {
-        const float threshold = 0.001f;
-
-        if (Mathf.Abs(endPos.x - startPos.x) > threshold)
-            currentPos.x = Mathf.Lerp(startPos.x, endPos.x, t);
-        if (Mathf.Abs(endPos.y - startPos.y) > threshold)
-            currentPos.y = Mathf.Lerp(startPos.y, endPos.y, t);
-        if (Mathf.Abs(endPos.z - startPos.z) > threshold)
-            currentPos.z = Mathf.Lerp(startPos.z, endPos.z, t);
-
-        return currentPos;
     }
     #endregion
 
