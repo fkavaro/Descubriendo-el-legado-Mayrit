@@ -30,7 +30,7 @@ public abstract class AHUDState : AUIState
 
         if (_contextualPanel == null)
         {
-            Debug.LogError($"{_stateName} HUD State: Contextual Panel is null!");
+            Debug.LogWarning($"{_stateName} HUD State: Contextual Panel is null!");
             return;
         }
 
@@ -115,7 +115,7 @@ public abstract class AHUDState : AUIState
 
         if (_UIDocument.rootVisualElement == null)
         {
-            Debug.LogError($"{_stateName} HUD State: UIDocument rootVisualElement is null!");
+            Debug.LogWarning($"{_stateName} HUD State: UIDocument rootVisualElement is null!");
             return;
         }
 

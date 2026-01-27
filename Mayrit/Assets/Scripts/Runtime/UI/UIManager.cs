@@ -61,6 +61,8 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     #region INHERITED
     public override StackFiniteStateMachine<AUIState> DefineBehaviourSystemOnAwake()
     {
+        Debug.Log($"{name}: Defining Behaviour System");
+
         _sfsm = new(this);
 
         _uiDocument = GetComponent<UIDocument>();
@@ -94,6 +96,14 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     #region LIFE CYCLE
     protected override void Awake()
     {
+        // Only allow the registered UIManager to initialize
+        var registered = ServiceLocator.Instance.Get<UIManager>();
+        if (registered != null && registered != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         // Subscribe to scene change event
         SceneManager.sceneLoaded += OnSceneLoaded;
 

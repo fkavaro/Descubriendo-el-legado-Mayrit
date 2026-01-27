@@ -60,6 +60,14 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
     #region LIFE CYCLE
     protected override void Awake()
     {
+        // Only allow the registered GameManager to initialize
+        var registered = ServiceLocator.Instance.Get<GameManager>();
+        if (registered != null && registered != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         // Subscribe to scene change event
         SceneManager.sceneLoaded += OnSceneLoaded;
 

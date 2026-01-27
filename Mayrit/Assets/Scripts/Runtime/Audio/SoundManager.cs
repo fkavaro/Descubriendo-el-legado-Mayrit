@@ -109,6 +109,17 @@ public class SoundManager : MonoBehaviour
     }
 #endif
 
+    protected void Awake()
+    {
+        // Only allow the registered SoundManager to initialize
+        var registered = ServiceLocator.Instance.Get<SoundManager>();
+        if (registered != null && registered != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
+
     void Start()
     {
         if (_effectsSource == null || _musicSource == null)

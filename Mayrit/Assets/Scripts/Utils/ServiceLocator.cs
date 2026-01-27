@@ -46,7 +46,7 @@ public class ServiceLocator
         if (_services.ContainsKey(type))
         {
             if (serviceConfig.service.gameObject.activeInHierarchy)
-                Debug.LogWarning($"Service {type.Name} is already registered. Destroying instance from scene: {serviceConfig.service.gameObject}.");
+                Debug.Log($"Service {type.Name} is already registered. Destroying instance from scene: {serviceConfig.service.gameObject}.");
 
             // Service already exists - destroy the new one trying to register
             UnityEngine.Object.Destroy(serviceConfig.service.gameObject);
