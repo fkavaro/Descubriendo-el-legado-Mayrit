@@ -1,0 +1,17 @@
+{
+    "name": "Mayrit.Behaviour",
+    "rootNamespace": "",
+    "references": [
+        "GUID:58a5824faf222d146937a4c61f613379",
+        "GUID:dd66b9accc585e547ac8f8e82a1af033"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

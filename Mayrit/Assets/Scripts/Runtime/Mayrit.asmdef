@@ -1,0 +1,21 @@
+{
+    "name": "Mayrit",
+    "rootNamespace": "",
+    "references": [
+        "GUID:4307f53044263cf4b835bd812fc161a4",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:8c4dd21966739024fbd72155091d199e",
+        "GUID:d8b63aba1907145bea998dd612889d6b",
+        "GUID:58a5824faf222d146937a4c61f613379",
+        "GUID:7ccfae9395b48234aac05a7a250e07a9"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
