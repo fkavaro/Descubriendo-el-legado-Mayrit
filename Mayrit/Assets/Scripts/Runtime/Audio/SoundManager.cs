@@ -39,9 +39,8 @@ public struct SFXlist
 
 /// <summary>
 /// Handles music and sound effects reproduction. 
-/// Requires two audioSource components 
+/// Requires two audioSource components.
 /// </summary>
-[ExecuteInEditMode]
 [RequireComponent(typeof(AudioSource))]
 public class SoundManager : MonoBehaviour
 {
