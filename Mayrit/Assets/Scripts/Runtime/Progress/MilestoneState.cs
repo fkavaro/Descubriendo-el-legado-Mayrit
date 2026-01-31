@@ -12,16 +12,15 @@ public class MilestoneState : AState
         _milestoneData = milestoneData;
     }
 
-    // public override void StartState()
-    // {
-    //     Debug.Log($"Trying to start milestone state: {_milestoneData.Header}");
+    public override void StartState()
+    {
+        // Load milestone scene, if not already loaded
+        if (!SceneManager.GetSceneByName(_milestoneData.SceneName.ToString()).isLoaded)
+            ServiceLocator.Instance.Get<ScenesController>().NewTransitionPlan()
+                .Load(SceneDatabase.Slot.Milestone, _milestoneData.SceneName, setActive: true)
+                .ClearAssets()
+                .Perform();
 
-    //     // Load milestone scene
-    //     ServiceLocator.Instance.Get<ScenesController>().NewTransitionPlan()
-    //         .Load(SceneDatabase.Slot.Milestone, _milestoneData.SceneName, setActive: true)
-    //         .ClearAssets()
-    //         .Perform();
-
-    //     base.StartState();
-    // }
+        base.StartState();
+    }
 }

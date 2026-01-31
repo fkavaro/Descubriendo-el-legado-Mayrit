@@ -16,6 +16,7 @@ public class ScenesController : MonoBehaviour
     // Key: Slot ID, Value: Scene Name
     readonly Dictionary<SceneDatabase.Slot, SceneDatabase.SceneName> _loadedBySlots = new();
     static readonly WaitForSeconds _waitForSeconds0_5 = new(0.5f);
+    public bool _isLoading;
     public bool IsLoading { get; private set; } = false;
 
     UIManager _uiManager;
@@ -56,6 +57,7 @@ public class ScenesController : MonoBehaviour
     private IEnumerator ChangeSceneRoutine(SceneTransitionPlan plan)
     {
         IsLoading = true;
+        _isLoading = true;
         if (plan.Overlay)
         {
             yield return _uiManager.FadeInLoadingScreenCoroutine();
@@ -96,6 +98,7 @@ public class ScenesController : MonoBehaviour
         ScenesLoadedFullyEvent?.Invoke(plan.ScenesToLoad, plan.SlotsToUnload);
 
         IsLoading = false;
+        _isLoading = false;
     }
     #endregion
 

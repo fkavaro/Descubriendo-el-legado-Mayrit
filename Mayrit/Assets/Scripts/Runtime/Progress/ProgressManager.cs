@@ -147,10 +147,7 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     public bool IsNextMilestoneAvailable()
     {
         if (_tourManager.CurrentTour == null)
-        {
-            Debug.LogWarning("[ProgressManager] No current tour available to check milestone availability.");
             return false;
-        }
 
         bool canSkipInRuntime = _canSkipTours; //Application.isPlaying && Application.isEditor // TODO: full line when gold release
         bool tourCompleted = _tourManager.CurrentTour.IsCompleted;
@@ -168,12 +165,8 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
 
     void OnStateSwitch()
     {
-        if (!SceneManager.GetSceneByName(_fsm.CurrentState.Data.SceneName.ToString()).isLoaded)
-        {
-            Debug.LogWarning($"[ProgressManager] Current milestone scene {_fsm.CurrentState.Data.SceneName} is not loaded!");
-            return;
-        }
-
+        _currentMilestoneMapping = _fsm.CurrentState.Data;
+        _currentMilestoneIndex = _currentMilestoneMapping.Index;
         MilestoneChangedEvent?.Invoke(CurrentMilestoneMapping);
     }
     #endregion
