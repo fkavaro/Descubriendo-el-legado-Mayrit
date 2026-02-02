@@ -42,11 +42,10 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     POI_CameraState _poiState;
 
     // Dependency Injection
-    ScenesController _scenesController;
     UIManager _uiManager;
     TourManager _tourManager;
     SoundManager _soundManager;
-    PlayableCharacter _playableCharacter;
+    public PlayableCharacter _playableCharacter;
     #endregion
 
     #region INHERITED
@@ -69,21 +68,19 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     #region LIFE CYCLE
     protected override void Awake()
     {
-        ServiceLocator.Instance.Register(this);
-
         base.Awake();
+
+        ServiceLocator.Instance.Register(this);
     }
 
     protected override void Start()
     {
         // Get dependencies from ServiceLocator
-        _scenesController = ServiceLocator.Instance.Get<ScenesController>();
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
         _tourManager = ServiceLocator.Instance.Get<TourManager>();
         _soundManager = ServiceLocator.Instance.Get<SoundManager>();
 
         // Subscribe to events
-        _scenesController.ScenesLoadedFullyEvent += OnScenesLoadedFully;
         _uiManager.EdgeScrollingToggledEvent += _spectatorCamera.OnIsEdgeScrollingToggled;
         _spectatorState.ObjectSelectedEvent += SwitchToOrbitalCamera;
         _thirdPersonState.ExitThirdPersonCameraEvent += OnExitThirdPersonCamera;
@@ -106,6 +103,8 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
 
         // Check edge scrolling initial state
         _spectatorCamera.isEdgeScrolling = _uiManager.EdgeScrollingValueSet;
+
+        base.Start();
     }
 
     void OnDisable()
@@ -291,18 +290,9 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     #endregion
 
     #region EVENT CALLBACKS
-    void OnScenesLoadedFully(Dictionary<SceneDatabase.Slot, SceneDatabase.SceneName> scenesLoaded, List<SceneDatabase.Slot> slotUnloaded)
-    {
-        base.Start();
-    }
-
-    /// <summary>Called when exiting third-person camera mode.</summary>
     void OnExitThirdPersonCamera() => SwitchToSpectatorCamera();
-
-    /// <summary>Called when the player clicks on a playable character.</summary>
     void OnPlayCharacterClicked() => SwitchToThirdPersonCamera();
 
-    /// <summary>Called when a contextual panel is hidden to reset camera if needed.</summary>
     void OnContextualPanelHidden()
     {
         if (IsInOrbitalState)

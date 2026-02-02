@@ -72,6 +72,12 @@ public class PlayerHUD_UIState : AHUDState
         if (_currentTour == null)
             _currentTour = _tourManager.CurrentTour;
 
+        if (_currentTour == null)
+        {
+            Debug.LogWarning($"{_stateName}: CurrentTour is null on StartState");
+            return;
+        }
+
         if (_currentTour.IsCompleted)
         {
             _tourArea.style.display = DisplayStyle.None;

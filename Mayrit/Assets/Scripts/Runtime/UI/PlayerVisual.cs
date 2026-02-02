@@ -5,14 +5,17 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(UIDocument))]
 public class PlayerVisual : Billboard
 {
+    #region PROPERTIES
+    [SerializeField] PlayableCharacter _playableCharacter;
+
     UIDocument _uiDocument;
     Button _playerButton;
-    public PlayableCharacter _playableCharacter;
 
-    // Dependency Injectionq
+    // Dependency Injection
     ProgressManager _progressManager;
     CameraManager _cameraManager;
     SoundManager _soundManager;
+    #endregion
 
     #region LIFE CYCLLE
     void Awake()
@@ -40,9 +43,21 @@ public class PlayerVisual : Billboard
         _cameraManager.CameraStateChangedEvent += OnCameraStateChanged;
         _playerButton.RegisterCallback<ClickEvent>(OnPlayerButtonClick);
     }
+
+    void Start()
+    {
+        GetPlayableCharacter();
+    }
     #endregion
 
     #region PRIVATE METHODS
+    void GetPlayableCharacter()
+    {
+        _playableCharacter = ServiceLocator.Instance.Get<PlayableCharacter>();
+
+        UpdateTransformPosition();
+        OnCameraStateChanged();
+    }
     void UpdateTransformPosition()
     {
         if (_playableCharacter != null)
@@ -53,10 +68,7 @@ public class PlayerVisual : Billboard
     #region CALLBACK METHODS
     void OnMilestoneChanged(Milestone_DataSO milestoneMapping)
     {
-        _playableCharacter = ServiceLocator.Instance.Get<PlayableCharacter>();
-
-        UpdateTransformPosition();
-        OnCameraStateChanged();
+        GetPlayableCharacter();
     }
 
     void OnCameraStateChanged()

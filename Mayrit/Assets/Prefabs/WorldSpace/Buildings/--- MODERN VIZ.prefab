@@ -1,0 +1,150 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4582935562734902673
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6453991533538374941}
+  m_Layer: 0
+  m_Name: Buildings
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &6453991533538374941
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4582935562734902673}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 896832215447561950}
+  m_Father: {fileID: 4834830275555568445}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6035488652241029550
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4834830275555568445}
+  - component: {fileID: 4805281923672837297}
+  m_Layer: 0
+  m_Name: --- MODERN VIZ
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4834830275555568445
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6035488652241029550}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 6453991533538374941}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!114 &4805281923672837297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6035488652241029550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d752d4e4f60de18458d8206deff39ae9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isActive: 0
+--- !u!1001 &2159980605210059381
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6453991533538374941}
+    m_Modifications:
+    - target: {fileID: 1264379889245979819, guid: 82547526f0915144a8b6af01661b087b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 48.549538
+      objectReference: {fileID: 0}
+    - target: {fileID: 1264379889245979819, guid: 82547526f0915144a8b6af01661b087b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 76
+      objectReference: {fileID: 0}
+    - target: {fileID: 1264379889245979819, guid: 82547526f0915144a8b6af01661b087b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 104.444984
+      objectReference: {fileID: 0}
+    - target: {fileID: 1264379889245979819, guid: 82547526f0915144a8b6af01661b087b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.6691307
+      objectReference: {fileID: 0}
+    - target: {fileID: 1264379889245979819, guid: 82547526f0915144a8b6af01661b087b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1264379889245979819, guid: 82547526f0915144a8b6af01661b087b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7431448
+      objectReference: {fileID: 0}
+    - target: {fileID: 1264379889245979819, guid: 82547526f0915144a8b6af01661b087b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1264379889245979819, guid: 82547526f0915144a8b6af01661b087b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1264379889245979819, guid: 82547526f0915144a8b6af01661b087b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 96
+      objectReference: {fileID: 0}
+    - target: {fileID: 1264379889245979819, guid: 82547526f0915144a8b6af01661b087b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3390421779974783583, guid: 82547526f0915144a8b6af01661b087b, type: 3}
+      propertyPath: m_VersionIndex
+      value: 9860
+      objectReference: {fileID: 0}
+    - target: {fileID: 3986610442869793587, guid: 82547526f0915144a8b6af01661b087b, type: 3}
+      propertyPath: m_VersionIndex
+      value: 9869
+      objectReference: {fileID: 0}
+    - target: {fileID: 7444594075944011122, guid: 82547526f0915144a8b6af01661b087b, type: 3}
+      propertyPath: m_Name
+      value: Catedral de la Almudena
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 82547526f0915144a8b6af01661b087b, type: 3}
+--- !u!4 &896832215447561950 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1264379889245979819, guid: 82547526f0915144a8b6af01661b087b, type: 3}
+  m_PrefabInstance: {fileID: 2159980605210059381}
+  m_PrefabAsset: {fileID: 0}

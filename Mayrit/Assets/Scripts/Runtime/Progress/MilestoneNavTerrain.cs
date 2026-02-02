@@ -47,34 +47,34 @@ public class MilestoneNavTerrain : MilestoneTracker
         }
     }
 
-    //     protected override void OnEditorUpdateChanged(bool updateInEditor)
-    //     {
-    // #if UNITY_EDITOR
-    //         if (Application.isPlaying || this == null) return;
+    protected override void OnEditorUpdateChanged(bool updateInEditor)
+    {
+#if UNITY_EDITOR
+        if (Application.isPlaying || this == null) return;
 
-    //         if (!updateInEditor)
-    //         {
-    //             // Only active if last milestone
-    //             SetChildrenActive((int)milestonesActivated.x == 7 && (int)milestonesActivated.y == 7);
-    //             return;
-    //         }
+        if (!updateInEditor)
+        {
+            // Only active if first milestone
+            SetChildrenActive((int)milestonesActivated.x == 0 && (int)milestonesActivated.y == 0);
+            return;
+        }
 
-    //         var progressManager = FindAnyObjectByType<ProgressManager>();
-    //         if (progressManager == null) return;
+        var progressManager = FindAnyObjectByType<ProgressManager>();
+        if (progressManager == null) return;
 
-    //         int milestone = progressManager.CurrentMilestoneIndex;
-    //         int min = Mathf.Min((int)milestonesActivated.x, (int)milestonesActivated.y);
-    //         int max = Mathf.Max((int)milestonesActivated.x, (int)milestonesActivated.y);
-    //         SetChildrenActive(milestone >= min && milestone <= max);
-    // #endif
-    //     }
+        int milestone = progressManager.CurrentMilestoneIndex;
+        int min = Mathf.Min((int)milestonesActivated.x, (int)milestonesActivated.y);
+        int max = Mathf.Max((int)milestonesActivated.x, (int)milestonesActivated.y);
+        SetChildrenActive(milestone >= min && milestone <= max);
+#endif
+    }
     #endregion
 
     #region PUBLIC METHODS
     [ContextMenu("Extract Tree Modifiers")]
     public int ExtractTreeModifiers()
     {
-        if (!ValidateActivation() || !ValidateReferences()) return 0;
+        if (!ValidateReferences()) return 0;
 
         ClearPreviousModifiers();
 
@@ -167,7 +167,7 @@ public class MilestoneNavTerrain : MilestoneTracker
 
     private void CreateModifier(string treeName, Vector3 worldPos)
     {
-        GameObject volumeObj = new GameObject(treeName + "_ModifierVolume");
+        GameObject volumeObj = new(treeName + "_ModifierVolume");
         volumeObj.transform.position = worldPos;
         volumeObj.transform.parent = _navMeshSurface.transform;
 

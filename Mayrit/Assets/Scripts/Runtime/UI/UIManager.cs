@@ -101,11 +101,9 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     #region LIFE CYCLE
     protected override void Awake()
     {
-        ServiceLocator.Instance.Register(this);
-
-
-
         base.Awake();
+
+        ServiceLocator.Instance.Register(this);
     }
 
     protected override void Start()

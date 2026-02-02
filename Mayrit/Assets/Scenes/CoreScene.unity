@@ -228,6 +228,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7491529587512623411, guid: ea9cacb45c8d1134faa83553081a2ee0, type: 3}
+      propertyPath: _startInMainMenu
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -280,14 +284,6 @@ PrefabInstance:
     - target: {fileID: 2963802708733175785, guid: f159fddb4a5e56746916cbd293b0859e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5795229730612990247, guid: f159fddb4a5e56746916cbd293b0859e, type: 3}
-      propertyPath: _fadeInDuration
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5795229730612990247, guid: f159fddb4a5e56746916cbd293b0859e, type: 3}
-      propertyPath: _fadeOutDuration
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8119952740670593480, guid: f159fddb4a5e56746916cbd293b0859e, type: 3}
       propertyPath: m_Name
@@ -344,6 +340,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Mayrit::SceneController
   currentSession: 
   currentMilestone: 
+  _isLoading: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

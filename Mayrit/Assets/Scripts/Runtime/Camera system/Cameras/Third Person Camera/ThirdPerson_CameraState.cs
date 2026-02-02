@@ -36,7 +36,13 @@ public class ThirdPerson_CameraState : ACameraState
         if (_gameManager.IsInPauseState)
             return;
 
-        _cameraController.TargetSmoothFollow();
+        if (_cameraManager.PlayableCharacter == null)
+        {
+            Debug.LogWarning("ThirdPerson_CameraState: No playable character found for third-person camera.");
+            return;
+        }
+
+        _cameraController.TargetSmoothFollow(_cameraManager.PlayableCharacter.transform);
 
         // Only allow camera rotation if the playable character is being controlled
         if (_cameraManager.PlayableCharacter.IsBeingControlled)

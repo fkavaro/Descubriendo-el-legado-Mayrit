@@ -24,6 +24,7 @@ public class SoundManager : ABehaviourEntity<FiniteStateMachine<AMusicState>>
     #endregion
 
     #region EDITOR PROPERTIES
+    [Header("Sound Settings")]
     [SerializeField] private AudioSource _effectsSource;
     [SerializeField] private AudioSource _musicSource;
     [Range(0, 1)] public float EffectsVolume = 1f;
@@ -99,11 +100,11 @@ public class SoundManager : ABehaviourEntity<FiniteStateMachine<AMusicState>>
 
     protected override void Awake()
     {
-        ServiceLocator.Instance.Register(this);
-
         _audioListener = GetComponent<AudioListener>();
 
         base.Awake();
+
+        ServiceLocator.Instance.Register(this);
     }
 
 

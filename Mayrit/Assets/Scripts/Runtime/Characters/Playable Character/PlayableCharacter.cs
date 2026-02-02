@@ -49,25 +49,20 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     #endregion
 
     #region LIFE CYCLE
-    // void OnEnable()
-    // {
-    //     SubscribeToRuntimeEvents();
-
-    //     if (Application.isPlaying)
-    //         SubscribeToServicesEvents();
-    // }
-
-    //     void OnValidate()
-    //     {
-    // #if UNITY_EDITOR
-    //         if (!Application.isPlaying)
-    //             SubscribeToRuntimeEvents();
-    // #endif
-    //     }
-
     void OnEnable()
     {
-        ServiceLocator.Instance.Register(this);
+        SubscribeToRuntimeEvents();
+
+        if (Application.isPlaying)
+            SubscribeToServicesEvents();
+    }
+
+    void OnValidate()
+    {
+#if UNITY_EDITOR
+        if (!Application.isPlaying)
+            SubscribeToRuntimeEvents();
+#endif
     }
 
     protected override void Awake()
@@ -85,13 +80,15 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
 
         _originalPosition = transform.position;
         _originalRotation = transform.rotation;
+
+        ServiceLocator.Instance.Register(this);
     }
 
     protected override void Start()
     {
-        base.Start();
-
         SubscribeToServicesEvents();
+
+        base.Start();
     }
 
     void OnDisable()
@@ -173,28 +170,28 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     }
     #endregion
 
-    // #region EDITOR UPDATES
-    // void SubscribeToRuntimeEvents()
-    // {
-    //     _progressManager = FindAnyObjectByType<ProgressManager>();
+    #region EDITOR UPDATES
+    void SubscribeToRuntimeEvents()
+    {
+        _progressManager = FindAnyObjectByType<ProgressManager>();
 
-    //     if (_progressManager != null)
-    //     {
-    //         _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
-    //         //_progressManager.OnEditorUpdateChangedEvent += OnEditorUpdateChanged;
-    //     }
-    // }
+        if (_progressManager != null)
+        {
+            _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
+            //_progressManager.OnEditorUpdateChangedEvent += OnEditorUpdateChanged;
+        }
+    }
 
-    // void UnsubscribeFromRuntimeEvents()
-    // {
-    //     _progressManager = FindAnyObjectByType<ProgressManager>();
+    void UnsubscribeFromRuntimeEvents()
+    {
+        _progressManager = FindAnyObjectByType<ProgressManager>();
 
-    //     if (_progressManager != null)
-    //     {
-    //         _progressManager.MilestoneChangedEvent -= OnMilestoneChanged;
-    //         // _progressManager.OnEditorUpdateChangedEvent -= OnEditorUpdateChanged;
-    //     }
-    // }
+        if (_progressManager != null)
+        {
+            _progressManager.MilestoneChangedEvent -= OnMilestoneChanged;
+            //_progressManager.OnEditorUpdateChangedEvent -= OnEditorUpdateChanged;
+        }
+    }
 
     //     void OnEditorUpdateChanged(bool updateInEditor)
     //     {
@@ -218,5 +215,5 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     //         }
     // #endif
     //     }
-    //#endregion
+    #endregion
 }

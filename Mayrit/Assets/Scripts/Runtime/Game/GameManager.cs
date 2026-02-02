@@ -55,13 +55,13 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
     #region LIFE CYCLE
     protected override void Awake()
     {
-        ServiceLocator.Instance.Register(this);
-
         _scenesController = ServiceLocator.Instance.Get<ScenesController>();
 
         _inputActions = new();
 
         base.Awake();
+
+        ServiceLocator.Instance.Register(this);
     }
 
     // TODO: this should be handled in superior abstract class

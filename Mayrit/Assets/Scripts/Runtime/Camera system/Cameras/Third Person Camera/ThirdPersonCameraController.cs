@@ -18,7 +18,6 @@ public class ThirdPersonCameraController
     readonly float _bottomClamp;
     readonly float _topClamp;
     readonly GameManager _gameManager;
-    readonly CameraManager _cameraManager;
 
     /// <summary>Current vertical rotation angle (up/down).</summary>
     float _targetPitch;
@@ -28,8 +27,6 @@ public class ThirdPersonCameraController
 
     /// <summary>Mouse look input values.</summary>
     Vector2 _lookInput;
-
-    PlayableCharacter PlayableCharacter => _cameraManager.PlayableCharacter;
     #endregion
 
     #region CONSTRUCTOR
@@ -44,7 +41,6 @@ public class ThirdPersonCameraController
         _topClamp = thirdPersonCameraData._orbitClamp[1];
 
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
-        _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
     }
     #endregion
 
@@ -81,12 +77,14 @@ public class ThirdPersonCameraController
     /// Smoothly moves the camera target to follow the playable character.
     /// Uses lerp interpolation for smooth position updates.
     /// </summary>
-    public void TargetSmoothFollow()
+    public void TargetSmoothFollow(Transform playerTransform)
     {
-        if (_cameraTarget == null || PlayableCharacter == null)
+        if (_cameraTarget == null)
             return;
 
-        Transform playerTransform = PlayableCharacter.transform;
+        if (playerTransform == null)
+            return;
+
         _cameraTarget.position = Vector3.Lerp(
             _cameraTarget.position,
             playerTransform.position,

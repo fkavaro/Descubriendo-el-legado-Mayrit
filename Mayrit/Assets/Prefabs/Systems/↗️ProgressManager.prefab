@@ -48,6 +48,7 @@ MonoBehaviour:
   _isExecutionPaused: 0
   _currentActionInfo: 
   _canSkipTours: 1
+  _updateInEditor: 0
   _currentMilestoneIndex: 0
   _currentMilestoneMapping: {fileID: 0}
   _milestoneMappings:

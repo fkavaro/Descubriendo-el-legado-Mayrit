@@ -36,8 +36,6 @@ public class Tour : MonoBehaviour
     void OnEnable()
     {
         //SubscribeToRuntimeEvents();
-
-        ServiceLocator.Instance.Register(this);
     }
 
     //     void OnValidate()
@@ -47,6 +45,11 @@ public class Tour : MonoBehaviour
     //             SubscribeToRuntimeEvents();
     // #endif
     //     }
+
+    void Awake()
+    {
+        ServiceLocator.Instance.Register(this);
+    }
 
     void OnDisable()
     {

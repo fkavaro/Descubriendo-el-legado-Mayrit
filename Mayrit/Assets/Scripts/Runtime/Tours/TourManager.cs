@@ -38,7 +38,6 @@ public class TourManager : MonoBehaviour
     // Dependency Injection
     ProgressManager _progressManager;
     UIManager _uiManager;
-    GameManager _gameManager;
     SoundManager _soundManager;
     PlayableCharacter _playableCharacter;
     #endregion
@@ -54,7 +53,6 @@ public class TourManager : MonoBehaviour
         // Get dependencies from Service Locator
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
-        _gameManager = ServiceLocator.Instance.Get<GameManager>();
         _soundManager = ServiceLocator.Instance.Get<SoundManager>();
 
         // Subscribe to events
@@ -71,6 +69,8 @@ public class TourManager : MonoBehaviour
             _maxPointCount,
             _maxTrailLength);
         _pathVisualizer.Initialize();
+
+        AttachToTour(ServiceLocator.Instance.Get<Tour>());
     }
 
     void Update()

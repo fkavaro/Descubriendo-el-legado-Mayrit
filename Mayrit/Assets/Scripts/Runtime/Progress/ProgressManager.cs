@@ -18,8 +18,8 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     [Header("Debug tweaks")]
     [SerializeField] bool _canSkipTours = false;
 
-    // [Tooltip("Wether to update scene at milestone changes in editor")]
-    // [SerializeField] bool _changesInEditor = false;
+    [Tooltip("Wether to update scene at milestone changes in editor")]
+    [SerializeField] bool _updateInEditor = false;
     [Header("Milestones")]
     [Range(0, 7)]
     [SerializeField] int _currentMilestoneIndex = 0;
@@ -29,10 +29,10 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
 
     #region INTERNAL PROPERTIES
     public event Action<Milestone_DataSO> MilestoneChangedEvent;
-    // public event Action<bool> OnEditorUpdateChangedEvent;
+    public event Action<bool> OnEditorUpdateChangedEvent;
 
-    // int _lastValidatedMilestoneIndex;
-    // bool _lastUpdateInEditor;
+    int _lastValidatedMilestoneIndex;
+    bool _lastUpdateInEditor;
     // Dictionary<int, MilestoneMapping> _milestonesMappings;
 
     FiniteStateMachine<MilestoneState> _fsm;
@@ -57,50 +57,56 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     #endregion
 
     #region LIFE CYCLE
-    //     // Called when the script is loaded or a value is changed in the inspector
-    //     void OnValidate()
-    //     {
-    // #if UNITY_EDITOR
-    //         if (Application.isPlaying)
-    //             return;
+    // Called when the script is loaded or a value is changed in the inspector
+    void OnValidate()
+    {
+#if UNITY_EDITOR
+        if (Application.isPlaying)
+            return;
 
-    //         // Invoke milestone changed event when _currentMilestone is changed in inspector
-    //         // and _updateInInspector is true
-    //         if (_lastValidatedMilestoneIndex != _currentMilestoneIndex)
-    //         {
-    //             _lastValidatedMilestoneIndex = _currentMilestoneIndex;
+        // Invoke milestone changed event when _currentMilestoneIndex is changed in inspector
+        // and _updateInInspector is true
+        if (_lastValidatedMilestoneIndex != _currentMilestoneIndex)
+        {
+            _lastValidatedMilestoneIndex = _currentMilestoneIndex;
 
-    //             if (_changesInEditor)
-    //             {
-    //                 // To avoid issues with re-entrancy
-    //                 UnityEditor.EditorApplication.delayCall += () => MilestoneChangedEvent?.Invoke(CurrentMilestoneMapping);
-    //             }
-    //         }
+            if (_updateInEditor)
+            {
+                _currentMilestoneMapping = _milestoneMappings[_currentMilestoneIndex];
+                // To avoid issues with re-entrancy
+                UnityEditor.EditorApplication.delayCall += () => MilestoneChangedEvent?.Invoke(CurrentMilestoneMapping);
+            }
+        }
 
-    //         // Invoke editor update changed event when _updateInEditor is changed in inspector
-    //         if (_lastUpdateInEditor != _changesInEditor)
-    //         {
-    //             _lastUpdateInEditor = _changesInEditor;
-    //             bool update = _changesInEditor;
+        // Invoke editor update changed event when _updateInEditor is changed in inspector
+        if (_lastUpdateInEditor != _updateInEditor)
+        {
+            _lastUpdateInEditor = _updateInEditor;
 
-    //             UnityEditor.EditorApplication.delayCall += () => OnEditorUpdateChangedEvent?.Invoke(update);
-    //         }
-    // #endif
-    //     }
+            if (_updateInEditor)
+                _currentMilestoneMapping = _milestoneMappings[_currentMilestoneIndex];
+            else
+                _currentMilestoneMapping = null;
+
+            UnityEditor.EditorApplication.delayCall += () => OnEditorUpdateChangedEvent?.Invoke(_updateInEditor);
+        }
+#endif
+    }
 
     protected override void Awake()
     {
-        ServiceLocator.Instance.Register(this);
-
         base.Awake();
+
+        ServiceLocator.Instance.Register(this);
     }
 
     protected override void Start()
     {
+        //_scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
         _scenesController = ServiceLocator.Instance.Get<ScenesController>();
         _tourManager = ServiceLocator.Instance.Get<TourManager>();
 
-        _scenesController.ScenesLoadedFullyEvent += OnScenesLoadedFully;
+        base.Start();
     }
 
     // TODO: this should be handled in superior abstract class
@@ -158,9 +164,8 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     #endregion
 
     #region CALLBACK METHODS
-    void OnScenesLoadedFully(Dictionary<SceneDatabase.Slot, SceneDatabase.SceneName> scenesLoaded, List<SceneDatabase.Slot> slotUnloaded)
+    void OnSceneLoadedPartially(SceneDatabase.SceneName sceneLoaded)
     {
-        base.Start();
     }
 
     void OnStateSwitch()
