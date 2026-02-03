@@ -52,9 +52,6 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     void OnEnable()
     {
         SubscribeToRuntimeEvents();
-
-        if (Application.isPlaying)
-            SubscribeToServicesEvents();
     }
 
     void OnValidate()
@@ -93,6 +90,7 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
 
     void OnDisable()
     {
+        UnsubscribeFromRuntimeEvents();
         UnsubscribeFromServicesEvents();
         ServiceLocator.Instance.Unregister(this);
     }
