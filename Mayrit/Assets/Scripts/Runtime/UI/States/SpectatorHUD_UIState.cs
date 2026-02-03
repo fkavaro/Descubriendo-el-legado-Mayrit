@@ -63,9 +63,6 @@ public class SpectatorHUD_UIState : AHUDState
             Debug.LogWarning("_previousMilestoneButton button not found");
         if (_modernSuperpositionButton == null)
             Debug.LogWarning("_modernSuperpositionButton button not found");
-
-        // Disable next milestone button until tour is completed
-        _nextMilestoneButton.SetEnabled(false);
     }
 
     protected override void RegisterUICallbacksOnAwake()
@@ -98,6 +95,7 @@ public class SpectatorHUD_UIState : AHUDState
     public override void StartState()
     {
         base.StartState();
+
         if (_wasContextualPanelShown)
             _milestoneArea.style.display = DisplayStyle.None;
         else

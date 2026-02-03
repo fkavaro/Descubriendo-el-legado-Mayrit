@@ -109,6 +109,7 @@ public class TimeManager : MonoBehaviour
     void OnDisable()
     {
         _progressManager.MilestoneChangedEvent -= OnMilestoneChanged;
+        ServiceLocator.Instance.Unregister(this);
     }
     #endregion
 

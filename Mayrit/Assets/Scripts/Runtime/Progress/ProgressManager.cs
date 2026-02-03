@@ -97,21 +97,22 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     {
         base.Awake();
 
+        _scenesController = ServiceLocator.Instance.Get<ScenesController>();
+
         ServiceLocator.Instance.Register(this);
     }
 
     protected override void Start()
     {
-        //_scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
+        _scenesController.ScenesLoadedFullyEvent += OnSceneLoadedFully;
         _scenesController = ServiceLocator.Instance.Get<ScenesController>();
         _tourManager = ServiceLocator.Instance.Get<TourManager>();
-
-        base.Start();
     }
 
     // TODO: this should be handled in superior abstract class
     void OnDisable()
     {
+        _scenesController.ScenesLoadedFullyEvent -= OnSceneLoadedFully;
         ServiceLocator.Instance.Unregister(this);
     }
     #endregion
@@ -164,8 +165,10 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     #endregion
 
     #region CALLBACK METHODS
-    void OnSceneLoadedPartially(SceneDatabase.SceneName sceneLoaded)
+    void OnSceneLoadedFully(Dictionary<SceneDatabase.Slot, SceneDatabase.SceneName> loadedScenes, List<SceneDatabase.Slot> unloadedSlots)
     {
+        if (loadedScenes.ContainsValue(SceneDatabase.SceneName.GameplayScene))
+            base.Start(); // Start behaviour system after scene is fully loaded
     }
 
     void OnStateSwitch()
