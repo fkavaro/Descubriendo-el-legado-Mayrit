@@ -1,13 +1,9 @@
+using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Unity.Cinemachine;
 
-/// <summary>
-/// Manages camera states and transitions between spectator, orbital, third-person, and POI camera modes.
-/// Uses a finite state machine to handle state logic and provides methods for switching between camera perspectives.
-/// </summary>
 public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
 {
     #region GETTERS

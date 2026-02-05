@@ -1,9 +1,8 @@
-using System;
 using UnityEngine;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
-/// <summary>
-/// Manages the time in game and data. Singleton.
-/// </summary>
 public class TimeManager : MonoBehaviour
 {
     #region PROPERTIES HELPERS

@@ -38,7 +38,7 @@ public class SoundController
     #endregion
 
     #region LYFECYCLE
-    public void Start()
+    public void InitializeVolumes()
     {
         UpdateMusicVolume(MusicVolumeSet);
         UpdateSFXVolume(SFXVolumeSet);

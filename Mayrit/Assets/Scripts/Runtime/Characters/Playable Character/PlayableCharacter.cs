@@ -1,6 +1,7 @@
-using System;
 using UnityEngine;
-using UnityEngine.Playables;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(SelectableObject))]
@@ -49,18 +50,18 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     #endregion
 
     #region LIFE CYCLE
-    void OnEnable()
-    {
-        SubscribeToRuntimeEvents();
-    }
-
-    void OnValidate()
-    {
-#if UNITY_EDITOR
-        if (!Application.isPlaying)
-            SubscribeToRuntimeEvents();
-#endif
-    }
+    // TODO: remove eventually
+    // void OnEnable()
+    // {
+    //     SubscribeToRuntimeEvents();
+    // }
+    //     void OnValidate()
+    //     {
+    // #if UNITY_EDITOR
+    //         if (!Application.isPlaying)
+    //             SubscribeToRuntimeEvents();
+    // #endif
+    //     }
 
     protected override void Awake()
     {
@@ -90,23 +91,15 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
 
     void OnDisable()
     {
-        UnsubscribeFromRuntimeEvents();
+        //UnsubscribeFromRuntimeEvents();
         UnsubscribeFromServicesEvents();
         ServiceLocator.Instance.Unregister(this);
     }
     #endregion
 
     #region STATE HANDLING
-    public void SwitchToNotControlledState()
-    {
-        _fsm.SwitchState(_notControlledState);
-    }
-
-    public void SwitchToControlledState()
-    {
-        _fsm.SwitchState(_controlledState);
-    }
-
+    public void SwitchToNotControlledState() => _fsm.SwitchState(_notControlledState);
+    public void SwitchToControlledState() => _fsm.SwitchState(_controlledState);
     public void SwitchToAtPOIState(PointOfInterest poi)
     {
         _atPOIState.CurrentPOI = poi;
@@ -169,36 +162,31 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     #endregion
 
     #region EDITOR UPDATES
-    void SubscribeToRuntimeEvents()
-    {
-        _progressManager = FindAnyObjectByType<ProgressManager>();
-
-        if (_progressManager != null)
-        {
-            _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
-            //_progressManager.OnEditorUpdateChangedEvent += OnEditorUpdateChanged;
-        }
-    }
-
-    void UnsubscribeFromRuntimeEvents()
-    {
-        _progressManager = FindAnyObjectByType<ProgressManager>();
-
-        if (_progressManager != null)
-        {
-            _progressManager.MilestoneChangedEvent -= OnMilestoneChanged;
-            //_progressManager.OnEditorUpdateChangedEvent -= OnEditorUpdateChanged;
-        }
-    }
-
+    // TODO: remove eventually
+    // void SubscribeToRuntimeEvents()
+    // {
+    //     _progressManager = FindAnyObjectByType<ProgressManager>();
+    //     if (_progressManager != null)
+    //     {
+    //         _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
+    //         //_progressManager.OnEditorUpdateChangedEvent += OnEditorUpdateChanged;
+    //     }
+    // }
+    // void UnsubscribeFromRuntimeEvents()
+    // {
+    //     _progressManager = FindAnyObjectByType<ProgressManager>();
+    //     if (_progressManager != null)
+    //     {
+    //         _progressManager.MilestoneChangedEvent -= OnMilestoneChanged;
+    //         //_progressManager.OnEditorUpdateChangedEvent -= OnEditorUpdateChanged;
+    //     }
+    // }
     //     void OnEditorUpdateChanged(bool updateInEditor)
     //     {
     // #if UNITY_EDITOR
     //         if (Application.isPlaying)
     //             return;
-
     //         if (this == null) return;
-
     //         // Not updated through editor
     //         if (!updateInEditor)
     //             // All playable characters active

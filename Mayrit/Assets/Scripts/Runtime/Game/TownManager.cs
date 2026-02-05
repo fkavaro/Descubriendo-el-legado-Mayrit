@@ -1,6 +1,7 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
 public class TownManager : MonoBehaviour
 {
@@ -49,56 +50,15 @@ public class TownManager : MonoBehaviour
     #endregion
 
     #region BUILDING REGISTRATION METHODS 
-    public void UpdatePopulation(int householdSize)
-    {
-        _population += householdSize;
-    }
-
-    /// <summary>
-    /// Registers a house in the town and updates population accordingly.
-    /// </summary>
-    public void RegisterHouse(House house)
-    {
-        RegisterBuilding(_houses, house, house.Capacity);
-    }
-
-    /// <summary>
-    /// Unregisters a house from the town and updates population accordingly.
-    /// </summary>
-    public void UnregisterHouse(House house)
-    {
-        UnregisterBuilding(_houses, house, -house.Capacity);
-    }
-
-    public void RegisterWorkplace(Workplace workplace)
-    {
-        RegisterBuilding(_workplaces, workplace);
-    }
-
-    public void UnregisterWorkplace(Workplace workplace)
-    {
-        UnregisterBuilding(_workplaces, workplace);
-    }
-
-    public void RegisterMarket(Market market)
-    {
-        RegisterBuilding(_markets, market);
-    }
-
-    public void UnregisterMarket(Market market)
-    {
-        UnregisterBuilding(_markets, market);
-    }
-
-    public void RegisterSanctuary(Sanctuary sanctuary)
-    {
-        RegisterBuilding(_sanctuaries, sanctuary);
-    }
-
-    public void UnregisterSanctuary(Sanctuary sanctuary)
-    {
-        UnregisterBuilding(_sanctuaries, sanctuary);
-    }
+    public void UpdatePopulation(int householdSize) => _population += householdSize;
+    public void RegisterHouse(House house) => RegisterBuilding(_houses, house, house.Capacity);
+    public void UnregisterHouse(House house) => UnregisterBuilding(_houses, house, -house.Capacity);
+    public void RegisterWorkplace(Workplace workplace) => RegisterBuilding(_workplaces, workplace);
+    public void UnregisterWorkplace(Workplace workplace) => UnregisterBuilding(_workplaces, workplace);
+    public void RegisterMarket(Market market) => RegisterBuilding(_markets, market);
+    public void UnregisterMarket(Market market) => UnregisterBuilding(_markets, market);
+    public void RegisterSanctuary(Sanctuary sanctuary) => RegisterBuilding(_sanctuaries, sanctuary);
+    public void UnregisterSanctuary(Sanctuary sanctuary) => UnregisterBuilding(_sanctuaries, sanctuary);
     #endregion
 
     #region BUILDING GETTERS

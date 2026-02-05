@@ -1,7 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.Pool;
 
 /// <summary>
@@ -41,6 +41,17 @@ public class NPCPoolManager : MonoBehaviour
     #endregion
 
     #region LIFE CYCLE
+    void OnEnable()
+    {
+        // NamesDatabase is required for name generation. Disable this manager if not assigned.
+        if (_namesDatabase == null)
+        {
+            Debug.LogError("NPCPoolManager requires a NamesDatabase assigned in the inspector. Disabling NPCPoolManager.");
+            enabled = false;
+            return;
+        }
+    }
+
     void Awake()
     {
         // Pool creation
@@ -73,17 +84,6 @@ public class NPCPoolManager : MonoBehaviour
         // Spawn a villager (per frame) if active villagers are below max
         if (_villagerPool != null && _activeVillagers.Count < _maxActiveVillagers)
             _villagerPool.Get();
-    }
-
-    void OnEnable()
-    {
-        // NamesDatabase is required for name generation. Disable this manager if not assigned.
-        if (_namesDatabase == null)
-        {
-            Debug.LogError("NPCPoolManager requires a NamesDatabase assigned in the inspector. Disabling NPCPoolManager.");
-            enabled = false;
-            return;
-        }
     }
 
     void OnDisable()

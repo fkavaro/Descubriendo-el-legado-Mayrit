@@ -1,13 +1,8 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
-/// <summary>
-/// ProgressObject listens to ProgressManager milestone changes and activates/deactivates
-/// its child objects accordingly. This implementation is defensive for editor-time
-/// operations (OnValidate, import callbacks) and avoids accessing singletons that may
-/// not be initialized during editor import.
-/// </summary>
 public class MilestoneTracker : MonoBehaviour
 {
     public bool _isActive = true;

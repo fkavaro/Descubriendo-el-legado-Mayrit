@@ -1,15 +1,12 @@
 using UnityEngine;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-/// <summary>
-/// MilestoneSetting is an editor-only helper script that allows you to preview
-/// how objects will appear at different milestone values while designing your level.
-/// It updates all child MilestoneTracker components to show/hide their children
-/// based on the selected milestone value (0-7).
-/// </summary>
 public class MilestoneSetting : MonoBehaviour
 {
     [Range(-1, 7)]

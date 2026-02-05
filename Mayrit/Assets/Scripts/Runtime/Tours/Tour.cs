@@ -1,6 +1,7 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
 public class Tour : MonoBehaviour
 {
@@ -33,11 +34,11 @@ public class Tour : MonoBehaviour
     #endregion
 
     #region LIFE CYCLE
-    void OnEnable()
-    {
-        //SubscribeToRuntimeEvents();
-    }
-
+    // TODO: remove eventually
+    // void OnEnable()
+    // {
+    //     SubscribeToRuntimeEvents();
+    // }
     //     void OnValidate()
     //     {
     // #if UNITY_EDITOR
@@ -163,6 +164,7 @@ public class Tour : MonoBehaviour
         UpdateNextPOI();
     }
 
+    // TODO: remove eventually
     // void OnMilestoneChanged(Milestone_DataSO milestoneMapping)
     // {
     //     if (milestoneMapping.Tour == this)
@@ -173,6 +175,7 @@ public class Tour : MonoBehaviour
     #endregion
 
     #region EDITOR UPDATES
+    // TODO: remove eventually
     // void SubscribeToRuntimeEvents()
     // {
     //     _progressManager = FindAnyObjectByType<ProgressManager>();

@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
-/// <summary>
-/// Manages the progress states and data. Singleton.
-/// </summary>
 public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneState>>
 {
     #region PROPERTY HELPERS
@@ -18,8 +15,9 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     [Header("Debug tweaks")]
     [SerializeField] bool _canSkipTours = false;
 
-    [Tooltip("Wether to update scene at milestone changes in editor")]
-    [SerializeField] bool _updateInEditor = false;
+    // TODO: remove eventually
+    // [Tooltip("Wether to update scene at milestone changes in editor")]
+    // [SerializeField] bool _updateInEditor = false;
     [Header("Milestones")]
     [Range(0, 7)]
     [SerializeField] int _currentMilestoneIndex = 0;
@@ -29,11 +27,11 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
 
     #region INTERNAL PROPERTIES
     public event Action<Milestone_DataSO> MilestoneChangedEvent;
-    public event Action<bool> OnEditorUpdateChangedEvent;
 
-    int _lastValidatedMilestoneIndex;
-    bool _lastUpdateInEditor;
-    // Dictionary<int, MilestoneMapping> _milestonesMappings;
+    // TODO: remove eventually
+    // public event Action<bool> OnEditorUpdateChangedEvent;
+    // int _lastValidatedMilestoneIndex;
+    // bool _lastUpdateInEditor;
 
     FiniteStateMachine<MilestoneState> _fsm;
 
@@ -57,89 +55,74 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     #endregion
 
     #region LIFE CYCLE
-    // Called when the script is loaded or a value is changed in the inspector
-    void OnValidate()
-    {
-#if UNITY_EDITOR
-        if (Application.isPlaying)
-            return;
+    // TODO remove eventually
+    //     // Called when the script is loaded or a value is changed in the inspector
+    //     void OnValidate()
+    //     {
+    // #if UNITY_EDITOR
+    //         if (Application.isPlaying)
+    //             return;
 
-        // Invoke milestone changed event when _currentMilestoneIndex is changed in inspector
-        // and _updateInInspector is true
-        if (_lastValidatedMilestoneIndex != _currentMilestoneIndex)
-        {
-            _lastValidatedMilestoneIndex = _currentMilestoneIndex;
+    //         // Invoke milestone changed event when _currentMilestoneIndex is changed in inspector
+    //         // and _updateInInspector is true
+    //         if (_lastValidatedMilestoneIndex != _currentMilestoneIndex)
+    //         {
+    //             _lastValidatedMilestoneIndex = _currentMilestoneIndex;
 
-            if (_updateInEditor)
-            {
-                _currentMilestoneMapping = _milestoneMappings[_currentMilestoneIndex];
-                // To avoid issues with re-entrancy
-                UnityEditor.EditorApplication.delayCall += () => MilestoneChangedEvent?.Invoke(CurrentMilestoneMapping);
-            }
-        }
+    //             if (_updateInEditor)
+    //             {
+    //                 _currentMilestoneMapping = _milestoneMappings[_currentMilestoneIndex];
+    //                 // To avoid issues with re-entrancy
+    //                 UnityEditor.EditorApplication.delayCall += () => MilestoneChangedEvent?.Invoke(CurrentMilestoneMapping);
+    //             }
+    //         }
 
-        // Invoke editor update changed event when _updateInEditor is changed in inspector
-        if (_lastUpdateInEditor != _updateInEditor)
-        {
-            _lastUpdateInEditor = _updateInEditor;
+    //         // Invoke editor update changed event when _updateInEditor is changed in inspector
+    //         if (_lastUpdateInEditor != _updateInEditor)
+    //         {
+    //             _lastUpdateInEditor = _updateInEditor;
 
-            if (_updateInEditor)
-                _currentMilestoneMapping = _milestoneMappings[_currentMilestoneIndex];
-            else
-                _currentMilestoneMapping = null;
+    //             if (_updateInEditor)
+    //                 _currentMilestoneMapping = _milestoneMappings[_currentMilestoneIndex];
+    //             else
+    //                 _currentMilestoneMapping = null;
 
-            UnityEditor.EditorApplication.delayCall += () => OnEditorUpdateChangedEvent?.Invoke(_updateInEditor);
-        }
-#endif
-    }
+    //             UnityEditor.EditorApplication.delayCall += () => OnEditorUpdateChangedEvent?.Invoke(_updateInEditor);
+    //         }
+    // #endif
+    //     }
 
     protected override void Awake()
     {
-        base.Awake();
-
-        _scenesController = ServiceLocator.Instance.Get<ScenesController>();
-
         ServiceLocator.Instance.Register(this);
+
+        base.Awake();
     }
 
     protected override void Start()
     {
-        _scenesController.ScenesLoadedFullyEvent += OnSceneLoadedFully;
         _scenesController = ServiceLocator.Instance.Get<ScenesController>();
         _tourManager = ServiceLocator.Instance.Get<TourManager>();
+
+        _scenesController.ScenesLoadedFullyEvent += OnScenesLoadedFully;
     }
 
-    // TODO: this should be handled in superior abstract class
     void OnDisable()
     {
-        _scenesController.ScenesLoadedFullyEvent -= OnSceneLoadedFully;
+        _scenesController.ScenesLoadedFullyEvent -= OnScenesLoadedFully;
         ServiceLocator.Instance.Unregister(this);
     }
     #endregion
 
     #region PUBLIC METHODS
-    public void SwitchToNextMilestone()
-    {
-        _fsm.SwitchToNextStateInSequence();
-    }
-
-    public void SwitchToPreviousMilestone()
-    {
-        _fsm.SwitchToPreviousStateInSequence();
-    }
-
-    public bool AtFirstMilestone()
-    {
-        return _fsm.AtFistStateInSequence();
-    }
-
-    public bool AtLastMilestone()
-    {
-        return _fsm.AtLastStateInSequence();
-    }
+    public void SwitchToNextMilestone() => _fsm.SwitchToNextStateInSequence();
+    public void SwitchToPreviousMilestone() => _fsm.SwitchToPreviousStateInSequence();
+    public bool AtFirstMilestone() => _fsm.AtFistStateInSequence();
+    public bool AtLastMilestone() => _fsm.AtLastStateInSequence();
     #endregion
 
     #region PRIVATE METHODS
+    // TODO: remove eventually
     // MilestoneMapping GetMappingForIndex(int index)
     // {
     //     if (_milestonesMappings == null)
@@ -165,7 +148,7 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     #endregion
 
     #region CALLBACK METHODS
-    void OnSceneLoadedFully(Dictionary<SceneDatabase.Slot, SceneDatabase.SceneName> loadedScenes, List<SceneDatabase.Slot> unloadedSlots)
+    void OnScenesLoadedFully(Dictionary<SceneDatabase.Slot, SceneDatabase.SceneName> loadedScenes, List<SceneDatabase.Slot> unloadedSlots)
     {
         if (loadedScenes.ContainsValue(SceneDatabase.SceneName.GameplayScene))
             base.Start(); // Start behaviour system after scene is fully loaded

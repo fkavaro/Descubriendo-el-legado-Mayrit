@@ -2,12 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 
-/// <summary>
-/// Handles music and sound effects reproduction. 
-/// Requires two audioSource components.
-/// </summary>
 [RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(AudioListener))]
 public class SoundManager : ABehaviourEntity<FiniteStateMachine<AMusicState>>
@@ -100,14 +95,11 @@ public class SoundManager : ABehaviourEntity<FiniteStateMachine<AMusicState>>
 
     protected override void Awake()
     {
+        ServiceLocator.Instance.Register(this);
         _audioListener = GetComponent<AudioListener>();
 
         base.Awake();
-
-        ServiceLocator.Instance.Register(this);
     }
-
-
 
     protected override void Start()
     {
@@ -131,7 +123,7 @@ public class SoundManager : ABehaviourEntity<FiniteStateMachine<AMusicState>>
         _scenesController.ScenesLoadedFullyEvent += OnScenesLoadedFully;
 
         // Set initial volumes
-        _soundController.Start();
+        _soundController.InitializeVolumes();
 
         base.Start();
     }
@@ -156,6 +148,13 @@ public class SoundManager : ABehaviourEntity<FiniteStateMachine<AMusicState>>
     void OnApplicationPause(bool paused)
     {
         _soundController.OnApplicationPause(paused);
+    }
+
+    void OnDisable()
+    {
+        _scenesController.SceneLoadedPartiallyEvent -= OnSceneLoadedPartially;
+        _scenesController.ScenesLoadedFullyEvent -= OnScenesLoadedFully;
+        ServiceLocator.Instance.Unregister(this);
     }
     #endregion
 

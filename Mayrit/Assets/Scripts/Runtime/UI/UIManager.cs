@@ -1,13 +1,9 @@
-using System;
 using UnityEngine;
-using UnityEngine.UIElements;
-using UnityEngine.SceneManagement;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UIElements;
 
-/// <summary>
-/// Manages the user interface states and data.
-/// </summary>
 [RequireComponent(typeof(UIDocument))]
 public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
 {
@@ -109,28 +105,26 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
 
     protected override void Start()
     {
-        // Get dependencies from ServiceLocator
         _scenesController = ServiceLocator.Instance.Get<ScenesController>();
-        _scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
         _scenesController.ScenesLoadedFullyEvent += OnScenesLoadedFully;
 
         base.Start();
+    }
+
+    void OnDisable()
+    {
+        _scenesController.ScenesLoadedFullyEvent -= OnScenesLoadedFully;
+        ServiceLocator.Instance.Unregister(this);
     }
     #endregion
 
     #region STATE HANDLING
     public void SwitchToMainMenuState() => _sfsm?.SwitchState(_mainMenuState);
-
     public void SwitchToSpectatorHUDState() => _sfsm?.SwitchState(_spectatorHUDState);
-
     public void SwitchToPlayerHUDState() => _sfsm?.SwitchState(_playerHUDState);
-
     public void SwitchToPauseState() => _sfsm?.SwitchState(_pauseState);
-
     public void SwitchToHeritageState() => _sfsm?.SwitchState(_heritageState);
-
     public void SwitchToSettingsMenuState() => _sfsm?.SwitchState(_settingsMenuState);
-
     public void SwitchToLoadingScreenState() => _sfsm?.SwitchState(_loadingScreenState);
     #endregion
 
@@ -173,10 +167,6 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     #endregion
 
     #region CALLBACK METHODS
-    void OnSceneLoadedPartially(SceneDatabase.SceneName loadedScene)
-    {
-
-    }
 
     void OnScenesLoadedFully(Dictionary<SceneDatabase.Slot, SceneDatabase.SceneName> loadedScenes, List<SceneDatabase.Slot> unloadedSlots)
     {
