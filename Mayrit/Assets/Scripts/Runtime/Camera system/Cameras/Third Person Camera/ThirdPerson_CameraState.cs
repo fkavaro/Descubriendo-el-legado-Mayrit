@@ -33,7 +33,7 @@ public class ThirdPerson_CameraState : ACameraState
 
     public override void LateUpdateState()
     {
-        if (_gameManager.IsInPauseState)
+        if (_gameManager.IsInPauseState || _uiManager.IsInLoadingScreenState)
             return;
 
         if (_cameraManager.PlayableCharacter == null)

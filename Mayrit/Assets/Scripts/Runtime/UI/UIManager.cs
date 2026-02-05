@@ -13,6 +13,8 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     public bool IsInPlayerHUDState => _sfsm.IsCurrentState(_playerHUDState);
     public bool IsInPauseState => _sfsm.IsCurrentState(_pauseState);
     public bool IsInHeritageState => _sfsm.IsCurrentState(_heritageState);
+    public bool IsInSettingsMenuState => _sfsm.IsCurrentState(_settingsMenuState);
+    public bool IsInLoadingScreenState => _sfsm.IsCurrentState(_loadingScreenState);
     public Vector2 TooltipOffset => _tooltipOffset;
     public bool EdgeScrollingValueSet => _edgeScrollingValueSet;
     public bool ControlsVisibilityValueSet => _controlsVisibilityValueSet;
