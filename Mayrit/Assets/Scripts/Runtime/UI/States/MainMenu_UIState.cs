@@ -28,6 +28,7 @@ public class MainMenu_UIState : AUIState
         if (_quitButton == null)
             Debug.LogWarning("_quitButton not found");
     }
+
     protected override void RegisterUICallbacksOnAwake()
     {
         _playButton.RegisterCallback<ClickEvent>(OnPlayClicked);

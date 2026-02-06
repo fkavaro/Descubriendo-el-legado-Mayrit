@@ -91,7 +91,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
         _settingsMenuState.AwakeState();
         _loadingScreenState.AwakeState();
 
-        _sfsm.SetInitialState(_mainMenuState);
+        _sfsm.SetInitialState(_loadingScreenState);
 
         return _sfsm;
     }
@@ -169,7 +169,6 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     #endregion
 
     #region CALLBACK METHODS
-
     void OnScenesLoadedFully(Dictionary<SceneDatabase.SceneType, SceneDatabase.SceneName> loadedScenes, List<SceneDatabase.SceneType> unloadedTypes)
     {
         if (loadedScenes.ContainsValue(SceneDatabase.SceneName.MainMenuScene))

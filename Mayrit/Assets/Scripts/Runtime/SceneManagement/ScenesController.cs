@@ -10,14 +10,14 @@ public class ScenesController : MonoBehaviour
     public event Action<SceneDatabase.SceneType, SceneDatabase.SceneName> SceneLoadedPartiallyEvent;
     public event Action<Dictionary<SceneDatabase.SceneType, SceneDatabase.SceneName>, List<SceneDatabase.SceneType>> ScenesLoadedFullyEvent;
 
-    public string currentSession;
-    public string currentMilestone;
+    [SerializeField] string currentSession;
+    [SerializeField] string currentMilestone;
+    [SerializeField] bool _isLoading = false;
+    [SerializeField] bool _debugMode = false;
 
     // Key: Scene Type, Value: Scene Name
     readonly Dictionary<SceneDatabase.SceneType, SceneDatabase.SceneName> _loadedByType = new();
     static readonly WaitForSeconds _waitForSeconds0_5 = new(0.5f);
-    public bool _isLoading;
-    public bool IsLoading { get; private set; } = false;
 
     UIManager _uiManager;
     #endregion
@@ -43,9 +43,10 @@ public class ScenesController : MonoBehaviour
 
     public Coroutine ExecutePlan(SceneTransitionPlan plan)
     {
-        if (IsLoading)
+        if (_isLoading)
         {
-            Debug.LogWarning("A scene transition is already in progress.");
+            if (_debugMode)
+                Debug.LogWarning("A scene transition is already in progress.");
             return null;
         }
 
@@ -56,7 +57,6 @@ public class ScenesController : MonoBehaviour
     #region CHANGE SCENES
     private IEnumerator ChangeSceneRoutine(SceneTransitionPlan plan)
     {
-        IsLoading = true;
         _isLoading = true;
         if (plan.Overlay)
         {
@@ -77,7 +77,8 @@ public class ScenesController : MonoBehaviour
 
             yield return LoadAdditiveSceneRoutine(kvp.Key, kvp.Value, plan.ActiveSceneName == kvp.Value);
 
-            Debug.Log($"ScenesController: Scene '{kvp.Value}' loaded into type '{kvp.Key}'.");
+            if (_debugMode)
+                Debug.Log($"[ScenesController] Scene '{kvp.Value}' loaded into type '{kvp.Key}'.");
             SceneLoadedPartiallyEvent?.Invoke(kvp.Key, kvp.Value);
         }
 
@@ -97,7 +98,6 @@ public class ScenesController : MonoBehaviour
 
         ScenesLoadedFullyEvent?.Invoke(plan.ScenesToLoad, plan.TypesToUnload);
 
-        IsLoading = false;
         _isLoading = false;
     }
     #endregion
