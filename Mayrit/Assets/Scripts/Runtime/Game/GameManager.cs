@@ -62,8 +62,8 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
     #endregion
 
     #region STATES HANDLERS
-    public void SwitchToMainMenuState() => _fsm?.SwitchState(_mainMenuState);
-    public void SwitchToGamePlayState() => _fsm?.SwitchState(_gamePlayState);
-    public void SwitchToPauseState() => _fsm?.SwitchState(_pauseState);
+    public void SwitchToMainMenuState() => _fsm.SwitchState(_mainMenuState);
+    public void SwitchToGamePlayState() => _fsm.SwitchState(_gamePlayState);
+    public void SwitchToPauseState() => _fsm.SwitchState(_pauseState);
     #endregion
 }
