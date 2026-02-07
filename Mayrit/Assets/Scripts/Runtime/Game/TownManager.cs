@@ -62,20 +62,12 @@ public class TownManager : MonoBehaviour
     #endregion
 
     #region BUILDING GETTERS
-    /// <summary>
-    /// Returns a random registered house with capacity for a new resident. 
-    /// Optionally excluding given house.
-    /// </summary>
-    /// <returns>Never null. If no house with free capacity found, returns a random house with increased capacity.</returns>
     public House GetHouse()
     {
         House house;
 
         if (_houses == null || _houses.Count == 0)
-        {
-            Debug.LogError("TownManager.GetHouse: No houses registered in TownManager.");
             return null;
-        }
 
         house = TryGetBuildingWithFreeCapacity(_houses);
 
@@ -98,10 +90,7 @@ public class TownManager : MonoBehaviour
         Workplace workplace;
 
         if (_workplaces == null || _workplaces.Count == 0)
-        {
-            Debug.LogError("TownManager.GetWorkplace: No workplaces registered in TownManager.");
             return null;
-        }
 
         workplace = TryGetBuildingWithFreeCapacity(_workplaces);
 
@@ -121,10 +110,6 @@ public class TownManager : MonoBehaviour
     #endregion
 
     #region REASSIGNATION METHODS
-    /// <summary>
-    /// Attempts to reassign residents from a destroyed house to other houses with free capacity.
-    /// If a resident cannot be reassigned, it will be returned to the NPC pool and population decremented.
-    /// </summary>
     public void ReassignResidents(House previousHouse, List<Villager> residents)
     {
         // Avoid running reassignment during editor teardown / when not playing
@@ -139,10 +124,6 @@ public class TownManager : MonoBehaviour
         });
     }
 
-    /// <summary>
-    /// Attempts to reassign employees from a closed workplace to other workplaces with free capacity.
-    /// If an employee cannot be reassigned, it will be returned to the NPC pool.
-    /// </summary>
     public void ReassignEmployees(Workplace previousWorkplace, List<Villager> employees)
     {
         if (employees == null || employees.Count == 0) return;

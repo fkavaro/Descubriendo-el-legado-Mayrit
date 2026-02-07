@@ -334,10 +334,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cad7e743cfecf564a840d4a068241b9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Mayrit::SceneController
+  _debugMode: 0
   currentSession: 
   currentMilestone: 
   _isLoading: 0
-  _debugMode: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

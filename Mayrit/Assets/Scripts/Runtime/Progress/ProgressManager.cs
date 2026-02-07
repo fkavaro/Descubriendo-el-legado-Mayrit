@@ -143,7 +143,6 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
             return false;
         }
 
-
         bool canSkipInRuntime = _canSkipTours; //Application.isPlaying && Application.isEditor // TODO: full line when gold release
         bool tourCompleted = _tourManager.CurrentTour.IsCompleted;
         bool isNextMilestoneAvailable = !AtLastMilestone() && (canSkipInRuntime || tourCompleted);
@@ -155,15 +154,22 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     #region CALLBACK METHODS
     void OnScenesLoadedFully(Dictionary<SceneDatabase.SceneType, SceneDatabase.SceneName> loadedScenes, List<SceneDatabase.SceneType> unloadedTypes)
     {
+        // If gameplay scene loaded, start behaviour system
         if (loadedScenes.ContainsValue(SceneDatabase.SceneName.GameplayScene))
-            base.Start(); // Start behaviour system after scene is fully loaded
+            base.Start();
+        // If milestone loaded, invoke event
+        if (loadedScenes.TryGetValue(SceneDatabase.SceneType.Milestone, out var milestoneScene))
+        {
+            if (DebugMode)
+                Debug.Log($"[ProgressManager] Milestone Change Event invoked.");
+            MilestoneChangedEvent?.Invoke(CurrentMilestoneMapping);
+        }
     }
 
     void OnStateSwitch()
     {
         _currentMilestoneMapping = _fsm.CurrentState.Data;
         _currentMilestoneIndex = _currentMilestoneMapping.Index;
-        MilestoneChangedEvent?.Invoke(CurrentMilestoneMapping);
     }
     #endregion
 }

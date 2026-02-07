@@ -38,6 +38,7 @@ public class NPCPoolManager : MonoBehaviour
 
     // Dependency Injection
     TownManager _townManager;
+    UIManager _uiManager;
     #endregion
 
     #region LIFE CYCLE
@@ -74,6 +75,7 @@ public class NPCPoolManager : MonoBehaviour
     {
         // Get dependencies from ServiceLocator
         _townManager = ServiceLocator.Instance.Get<TownManager>();
+        _uiManager = ServiceLocator.Instance.Get<UIManager>();
 
         // Subscribe to town population changes
         _townManager.OnPopulationChanged += OnTownPopulationChanged;
@@ -81,8 +83,13 @@ public class NPCPoolManager : MonoBehaviour
 
     void Update()
     {
-        // Spawn a villager (per frame) if active villagers are below max
-        if (_villagerPool != null && _activeVillagers.Count < _maxActiveVillagers)
+        if (_uiManager.IsInLoadingScreenState)
+            return;
+
+        int activeDifference = _maxActiveVillagers - _activeVillagers.Count;
+        if (activeDifference < 0)
+            _villagerPool.Release(_activeVillagers[^1]); // Return last active villager to pool
+        else if (activeDifference > 0)
             _villagerPool.Get();
     }
 
@@ -102,6 +109,7 @@ public class NPCPoolManager : MonoBehaviour
     public void ReturnVillagerToPool(Villager villager)
     {
         if (_villagerPool == null || villager == null) return;
+
         _villagerPool.Release(villager);
     }
 
@@ -151,19 +159,20 @@ public class NPCPoolManager : MonoBehaviour
                 return nearbyVillagers;
             }
         }
-        catch { /* fall back to managed list below on error */ }
-
-        // Fallback: iterate managed active villager list
-        if (_activeVillagers == null || _activeVillagers.Count == 0) return nearbyVillagers;
-        float sqrRange = range * range;
-        foreach (var villager in _activeVillagers)
+        catch
         {
-            if (villager == null) continue;
-            if (villager == exclude) continue;
-            if (!villager.gameObject.activeInHierarchy) continue;
+            // Fallback: iterate managed active villager list
+            if (_activeVillagers == null || _activeVillagers.Count == 0) return nearbyVillagers;
+            float sqrRange = range * range;
+            foreach (var villager in _activeVillagers)
+            {
+                if (villager == null) continue;
+                if (villager == exclude) continue;
+                if (!villager.gameObject.activeInHierarchy) continue;
 
-            if ((villager.transform.position - position).sqrMagnitude <= sqrRange)
-                nearbyVillagers.Add(villager);
+                if ((villager.transform.position - position).sqrMagnitude <= sqrRange)
+                    nearbyVillagers.Add(villager);
+            }
         }
 
         return nearbyVillagers;
@@ -222,25 +231,8 @@ public class NPCPoolManager : MonoBehaviour
     /// </summary>
     void OnTownPopulationChanged(int newPopulation)
     {
-        // Update target active villager count. Spawning (growth) is handled
-        // incrementally by Update() to avoid hitches — it will add at most
-        // one villager per frame until the target is reached.
+        //Debug.Log($"NPCPoolManager: Town population changed to {newPopulation}. Updating active villagers...");
         _maxActiveVillagers = Mathf.RoundToInt(newPopulation * _activeVillagersRatio);
-
-        // If we need to retire villagers (active > max), release extras immediately.
-        int currentActive = _activeVillagers.Count;
-        int activeDifference = _maxActiveVillagers - currentActive;
-        if (activeDifference < 0)
-        {
-            int toRetire = -activeDifference;
-            for (int i = 0; i < toRetire; i++)
-            {
-                if (_activeVillagers.Count == 0) break;
-
-                Villager lastActiveVillager = _activeVillagers[^1];
-                ReturnVillagerToPool(lastActiveVillager);
-            }
-        }
     }
     #endregion
 
@@ -291,21 +283,36 @@ public class NPCPoolManager : MonoBehaviour
 
     void GetVillager(Villager villager)
     {
-        // Track active
-        if (!_activeVillagers.Contains(villager))
-            _activeVillagers.Add(villager);
-
         House randomFreeHouse = _townManager.GetHouse();
+        if (randomFreeHouse == null)
+        {
+            Debug.LogError("NPCPoolManager.GetVillager: No houses available to assign to new villager.");
+            return;
+        }
         villager.AssignHome(randomFreeHouse);
 
         Workplace randomWorkplace = _townManager.GetWorkplace();
-        villager.AssignWorkplace(randomWorkplace);
+        if (randomWorkplace != null) // Can be null
+            villager.AssignWorkplace(randomWorkplace);
 
         Sanctuary nearestSanctuary = _townManager.GetNearestSanctuary(randomFreeHouse);
+        if (nearestSanctuary == null)
+        {
+            Debug.LogError("NPCPoolManager.GetVillager: No sanctuaries available to assign to new villager.");
+            return;
+        }
         villager.AssignSanctuary(nearestSanctuary);
 
         Market randomMarket = _townManager.GetNearestMarket(randomFreeHouse);
+        if (randomMarket == null)
+        {
+            Debug.LogError("NPCPoolManager.GetVillager: No markets available to assign to new villager.");
+            return;
+        }
         villager.AssignMarket(randomMarket);
+
+        if (!_activeVillagers.Contains(villager))
+            _activeVillagers.Add(villager);
 
         // Activate and reset components
         villager.gameObject.SetActive(true);
