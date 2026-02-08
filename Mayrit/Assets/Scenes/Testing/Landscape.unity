@@ -119,6 +119,120 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &7866197
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 995247119027860660, guid: 4dab91e816d13934a9ce8b0114c52f53, type: 3}
+      propertyPath: m_Name
+      value: Imposter Chestnut 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5690817889204183401, guid: 4dab91e816d13934a9ce8b0114c52f53, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -692.5555
+      objectReference: {fileID: 0}
+    - target: {fileID: 5690817889204183401, guid: 4dab91e816d13934a9ce8b0114c52f53, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 21.10179
+      objectReference: {fileID: 0}
+    - target: {fileID: 5690817889204183401, guid: 4dab91e816d13934a9ce8b0114c52f53, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -74.408516
+      objectReference: {fileID: 0}
+    - target: {fileID: 5690817889204183401, guid: 4dab91e816d13934a9ce8b0114c52f53, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5690817889204183401, guid: 4dab91e816d13934a9ce8b0114c52f53, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5690817889204183401, guid: 4dab91e816d13934a9ce8b0114c52f53, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5690817889204183401, guid: 4dab91e816d13934a9ce8b0114c52f53, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5690817889204183401, guid: 4dab91e816d13934a9ce8b0114c52f53, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5690817889204183401, guid: 4dab91e816d13934a9ce8b0114c52f53, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5690817889204183401, guid: 4dab91e816d13934a9ce8b0114c52f53, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4dab91e816d13934a9ce8b0114c52f53, type: 3}
+--- !u!1001 &32932572
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5999880811764031460, guid: f90ae9153e18c604f95db31dcb79a323, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -696.9663
+      objectReference: {fileID: 0}
+    - target: {fileID: 5999880811764031460, guid: f90ae9153e18c604f95db31dcb79a323, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 20.573948
+      objectReference: {fileID: 0}
+    - target: {fileID: 5999880811764031460, guid: f90ae9153e18c604f95db31dcb79a323, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -65.24685
+      objectReference: {fileID: 0}
+    - target: {fileID: 5999880811764031460, guid: f90ae9153e18c604f95db31dcb79a323, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5999880811764031460, guid: f90ae9153e18c604f95db31dcb79a323, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5999880811764031460, guid: f90ae9153e18c604f95db31dcb79a323, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5999880811764031460, guid: f90ae9153e18c604f95db31dcb79a323, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5999880811764031460, guid: f90ae9153e18c604f95db31dcb79a323, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5999880811764031460, guid: f90ae9153e18c604f95db31dcb79a323, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5999880811764031460, guid: f90ae9153e18c604f95db31dcb79a323, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6178822432771921093, guid: f90ae9153e18c604f95db31dcb79a323, type: 3}
+      propertyPath: m_Name
+      value: Imposter Chestnut 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f90ae9153e18c604f95db31dcb79a323, type: 3}
 --- !u!1001 &98057618
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -703,6 +817,63 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!1001 &517071794
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3414275007356716543, guid: 35bfa94ee2d79384b8ce18d77c99fda4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -702.5991
+      objectReference: {fileID: 0}
+    - target: {fileID: 3414275007356716543, guid: 35bfa94ee2d79384b8ce18d77c99fda4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 20.695572
+      objectReference: {fileID: 0}
+    - target: {fileID: 3414275007356716543, guid: 35bfa94ee2d79384b8ce18d77c99fda4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -77.21637
+      objectReference: {fileID: 0}
+    - target: {fileID: 3414275007356716543, guid: 35bfa94ee2d79384b8ce18d77c99fda4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3414275007356716543, guid: 35bfa94ee2d79384b8ce18d77c99fda4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3414275007356716543, guid: 35bfa94ee2d79384b8ce18d77c99fda4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3414275007356716543, guid: 35bfa94ee2d79384b8ce18d77c99fda4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3414275007356716543, guid: 35bfa94ee2d79384b8ce18d77c99fda4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3414275007356716543, guid: 35bfa94ee2d79384b8ce18d77c99fda4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3414275007356716543, guid: 35bfa94ee2d79384b8ce18d77c99fda4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7307618964091006717, guid: 35bfa94ee2d79384b8ce18d77c99fda4, type: 3}
+      propertyPath: m_Name
+      value: Imposter Chestnut 6
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 35bfa94ee2d79384b8ce18d77c99fda4, type: 3}
 --- !u!43 &540032770
 Mesh:
   m_ObjectHideFlags: 0
@@ -1947,6 +2118,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 49.7, y: 0, z: 90}
+--- !u!1001 &920363573
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 215303071630652315, guid: 43699335e54da364ea5aefcf0129744f, type: 3}
+      propertyPath: m_Name
+      value: Imposter Chestnut 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8919840187020762468, guid: 43699335e54da364ea5aefcf0129744f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -693.59283
+      objectReference: {fileID: 0}
+    - target: {fileID: 8919840187020762468, guid: 43699335e54da364ea5aefcf0129744f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 18.556988
+      objectReference: {fileID: 0}
+    - target: {fileID: 8919840187020762468, guid: 43699335e54da364ea5aefcf0129744f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -55.628475
+      objectReference: {fileID: 0}
+    - target: {fileID: 8919840187020762468, guid: 43699335e54da364ea5aefcf0129744f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8919840187020762468, guid: 43699335e54da364ea5aefcf0129744f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8919840187020762468, guid: 43699335e54da364ea5aefcf0129744f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8919840187020762468, guid: 43699335e54da364ea5aefcf0129744f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8919840187020762468, guid: 43699335e54da364ea5aefcf0129744f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8919840187020762468, guid: 43699335e54da364ea5aefcf0129744f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8919840187020762468, guid: 43699335e54da364ea5aefcf0129744f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 43699335e54da364ea5aefcf0129744f, type: 3}
 --- !u!1001 &950942474
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2179,6 +2407,63 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: d1278883f5417154f9e8a819729e476b, type: 3}
+--- !u!1001 &1038319234
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5604805015924856591, guid: 65d3a0ba17f8ab040bc01ad1a8918296, type: 3}
+      propertyPath: m_Name
+      value: Imposter Chestnut 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6333120378937069431, guid: 65d3a0ba17f8ab040bc01ad1a8918296, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -688.0742
+      objectReference: {fileID: 0}
+    - target: {fileID: 6333120378937069431, guid: 65d3a0ba17f8ab040bc01ad1a8918296, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 20.699455
+      objectReference: {fileID: 0}
+    - target: {fileID: 6333120378937069431, guid: 65d3a0ba17f8ab040bc01ad1a8918296, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -65.05344
+      objectReference: {fileID: 0}
+    - target: {fileID: 6333120378937069431, guid: 65d3a0ba17f8ab040bc01ad1a8918296, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6333120378937069431, guid: 65d3a0ba17f8ab040bc01ad1a8918296, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6333120378937069431, guid: 65d3a0ba17f8ab040bc01ad1a8918296, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6333120378937069431, guid: 65d3a0ba17f8ab040bc01ad1a8918296, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6333120378937069431, guid: 65d3a0ba17f8ab040bc01ad1a8918296, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6333120378937069431, guid: 65d3a0ba17f8ab040bc01ad1a8918296, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6333120378937069431, guid: 65d3a0ba17f8ab040bc01ad1a8918296, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 65d3a0ba17f8ab040bc01ad1a8918296, type: 3}
 --- !u!1001 &1059159450
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3055,6 +3340,63 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cc5fde6864ccb3e458ee4a1c885856f4, type: 3}
+--- !u!1001 &1510410090
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3963492637288868276, guid: d02a809ac6395b642b6c63e3a990ba0a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -707.30225
+      objectReference: {fileID: 0}
+    - target: {fileID: 3963492637288868276, guid: d02a809ac6395b642b6c63e3a990ba0a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 20.29706
+      objectReference: {fileID: 0}
+    - target: {fileID: 3963492637288868276, guid: d02a809ac6395b642b6c63e3a990ba0a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -66.712585
+      objectReference: {fileID: 0}
+    - target: {fileID: 3963492637288868276, guid: d02a809ac6395b642b6c63e3a990ba0a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3963492637288868276, guid: d02a809ac6395b642b6c63e3a990ba0a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3963492637288868276, guid: d02a809ac6395b642b6c63e3a990ba0a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3963492637288868276, guid: d02a809ac6395b642b6c63e3a990ba0a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3963492637288868276, guid: d02a809ac6395b642b6c63e3a990ba0a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3963492637288868276, guid: d02a809ac6395b642b6c63e3a990ba0a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3963492637288868276, guid: d02a809ac6395b642b6c63e3a990ba0a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4494702203073483800, guid: d02a809ac6395b642b6c63e3a990ba0a, type: 3}
+      propertyPath: m_Name
+      value: Imposter Chestnut 5
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d02a809ac6395b642b6c63e3a990ba0a, type: 3}
 --- !u!1001 &1539985670
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3290,6 +3632,63 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!1001 &1620943181
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5657331934856341591, guid: 8b6f929a5b8727542b2b2def82f7b795, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -686.97925
+      objectReference: {fileID: 0}
+    - target: {fileID: 5657331934856341591, guid: 8b6f929a5b8727542b2b2def82f7b795, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 20.343872
+      objectReference: {fileID: 0}
+    - target: {fileID: 5657331934856341591, guid: 8b6f929a5b8727542b2b2def82f7b795, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -81.22051
+      objectReference: {fileID: 0}
+    - target: {fileID: 5657331934856341591, guid: 8b6f929a5b8727542b2b2def82f7b795, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5657331934856341591, guid: 8b6f929a5b8727542b2b2def82f7b795, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5657331934856341591, guid: 8b6f929a5b8727542b2b2def82f7b795, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5657331934856341591, guid: 8b6f929a5b8727542b2b2def82f7b795, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5657331934856341591, guid: 8b6f929a5b8727542b2b2def82f7b795, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5657331934856341591, guid: 8b6f929a5b8727542b2b2def82f7b795, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5657331934856341591, guid: 8b6f929a5b8727542b2b2def82f7b795, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8487649076732704616, guid: 8b6f929a5b8727542b2b2def82f7b795, type: 3}
+      propertyPath: m_Name
+      value: Imposter Chestnut 8
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8b6f929a5b8727542b2b2def82f7b795, type: 3}
 --- !u!43 &1762600549
 Mesh:
   m_ObjectHideFlags: 0
@@ -3752,6 +4151,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &2147399453
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2864276132604039493, guid: 807b7ee2ccf72f147b55f579d199ba38, type: 3}
+      propertyPath: m_Name
+      value: Imposter Chestnut 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155126381815876045, guid: 807b7ee2ccf72f147b55f579d199ba38, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -699.53845
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155126381815876045, guid: 807b7ee2ccf72f147b55f579d199ba38, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 21.410656
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155126381815876045, guid: 807b7ee2ccf72f147b55f579d199ba38, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -85.28765
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155126381815876045, guid: 807b7ee2ccf72f147b55f579d199ba38, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155126381815876045, guid: 807b7ee2ccf72f147b55f579d199ba38, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155126381815876045, guid: 807b7ee2ccf72f147b55f579d199ba38, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155126381815876045, guid: 807b7ee2ccf72f147b55f579d199ba38, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155126381815876045, guid: 807b7ee2ccf72f147b55f579d199ba38, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155126381815876045, guid: 807b7ee2ccf72f147b55f579d199ba38, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155126381815876045, guid: 807b7ee2ccf72f147b55f579d199ba38, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 807b7ee2ccf72f147b55f579d199ba38, type: 3}
 --- !u!1001 &6942884875501100447
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3831,3 +4287,11 @@ SceneRoots:
   - {fileID: 137220935}
   - {fileID: 1328925670}
   - {fileID: 277186238}
+  - {fileID: 920363573}
+  - {fileID: 1038319234}
+  - {fileID: 32932572}
+  - {fileID: 7866197}
+  - {fileID: 1510410090}
+  - {fileID: 517071794}
+  - {fileID: 2147399453}
+  - {fileID: 1620943181}
