@@ -874,6 +874,63 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!1001 &470524875
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1343455722398522581, guid: 59510ea80d9d0de408b433d3dc83db7f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -739.472
+      objectReference: {fileID: 0}
+    - target: {fileID: 1343455722398522581, guid: 59510ea80d9d0de408b433d3dc83db7f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 15.943159
+      objectReference: {fileID: 0}
+    - target: {fileID: 1343455722398522581, guid: 59510ea80d9d0de408b433d3dc83db7f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -533.90247
+      objectReference: {fileID: 0}
+    - target: {fileID: 1343455722398522581, guid: 59510ea80d9d0de408b433d3dc83db7f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1343455722398522581, guid: 59510ea80d9d0de408b433d3dc83db7f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1343455722398522581, guid: 59510ea80d9d0de408b433d3dc83db7f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1343455722398522581, guid: 59510ea80d9d0de408b433d3dc83db7f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1343455722398522581, guid: 59510ea80d9d0de408b433d3dc83db7f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1343455722398522581, guid: 59510ea80d9d0de408b433d3dc83db7f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1343455722398522581, guid: 59510ea80d9d0de408b433d3dc83db7f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8014643712102344591, guid: 59510ea80d9d0de408b433d3dc83db7f, type: 3}
+      propertyPath: m_Name
+      value: Imposter Weeping Willow 6
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 59510ea80d9d0de408b433d3dc83db7f, type: 3}
 --- !u!1001 &517071794
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1814,6 +1871,63 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!1001 &732946811
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4789241955977766306, guid: b72f33a30cf4f974f98ab23956186624, type: 3}
+      propertyPath: m_Name
+      value: Imposter Weeping Willow 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081307194439910169, guid: b72f33a30cf4f974f98ab23956186624, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -739.1923
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081307194439910169, guid: b72f33a30cf4f974f98ab23956186624, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 18.35155
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081307194439910169, guid: b72f33a30cf4f974f98ab23956186624, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -512.39166
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081307194439910169, guid: b72f33a30cf4f974f98ab23956186624, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081307194439910169, guid: b72f33a30cf4f974f98ab23956186624, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081307194439910169, guid: b72f33a30cf4f974f98ab23956186624, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081307194439910169, guid: b72f33a30cf4f974f98ab23956186624, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081307194439910169, guid: b72f33a30cf4f974f98ab23956186624, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081307194439910169, guid: b72f33a30cf4f974f98ab23956186624, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081307194439910169, guid: b72f33a30cf4f974f98ab23956186624, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b72f33a30cf4f974f98ab23956186624, type: 3}
 --- !u!1001 &738069391
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2692,6 +2806,63 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: d1278883f5417154f9e8a819729e476b, type: 3}
+--- !u!1001 &959772772
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 761739866045158929, guid: fb20b413c150a1643bb87fa1efb647a7, type: 3}
+      propertyPath: m_Name
+      value: Imposter Weeping Willow 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2682523370606660891, guid: fb20b413c150a1643bb87fa1efb647a7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -737.64844
+      objectReference: {fileID: 0}
+    - target: {fileID: 2682523370606660891, guid: fb20b413c150a1643bb87fa1efb647a7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 15.563599
+      objectReference: {fileID: 0}
+    - target: {fileID: 2682523370606660891, guid: fb20b413c150a1643bb87fa1efb647a7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -543.0898
+      objectReference: {fileID: 0}
+    - target: {fileID: 2682523370606660891, guid: fb20b413c150a1643bb87fa1efb647a7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2682523370606660891, guid: fb20b413c150a1643bb87fa1efb647a7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2682523370606660891, guid: fb20b413c150a1643bb87fa1efb647a7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2682523370606660891, guid: fb20b413c150a1643bb87fa1efb647a7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2682523370606660891, guid: fb20b413c150a1643bb87fa1efb647a7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2682523370606660891, guid: fb20b413c150a1643bb87fa1efb647a7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2682523370606660891, guid: fb20b413c150a1643bb87fa1efb647a7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fb20b413c150a1643bb87fa1efb647a7, type: 3}
 --- !u!1001 &976003357
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4202,6 +4373,63 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b6f929a5b8727542b2b2def82f7b795, type: 3}
+--- !u!1001 &1710401790
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 145003257635687957, guid: f2abc9130de1bcc438463ab0e8683c0a, type: 3}
+      propertyPath: m_Name
+      value: Imposter Weeping Willow 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8592385167932294228, guid: f2abc9130de1bcc438463ab0e8683c0a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -745.2762
+      objectReference: {fileID: 0}
+    - target: {fileID: 8592385167932294228, guid: f2abc9130de1bcc438463ab0e8683c0a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 16.700333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8592385167932294228, guid: f2abc9130de1bcc438463ab0e8683c0a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -507.68176
+      objectReference: {fileID: 0}
+    - target: {fileID: 8592385167932294228, guid: f2abc9130de1bcc438463ab0e8683c0a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8592385167932294228, guid: f2abc9130de1bcc438463ab0e8683c0a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8592385167932294228, guid: f2abc9130de1bcc438463ab0e8683c0a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8592385167932294228, guid: f2abc9130de1bcc438463ab0e8683c0a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8592385167932294228, guid: f2abc9130de1bcc438463ab0e8683c0a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8592385167932294228, guid: f2abc9130de1bcc438463ab0e8683c0a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8592385167932294228, guid: f2abc9130de1bcc438463ab0e8683c0a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f2abc9130de1bcc438463ab0e8683c0a, type: 3}
 --- !u!43 &1762600549
 Mesh:
   m_ObjectHideFlags: 0
@@ -4558,6 +4786,63 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!1001 &1868883700
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5459484395888594597, guid: c5f337ff3ec99cb4c90d205a083fbe4a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -742.4725
+      objectReference: {fileID: 0}
+    - target: {fileID: 5459484395888594597, guid: c5f337ff3ec99cb4c90d205a083fbe4a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 16.177544
+      objectReference: {fileID: 0}
+    - target: {fileID: 5459484395888594597, guid: c5f337ff3ec99cb4c90d205a083fbe4a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -523.2502
+      objectReference: {fileID: 0}
+    - target: {fileID: 5459484395888594597, guid: c5f337ff3ec99cb4c90d205a083fbe4a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5459484395888594597, guid: c5f337ff3ec99cb4c90d205a083fbe4a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5459484395888594597, guid: c5f337ff3ec99cb4c90d205a083fbe4a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5459484395888594597, guid: c5f337ff3ec99cb4c90d205a083fbe4a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5459484395888594597, guid: c5f337ff3ec99cb4c90d205a083fbe4a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5459484395888594597, guid: c5f337ff3ec99cb4c90d205a083fbe4a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5459484395888594597, guid: c5f337ff3ec99cb4c90d205a083fbe4a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8687547947113606750, guid: c5f337ff3ec99cb4c90d205a083fbe4a, type: 3}
+      propertyPath: m_Name
+      value: Imposter Weeping Willow 4
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c5f337ff3ec99cb4c90d205a083fbe4a, type: 3}
 --- !u!1001 &1877354653
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4817,3 +5102,8 @@ SceneRoots:
   - {fileID: 949367820}
   - {fileID: 623219276}
   - {fileID: 738069391}
+  - {fileID: 1710401790}
+  - {fileID: 732946811}
+  - {fileID: 1868883700}
+  - {fileID: 470524875}
+  - {fileID: 959772772}
