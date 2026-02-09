@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4890566240960862971}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -168.40001, y: 65.200005, z: -50.4}
   m_LocalScale: {x: 8, y: 8, z: 8}
   m_ConstrainProportionsScale: 1
@@ -73,4 +73,10 @@ MonoBehaviour:
   disappearWhenFar: 0
   scaleRange: {x: 5, y: 30}
   distanceRange: {x: 50, y: 500}
-  _playableCharacter: {fileID: 0}
+  _orbitalStateSetting:
+    IsForCharacter: 1
+    DataToShow: {fileID: 0}
+    Target: {fileID: 0}
+    _orbitSpeed: 5
+    _zoomValue: 7
+    _horizontalOffset: 2

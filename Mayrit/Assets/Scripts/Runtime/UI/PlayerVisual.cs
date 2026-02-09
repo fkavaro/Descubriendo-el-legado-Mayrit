@@ -8,7 +8,8 @@ using UnityEngine.UIElements;
 public class PlayerVisual : Billboard
 {
     #region PROPERTIES
-    [SerializeField] PlayableCharacter _playableCharacter;
+    [Space]
+    [SerializeField] OrbitalStateSetting _orbitalStateSetting;
 
     UIDocument _uiDocument;
     Button _playerButton;
@@ -36,6 +37,8 @@ public class PlayerVisual : Billboard
 
         _playerButton.visible = false;
         _playerButton.RegisterCallback<ClickEvent>(OnPlayerButtonClick);
+
+        _orbitalStateSetting.IsForCharacter = true;
     }
 
     void Start()
@@ -64,16 +67,19 @@ public class PlayerVisual : Billboard
     #region PRIVATE METHODS
     void LocateOverPlayer()
     {
-        _playableCharacter = ServiceLocator.Instance.Get<PlayableCharacter>();
+        PlayableCharacter playableCharacter = ServiceLocator.Instance.Get<PlayableCharacter>();
 
-        if (!_cameraManager.IsInSpectatorState || _playableCharacter == null)
+        if (!_cameraManager.IsInSpectatorState || playableCharacter == null)
         {
             _playerButton.visible = false;
             return;
         }
 
         _playerButton.visible = true;
-        transform.position = _playableCharacter.transform.position + 10 * Vector3.up;
+        transform.position = playableCharacter.transform.position + 10 * Vector3.up;
+
+        _orbitalStateSetting.Target = playableCharacter.transform;
+        _orbitalStateSetting.DataToShow = playableCharacter.CharacterData;
     }
     #endregion
 
@@ -97,7 +103,19 @@ public class PlayerVisual : Billboard
 
     void OnPlayerButtonClick(ClickEvent evt)
     {
-        _cameraManager.SwitchToOrbitalCamera(_playableCharacter.GetComponent<SelectableObject>());
+        if (_orbitalStateSetting.DataToShow == null)
+        {
+            Debug.LogWarning($"[PlayerVisual] No information to show.", this);
+            return;
+        }
+
+        if (_orbitalStateSetting.Target == null)
+        {
+            Debug.LogWarning($"[PlayerVisual] Can't orbit around null target.", this);
+            return;
+        }
+
+        _cameraManager.SwitchToOrbitalCamera(_orbitalStateSetting);
         _soundManager.PlayButtonClickSFX();
     }
     #endregion

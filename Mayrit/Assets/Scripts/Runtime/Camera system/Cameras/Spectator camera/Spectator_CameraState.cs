@@ -5,10 +5,10 @@ using Unity.Cinemachine;
 public class Spectator_CameraState : ACameraState
 {
     #region PROPERTIES
-    public event Action<SelectableObject> ObjectSelectedEvent;
+    //public event Action<SelectableObject> ObjectSelectedEvent;
 
     readonly SpectatorCameraController _cameraController;
-    readonly SpectatorCameraSelector _cameraSelector;
+    //readonly SpectatorCameraSelector _cameraSelector;
     #endregion
 
     #region CONSTRUCTOR
@@ -16,7 +16,7 @@ public class Spectator_CameraState : ACameraState
     : base("Spectator camera", spectatorCameraData.Camera, spectatorCameraData.SimulationSpeed)
     {
         _cameraController = new(spectatorCameraData);
-        _cameraSelector = new(spectatorCameraData);
+        //_cameraSelector = new(spectatorCameraData);
     }
     #endregion
 
@@ -26,7 +26,7 @@ public class Spectator_CameraState : ACameraState
         base.StartState();
 
         _gameManager.InputActions.Camera.Enable();
-        _cameraSelector.ObjectSelectedEvent += OnObjectSelected;
+        //_cameraSelector.ObjectSelectedEvent += OnObjectSelected;
     }
 
     public override void UpdateState()
@@ -34,7 +34,7 @@ public class Spectator_CameraState : ACameraState
         if (_gameManager.IsInPauseState || _uiManager.IsInLoadingScreenState)
             return;
 
-        _cameraSelector.Update();
+        //_cameraSelector.Update();
     }
 
     public override void LateUpdateState()
@@ -54,9 +54,9 @@ public class Spectator_CameraState : ACameraState
     #endregion
 
     #region CALLBACK METHODS
-    void OnObjectSelected(SelectableObject selectedObject)
-    {
-        ObjectSelectedEvent?.Invoke(selectedObject);
-    }
+    // void OnObjectSelected(SelectableObject selectedObject)
+    // {
+    //     ObjectSelectedEvent?.Invoke(selectedObject);
+    // }
     #endregion
 }

@@ -1,20 +1,43 @@
+using System;
 using UnityEngine;
 using Unity.Cinemachine;
+
+[Serializable]
+public class OrbitalStateSetting
+{
+    public float OrbitSpeed => _orbitSpeed;
+    public float ZoomValue => _zoomValue;
+    public float HorizontalOffset => _horizontalOffset;
+
+    public bool IsForCharacter = false;
+    public DataSO DataToShow;
+    public Transform Target;
+    [SerializeField] float _orbitSpeed = 10f;
+    [SerializeField] float _zoomValue = 70f;
+    [SerializeField] float _horizontalOffset = 20f;
+}
 
 public class Orbital_CameraState : ACameraState
 {
     #region PROPERTIES HELPERS
-    public SelectableObject SelectedObject
+    // public SelectableObject SelectedObject
+    // {
+    //     get => _selectedObject;
+    //     set => _selectedObject = value;
+    // }
+
+    public OrbitalStateSetting Setting
     {
-        get => _selectedObject;
-        set => _selectedObject = value;
+        get => _setting;
+        set => _setting = value;
     }
     #endregion
 
     #region PROPERTIES
     readonly CinemachineOrbitalFollow _orbitalFollow;
 
-    SelectableObject _selectedObject;
+    //SelectableObject _selectedObject;
+    OrbitalStateSetting _setting;
     float _orbitSpeed;
     float _zoomValue;
     float _horizontalOffset;
@@ -33,24 +56,24 @@ public class Orbital_CameraState : ACameraState
     {
         base.StartState();
 
-        if (_selectedObject == null)
-        {
-            Debug.LogWarning("Orbital camera state can't start without a selected object to orbit around.");
-            return;
-        }
+        // if (_selectedObject == null)
+        // {
+        //     Debug.LogWarning("Orbital camera state can't start without a selected object to orbit around.");
+        //     return;
+        // }
 
-        Transform objectToOrbitAround = _selectedObject.transform;
-        _camera.Follow = objectToOrbitAround;
-        _camera.LookAt = objectToOrbitAround;
+        //Transform objectToOrbitAround = _selectedObject.transform;
+        _camera.Follow = _setting.Target;
+        _camera.LookAt = _setting.Target;
 
-        _orbitSpeed = _selectedObject.OrbitalCameraValues.OrbitSpeed;
-        _zoomValue = _selectedObject.OrbitalCameraValues.ZoomValue;
-        _horizontalOffset = _selectedObject.OrbitalCameraValues.HorizontalOffset;
+        _orbitSpeed = _setting.OrbitSpeed;
+        _zoomValue = _setting.ZoomValue;
+        _horizontalOffset = _setting.HorizontalOffset;
 
         _orbitalFollow.Radius = _zoomValue;
         ApplyContextualPanelOffset();
 
-        _uiManager.ShowContextualPanel(_selectedObject.Data, _selectedObject.IsCharacter);
+        _uiManager.ShowContextualPanel(_setting.DataToShow, _setting.IsForCharacter);
     }
 
     public override void UpdateState()

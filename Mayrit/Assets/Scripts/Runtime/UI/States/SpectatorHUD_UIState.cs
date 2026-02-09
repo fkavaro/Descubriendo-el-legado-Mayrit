@@ -87,8 +87,8 @@ public class SpectatorHUD_UIState : AHUDState
     {
         base.SubscribeToServicesEventsOnStart();
 
-        _uiManager.ShowTooltipEvent += OnShowTooltip;
-        _uiManager.HideTooltipEvent += OnHideTooltip;
+        //_uiManager.ShowTooltipEvent += OnShowTooltip;
+        //_uiManager.HideTooltipEvent += OnHideTooltip;
         _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
     }
 
@@ -108,8 +108,8 @@ public class SpectatorHUD_UIState : AHUDState
     {
         base.UnsubscribeToServicesEventsOnExit();
 
-        _uiManager.ShowTooltipEvent -= OnShowTooltip;
-        _uiManager.HideTooltipEvent -= OnHideTooltip;
+        //_uiManager.ShowTooltipEvent -= OnShowTooltip;
+        //_uiManager.HideTooltipEvent -= OnHideTooltip;
         _progressManager.MilestoneChangedEvent -= OnMilestoneChanged;
     }
     #endregion
@@ -175,31 +175,31 @@ public class SpectatorHUD_UIState : AHUDState
         ShowContextualPanel(mapping);
     }
 
-    void OnShowTooltip(DataSO data)
-    {
-        if (!_cameraManager.IsInSpectatorState || data == null)
-        {
-            OnHideTooltip();
-            return;
-        }
+    // void OnShowTooltip(DataSO data)
+    // {
+    //     if (!_cameraManager.IsInSpectatorState || data == null)
+    //     {
+    //         OnHideTooltip();
+    //         return;
+    //     }
 
-        if (_tooltip.text != data.Header)
-            _tooltip.text = data.Header;
-        if (_tooltip.style.display != DisplayStyle.Flex)
-            _tooltip.style.display = DisplayStyle.Flex;
+    //     if (_tooltip.text != data.Header)
+    //         _tooltip.text = data.Header;
+    //     if (_tooltip.style.display != DisplayStyle.Flex)
+    //         _tooltip.style.display = DisplayStyle.Flex;
 
-        Vector2 _cursorScreenPos = Mouse.current.position.ReadValue();
+    //     Vector2 _cursorScreenPos = Mouse.current.position.ReadValue();
 
-        // UI Toolkit's Y axis is from top to bottom, 
-        // while screen coordinates are from bottom to top
-        _tooltip.style.left = _cursorScreenPos.x + _uiManager.TooltipOffset.x; ;
-        _tooltip.style.top = Screen.height - _cursorScreenPos.y + _uiManager.TooltipOffset.y;
-    }
+    //     // UI Toolkit's Y axis is from top to bottom, 
+    //     // while screen coordinates are from bottom to top
+    //     _tooltip.style.left = _cursorScreenPos.x + _uiManager.TooltipOffset.x; ;
+    //     _tooltip.style.top = Screen.height - _cursorScreenPos.y + _uiManager.TooltipOffset.y;
+    // }
 
-    void OnHideTooltip()
-    {
-        if (_tooltip.style.display != DisplayStyle.None)
-            _tooltip.style.display = DisplayStyle.None;
-    }
+    // void OnHideTooltip()
+    // {
+    //     if (_tooltip.style.display != DisplayStyle.None)
+    //         _tooltip.style.display = DisplayStyle.None;
+    // }
     #endregion
 }

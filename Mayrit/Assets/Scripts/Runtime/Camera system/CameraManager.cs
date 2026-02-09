@@ -78,7 +78,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
 
         // Subscribe to events
         _uiManager.EdgeScrollingToggledEvent += _spectatorCamera.OnIsEdgeScrollingToggled;
-        _spectatorState.ObjectSelectedEvent += SwitchToOrbitalCamera;
+        //_spectatorState.ObjectSelectedEvent += SwitchToOrbitalCamera;
         _thirdPersonState.ExitThirdPersonCameraEvent += OnExitThirdPersonCamera;
         _uiManager.OnContextualPanelHiddenEvent += OnContextualPanelHidden;
         _uiManager.PlayCharacterClickedEvent += OnPlayCharacterClicked;
@@ -106,7 +106,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     void OnDisable()
     {
         // Unsubscribe from events
-        _spectatorState.ObjectSelectedEvent -= SwitchToOrbitalCamera;
+        //_spectatorState.ObjectSelectedEvent -= SwitchToOrbitalCamera;
         _thirdPersonState.ExitThirdPersonCameraEvent -= OnExitThirdPersonCamera;
         _uiManager.OnContextualPanelHiddenEvent -= OnContextualPanelHidden;
         _uiManager.PlayCharacterClickedEvent -= OnPlayCharacterClicked;
@@ -128,23 +128,37 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
             TransitionFromOrbitalToSpectator();
     }
 
-    /// <summary>
-    /// Switches to orbital camera mode around the specified object.
-    /// </summary>
-    /// <param name="selectedElement">The object to orbit around.</param>
-    public void SwitchToOrbitalCamera(SelectableObject selectedElement)
+    public void SwitchToOrbitalCamera(OrbitalStateSetting orbitalStateSetting)
     {
-        _orbitalState.SelectedObject = selectedElement;
+        _orbitalState.Setting = orbitalStateSetting;
         _soundManager.PlayCameraTransitionSFX();
 
         SyncOrbitalCameraWithSpectator();
         _fsm.SwitchState(_orbitalState);
 
         if (DebugMode)
-            Debug.Log($"Switched to orbital camera around '{selectedElement.name}'.");
+            Debug.Log($"Switched to orbital camera around '{orbitalStateSetting.Target.name}'.");
 
         CameraStateChangedEvent?.Invoke();
     }
+
+    // /// <summary>
+    // /// Switches to orbital camera mode around the specified object.
+    // /// </summary>
+    // /// <param name="selectedElement">The object to orbit around.</param>
+    // public void SwitchToOrbitalCamera(SelectableObject selectedElement)
+    // {
+    //     //_orbitalState.SelectedObject = selectedElement;
+    //     _soundManager.PlayCameraTransitionSFX();
+
+    //     SyncOrbitalCameraWithSpectator();
+    //     _fsm.SwitchState(_orbitalState);
+
+    //     if (DebugMode)
+    //         Debug.Log($"Switched to orbital camera around '{selectedElement.name}'.");
+
+    //     CameraStateChangedEvent?.Invoke();
+    // }
 
     /// <summary>
     /// Switches to third-person camera mode, following the playable character.

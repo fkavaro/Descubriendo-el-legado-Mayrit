@@ -15,9 +15,9 @@ public class Billboard : MonoBehaviour
 
     [Header("Distance scaling")]
     [Tooltip("Min and max uniform scale: x = minimum scale, y = maximum scale")]
-    [SerializeField] Vector2 scaleRange = new(0.5f, 3f);
+    [SerializeField] Vector2 scaleRange = new(1f, 10f);
     [Tooltip("Distance range: x = minimum distance, y = maximum distance. Passed max distance, object will be invisible.")]
-    [SerializeField] Vector2 distanceRange = new(50f, 500f);
+    [SerializeField] Vector2 distanceRange = new(50f, 1000f);
     #endregion
 
     #region INTERNAL PROPERTIES

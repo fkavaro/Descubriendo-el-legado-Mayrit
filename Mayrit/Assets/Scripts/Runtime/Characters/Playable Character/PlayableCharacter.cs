@@ -4,12 +4,13 @@ using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(SelectableObject))]
+//[RequireComponent(typeof(SelectableObject))]
 public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacterState>>
 {
     #region PROPERTY HELPERS
     public bool IsBeingControlled => _fsm.IsCurrentState(_controlledState);
     public PlayableCharacterMovementController MovementController => _movementController;
+    public DataSO CharacterData => _characterData;
     public LayerMask ObstacleLayers => _obstacleLayers;
     #endregion
 
@@ -19,6 +20,7 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     PlayableCharacterMovementController _movementController;
 
     [Header("Playable Character Settings")]
+    [SerializeField] DataSO _characterData;
     [SerializeField] LayerMask _obstacleLayers;
 
     // State machine and states
@@ -66,6 +68,9 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     protected override void Awake()
     {
         base.Awake();
+
+        if (_characterData == null)
+            Debug.LogWarning($"[PlayableCharacter] No CharacterData assigned to {gameObject.name}. Please assign a DataSO with the character's information.", this);
 
         _animationController = new(this, this, CharacterAnimator);
         _movementController = new(this, GetComponent<CharacterController>());

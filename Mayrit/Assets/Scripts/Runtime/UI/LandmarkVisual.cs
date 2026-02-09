@@ -3,20 +3,55 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [RequireComponent(typeof(UIDocument))]
-public class LandmarkVisual : MonoBehaviour
+public class LandmarkVisual : Billboard
 {
     UIDocument _uiDocument;
     Label _nameLabel;
     Button _nameButton;
 
-    public DataSO _information;
+    [Header("Landmark information")]
+    [SerializeField] OrbitalStateSetting _orbitalCameraValues;
 
     // Dependency Injection
     UIManager _uiManager;
     SoundManager _soundManager;
     CameraManager _cameraManager;
 
-    void Awake()
+    void OnEnable()
+    {
+        if (_orbitalCameraValues.DataToShow == null)
+        {
+            Debug.LogWarning($"[LandmarkVisual] No information assigned to {gameObject.name}. Please assign a DataSO with the landmark's information.", this);
+            return;
+        }
+
+        if (_orbitalCameraValues.Target == null)
+            _orbitalCameraValues.Target = transform; // Default to self if no target assigned
+
+        // Try to get the UIDocument component from the same GameObject
+        _uiDocument = GetComponent<UIDocument>();
+        var root = _uiDocument.rootVisualElement;
+
+        _nameLabel = root.Q<Label>(name: "Name");
+        _nameButton = root.Q<Button>(name: "NameButton");
+
+        if (_nameLabel == null)
+        {
+            Debug.LogWarning("[LandmarkVisual] No Label with name 'Name' was found in the UIDocument.", this);
+            return;
+        }
+
+        if (_nameButton == null)
+        {
+            Debug.LogWarning("[LandmarkVisual] No Button with name 'NameButton' was found in the UIDocument., this");
+            return;
+        }
+
+        _nameLabel.text = _orbitalCameraValues.DataToShow.Header;
+        _nameButton.RegisterCallback<ClickEvent>(OnNameButtonClick);
+    }
+
+    void Start()
     {
         // Get dependency from Service Locator
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
@@ -26,47 +61,32 @@ public class LandmarkVisual : MonoBehaviour
         _cameraManager.CameraStateChangedEvent += OnCameraStateChanged;
     }
 
-
-    void OnEnable()
+    void OnDisable()
     {
-        // Try to get the UIDocument component from the same GameObject
-        _uiDocument = GetComponent<UIDocument>();
-        var root = _uiDocument.rootVisualElement;
+        _nameButton?.UnregisterCallback<ClickEvent>(OnNameButtonClick);
 
-        // Try to find a Label with name 'Name' in the document
-        _nameLabel = root.Q<Label>(name: "Name");
-        if (_nameLabel == null)
-        {
-            Debug.LogWarning("NameVisual: No Label with name 'Name' was found in the UIDocument.");
-            return;
-        }
-
-        _nameLabel.text = _information.Header;
-
-        // Try to find a Button with name 'NameButton' in the document
-        _nameButton = root.Q<Button>(name: "NameButton");
-        if (_nameButton == null)
-        {
-            Debug.LogWarning("LandmarkVisual: No Button with name 'NameButton' was found in the UIDocument.");
-            return;
-        }
-
-        // Register click event
-        _nameButton.RegisterCallback<ClickEvent>(OnNameButtonClick);
+        if (_cameraManager != null)
+            _cameraManager.CameraStateChangedEvent -= OnCameraStateChanged;
     }
 
     void OnNameButtonClick(ClickEvent evt)
     {
-        _uiManager.ShowContextualPanel(_information);
+        _uiManager.ShowContextualPanel(_orbitalCameraValues.DataToShow);
         _soundManager.PlayButtonClickSFX();
+
+        if (_orbitalCameraValues.Target == null)
+        {
+            Debug.LogWarning($"[LandmarkVisual] can't orbit around null target.", this);
+            return;
+        }
+
+        _cameraManager.SwitchToOrbitalCamera(_orbitalCameraValues);
     }
 
     void OnCameraStateChanged()
     {
         if (_cameraManager.IsInSpectatorState)
-        {
             _nameButton.visible = true;
-        }
         else
             _nameButton.visible = false;
     }
