@@ -5,18 +5,23 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(UIDocument))]
 public class LandmarkVisual : Billboard
 {
+    #region EDITOR PROPERTIES
+    [Header("Landmark information")]
+    [SerializeField] OrbitalStateSetting _orbitalCameraValues;
+    #endregion
+
+    #region INTERNAL PROPERTIES
     UIDocument _uiDocument;
     Label _nameLabel;
     Button _nameButton;
-
-    [Header("Landmark information")]
-    [SerializeField] OrbitalStateSetting _orbitalCameraValues;
 
     // Dependency Injection
     UIManager _uiManager;
     SoundManager _soundManager;
     CameraManager _cameraManager;
+    #endregion
 
+    #region LIFE CYCLE
     void OnEnable()
     {
         if (_orbitalCameraValues.DataToShow == null)
@@ -68,7 +73,9 @@ public class LandmarkVisual : Billboard
         if (_cameraManager != null)
             _cameraManager.CameraStateChangedEvent -= OnCameraStateChanged;
     }
+    #endregion
 
+    #region CALLBACK METHODS
     void OnNameButtonClick(ClickEvent evt)
     {
         _uiManager.ShowContextualPanel(_orbitalCameraValues.DataToShow);
@@ -90,4 +97,5 @@ public class LandmarkVisual : Billboard
         else
             _nameButton.visible = false;
     }
+    #endregion
 }

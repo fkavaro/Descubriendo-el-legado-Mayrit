@@ -53,16 +53,18 @@ public class ModernSuperposition : MonoBehaviour
     #endregion
 
     #region PRIVATE METHODS
-    void OnCameraStateChanged()
-    {
-        if (!_cameraManager.IsInSpectatorState)
-            IsActive = false;
-    }
-
     void SetChildrenActive(bool isActive)
     {
         foreach (Transform child in transform)
             child.gameObject.SetActive(isActive);
+    }
+    #endregion
+
+    #region CALLBACK METHODS
+    void OnCameraStateChanged()
+    {
+        if (_cameraManager.IsInThirdPersonState || _cameraManager.IsInPOIState)
+            IsActive = false;
     }
     #endregion
 }

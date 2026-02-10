@@ -7,10 +7,12 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(UIDocument))]
 public class PlayerVisual : Billboard
 {
-    #region PROPERTIES
+    #region EDITOR PROPERTIES
     [Space]
     [SerializeField] OrbitalStateSetting _orbitalStateSetting;
+    #endregion
 
+    #region INTERNAL PROPERTIES
     UIDocument _uiDocument;
     Button _playerButton;
 
