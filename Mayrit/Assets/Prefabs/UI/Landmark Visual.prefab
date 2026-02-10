@@ -70,9 +70,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   _freezeXZAxis: 0
   _dynamicScaling: 1
-  _disappearWhenFar: 0
   scaleRange: {x: 1, y: 10}
   distanceRange: {x: 50, y: 1000}
+  _hideIfTooFar: 0
   _orbitalCameraValues:
     IsForCharacter: 0
     DataToShow: {fileID: 0}
@@ -80,6 +80,7 @@ MonoBehaviour:
     _orbitSpeed: 10
     _zoomValue: 70
     _horizontalOffset: 20
+  _fixHeight: 0
   _heightMultiplierCurve:
     serializedVersion: 2
     m_Curve:
