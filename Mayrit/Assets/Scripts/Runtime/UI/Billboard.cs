@@ -10,8 +10,6 @@ public class Billboard : MonoBehaviour
     [SerializeField] bool _freezeXZAxis = false;
     [Tooltip("Wether to scale based on distance to camera")]
     [SerializeField] bool _dynamicScaling = true;
-    [Tooltip("Wether to disappear when too far from camera")]
-    [SerializeField] bool _disappearWhenFar = false;
 
     [Header("Distance scaling")]
     [Tooltip("Min and max uniform scale: x = minimum scale, y = maximum scale")]
@@ -22,6 +20,7 @@ public class Billboard : MonoBehaviour
 
     #region INTERNAL PROPERTIES
     protected Camera _mainCamera;
+    protected bool _isTooFar;
     #endregion
 
     #region MONOBEHAVIOUR
@@ -69,13 +68,10 @@ public class Billboard : MonoBehaviour
 
     void CheckIfTooFar()
     {
-        if (!_disappearWhenFar) return;
-
         float distance = Vector3.Distance(transform.position, _mainCamera.transform.position);
         float maxDistance = Mathf.Max(distanceRange.x, distanceRange.y);
 
-        // Enable or disable the GameObject based on distance
-        gameObject.SetActive(distance <= maxDistance);
+        _isTooFar = distance > maxDistance;
     }
     #endregion
 }

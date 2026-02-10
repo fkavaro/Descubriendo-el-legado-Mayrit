@@ -7,6 +7,7 @@ public class LandmarkVisual : Billboard
 {
     #region EDITOR PROPERTIES
     [Header("Landmark information")]
+    [SerializeField] bool _hideIfTooFar = true;
     [SerializeField] OrbitalStateSetting _orbitalCameraValues;
     [Header("Height Adjustment")]
     [SerializeField] bool _fixHeight = false;
@@ -88,6 +89,20 @@ public class LandmarkVisual : Billboard
     protected override void Update()
     {
         base.Update();
+
+        if (_hideIfTooFar)
+        {
+            if (_isTooFar)
+            {
+                if (_nameButton.visible)
+                    _nameButton.visible = false;
+            }
+            else
+            {
+                if (!_nameButton.visible)
+                    _nameButton.visible = true;
+            }
+        }
 
         if (!_fixHeight) return;
 
