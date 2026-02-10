@@ -205,6 +205,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Small house model
       objectReference: {fileID: 0}
+    - target: {fileID: 4534596316549569608, guid: dcf8e4e4b719b3c47847b55e50700b52, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4756110272827475814, guid: dcf8e4e4b719b3c47847b55e50700b52, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.5
@@ -245,9 +249,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6996768013240773727, guid: dcf8e4e4b719b3c47847b55e50700b52, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7046791990992230881, guid: dcf8e4e4b719b3c47847b55e50700b52, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7046791990992230881, guid: dcf8e4e4b719b3c47847b55e50700b52, type: 3}
       propertyPath: m_VersionIndex
-      value: 2728
+      value: 2731
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
