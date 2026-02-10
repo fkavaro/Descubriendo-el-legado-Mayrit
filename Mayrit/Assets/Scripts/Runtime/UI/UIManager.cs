@@ -15,7 +15,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     public bool IsInHeritageState => _sfsm.IsCurrentState(_heritageState);
     public bool IsInSettingsMenuState => _sfsm.IsCurrentState(_settingsMenuState);
     public bool IsInLoadingScreenState => _sfsm.IsCurrentState(_loadingScreenState);
-    //public Vector2 TooltipOffset => _tooltipOffset;
+    //public Vector2 TooltipOffset => _tooltipOffset; // TODO: remove later
     public bool EdgeScrollingValueSet => _edgeScrollingValueSet;
     public bool ControlsVisibilityValueSet => _controlsVisibilityValueSet;
     public float MusicVolumeValueSet => _musicVolumeValueSet;
@@ -29,7 +29,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     [SerializeField] float _fadeOutDuration = 1f;
 
     [Header("Other settings")]
-    //[SerializeField] Vector2 _tooltipOffset = new(-30, -30);
+    //[SerializeField] Vector2 _tooltipOffset = new(-30, -30); // TODO: remove later
     [SerializeField] bool _edgeScrollingValueSet = true;
     [SerializeField] bool _controlsVisibilityValueSet = true;
     [SerializeField] float _musicVolumeValueSet = 1f;
@@ -42,8 +42,11 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     // Events
     public event Action<DataSO, bool> ShowContextualPanelEvent;
     public event Action OnContextualPanelHiddenEvent;
+
+    // TODO: remove later
     //public event Action<DataSO> ShowTooltipEvent;
     //public event Action HideTooltipEvent;
+
     public event Action PlayCharacterClickedEvent;
     public event Action ModernSuperpositionToggledEvent;
     public event Action<bool> EdgeScrollingToggledEvent;
@@ -136,11 +139,11 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
         ShowContextualPanelEvent?.Invoke(data, isCharacterData);
     }
 
+    // TODO: remove later
     // public void ShowTooltip(DataSO data)
     // {
     //     ShowTooltipEvent?.Invoke(data);
     // }
-
     // public void HideTooltip()
     // {
     //     HideTooltipEvent?.Invoke();

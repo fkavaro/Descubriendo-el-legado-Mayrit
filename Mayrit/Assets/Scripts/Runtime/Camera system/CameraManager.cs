@@ -142,6 +142,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         CameraStateChangedEvent?.Invoke();
     }
 
+    // TODO: remove later
     // /// <summary>
     // /// Switches to orbital camera mode around the specified object.
     // /// </summary>

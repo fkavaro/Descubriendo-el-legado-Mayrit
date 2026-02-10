@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-
+// TODO: remove later
 // public class SelectableObject : MonoBehaviour
 // {
 //     #region PROPERTY HELPERS

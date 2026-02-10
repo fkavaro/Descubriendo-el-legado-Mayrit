@@ -86,10 +86,11 @@ public class SpectatorHUD_UIState : AHUDState
     protected override void SubscribeToServicesEventsOnStart()
     {
         base.SubscribeToServicesEventsOnStart();
+        _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
 
+        // TODO: remove later
         //_uiManager.ShowTooltipEvent += OnShowTooltip;
         //_uiManager.HideTooltipEvent += OnHideTooltip;
-        _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
     }
 
     public override void StartState()
@@ -107,10 +108,11 @@ public class SpectatorHUD_UIState : AHUDState
     protected override void UnsubscribeToServicesEventsOnExit()
     {
         base.UnsubscribeToServicesEventsOnExit();
+        _progressManager.MilestoneChangedEvent -= OnMilestoneChanged;
 
+        // TODO: remove later
         //_uiManager.ShowTooltipEvent -= OnShowTooltip;
         //_uiManager.HideTooltipEvent -= OnHideTooltip;
-        _progressManager.MilestoneChangedEvent -= OnMilestoneChanged;
     }
     #endregion
 
@@ -175,6 +177,7 @@ public class SpectatorHUD_UIState : AHUDState
         ShowContextualPanel(mapping);
     }
 
+    // TODO: remove later
     // void OnShowTooltip(DataSO data)
     // {
     //     if (!_cameraManager.IsInSpectatorState || data == null)
@@ -187,15 +190,12 @@ public class SpectatorHUD_UIState : AHUDState
     //         _tooltip.text = data.Header;
     //     if (_tooltip.style.display != DisplayStyle.Flex)
     //         _tooltip.style.display = DisplayStyle.Flex;
-
     //     Vector2 _cursorScreenPos = Mouse.current.position.ReadValue();
-
     //     // UI Toolkit's Y axis is from top to bottom, 
     //     // while screen coordinates are from bottom to top
     //     _tooltip.style.left = _cursorScreenPos.x + _uiManager.TooltipOffset.x; ;
     //     _tooltip.style.top = Screen.height - _cursorScreenPos.y + _uiManager.TooltipOffset.y;
     // }
-
     // void OnHideTooltip()
     // {
     //     if (_tooltip.style.display != DisplayStyle.None)

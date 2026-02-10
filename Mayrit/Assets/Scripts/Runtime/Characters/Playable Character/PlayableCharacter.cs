@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(CharacterController))]
-//[RequireComponent(typeof(SelectableObject))]
 public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacterState>>
 {
     #region PROPERTY HELPERS
