@@ -8,12 +8,29 @@ public class LandmarkVisual : Billboard
     #region EDITOR PROPERTIES
     [Header("Landmark information")]
     [SerializeField] OrbitalStateSetting _orbitalCameraValues;
+    [Header("Height Adjustment")]
+    [SerializeField] bool _fixHeight = false;
+    [SerializeField] AnimationCurve _heightMultiplierCurve;
+    [SerializeField] float _cameraDistance;
+    [SerializeField] float _currentHeightOffset;
     #endregion
 
     #region INTERNAL PROPERTIES
     UIDocument _uiDocument;
     Label _nameLabel;
     Button _nameButton;
+    Vector3 _originalPosition;
+    float OriginalHeight => _originalPosition.y;
+
+    // Computed properties
+    float CameraDistance
+    {
+        get
+        {
+            return Vector3.Distance(_originalPosition, _mainCamera.transform.position);
+        }
+    }
+
 
     // Dependency Injection
     UIManager _uiManager;
@@ -32,6 +49,8 @@ public class LandmarkVisual : Billboard
 
         if (_orbitalCameraValues.Target == null)
             _orbitalCameraValues.Target = transform; // Default to self if no target assigned
+
+        _originalPosition = transform.position;
 
         // Try to get the UIDocument component from the same GameObject
         _uiDocument = GetComponent<UIDocument>();
@@ -64,6 +83,18 @@ public class LandmarkVisual : Billboard
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
 
         _cameraManager.CameraStateChangedEvent += OnCameraStateChanged;
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+
+        if (!_fixHeight) return;
+
+        _currentHeightOffset = _heightMultiplierCurve.Evaluate(CameraDistance);
+        _cameraDistance = CameraDistance;
+
+        transform.position = new Vector3(transform.position.x, OriginalHeight + _currentHeightOffset, transform.position.z);
     }
 
     void OnDisable()

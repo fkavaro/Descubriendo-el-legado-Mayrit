@@ -7,11 +7,11 @@ public class Billboard : MonoBehaviour
 {
     #region EDITOR PROPERTIES
     [Tooltip("Wether to fully follow camera or just in Y axis")]
-    [SerializeField] bool freezeXZAxis = false;
+    [SerializeField] bool _freezeXZAxis = false;
     [Tooltip("Wether to scale based on distance to camera")]
-    [SerializeField] bool dynamicScaling = true;
+    [SerializeField] bool _dynamicScaling = true;
     [Tooltip("Wether to disappear when too far from camera")]
-    [SerializeField] bool disappearWhenFar = false;
+    [SerializeField] bool _disappearWhenFar = false;
 
     [Header("Distance scaling")]
     [Tooltip("Min and max uniform scale: x = minimum scale, y = maximum scale")]
@@ -21,14 +21,14 @@ public class Billboard : MonoBehaviour
     #endregion
 
     #region INTERNAL PROPERTIES
-    Camera cam;
+    protected Camera _mainCamera;
     #endregion
 
     #region MONOBEHAVIOUR
-    void Update()
+    protected virtual void Update()
     {
-        cam = Camera.main;
-        if (cam == null) return;
+        _mainCamera = Camera.main;
+        if (_mainCamera == null) return;
         ApplyRotation();
         ApplyScaling();
         CheckIfTooFar();
@@ -38,18 +38,18 @@ public class Billboard : MonoBehaviour
     #region PRIVATE METHODS
     void ApplyRotation()
     {
-        if (freezeXZAxis)
-            transform.rotation = Quaternion.Euler(0f, cam.transform.rotation.eulerAngles.y, 0f);
+        if (_freezeXZAxis)
+            transform.rotation = Quaternion.Euler(0f, _mainCamera.transform.rotation.eulerAngles.y, 0f);
         else
-            transform.rotation = cam.transform.rotation;
+            transform.rotation = _mainCamera.transform.rotation;
     }
 
     void ApplyScaling()
     {
-        if (!dynamicScaling) return;
+        if (!_dynamicScaling) return;
 
         // Scale based on distance to camera: closer -> smaller, farther -> bigger
-        float distance = Vector3.Distance(transform.position, cam.transform.position);
+        float distance = Vector3.Distance(transform.position, _mainCamera.transform.position);
 
         // Ensure to treat x as min and y as max for distances and scales
         float minDistance = Mathf.Min(distanceRange.x, distanceRange.y);
@@ -69,9 +69,9 @@ public class Billboard : MonoBehaviour
 
     void CheckIfTooFar()
     {
-        if (!disappearWhenFar) return;
+        if (!_disappearWhenFar) return;
 
-        float distance = Vector3.Distance(transform.position, cam.transform.position);
+        float distance = Vector3.Distance(transform.position, _mainCamera.transform.position);
         float maxDistance = Mathf.Max(distanceRange.x, distanceRange.y);
 
         // Enable or disable the GameObject based on distance

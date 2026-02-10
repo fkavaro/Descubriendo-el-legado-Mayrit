@@ -10,7 +10,7 @@ using Unity.Cinemachine;
 public class CameraData
 {
     [Range(0.1f, 10f)]
-    [Tooltip("Simulation speed multiplier for camera movement.")]
+    [Tooltip("Simulation speed multiplier for this camera.")]
     public float simulationSpeed = 1f;
 
     [Tooltip("Reference to the Cinemachine camera component.")]
