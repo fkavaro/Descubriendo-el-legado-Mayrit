@@ -2244,9 +2244,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: ca10c17a24972b64a9e86283d77aa0bf, type: 2}
     - target: {fileID: 5961391977125746939, guid: 20122a36d24c42945ad2861e326b4edc, type: 3}
+      propertyPath: _orbitalCameraValues._zoomValue
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5961391977125746939, guid: 20122a36d24c42945ad2861e326b4edc, type: 3}
       propertyPath: _orbitalCameraValues._dataToShow
       value: 
       objectReference: {fileID: 11400000, guid: 161bff25305ffa946b56fcfaa7b5915a, type: 2}
+    - target: {fileID: 5961391977125746939, guid: 20122a36d24c42945ad2861e326b4edc, type: 3}
+      propertyPath: _orbitalCameraValues._horizontalOffset
+      value: 30
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
