@@ -51777,6 +51777,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 760035580486596215, guid: 17642575fc6e78a408f3cbe110095f86, type: 3}
+      propertyPath: m_NavMeshData
+      value: 
+      objectReference: {fileID: 23800000, guid: 833aa91a69e2f204cb3171a0205913ba, type: 2}
     - target: {fileID: 763521379307266794, guid: 17642575fc6e78a408f3cbe110095f86, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -56321,6 +56325,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 561378447}
+    - target: {fileID: 7932846801801431434, guid: 17642575fc6e78a408f3cbe110095f86, type: 3}
+      propertyPath: _isActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7938652480170119428, guid: 17642575fc6e78a408f3cbe110095f86, type: 3}
       propertyPath: m_Mesh
       value: 
