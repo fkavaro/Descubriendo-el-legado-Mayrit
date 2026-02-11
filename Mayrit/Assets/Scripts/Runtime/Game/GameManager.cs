@@ -18,6 +18,8 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
     MainMenu_GameState _mainMenuState;
     GamePlay_GameState _gamePlayState;
     Pause_GameState _pauseState;
+
+    ScenesController _scenesController;
     #endregion
 
     #region INHERITED
@@ -48,6 +50,18 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
         _inputActions = new();
 
         base.Awake();
+    }
+
+    protected override void Start()
+    {
+        _scenesController = ServiceLocator.Instance.Get<ScenesController>();
+
+        // Load Main Menu Scene
+        _scenesController.NewTransitionPlan()
+            .Load(SceneDatabase.SceneType.Session, SceneDatabase.SceneName.MainMenuScene, setActive: true)
+            .Perform();
+
+        base.Start();
     }
 
     void OnDisable()

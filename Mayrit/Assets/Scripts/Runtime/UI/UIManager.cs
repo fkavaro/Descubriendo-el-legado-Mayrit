@@ -94,7 +94,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
         _settingsMenuState.AwakeState();
         _loadingScreenState.AwakeState();
 
-        _sfsm.SetInitialState(_loadingScreenState);
+        _sfsm.SetInitialState(_mainMenuState);
 
         return _sfsm;
     }
@@ -113,7 +113,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
         _scenesController = ServiceLocator.Instance.Get<ScenesController>();
         _scenesController.ScenesLoadedFullyEvent += OnScenesLoadedFully;
 
-        base.Start();
+        //base.Start(); When main menu scene is loaded
     }
 
     void OnDisable()
@@ -176,7 +176,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     {
         if (loadedScenes.ContainsValue(SceneDatabase.SceneName.MainMenuScene))
         {
-            SwitchToMainMenuState();
+            base.Start(); // Switches to initial state: main menu state
 
             // Unsubscribe from events
             if (_tourManager != null)
