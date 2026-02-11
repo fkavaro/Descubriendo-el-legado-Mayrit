@@ -112,6 +112,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     {
         _scenesController = ServiceLocator.Instance.Get<ScenesController>();
         _scenesController.ScenesLoadedFullyEvent += OnScenesLoadedFully;
+        _scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
 
         //base.Start(); When main menu scene is loaded
     }
@@ -119,6 +120,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     void OnDisable()
     {
         _scenesController.ScenesLoadedFullyEvent -= OnScenesLoadedFully;
+        _scenesController.SceneLoadedPartiallyEvent -= OnSceneLoadedPartially;
         ServiceLocator.Instance.Unregister(this);
     }
     #endregion
@@ -172,11 +174,19 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     #endregion
 
     #region CALLBACK METHODS
+    void OnSceneLoadedPartially(SceneDatabase.SceneType type, SceneDatabase.SceneName name)
+    {
+        // If main menu loaded, switches to initial state: main menu stat
+        if (name == SceneDatabase.SceneName.MainMenuScene)
+            // Only background will be shown, buttons will be shown when the scene is fully loaded
+            base.Start();
+    }
+
     void OnScenesLoadedFully(Dictionary<SceneDatabase.SceneType, SceneDatabase.SceneName> loadedScenes, List<SceneDatabase.SceneType> unloadedTypes)
     {
         if (loadedScenes.ContainsValue(SceneDatabase.SceneName.MainMenuScene))
         {
-            base.Start(); // Switches to initial state: main menu state
+            _mainMenuState.OnMainMenuSceneLoadedFully(); // Show buttons
 
             // Unsubscribe from events
             if (_tourManager != null)

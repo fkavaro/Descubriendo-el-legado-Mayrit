@@ -34,6 +34,11 @@ public class LoadingScreen_UIState : AUIState
     {
 
     }
+
+    public override void ExitState()
+    {
+        //base.ExitState(); Dont hide on exit, hide after FadeOutCoroutine
+    }
     #endregion
 
     #region COROUTINES
@@ -45,6 +50,7 @@ public class LoadingScreen_UIState : AUIState
     public IEnumerator FadeOutCoroutine()
     {
         yield return FadeToAlpha(0f, _fadeOutDuration);
+        base.ExitState(); // Hide after fade out is complete
     }
 
     IEnumerator FadeToAlpha(float targetAlpha, float duration)
