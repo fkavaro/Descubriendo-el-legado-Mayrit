@@ -52,8 +52,8 @@ MonoBehaviour:
   m_Position: 0
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
-  m_WorldSpaceHeight: 1080
-  m_PivotReferenceSize: 0
+  m_WorldSpaceHeight: 260
+  m_PivotReferenceSize: 1
   m_Pivot: 0
   m_WorldSpaceCollider: {fileID: 0}
 --- !u!114 &5961391977125746939
@@ -73,7 +73,7 @@ MonoBehaviour:
   scaleRange: {x: 1, y: 10}
   distanceRange: {x: 50, y: 1000}
   _hideIfTooFar: 0
-  _orbitalCameraValues:
+  _orbitalStateSetting:
     IsForCharacter: 0
     DataToShow: {fileID: 0}
     Target: {fileID: 0}

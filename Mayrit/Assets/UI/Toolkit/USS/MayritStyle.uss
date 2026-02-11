@@ -128,17 +128,46 @@
     bottom: 0;
     right: 0;
     height: 100%;
-    transition-duration: 0.3s;
-    border-left-color: rgba(0, 0, 0, 0);
-    border-right-color: rgba(0, 0, 0, 0);
-    border-top-color: rgba(0, 0, 0, 0);
-    border-bottom-color: rgba(0, 0, 0, 0);
+    transition-duration: 0.2s;
 }
 
-.clickableArea :hover {
-    background-color: rgba(0, 0, 0, 0.78);
+.clickableArea:hover {
+    background-color: rgba(0, 0, 0, 0.71);
+    transition-duration: 0.2s;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
     border-bottom-left-radius: 20px;
+}
+
+
+
+
+
+.landmarkVisual {
+    background-color: rgba(0, 0, 0, 0);
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 100%;
+    transition-duration: 0.2s;
+    padding-top: 50px;
+    padding-right: 50px;
+    padding-bottom: 50px;
+    padding-left: 50px;
+    border-top-left-radius: 200px;
+    border-top-right-radius: 200px;
+    border-bottom-right-radius: 200px;
+    border-bottom-left-radius: 200px;
+}
+
+.landmarkVisual:hover {
+    background-color: rgba(0, 0, 0, 0.71);
+    transition-duration: 0.2s;
+    border-top-left-radius: 200px;
+    border-top-right-radius: 200px;
+    border-bottom-right-radius: 200px;
+    border-bottom-left-radius: 200px;
+    scale: 1.1 1.1 1.1;
 }

@@ -8,7 +8,7 @@ public class LandmarkVisual : Billboard
     #region EDITOR PROPERTIES
     [Header("Landmark information")]
     [SerializeField] bool _hideIfTooFar = true;
-    [SerializeField] OrbitalStateSetting _orbitalCameraValues;
+    [SerializeField] OrbitalStateSetting _orbitalStateSetting;
     [Header("Height Adjustment")]
     [SerializeField] bool _fixHeight = false;
     [SerializeField] AnimationCurve _heightMultiplierCurve;
@@ -17,7 +17,6 @@ public class LandmarkVisual : Billboard
     #endregion
 
     #region INTERNAL PROPERTIES
-    UIDocument _uiDocument;
     Label _nameLabel;
     Button _nameButton;
     Vector3 _originalPosition;
@@ -42,23 +41,21 @@ public class LandmarkVisual : Billboard
     #region LIFE CYCLE
     void OnEnable()
     {
-        if (_orbitalCameraValues.DataToShow == null)
+        if (_orbitalStateSetting.DataToShow == null)
         {
             Debug.LogWarning($"[LandmarkVisual] No information assigned to {gameObject.name}. Please assign a DataSO with the landmark's information.", this);
             return;
         }
 
-        if (_orbitalCameraValues.Target == null)
-            _orbitalCameraValues.Target = transform; // Default to self if no target assigned
+        if (_orbitalStateSetting.Target == null)
+            _orbitalStateSetting.Target = transform; // Default to self if no target assigned
 
         _originalPosition = transform.position;
 
-        // Try to get the UIDocument component from the same GameObject
-        _uiDocument = GetComponent<UIDocument>();
-        var root = _uiDocument.rootVisualElement;
+        VisualElement root = GetComponent<UIDocument>().rootVisualElement;
 
-        _nameLabel = root.Q<Label>(name: "Name");
-        _nameButton = root.Q<Button>(name: "NameButton");
+        _nameLabel = root.Q<Label>("Name");
+        _nameButton = root.Q<Button>("NameButton");
 
         if (_nameLabel == null)
         {
@@ -72,7 +69,7 @@ public class LandmarkVisual : Billboard
             return;
         }
 
-        _nameLabel.text = _orbitalCameraValues.DataToShow.Header;
+        _nameLabel.text = _orbitalStateSetting.DataToShow.Header;
         _nameButton.RegisterCallback<ClickEvent>(OnNameButtonClick);
     }
 
@@ -124,16 +121,16 @@ public class LandmarkVisual : Billboard
     #region CALLBACK METHODS
     void OnNameButtonClick(ClickEvent evt)
     {
-        _uiManager.ShowContextualPanel(_orbitalCameraValues.DataToShow);
+        _uiManager.ShowContextualPanel(_orbitalStateSetting.DataToShow);
         _soundManager.PlayButtonClickSFX();
 
-        if (_orbitalCameraValues.Target == null)
+        if (_orbitalStateSetting.Target == null)
         {
             Debug.LogWarning($"[LandmarkVisual] can't orbit around null target.", this);
             return;
         }
 
-        _cameraManager.SwitchToOrbitalCamera(_orbitalCameraValues);
+        _cameraManager.SwitchToOrbitalCamera(_orbitalStateSetting);
     }
 
     void OnCameraStateChanged()
