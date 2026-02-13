@@ -8,5 +8,6 @@
   <Project Path="sc.terrain.painter.editor.csproj" />
   <Project Path="Mayrit.Editor.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Mayrit.UIComponents.csproj" />
   <Project Path="Mayrit.Input.csproj" />
 </Solution>

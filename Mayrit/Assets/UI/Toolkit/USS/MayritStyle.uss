@@ -100,8 +100,6 @@
     scale: 1.05 1.05;
 }
 
-
-
 .button.smallButton {
     width: 80px;
     height: 80px;
@@ -179,11 +177,72 @@
     border-bottom-color: rgb(89, 48, 47);
 }
 
-
-
 .button.closeButton:hover {
     width: 80px;
     height: 80px;
     position: absolute;
     background-color: rgb(192, 76, 75);
+}
+
+Switch {
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    flex-direction: row;
+}
+
+Switch Label {
+    color: rgb(255, 255, 255);
+    font-size: 18px;
+    -unity-font-style: bold;
+    margin-left: 10px;
+}
+
+.switch-border {
+    background-color: rgb(47, 68, 89);
+    width: 60px;
+    height: 40px;
+    border-top-width: 3px;
+    border-right-width: 3px;
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+    border-left-color: rgb(89, 96, 140);
+    border-right-color: rgb(89, 96, 140);
+    border-top-color: rgb(89, 96, 140);
+    border-bottom-color: rgb(89, 96, 140);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    justify-content: center;
+    align-self: center;
+}
+
+.switch-border_on {
+    border-left-color: rgb(111, 122, 185);
+    border-right-color: rgb(111, 122, 185);
+    border-top-color: rgb(111, 122, 185);
+    border-bottom-color: rgb(111, 122, 185);
+}
+
+.switch-knob {
+    width: 26px;
+    height: 26px;
+    background-color: rgb(89, 96, 140);
+    margin-top: 4px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+    margin-left: 4px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    transition-duration: 0.2s;
+}
+
+.switch-knob_on {
+    background-color: rgb(111, 122, 185);
+    translate: 20px 0;
+    transition-duration: 0.2s;
 }
