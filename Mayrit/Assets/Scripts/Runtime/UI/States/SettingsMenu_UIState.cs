@@ -6,8 +6,8 @@ public class SettingsMenu_UIState : AUIState
 {
     #region PROPERTIES
     Button _closeButton;
-    Toggle _edgeScrollingToggle,
-        _showControlsToggle;
+    Switch _edgeScrollingSwitch,
+        _showControlsSwitch;
     Slider _musicVolumeSlider,
         _sfxVolumeSlider;
     #endregion
@@ -21,17 +21,17 @@ public class SettingsMenu_UIState : AUIState
     protected override void ConfigureUIElementsOnAwake()
     {
         _closeButton = _screen.Q<Button>("CloseButton");
-        _edgeScrollingToggle = _screen.Q<Toggle>("EdgeScrollingToggle");
-        _showControlsToggle = _screen.Q<Toggle>("ShowControlsToggle");
+        _edgeScrollingSwitch = _screen.Q<Switch>("EdgeScrollingSwitch");
+        _showControlsSwitch = _screen.Q<Switch>("ShowControlsSwitch");
         _musicVolumeSlider = _screen.Q<Slider>("MusicVolumeSlider");
         _sfxVolumeSlider = _screen.Q<Slider>("SFXVolumeSlider");
 
         if (_closeButton == null)
             Debug.LogWarning("_closeButton not found");
-        if (_edgeScrollingToggle == null)
-            Debug.LogWarning("_edgeScrollingToggle not found");
-        if (_showControlsToggle == null)
-            Debug.LogWarning("_showControlsToggle not found");
+        if (_edgeScrollingSwitch == null)
+            Debug.LogWarning("_edgeScrollingSwitch not found");
+        if (_showControlsSwitch == null)
+            Debug.LogWarning("_showControlsSwitch not found");
         if (_musicVolumeSlider == null)
             Debug.LogWarning("_musicVolumeSlider not found");
         if (_sfxVolumeSlider == null)
@@ -41,10 +41,11 @@ public class SettingsMenu_UIState : AUIState
     protected override void RegisterUICallbacksOnAwake()
     {
         _closeButton.RegisterCallback<ClickEvent>(OnCloseClicked);
-        _edgeScrollingToggle.RegisterCallback<ChangeEvent<bool>>(OnEdgeScrollingToggled);
-        _showControlsToggle.RegisterCallback<ChangeEvent<bool>>(OnShowControlsToggled);
         _musicVolumeSlider.RegisterCallback<ChangeEvent<float>>(OnMusicVolumeChanged);
         _sfxVolumeSlider.RegisterCallback<ChangeEvent<float>>(OnSFXVolumeChanged);
+
+        _edgeScrollingSwitch.Toggled += OnEdgeScrollingToggled;
+        _showControlsSwitch.Toggled += OnShowControlsToggled;
     }
 
     public override void StartState()
@@ -53,8 +54,8 @@ public class SettingsMenu_UIState : AUIState
 
         _musicVolumeSlider.value = _soundManager.MusicVolume;
         _sfxVolumeSlider.value = _soundManager.EffectsVolume;
-        _showControlsToggle.value = _uiManager.ControlsVisibilityValueSet;
-        _edgeScrollingToggle.value = _uiManager.EdgeScrollingValueSet;
+        _showControlsSwitch.Value = _uiManager.ControlsVisibilityValueSet;
+        _edgeScrollingSwitch.Value = _uiManager.EdgeScrollingValueSet;
     }
     #endregion
 
@@ -70,15 +71,15 @@ public class SettingsMenu_UIState : AUIState
             _uiManager.SwitchToPauseState();
     }
 
-    void OnEdgeScrollingToggled(ChangeEvent<bool> evt)
+    void OnEdgeScrollingToggled(bool value)
     {
-        _uiManager.InvokeEdgeScrollingToggledEvent(evt.newValue);
+        _uiManager.InvokeEdgeScrollingToggledEvent(value);
         _soundManager.PlayButtonClickSFX();
     }
 
-    void OnShowControlsToggled(ChangeEvent<bool> evt)
+    void OnShowControlsToggled(bool value)
     {
-        _uiManager.SetControlsVisibility(evt.newValue);
+        _uiManager.SetControlsVisibility(value);
         _soundManager.PlayButtonClickSFX();
     }
 

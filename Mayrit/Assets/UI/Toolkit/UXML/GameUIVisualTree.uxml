@@ -239,12 +239,12 @@
             <ui:VisualElement name="Bg" style="flex-grow: 0; background-color: rgba(113, 119, 153, 0.71); border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; border-left-color: rgb(47, 68, 89); border-right-color: rgb(47, 68, 89); border-top-color: rgb(47, 68, 89); border-bottom-color: rgb(47, 68, 89); border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px; flex-direction: column; flex-shrink: 0; padding-top: 30px; padding-right: 30px; padding-bottom: 30px; padding-left: 30px;">
                 <ui:VisualElement name="Upper" style="flex-grow: 0; flex-direction: row; flex-shrink: 0; justify-content: center; align-self: center; align-items: flex-end; width: 1000px; height: 200px;">
                     <ui:VisualElement name="ControlsSettings" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; background-color: rgb(113, 119, 153); border-left-color: rgb(47, 68, 89); border-right-color: rgb(47, 68, 89); border-top-color: rgb(47, 68, 89); border-bottom-color: rgb(47, 68, 89); border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px; border-top-left-radius: 30px; border-top-right-radius: 30px; border-bottom-right-radius: 30px; border-bottom-left-radius: 30px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px; align-self: stretch; flex-grow: 1; width: 200px;">
-                        <ui:VisualElement name="Title" class="subHeader" style="align-self: center;">
+                        <ui:VisualElement name="Title" class="subHeader" style="align-self: center; margin-bottom: 5px;">
                             <ui:Label text="Control" class="subHeader" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: upper-center; align-items: center; align-self: center;"/>
                         </ui:VisualElement>
-                        <ui:VisualElement style="align-self: stretch; justify-content: center; align-items: stretch; flex-shrink: 1; flex-grow: 1; align-content: center;">
-                            <ui:Toggle label="Movimiento por borde de pantalla" name="EdgeScrollingToggle" class="text" style="color: rgb(243, 243, 243); font-size: 20px;"/>
-                            <ui:Toggle label="Mostrar controles en el juego" name="ShowControlsToggle" class="text" style="color: rgb(243, 243, 243); font-size: 20px;"/>
+                        <ui:VisualElement style="align-self: stretch; justify-content: space-between; align-items: stretch; flex-shrink: 1; flex-grow: 1; align-content: center;">
+                            <Switch text="Movimiento por borde de pantalla" name="EdgeScrollingSwitch"/>
+                            <Switch text="Mostrar controles en el juego" name="ShowControlsSwitch"/>
                         </ui:VisualElement>
                     </ui:VisualElement>
                     <ui:VisualElement style="width: 30px; align-self: stretch;"/>
