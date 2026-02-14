@@ -76,8 +76,6 @@ public class LandmarkVisual : Billboard
         _soundManager = ServiceLocator.Instance.Get<SoundManager>();
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
 
-        _rootVisual.visible = _uiManager.IsLandmarkVisualizationOn;
-
         _cameraManager.CameraStateChangedEvent += OnCameraStateChanged;
         _uiManager.LandmarkVisualizationToggled += OnVisualizationToggled;
 
@@ -135,7 +133,7 @@ public class LandmarkVisual : Billboard
 
     void OnCameraStateChanged()
     {
-        if (_cameraManager.IsInThirdPersonState || _cameraManager.IsInPOIState)
+        if (_cameraManager.IsInThirdPersonState || _cameraManager.IsInPOIState || _cameraManager.IsInOrbitalState)
             _rootVisual.visible = false;
         else
             _rootVisual.visible = _wasActive;
