@@ -22,6 +22,9 @@ public class ThirdPerson_CameraState : ACameraState
     {
         base.StartState();
 
+        // Keep controller yaw/pitch in sync with the current target rotation
+        _cameraController.SyncFromTargetRotation();
+
         _gameManager.InputActions.Camera.Enable();
         _gameManager.InputActions.Camera.ExitMode.performed += OnExitCameraMode;
 

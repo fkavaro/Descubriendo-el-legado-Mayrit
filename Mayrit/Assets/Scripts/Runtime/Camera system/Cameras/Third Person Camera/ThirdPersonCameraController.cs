@@ -46,6 +46,19 @@ public class ThirdPersonCameraController
 
     #region PUBLIC METHODS
     /// <summary>
+    /// Syncs internal yaw/pitch with the current target rotation.
+    /// </summary>
+    public void SyncFromTargetRotation()
+    {
+        if (_cameraTarget == null)
+            return;
+
+        Vector3 eulerAngles = _cameraTarget.rotation.eulerAngles;
+        _targetPitch = Mathf.DeltaAngle(0f, eulerAngles.x);
+        _targetYaw = Mathf.DeltaAngle(0f, eulerAngles.y);
+    }
+
+    /// <summary>
     /// Updates camera rotation based on mouse input.
     /// Applies vertical (pitch) and horizontal (yaw) rotation to the camera target.
     /// </summary>

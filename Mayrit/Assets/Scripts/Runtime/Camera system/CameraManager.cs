@@ -184,6 +184,9 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
             return;
         }
 
+        if (IsInOrbitalState)
+            SyncThirdPersonWithOrbital();
+
         _thirdPersonCamera.LookAt.position = _playableCharacter.transform.position;
         _fsm.SwitchState(_thirdPersonState);
 
@@ -264,15 +267,22 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         orbitalOrbit.VerticalAxis.Value = spectatorOrbit.VerticalAxis.Value;
     }
 
+    void SyncThirdPersonWithOrbital()
+    {
+        CinemachineOrbitalFollow orbitalOrbit = _orbitalCamera.GetComponent<CinemachineOrbitalFollow>();
+
+        float yaw = Mathf.Repeat(orbitalOrbit.HorizontalAxis.Value, 360f);
+        float pitch = Mathf.DeltaAngle(0f, orbitalOrbit.VerticalAxis.Value);
+
+        Vector2 limits = _thirdPersonCameraData._orbitClamp;
+        float clampedPitch = Mathf.Clamp(pitch, limits.x, limits.y);
+
+        _thirdPersonCamera.LookAt.rotation = Quaternion.Euler(clampedPitch, yaw, 0f);
+    }
+
     void SyncSpectatorWithThirdPerson()
     {
         CinemachineOrbitalFollow spectatorOrbit = _spectatorCamera.GetComponent<CinemachineOrbitalFollow>();
-
-        if (spectatorOrbit == null || _thirdPersonCamera.LookAt == null)
-        {
-            Debug.LogWarning("Cannot sync spectator with third person: Missing CinemachineOrbitalFollow component or third person LookAt target.");
-            return;
-        }
 
         // Extract pitch/yaw from third-person target rotation and convert to signed degrees
         Vector3 eulerAngles = _thirdPersonCamera.LookAt.eulerAngles;
