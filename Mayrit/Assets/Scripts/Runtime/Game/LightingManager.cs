@@ -3,28 +3,28 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public class TimeManager : MonoBehaviour
+public class LightingManager : MonoBehaviour
 {
     #region PROPERTIES HELPERS
-    public float SimulationSpeed => _gameSimulationSpeed;
     public float CurrentTime => _currentTime;
     #endregion
 
     #region EDITOR PROPERTIES
     [Header("Time Settings")]
-    [Tooltip("Game simulation speed multiplier. Set by Camera states.")]
-    [Range(0.1f, 10f)]
-    [SerializeField] float _gameSimulationSpeed = 1f;
+    [SerializeField] bool _hasTransitions = false;
+    [Tooltip("In hours")]
+    [Range(0f, 24f)]
+    [SerializeField] float _currentTime;
+
+    [Header("Transition Settings")]
+
     [Tooltip("Whether the time will advance automatically or just to reach a wanted time")]
     [SerializeField] bool _isDynamic = false;
     [Tooltip("Wanted time in hours to be reached. If dynamic time is enabled, this will be ignored")]
     [Range(0f, 24f)]
     [SerializeField] float _wantedTime = 10f;
-    [Tooltip("Current time in hours since the start of the game")]
-    [Range(0f, 24f)]
-    [SerializeField] float _currentTime;
     [Tooltip("Time cycle speed multiplier")]
-    [SerializeField] float _timeSpeed = 0.2f;
+    [SerializeField] float _transitionSpeed = 0.1f;
 
     [Header("Sun Light Settings")]
     [SerializeField] Light _sunSource;
@@ -67,6 +67,9 @@ public class TimeManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if (!_hasTransitions)
+            return;
+
         // Get dependencies from ServiceLocator
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
@@ -81,6 +84,9 @@ public class TimeManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!_hasTransitions)
+            return;
+
         // Difference between current time and wanted time is less than threshold of 0.1f
         _isWantedTimeReached = Mathf.Abs(_currentTime - _wantedTime) < 0.1f;
 
@@ -90,11 +96,6 @@ public class TimeManager : MonoBehaviour
             UpdateTimeOfDay();
             UpdateLighting();
             CheckActiveLightSource();
-        }
-
-        if (_gameSimulationSpeed != Time.timeScale && Time.timeScale != 0f)
-        {
-            SetSimulationSpeed(_gameSimulationSpeed);
         }
     }
 
@@ -106,35 +107,9 @@ public class TimeManager : MonoBehaviour
 
     void OnDisable()
     {
-        _progressManager.MilestoneChangedEvent -= OnMilestoneChanged;
+        if (_hasTransitions)
+            _progressManager.MilestoneChangedEvent -= OnMilestoneChanged;
         ServiceLocator.Instance.Unregister(this);
-    }
-    #endregion
-
-    #region PUBLIC METHODS
-    public void SetSimulationSpeed(float speed)
-    {
-        // Validate input
-        if (float.IsNaN(speed) || float.IsInfinity(speed))
-        {
-            Debug.LogWarning("TimeManager.SetSimulationSpeed: invalid speed (NaN or Infinity). Change ignored.");
-            return;
-        }
-
-        // Keep inside sensible bounds (aligns with inspector limits but slightly more permissive for safety)
-        const float minSpeed = 0.01f;
-        const float maxSpeed = 10f;
-        float clamped = Mathf.Clamp(speed, minSpeed, maxSpeed);
-        if (!Mathf.Approximately(clamped, speed))
-            Debug.LogWarning($"TimeManager: requested simulation speed {speed} was clamped to {clamped}.");
-
-        _gameSimulationSpeed = clamped;
-
-        // Apply time scale for gameplay
-        Time.timeScale = _gameSimulationSpeed;
-
-        // Keep physics timestep consistent with timeScale (default fixedDeltaTime is 0.02)
-        Time.fixedDeltaTime = 0.02f * Mathf.Max(Time.timeScale, minSpeed);
     }
     #endregion
 
@@ -143,7 +118,7 @@ public class TimeManager : MonoBehaviour
     {
         // Smoothly interpolate towards wanted time with damping for smooth transitions
         const float smoothTime = 1f; // Time to reach wanted time
-        _currentTime = Mathf.SmoothDamp(_currentTime, _wantedTime, ref _timeVelocity, smoothTime, Mathf.Infinity, Time.unscaledDeltaTime * _timeSpeed);
+        _currentTime = Mathf.SmoothDamp(_currentTime, _wantedTime, ref _timeVelocity, smoothTime, Mathf.Infinity, Time.unscaledDeltaTime * _transitionSpeed);
 
         // Ensure current time wraps around after 24 hours
         if (_currentTime >= 24f)

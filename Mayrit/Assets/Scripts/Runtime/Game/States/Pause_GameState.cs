@@ -3,16 +3,8 @@ using UnityEngine;
 
 public class Pause_GameState : AGameState
 {
-    // Dependency Injection
-    protected TimeManager _timeManager;
-
     public Pause_GameState()
     : base("Pause") { }
-
-    protected override void GetServicesDependenciesOnStart()
-    {
-        _timeManager = ServiceLocator.Instance.Get<TimeManager>();
-    }
 
     public override void StartState()
     {
@@ -23,6 +15,6 @@ public class Pause_GameState : AGameState
 
     public override void ExitState()
     {
-        Time.timeScale = _timeManager.SimulationSpeed;
+        Time.timeScale = _gameManager.SimulationSpeed;
     }
 }

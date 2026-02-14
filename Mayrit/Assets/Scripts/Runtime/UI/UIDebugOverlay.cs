@@ -11,7 +11,7 @@ public class UIDebugOverlay : MonoBehaviour
     GameManager _gameManager;
     ProgressManager _progressManager;
     CameraManager _cameraManager;
-    TimeManager _timeManager;
+    LightingManager _timeManager;
     TownManager _townManager;
     NPCPoolManager _npcPoolManager;
     PlayableCharacter _playableCharacter;
@@ -54,7 +54,7 @@ public class UIDebugOverlay : MonoBehaviour
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
-        _timeManager = ServiceLocator.Instance.Get<TimeManager>();
+        _timeManager = ServiceLocator.Instance.Get<LightingManager>();
         _townManager = ServiceLocator.Instance.Get<TownManager>();
         _npcPoolManager = ServiceLocator.Instance.Get<NPCPoolManager>();
         _playableCharacter = ServiceLocator.Instance.Get<PlayableCharacter>();

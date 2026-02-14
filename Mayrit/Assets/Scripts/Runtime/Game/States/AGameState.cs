@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 public abstract class AGameState : AState
 {
     protected ScenesController _scenesController;
+    protected GameManager _gameManager;
     protected ProgressManager _progressManager;
 
     protected AGameState(string name)
@@ -16,10 +17,9 @@ public abstract class AGameState : AState
         _scenesController = ServiceLocator.Instance.Get<ScenesController>();
     }
 
-    public override void StartState()
+    protected override void GetServicesDependenciesOnStart()
     {
-        base.StartState();
-
+        _gameManager = ServiceLocator.Instance.Get<GameManager>();
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
     }
 }

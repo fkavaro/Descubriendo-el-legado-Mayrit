@@ -251,7 +251,7 @@ GameObject:
   - component: {fileID: 2068799235105443334}
   - component: {fileID: 9097381160131699623}
   m_Layer: 0
-  m_Name: "\u231BTimeManager"
+  m_Name: "\U0001F324\uFE0FLightingManager"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -287,11 +287,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4532c210d7d8f854fa2f13a2a7a04f7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameSimulationSpeed: 1
+  _hasTransitions: 0
+  _currentTime: 10
   _isDynamic: 0
   _wantedTime: 10
-  _currentTime: 10
-  _timeSpeed: 0.1
+  _transitionSpeed: 0.1
   _sunSource: {fileID: 6097541470270510900}
   _sunAngle: 150
   _sunLatitude: 40
