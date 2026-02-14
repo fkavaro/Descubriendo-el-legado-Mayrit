@@ -18,7 +18,8 @@ public class LoadingScreen_UIState : AUIState
 
     Button _continueButton;
 
-    VisualElement _root,
+    VisualElement _infoLoadingScreen,
+        _blackLoadingScreen,
         _image;
 
     DataSO _currentMilestone;
@@ -38,16 +39,15 @@ public class LoadingScreen_UIState : AUIState
     #region INHERITED METHODS
     protected override void ConfigureUIElementsOnAwake()
     {
-        _root = _UIDocument.rootVisualElement.Q<VisualElement>("LoadingScreen");
+        _infoLoadingScreen = _screen.Q<VisualElement>("InfoLoadingScreen");
+        _blackLoadingScreen = _screen.Q<VisualElement>("BlackLoadingScreen");
+        _header = _infoLoadingScreen.Q<Label>("Header");
+        _subHeader = _infoLoadingScreen.Q<Label>("SubHeader");
+        _description = _infoLoadingScreen.Q<Label>("Description");
+        _continueButton = _infoLoadingScreen.Q<Button>("ContinueButton");
+        _image = _infoLoadingScreen.Q<VisualElement>("Image");
 
-        _header = _root.Q<Label>("Header");
-        _subHeader = _root.Q<Label>("SubHeader");
-        _description = _root.Q<Label>("Description");
-        _continueButton = _root.Q<Button>("ContinueButton");
-        _image = _root.Q<VisualElement>("Image");
-
-
-        if (_root == null)
+        if (_infoLoadingScreen == null)
             Debug.LogWarning("LoadingScreenController: No VisualElement with name 'LoadingScreen' found.");
         if (_header == null)
             Debug.LogWarning("LoadingScreenController: No Label with name 'Header' found.");
@@ -68,15 +68,19 @@ public class LoadingScreen_UIState : AUIState
 
     public override void StartState()
     {
+        base.StartState();
+
+        _infoLoadingScreen.style.opacity = 0f;
+        _infoLoadingScreen.style.display = DisplayStyle.None;
+        _blackLoadingScreen.style.opacity = 0f;
+        _blackLoadingScreen.style.display = DisplayStyle.None;
+
         ContinueIsClicked = false;
-        _root.style.opacity = 0f;
+        //_continueButton.style.opacity = 0f;
         _continueButton.text = "Cargando...";
         _continueButton.SetEnabled(false);
 
-        base.StartState();
-
         _scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
-        _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
 
         // Get current milestone data
         _currentMilestone = _progressManager.CurrentMilestoneMapping;
@@ -105,11 +109,6 @@ public class LoadingScreen_UIState : AUIState
         }
     }
 
-    private void OnMilestoneChanged(Milestone_DataSO sO)
-    {
-
-    }
-
     public override void ExitState()
     {
         //base.ExitState(); Dont hide on exit, hide after FadeOutCoroutine
@@ -118,45 +117,53 @@ public class LoadingScreen_UIState : AUIState
     #endregion
 
     #region COROUTINES
+    public IEnumerator BlackFadeInCoroutine()
+    {
+        _blackLoadingScreen.style.display = DisplayStyle.Flex;
+        yield return FadeToAlpha(_blackLoadingScreen, 1f, _fadeInDuration);
+    }
+
+    public IEnumerator BlackFadeOutCoroutine()
+    {
+        yield return FadeToAlpha(_blackLoadingScreen, 0f, _fadeOutDuration);
+        _blackLoadingScreen.style.display = DisplayStyle.None;
+        base.ExitState(); // Hide after fade out is complete
+    }
+
     public IEnumerator FadeInCoroutine()
     {
-        yield return FadeToAlpha(1f, _fadeInDuration);
+        yield return BlackFadeInCoroutine();
+        _infoLoadingScreen.style.display = DisplayStyle.Flex;
+        yield return FadeToAlpha(_infoLoadingScreen, 1f, _fadeInDuration);
     }
 
     public IEnumerator FadeOutCoroutine()
     {
-        yield return FadeToAlpha(0f, _fadeOutDuration);
-        base.ExitState(); // Hide after fade out is complete
+        Debug.Log("Starting fade out of loading screen...");
+        yield return FadeToAlpha(_infoLoadingScreen, 0f, _fadeOutDuration);
+        _infoLoadingScreen.style.display = DisplayStyle.None;
+        yield return BlackFadeOutCoroutine();
     }
 
-    IEnumerator FadeToAlpha(float targetAlpha, float duration)
+    IEnumerator FadeToAlpha(VisualElement visualElement, float targetAlpha, float duration)
     {
-        if (_root == null)
-        {
-            Debug.LogWarning("LoadingScreenController: No VisualElement assigned.");
-            yield break;
-        }
+        if (visualElement.style.display == DisplayStyle.None)
+            visualElement.style.display = DisplayStyle.Flex;
 
-        float startAlpha = GetCurrentAlpha();
+        if (visualElement.resolvedStyle.opacity == targetAlpha)
+            Debug.LogWarning("FadeToAlpha called with targetAlpha equal to current alpha.");
+
+        float startAlpha = visualElement.resolvedStyle.opacity;
         float elapsed = 0f;
         while (elapsed < duration)
         {
             elapsed += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
             float newAlpha = Mathf.Lerp(startAlpha, targetAlpha, t);
-            _root.style.opacity = newAlpha;
+            visualElement.style.opacity = newAlpha;
             yield return null;
         }
-        _root.style.opacity = targetAlpha;
-    }
-    #endregion
-
-    #region HELPERS
-    private float GetCurrentAlpha()
-    {
-        if (_root.resolvedStyle.opacity >= 0f)
-            return _root.resolvedStyle.opacity;
-        return 0f;
+        visualElement.style.opacity = targetAlpha;
     }
     #endregion
 
@@ -171,6 +178,7 @@ public class LoadingScreen_UIState : AUIState
         {
             _continueButton.text = "Continuar";
             _continueButton.SetEnabled(true);
+            //_continueButton.style.opacity = 100f;
         }
     }
 }

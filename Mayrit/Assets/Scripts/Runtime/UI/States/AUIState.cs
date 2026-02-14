@@ -47,6 +47,7 @@ public abstract class AUIState : AState
             return;
         }
 
+        _screen.style.display = DisplayStyle.None; // Hide
         ConfigureUIElementsOnAwake();
         RegisterUICallbacksOnAwake();
     }
@@ -67,12 +68,6 @@ public abstract class AUIState : AState
 
     public override void StartState()
     {
-        if (_screen == null)
-        {
-            Debug.LogWarning($"{_stateName} UI State: _screen is null.");
-            return;
-        }
-
         _screen.style.display = DisplayStyle.Flex; // Show
         base.StartState();
     }

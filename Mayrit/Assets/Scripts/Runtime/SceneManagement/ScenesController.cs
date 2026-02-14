@@ -60,7 +60,12 @@ public class ScenesController : MonoBehaviour
         _isLoading = true;
         if (plan.Overlay)
         {
-            yield return _uiManager.FadeInLoadingScreenCoroutine();
+            // Black if loading main menu
+            if (plan.ScenesToLoad.ContainsValue(SceneDatabase.SceneName.MainMenuScene))
+                yield return _uiManager.FadeInBlackLoadingScreenCoroutine();
+            else
+                yield return _uiManager.FadeInLoadingScreenCoroutine();
+
             yield return _waitForSeconds0_5;
         }
 
@@ -93,7 +98,11 @@ public class ScenesController : MonoBehaviour
         if (plan.Overlay)
         {
             yield return _waitForSeconds0_5;
-            yield return _uiManager.FadeOutLoadingScreenCoroutine();
+
+            if (plan.ScenesToLoad.ContainsValue(SceneDatabase.SceneName.MainMenuScene))
+                yield return _uiManager.FadeOutBlackLoadingScreenCoroutine();
+            else
+                yield return _uiManager.FadeOutLoadingScreenCoroutine();
         }
 
         ScenesLoadedFullyEvent?.Invoke(plan.ScenesToLoad, plan.TypesToUnload);

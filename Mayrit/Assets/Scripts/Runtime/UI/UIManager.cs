@@ -273,7 +273,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     }
     #endregion
 
-    #region CORIOUTINES
+    #region COROUTINES
     public IEnumerator FadeInLoadingScreenCoroutine()
     {
         SwitchToLoadingScreenState();
@@ -286,6 +286,17 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
         while (!_loadingScreenState.ContinueIsClicked)
             yield return null;
         yield return _loadingScreenState.FadeOutCoroutine();
+    }
+
+    public IEnumerator FadeInBlackLoadingScreenCoroutine()
+    {
+        SwitchToLoadingScreenState();
+        yield return _loadingScreenState.BlackFadeInCoroutine();
+    }
+
+    public IEnumerator FadeOutBlackLoadingScreenCoroutine()
+    {
+        yield return _loadingScreenState.BlackFadeOutCoroutine();
     }
     #endregion
 }
