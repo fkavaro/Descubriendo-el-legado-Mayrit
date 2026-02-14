@@ -1403,53 +1403,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2460785818384301101, guid: da3a56083b7325b4e8667eeafb70b3c7, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: -0.8754261
-      objectReference: {fileID: 0}
-    - target: {fileID: 2460785818384301101, guid: da3a56083b7325b4e8667eeafb70b3c7, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.4082179
-      objectReference: {fileID: 0}
-    - target: {fileID: 2460785818384301101, guid: da3a56083b7325b4e8667eeafb70b3c7, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.23456971
-      objectReference: {fileID: 0}
-    - target: {fileID: 2460785818384301101, guid: da3a56083b7325b4e8667eeafb70b3c7, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0.10938169
-      objectReference: {fileID: 0}
     - target: {fileID: 5284671780804002193, guid: da3a56083b7325b4e8667eeafb70b3c7, type: 3}
       propertyPath: m_Name
       value: "\U0001F324\uFE0FLightingManager"
-      objectReference: {fileID: 0}
-    - target: {fileID: 6097541470270510900, guid: da3a56083b7325b4e8667eeafb70b3c7, type: 3}
-      propertyPath: m_Intensity
-      value: 123379.625
-      objectReference: {fileID: 0}
-    - target: {fileID: 6097541470270510900, guid: da3a56083b7325b4e8667eeafb70b3c7, type: 3}
-      propertyPath: m_ColorTemperature
-      value: 5981.481
-      objectReference: {fileID: 0}
-    - target: {fileID: 6606415416219525959, guid: da3a56083b7325b4e8667eeafb70b3c7, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: -0.6275069
-      objectReference: {fileID: 0}
-    - target: {fileID: 6606415416219525959, guid: da3a56083b7325b4e8667eeafb70b3c7, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.56486255
-      objectReference: {fileID: 0}
-    - target: {fileID: 6606415416219525959, guid: da3a56083b7325b4e8667eeafb70b3c7, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.5265408
-      objectReference: {fileID: 0}
-    - target: {fileID: 6606415416219525959, guid: da3a56083b7325b4e8667eeafb70b3c7, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0.09960046
-      objectReference: {fileID: 0}
-    - target: {fileID: 8492983115411438351, guid: da3a56083b7325b4e8667eeafb70b3c7, type: 3}
-      propertyPath: m_Intensity
-      value: 1.8416202
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -39443,7 +39443,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1594008427302929976, guid: 17642575fc6e78a408f3cbe110095f86, type: 3}
       propertyPath: m_Intensity
-      value: 0.5093886
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1594008427302929976, guid: 17642575fc6e78a408f3cbe110095f86, type: 3}
       propertyPath: m_CookieSize2D.x
@@ -39787,7 +39787,7 @@ PrefabInstance:
       objectReference: {fileID: 1669988589}
     - target: {fileID: 2126348742089563792, guid: 17642575fc6e78a408f3cbe110095f86, type: 3}
       propertyPath: _sunAngle
-      value: 195
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 2126348742089563792, guid: 17642575fc6e78a408f3cbe110095f86, type: 3}
       propertyPath: _isDayTime
@@ -39795,7 +39795,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2126348742089563792, guid: 17642575fc6e78a408f3cbe110095f86, type: 3}
       propertyPath: _currentTime
-      value: 13
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2127956737212052727, guid: 17642575fc6e78a408f3cbe110095f86, type: 3}
       propertyPath: m_Mesh
@@ -40867,7 +40867,7 @@ PrefabInstance:
       objectReference: {fileID: 1167520225}
     - target: {fileID: 3989341221738523139, guid: 17642575fc6e78a408f3cbe110095f86, type: 3}
       propertyPath: m_Intensity
-      value: 128269.67
+      value: 130000
       objectReference: {fileID: 0}
     - target: {fileID: 3989341221738523139, guid: 17642575fc6e78a408f3cbe110095f86, type: 3}
       propertyPath: m_Shadows.m_Type
@@ -40875,7 +40875,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3989341221738523139, guid: 17642575fc6e78a408f3cbe110095f86, type: 3}
       propertyPath: m_ColorTemperature
-      value: 6348.3794
+      value: 6500
       objectReference: {fileID: 0}
     - target: {fileID: 3990872251860909081, guid: 17642575fc6e78a408f3cbe110095f86, type: 3}
       propertyPath: m_Mesh

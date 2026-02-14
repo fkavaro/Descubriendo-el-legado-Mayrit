@@ -9,6 +9,8 @@ using UnityEditor;
 
 public class MilestoneSetting : MonoBehaviour
 {
+    public int MilestonePreviewIndex => _milestonePreview;
+
     [Range(-1, 7)]
     [SerializeField] private int _milestonePreview = -1;
 

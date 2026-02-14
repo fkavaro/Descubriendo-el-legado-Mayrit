@@ -15,6 +15,7 @@ public class LightingManager : MonoBehaviour
     [Tooltip("In hours")]
     [Range(0f, 24f)]
     [SerializeField] float _currentTime;
+    [SerializeField] MilestonesTimesSO _milestoneTimes;
 
     [Header("Transition Settings")]
 
@@ -53,12 +54,31 @@ public class LightingManager : MonoBehaviour
     float _normalisedTime; // Normalised time value between 0 and 1, where 0 is midnight and 1 is the next midnight
     float _timeVelocity; // Velocity for SmoothDamp
 
+    MilestoneSetting _milestoneSetting;
+
     // Dependency Injection
     ProgressManager _progressManager;
     GameManager _gameManager;
     #endregion
 
     #region LIFE CYCLE
+#if UNITY_EDITOR
+    void OnValidate()
+    {
+        if (Application.isPlaying)
+            return;
+
+        _milestoneSetting = GetComponentInParent<MilestoneSetting>();
+
+        _currentTime = _milestoneSetting.MilestonePreviewIndex >= 0
+        ? _milestoneTimes.List[_milestoneSetting.MilestonePreviewIndex]._time
+        : 10f; // Default to 10am if no milestone preview index is set
+
+        UpdateLighting();
+        CheckActiveLightSource();
+    }
+#endif
+
     void Awake()
     {
         ServiceLocator.Instance.Register(this);
@@ -97,12 +117,6 @@ public class LightingManager : MonoBehaviour
             UpdateLighting();
             CheckActiveLightSource();
         }
-    }
-
-    void OnValidate()
-    {
-        UpdateLighting();
-        CheckActiveLightSource();
     }
 
     void OnDisable()
