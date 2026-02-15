@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -53,6 +54,13 @@ public class PauseMenu_UIState : AUIState
             _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
     }
 
+    protected override void SubscribeToServicesEventsOnStart()
+    {
+        base.SubscribeToServicesEventsOnStart();
+
+        _scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
+    }
+
     public override void StartState()
     {
         base.StartState();
@@ -63,7 +71,7 @@ public class PauseMenu_UIState : AUIState
 
     public override void ExitState()
     {
-        base.ExitState();
+        //base.ExitState(); Obly after main menu loaded
         _gameManager.InputActions.UI.Disable();
         _gameManager.InputActions.UI.Pause.performed -= OnPauseKeyPressed;
     }
@@ -72,6 +80,7 @@ public class PauseMenu_UIState : AUIState
     #region CALLBACK METHODS
     void OnPlayClicked(ClickEvent evt)
     {
+        base.ExitState();
         _gameManager.SwitchToGamePlayState();
         _soundManager.PlayButtonClickSFX();
 
@@ -94,6 +103,7 @@ public class PauseMenu_UIState : AUIState
 
     void OnSettingsClicked(ClickEvent evt)
     {
+        base.ExitState();
         _uiManager.SwitchToSettingsMenuState();
         _soundManager.PlayButtonClickSFX();
     }
@@ -105,6 +115,12 @@ public class PauseMenu_UIState : AUIState
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false; // For convenience in the editor
 #endif
+    }
+
+    void OnSceneLoadedPartially(SceneDatabase.SceneType type, SceneDatabase.SceneName name)
+    {
+        if (name == SceneDatabase.SceneName.MainMenuScene)
+            base.ExitState();
     }
     #endregion
 }
