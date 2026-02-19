@@ -186,6 +186,8 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
 
         if (IsInOrbitalState)
             SyncThirdPersonWithOrbital();
+        else if (IsInPOIState)
+            SyncThirdPersonWithPOI();
 
         _thirdPersonCamera.LookAt.position = _playableCharacter.transform.position;
         _fsm.SwitchState(_thirdPersonState);
@@ -267,19 +269,6 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         orbitalOrbit.VerticalAxis.Value = spectatorOrbit.VerticalAxis.Value;
     }
 
-    void SyncThirdPersonWithOrbital()
-    {
-        CinemachineOrbitalFollow orbitalOrbit = _orbitalCamera.GetComponent<CinemachineOrbitalFollow>();
-
-        float yaw = Mathf.Repeat(orbitalOrbit.HorizontalAxis.Value, 360f);
-        float pitch = Mathf.DeltaAngle(0f, orbitalOrbit.VerticalAxis.Value);
-
-        Vector2 limits = _thirdPersonCameraData._orbitClamp;
-        float clampedPitch = Mathf.Clamp(pitch, limits.x, limits.y);
-
-        _thirdPersonCamera.LookAt.rotation = Quaternion.Euler(clampedPitch, yaw, 0f);
-    }
-
     void SyncSpectatorWithThirdPerson()
     {
         CinemachineOrbitalFollow spectatorOrbit = _spectatorCamera.GetComponent<CinemachineOrbitalFollow>();
@@ -299,6 +288,34 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
             spectatorOrbit.VerticalAxis.Value = limits.y;
         else
             spectatorOrbit.VerticalAxis.Value = signedPitch;
+    }
+
+    void SyncThirdPersonWithOrbital()
+    {
+        CinemachineOrbitalFollow orbitalOrbit = _orbitalCamera.GetComponent<CinemachineOrbitalFollow>();
+
+        float yaw = Mathf.Repeat(orbitalOrbit.HorizontalAxis.Value, 360f);
+        float pitch = Mathf.DeltaAngle(0f, orbitalOrbit.VerticalAxis.Value);
+
+        Vector2 limits = _thirdPersonCameraData._orbitClamp;
+        float clampedPitch = Mathf.Clamp(pitch, limits.x, limits.y);
+
+        _thirdPersonCamera.LookAt.rotation = Quaternion.Euler(clampedPitch, yaw, 0f);
+    }
+
+    void SyncThirdPersonWithPOI()
+    {
+        Transform poiCameraTransform = _poiState.Camera.transform;
+        Vector3 poiForward = poiCameraTransform.forward;
+
+        Vector3 eulerAngles = Quaternion.LookRotation(poiForward, Vector3.up).eulerAngles;
+        float pitch = Mathf.DeltaAngle(0f, eulerAngles.x);
+        float yaw = Mathf.Repeat(eulerAngles.y, 360f);
+
+        Vector2 limits = _thirdPersonCameraData._orbitClamp;
+        float clampedPitch = Mathf.Clamp(pitch, limits.x, limits.y);
+
+        _thirdPersonCamera.LookAt.rotation = Quaternion.Euler(clampedPitch, yaw, 0f);
     }
     #endregion
 
