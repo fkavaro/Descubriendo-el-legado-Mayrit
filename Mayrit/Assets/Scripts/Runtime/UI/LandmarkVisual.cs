@@ -76,6 +76,7 @@ public class LandmarkVisual : Billboard
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
 
         _rootVisual.visible = _uiManager.IsLandmarkVisualizationOn;
+        _wasActive = _rootVisual.visible;
 
         _cameraManager.CameraStateChangedEvent += OnCameraStateChanged;
         _uiManager.LandmarkVisualizationToggled += OnVisualizationToggled;
