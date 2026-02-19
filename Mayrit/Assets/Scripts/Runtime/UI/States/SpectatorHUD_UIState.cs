@@ -16,7 +16,8 @@ public class SpectatorHUD_UIState : AHUDState
         _nextMilestoneButton,
         _previousMilestoneButton;
     VisualElement _milestoneArea,
-        _playerFollower;
+        _playerFollower,
+        _switches;
 
     public Switch _modernVisualizactionSwitch,
         _landmarkVisualizationSwitch;
@@ -41,8 +42,9 @@ public class SpectatorHUD_UIState : AHUDState
         _nextMilestoneButton = _milestoneArea.Q<Button>("NextMilestoneButton");
         _previousMilestoneButton = _milestoneArea.Q<Button>("PreviousMilestoneButton");
         _playerFollower = _screen.Q<VisualElement>("PlayerFollower");
-        _modernVisualizactionSwitch = _screen.Q<Switch>("ModernVisualizationSwitch");
-        _landmarkVisualizationSwitch = _screen.Q<Switch>("LandmarkVisualizationSwitch");
+        _switches = _screen.Q<VisualElement>("Switches");
+        _modernVisualizactionSwitch = _switches.Q<Switch>("ModernVisualizationSwitch");
+        _landmarkVisualizationSwitch = _switches.Q<Switch>("LandmarkVisualizationSwitch");
 
         if (_pauseButton == null)
             Debug.LogWarning("_pauseButton not found");
@@ -62,6 +64,8 @@ public class SpectatorHUD_UIState : AHUDState
             Debug.LogWarning("_previousMilestoneButton button not found");
         if (_playerFollower == null)
             Debug.LogWarning("_playerFollower not found");
+        if (_switches == null)
+            Debug.LogWarning("_switches not found");
         if (_modernVisualizactionSwitch == null)
             Debug.LogWarning("_modernVisualizactionSwitch not found");
         if (_landmarkVisualizationSwitch == null)
@@ -134,11 +138,13 @@ public class SpectatorHUD_UIState : AHUDState
     protected override void OnContextualPanelShown()
     {
         _milestoneArea.style.display = DisplayStyle.None;
+        _switches.style.display = DisplayStyle.None;
     }
 
     protected override void OnContextualPanelHidden()
     {
         _milestoneArea.style.display = DisplayStyle.Flex;
+        _switches.style.display = DisplayStyle.Flex;
     }
     #endregion
 

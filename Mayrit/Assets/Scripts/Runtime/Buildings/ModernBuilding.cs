@@ -75,7 +75,7 @@ public class ModernBuilding : MonoBehaviour
     void OnContextualShownPanel(DataSO data, bool isCharacter)
     {
         if (isCharacter)
-            return;
+            IsActive = false;
 
         if (data == null || _landmarkVisual.Data == null)
             return;
