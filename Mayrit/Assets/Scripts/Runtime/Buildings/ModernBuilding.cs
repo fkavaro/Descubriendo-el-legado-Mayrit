@@ -1,11 +1,13 @@
 using System;
 using UnityEngine;
 
-public class ModernSuperposition : MonoBehaviour
+public class ModernBuilding : MonoBehaviour
 {
     #region EDITOR PROPERTIES
     [Header("Settings")]
-    public bool _isActive = false;
+    [SerializeField] bool _isActive = false;
+    [SerializeField] LandmarkVisual _landmarkVisual;
+    [SerializeField] GameObject _model;
     #endregion
 
     #region INTERNAL PROPERTIES
@@ -15,7 +17,8 @@ public class ModernSuperposition : MonoBehaviour
         set
         {
             _isActive = value;
-            SetChildrenActive(_isActive);
+            _landmarkVisual.SetActive(_isActive);
+            _model.SetActive(_isActive);
         }
     }
 
@@ -34,6 +37,7 @@ public class ModernSuperposition : MonoBehaviour
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
 
         IsActive = _uiManager.IsModernVisualizationOn;
+        _wasActive = IsActive;
     }
 
     void Start()
@@ -41,11 +45,8 @@ public class ModernSuperposition : MonoBehaviour
         // Subscribe to events
         _cameraManager.CameraStateChangedEvent += OnCameraStateChanged;
         _uiManager.ModernVisualizationToggled += OnVisualizationToggled;
-    }
-
-    void OnValidate()
-    {
-        SetChildrenActive(IsActive);
+        _uiManager.ShowContextualPanelEvent += OnContextualShownPanel;
+        _uiManager.OnContextualPanelHiddenEvent += OnContextualHiddenPanel;
     }
 
     void OnDisable()
@@ -53,14 +54,8 @@ public class ModernSuperposition : MonoBehaviour
         // Unsubscribe from events
         _cameraManager.CameraStateChangedEvent -= OnCameraStateChanged;
         _uiManager.ModernVisualizationToggled -= OnVisualizationToggled;
-    }
-    #endregion
-
-    #region PRIVATE METHODS
-    void SetChildrenActive(bool isActive)
-    {
-        foreach (Transform child in transform)
-            child.gameObject.SetActive(isActive);
+        _uiManager.ShowContextualPanelEvent -= OnContextualShownPanel;
+        _uiManager.OnContextualPanelHiddenEvent -= OnContextualHiddenPanel;
     }
     #endregion
 
@@ -69,14 +64,28 @@ public class ModernSuperposition : MonoBehaviour
     {
         if (_cameraManager.IsInThirdPersonState || _cameraManager.IsInPOIState)
             IsActive = false;
-        else
-            IsActive = _wasActive;
     }
 
     void OnVisualizationToggled(bool value)
     {
         IsActive = value;
         _wasActive = value;
+    }
+
+    void OnContextualShownPanel(DataSO data, bool isCharacter)
+    {
+        if (isCharacter)
+            return;
+
+        if (data == null || _landmarkVisual.Data == null)
+            return;
+
+        IsActive = data == _landmarkVisual.Data;
+    }
+
+    void OnContextualHiddenPanel()
+    {
+        IsActive = _wasActive;
     }
     #endregion
 }

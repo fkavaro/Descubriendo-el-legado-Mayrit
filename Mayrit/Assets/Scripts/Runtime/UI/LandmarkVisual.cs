@@ -17,6 +17,8 @@ public class LandmarkVisual : Billboard
     #endregion
 
     #region INTERNAL PROPERTIES
+    public DataSO Data => _orbitalStateSetting.DataToShow;
+
     float OriginalHeight => _originalPosition.y;
     float CameraDistance
     {
@@ -115,6 +117,13 @@ public class LandmarkVisual : Billboard
         _nameButton.UnregisterCallback<ClickEvent>(OnClicked);
         _cameraManager.CameraStateChangedEvent -= OnCameraStateChanged;
         _uiManager.LandmarkVisualizationToggled -= OnVisualizationToggled;
+    }
+    #endregion
+
+    #region PUBLIC METHODS
+    public void SetActive(bool isActive)
+    {
+        _rootVisual.visible = isActive && _wasActive;
     }
     #endregion
 

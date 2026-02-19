@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1264379889245979819}
+  - component: {fileID: 5033014781113820362}
   m_Layer: 0
   m_Name: Catedral de la Almudena
   m_TagString: Untagged
@@ -29,11 +30,26 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 5122800675889089575}
   - {fileID: 3553789369028324898}
   - {fileID: 8604626003126523917}
-  - {fileID: 5122800675889089575}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5033014781113820362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7444594075944011122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddf48271ff8def84696d2cdfde0f714d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mayrit::ModernBuilding
+  _isActive: 0
+  _landmarkVisual: {fileID: 7039334064206226707}
+  _model: {fileID: 8675736771242699589}
 --- !u!1 &7668991903738559520
 GameObject:
   m_ObjectHideFlags: 0
@@ -92,7 +108,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8675736771242699589}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
@@ -9831,3 +9847,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 169513873263432650, guid: 20122a36d24c42945ad2861e326b4edc, type: 3}
   m_PrefabInstance: {fileID: 3678213162166926824}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7039334064206226707 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5961391977125746939, guid: 20122a36d24c42945ad2861e326b4edc, type: 3}
+  m_PrefabInstance: {fileID: 3678213162166926824}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fae0cc97166c56449806f0bd041285ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
