@@ -109,7 +109,10 @@ public class SpectatorHUD_UIState : AHUDState
         if (_wasContextualPanelShown)
             _milestoneArea.style.display = DisplayStyle.None;
         else
+        {
+            _switches.style.display = DisplayStyle.Flex;
             _milestoneArea.style.display = DisplayStyle.Flex;
+        }
 
         _nextMilestoneButton.SetEnabled(_progressManager.IsNextMilestoneAvailable());
 
@@ -178,6 +181,8 @@ public class SpectatorHUD_UIState : AHUDState
 
     void OnMilestoneChanged(Milestone_DataSO mapping)
     {
+        _switches.style.display = DisplayStyle.Flex;
+
         // Overwrite milestone area
         _milestoneName.text = mapping.Header;
         _milestoneDate.text = mapping.SubHeader;
