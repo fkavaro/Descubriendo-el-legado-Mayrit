@@ -4,6 +4,7 @@ using UnityEngine.UIElements;
 public class PlayerHUD_UIState : AHUDState
 {
     #region  PROPERTIES
+    public bool _showTourEnd;
     Tour _currentTour;
 
     Button _pauseButton;
@@ -11,9 +12,6 @@ public class PlayerHUD_UIState : AHUDState
         _onTourEndVisual;
     Label _tourName,
         _tourDescription;
-
-    // Dependency Injection
-    TourManager _tourManager;
     #endregion
 
     #region CONSTRUCTOR
@@ -53,44 +51,17 @@ public class PlayerHUD_UIState : AHUDState
     {
         base.GetServicesDependenciesOnStart();
 
-        _tourManager = ServiceLocator.Instance.Get<TourManager>();
-        _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
-    }
+        _currentTour = ServiceLocator.Instance.Get<Tour>();
 
-    protected override void SubscribeToServicesEventsOnStart()
-    {
-        base.SubscribeToServicesEventsOnStart();
-        _tourManager.TourCompletedEvent += OnTourEnded;
-        _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
+        if (_currentTour == null)
+            Debug.LogWarning("PlayerHUD_UIState: No Tour found in ServiceLocator on StartState");
     }
 
     public override void StartState()
     {
         base.StartState();
 
-        if (_currentTour == null)
-            _currentTour = _tourManager.CurrentTour;
-
-        if (_currentTour == null)
-        {
-            Debug.LogWarning($"{_stateName}: CurrentTour is null on StartState");
-            return;
-        }
-
-        if (_currentTour.IsCompleted)
-        {
-            _tourArea.style.display = DisplayStyle.None;
-            _onTourEndVisual.style.display = DisplayStyle.Flex;
-        }
-        else
-        {
-            if (!_wasContextualPanelShown)
-            {
-                _onTourEndVisual.style.display = DisplayStyle.None;
-                _tourArea.style.display = DisplayStyle.Flex;
-                UpdateTourInfo();
-            }
-        }
+        ShowTourEndVisual(_showTourEnd);
     }
 
     public override void ExitState()
@@ -111,36 +82,25 @@ public class PlayerHUD_UIState : AHUDState
 
     protected override void OnContextualPanelHidden()
     {
-        if (_currentTour != null && _currentTour.IsCompleted)
-            _onTourEndVisual.style.display = DisplayStyle.Flex;
-        else
-            _tourArea.style.display = DisplayStyle.Flex;
+        ShowTourEndVisual(_currentTour.IsCompleted);
     }
     #endregion
 
-    void UpdateTourInfo()
+    #region PUBLIC METHODS
+    void ShowTourEndVisual(bool show)
     {
-        if (_currentTour == null)
+        if (show)
         {
-            Debug.LogWarning($"{_stateName}: CurrentTour is null on UpdateTourInfo");
-            return;
+            _tourArea.style.display = DisplayStyle.None;
+            _onTourEndVisual.style.display = DisplayStyle.Flex;
         }
-
-        _tourName.text = _currentTour.Data.Header;
-        _tourDescription.text = _currentTour.Data.SubHeader;
-    }
-
-    #region CALLBACK METHODS
-    void OnMilestoneChanged(Milestone_DataSO mapping)
-    {
-        _currentTour = _tourManager.CurrentTour;
-        UpdateTourInfo();
-    }
-
-    void OnTourEnded(Tour tour)
-    {
-        _tourArea.style.display = DisplayStyle.None;
-        _onTourEndVisual.style.display = DisplayStyle.Flex;
+        else
+        {
+            _onTourEndVisual.style.display = DisplayStyle.None;
+            _tourArea.style.display = DisplayStyle.Flex;
+            _tourName.text = _currentTour.Data.Header;
+            _tourDescription.text = _currentTour.Data.SubHeader;
+        }
     }
     #endregion
 }

@@ -63,7 +63,9 @@ public class Tour : MonoBehaviour
     public void StartTour()
     {
         Activate();
-        SetNextPOI();
+
+        if (!_isCompleted)
+            SetNextPOI();
     }
 
     public void Reset()
@@ -104,6 +106,10 @@ public class Tour : MonoBehaviour
     void SetNextPOI()
     {
         _nextPOI = GetPOIFromList(_currentPOIindex);
+
+        if (_nextPOI == null)
+            return;
+
         AttachToPOI(_nextPOI);
         OnNextPOIChangeEvent?.Invoke(_nextPOI);
     }

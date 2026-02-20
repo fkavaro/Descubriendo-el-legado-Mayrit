@@ -142,6 +142,7 @@ public class ContextualPanel
         else
         {
             _startTourButton.style.display = DisplayStyle.None;
+            _resetTourButton.style.display = DisplayStyle.None;
             _hadPlayButton = false;
         }
 

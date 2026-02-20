@@ -93,6 +93,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         //_spectatorState.ObjectSelectedEvent += SwitchToOrbitalCamera;
         _uiManager.ContextualPanelHiddenEvent += OnContextualPanelHidden;
         _uiManager.PlayTourClickedEvent += OnPlayCharacterClicked;
+        _uiManager.ResetTourClickedEvent += OnPlayCharacterClicked;
         _tourManager.POIVisitedEvent += OnTourPOIVisited;
 
         // Set camera target at min height
@@ -120,6 +121,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         //_spectatorState.ObjectSelectedEvent -= SwitchToOrbitalCamera;
         _uiManager.ContextualPanelHiddenEvent -= OnContextualPanelHidden;
         _uiManager.PlayTourClickedEvent -= OnPlayCharacterClicked;
+        _uiManager.ResetTourClickedEvent -= OnPlayCharacterClicked;
         _tourManager.POIVisitedEvent -= OnTourPOIVisited;
 
         ServiceLocator.Instance.Unregister(this);
