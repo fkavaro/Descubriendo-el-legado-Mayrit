@@ -18,7 +18,7 @@ public class GamePlay_GameState : AGameState
         if (!SceneManager.GetSceneByName(SceneDatabase.SceneName.GameplayScene.ToString()).isLoaded)
             _scenesController.NewTransitionPlan()
                 .Load(SceneDatabase.SceneType.Session, SceneDatabase.SceneName.GameplayScene, setActive: true)
-                .Load(SceneDatabase.SceneType.Milestone, _progressManager.RestoredMilestone)
+                .Load(SceneDatabase.SceneType.Milestone, _progressManager.StoredMilestoneScene)
                 .WithOverlay()
                 .ClearAssets()
                 .Perform();

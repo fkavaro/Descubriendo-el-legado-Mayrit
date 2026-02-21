@@ -87,7 +87,7 @@ public class LoadingScreen_UIState : AUIState
         _scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
 
         // Get current milestone data
-        _currentMilestone = _progressManager.CurrentMilestoneMapping;
+        _currentMilestone = _progressManager.CurrentMilestoneData;
 
         if (_currentMilestone != null)
         {

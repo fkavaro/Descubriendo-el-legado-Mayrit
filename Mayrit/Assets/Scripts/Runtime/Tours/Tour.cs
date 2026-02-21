@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 
 public class Tour : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class Tour : MonoBehaviour
     public bool IsCompleted => _isCompleted;
     public bool HasBeenCompleted => _hasBeenCompleted;
     public PointOfInterest NextPOI => _nextPOI;
+    public PointOfInterest LastPOIinList => GetPOIFromList(_pointsOfInterest.Count - 1);
     #endregion
 
     #region EDITOR PROPERTIES
@@ -73,6 +75,12 @@ public class Tour : MonoBehaviour
         _isCompleted = false;
         _currentPOIindex = 0;
         ResetPOIs();
+    }
+
+    public void MarkAsCompleted()
+    {
+        _isCompleted = true;
+        _hasBeenCompleted = true;
     }
     #endregion
 

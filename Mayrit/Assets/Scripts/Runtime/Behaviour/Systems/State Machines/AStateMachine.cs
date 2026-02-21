@@ -151,6 +151,17 @@ where StateType : AState
     {
         return _currentState == _statesSequence[^1];
     }
+
+    public void SetInitialStateFromSequence(int index)
+    {
+        if (index < 0 || index >= _statesSequence.Count)
+        {
+            Debug.LogError("Index out of range when setting initial state from sequence.");
+            return;
+        }
+
+        SetInitialState(_statesSequence[index]);
+    }
     #endregion
 
     #region LIFE CYCLE: DERIVED TO CURRENT STATE

@@ -154,7 +154,7 @@ public class SpectatorHUD_UIState : AHUDState
     #region CALLBACK METHODS
     void OnMilestoneClicked(ClickEvent evt)
     {
-        ShowContextualPanel(_progressManager.CurrentMilestoneMapping);
+        ShowContextualPanel(_progressManager.CurrentMilestoneData);
         _soundManager.PlayButtonClickSFX();
     }
 

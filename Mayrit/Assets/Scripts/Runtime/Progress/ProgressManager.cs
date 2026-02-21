@@ -6,8 +6,9 @@ using System.Collections.Generic;
 public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneState>>
 {
     #region PROPERTY HELPERS
-    public Milestone_DataSO CurrentMilestoneMapping => _milestoneMappings[_currentMilestoneIndex];
-    public SceneDatabase.SceneName RestoredMilestone => CurrentMilestoneMapping.SceneName;
+    public Milestone_DataSO CurrentMilestoneData => _milestonesData[_currentMilestoneIndex];
+    public SceneDatabase.SceneName StoredMilestoneScene => _milestonesData[_highestCompletedMilestoneIndex].SceneName;
+    public int HighestCompletedMilestoneIndex => _highestCompletedMilestoneIndex;
     #endregion
 
     #region EDITOR PROPERTIES
@@ -20,7 +21,7 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     [Header("Milestones")]
     [Range(0, 7)]
     [SerializeField] int _currentMilestoneIndex = 0;
-    [SerializeField] List<Milestone_DataSO> _milestoneMappings = new();
+    [SerializeField] List<Milestone_DataSO> _milestonesData = new();
     #endregion
 
     #region INTERNAL PROPERTIES
@@ -35,6 +36,7 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
 
     ScenesController _scenesController;
     TourManager _tourManager;
+    int _highestCompletedMilestoneIndex;
     #endregion
 
     #region INHERITED
@@ -43,8 +45,8 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
         _fsm = new(this);
 
         // Build state for each milestone scene
-        for (int i = 0; i < _milestoneMappings.Count; i++)
-            _fsm.AddStateToSequence(new MilestoneState(_milestoneMappings[i]));
+        for (int i = 0; i < _milestonesData.Count; i++)
+            _fsm.AddStateToSequence(new MilestoneState(_milestonesData[i]));
 
         return _fsm;
     }
@@ -97,7 +99,10 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
 
     protected override void Start()
     {
-        _currentMilestoneIndex = 0; // TODO load from memory
+        PlayerProgressData saveData = GameSaveSystem.Load();
+        int maxIndex = Mathf.Max(0, _milestonesData.Count - 1);
+        _highestCompletedMilestoneIndex = Mathf.Clamp(saveData.HighestCompletedMilestoneIndex, 0, maxIndex);
+        _currentMilestoneIndex = _highestCompletedMilestoneIndex;
 
         _scenesController = ServiceLocator.Instance.Get<ScenesController>();
         _scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
@@ -119,6 +124,22 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     public void SwitchToPreviousMilestone() => _fsm.SwitchToPreviousStateInSequence(out _currentMilestoneIndex);
     public bool AtFirstMilestone() => _fsm.AtFistStateInSequence();
     public bool AtLastMilestone() => _fsm.AtLastStateInSequence();
+
+    public bool IsNextMilestoneAvailable()
+    {
+        if (_tourManager == null || _tourManager.CurrentTour == null)
+        {
+            if (DebugMode)
+                Debug.LogWarning("ProgressManager: No current tour found. Next milestone availability will always return false.");
+            return false;
+        }
+
+        bool canSkipInRuntime = _canSkipTours; //Application.isPlaying && Application.isEditor // TODO: full line when gold release
+        bool tourCompleted = _tourManager.CurrentTour.IsCompleted;
+        bool isNextMilestoneAvailable = !AtLastMilestone() && (canSkipInRuntime || tourCompleted);
+
+        return isNextMilestoneAvailable;
+    }
     #endregion
 
     #region PRIVATE METHODS
@@ -134,20 +155,14 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     //     return null;
     // }
 
-    public bool IsNextMilestoneAvailable()
+    void UpdateHighestCompletedMilestone()
     {
-        if (_tourManager.CurrentTour == null)
-        {
-            if (DebugMode)
-                Debug.LogWarning("ProgressManager: No current tour found. Next milestone availability will always return false.");
-            return false;
-        }
+        _highestCompletedMilestoneIndex = Mathf.Max(_highestCompletedMilestoneIndex, _currentMilestoneIndex);
+    }
 
-        bool canSkipInRuntime = _canSkipTours; //Application.isPlaying && Application.isEditor // TODO: full line when gold release
-        bool tourCompleted = _tourManager.CurrentTour.IsCompleted;
-        bool isNextMilestoneAvailable = !AtLastMilestone() && (canSkipInRuntime || tourCompleted);
-
-        return isNextMilestoneAvailable;
+    void SaveProgress()
+    {
+        GameSaveSystem.Save(_highestCompletedMilestoneIndex);
     }
     #endregion
 
@@ -155,21 +170,33 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     void OnSceneLoadedPartially(SceneDatabase.SceneType type, SceneDatabase.SceneName name)
     {
         if (name == SceneDatabase.SceneName.GameplayScene)
+        {
             _tourManager = ServiceLocator.Instance.Get<TourManager>();
+            _tourManager.TourCompletedEvent += OnTourCompleted;
+        }
     }
 
     void OnScenesLoadedFully(Dictionary<SceneDatabase.SceneType, SceneDatabase.SceneName> loadedScenes, List<SceneDatabase.SceneType> unloadedTypes)
     {
         // If gameplay scene loaded, start behaviour system
         if (loadedScenes.ContainsValue(SceneDatabase.SceneName.GameplayScene))
+        {
+            _fsm.SetInitialStateFromSequence(_currentMilestoneIndex);
             base.Start();
+        }
         // If milestone loaded, invoke event
         if (loadedScenes.TryGetValue(SceneDatabase.SceneType.Milestone, out var milestoneScene))
         {
             if (DebugMode)
                 Debug.Log($"[ProgressManager] Milestone Change Event invoked.");
-            MilestoneChangedEvent?.Invoke(CurrentMilestoneMapping);
+            MilestoneChangedEvent?.Invoke(CurrentMilestoneData);
         }
+    }
+
+    void OnTourCompleted(Tour tour)
+    {
+        UpdateHighestCompletedMilestone();
+        SaveProgress();
     }
     #endregion
 }

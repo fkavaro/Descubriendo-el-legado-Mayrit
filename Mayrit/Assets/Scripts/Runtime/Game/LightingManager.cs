@@ -93,7 +93,7 @@ public class LightingManager : MonoBehaviour
         // Get dependencies from ServiceLocator
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
-        _currentTime = _progressManager.CurrentMilestoneMapping.WantedTime;
+        _currentTime = _progressManager.CurrentMilestoneData.WantedTime;
 
         // Subscribe to ProgressManager event to set the wanted time when the game starts
         _progressManager.MilestoneChangedEvent += OnMilestoneChanged;

@@ -36,6 +36,7 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     TourManager _tourManager;
     UIManager _uiManager;
     CameraManager _cameraManager;
+    ProgressManager _progressManager;
     #endregion
 
     #region INHERITED
@@ -81,6 +82,7 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
         _tourManager = ServiceLocator.Instance.Get<TourManager>();
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
+        _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
 
         _originalPosition = transform.position;
         _originalRotation = transform.rotation;
@@ -135,6 +137,20 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     }
     #endregion
 
+    #region PUBLIC METHODS
+    public void LocateAt(Transform transform)
+    {
+        GO.transform.SetPositionAndRotation(transform.position, transform.rotation);
+    }
+    #endregion
+
+    #region PRIVATE METHODS
+    void ResetPositionAndRotation()
+    {
+        GO.transform.SetPositionAndRotation(_originalPosition, _originalRotation);
+    }
+    #endregion
+
     #region CALLBACK METHODS
     void OnPlayTourClicked()
     {
@@ -144,7 +160,7 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     void OnResetTourClicked()
     {
         SwitchToControlledState();
-        GO.transform.SetPositionAndRotation(_originalPosition, _originalRotation);
+        ResetPositionAndRotation();
         PositionResetEvent?.Invoke();
     }
 
@@ -167,12 +183,18 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
             SwitchToNotControlledState();
     }
 
-    // void OnMilestoneChanged(Milestone_DataSO milestoneMapping)
+    // void OnMilestoneChanged(Milestone_DataSO milestoneData)
     // {
-    //     Tour tour = ServiceLocator.Instance.Get<Tour>();
-    //     // Reset position and rotation if tour is completed
-    //     if (tour != null && tour.IsCompleted)
-    //         GO.transform.SetPositionAndRotation(_originalPosition, _originalRotation);
+    //     int milestoneIndex = milestoneData.MilestoneIndex;
+    //     int highestCompleted = _progressManager.HighestCompletedMilestoneIndex;
+
+    //     if (milestoneIndex < highestCompleted)
+    //     {
+    //         //if (DebugMode)
+    //         Debug.Log($"[PlayableCharacter] Milestone changed to index {milestoneIndex}, which is below the highest completed milestone index {highestCompleted}. Resetting position and rotation to reflect progress.");
+
+    //         ResetPositionAndRotation();
+    //     }
     // }
     #endregion
 
