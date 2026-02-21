@@ -6,7 +6,7 @@ public class PlayerProgressData
 {
     // Highest milestone the player has reached at least once.
     // The game restores this value on startup to load the corresponding scene/state.
-    public int HighestCompletedMilestoneIndex = -1;
+    public int StoredMilestoneIndex = -1;
 }
 
 public static class GameSaveSystem
@@ -44,11 +44,11 @@ public static class GameSaveSystem
     /// <summary>
     /// Saves player progress to PlayerPrefs as JSON. Overwrites any existing save.
     /// </summary>
-    public static void Save(int highestCompletedMilestoneIndex)
+    public static void Save(int milestoneIndex)
     {
         PlayerProgressData data = new()
         {
-            HighestCompletedMilestoneIndex = Mathf.Max(0, highestCompletedMilestoneIndex)
+            StoredMilestoneIndex = Mathf.Max(0, milestoneIndex)
         };
 
         string json = JsonUtility.ToJson(data);
@@ -75,7 +75,7 @@ public static class GameSaveSystem
         try
         {
             PlayerProgressData data = JsonUtility.FromJson<PlayerProgressData>(json);
-            data.HighestCompletedMilestoneIndex = Mathf.Max(0, data.HighestCompletedMilestoneIndex);
+            data.StoredMilestoneIndex = Mathf.Max(0, data.StoredMilestoneIndex);
             return data != null;
         }
         catch

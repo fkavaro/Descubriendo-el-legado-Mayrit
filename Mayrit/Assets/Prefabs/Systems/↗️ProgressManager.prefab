@@ -48,6 +48,7 @@ MonoBehaviour:
   _isExecutionPaused: 0
   _currentActionInfo: 
   _canSkipTours: 1
+  _storedMilestoneIndex: -1
   _currentMilestoneIndex: 0
   _milestonesData:
   - {fileID: 11400000, guid: f2bb9dbbbd8680e49951173cf8421d33, type: 2}

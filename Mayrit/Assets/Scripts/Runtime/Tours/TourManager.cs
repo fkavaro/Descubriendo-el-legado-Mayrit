@@ -147,12 +147,10 @@ public class TourManager : MonoBehaviour
                 return;
             }
 
-            int milestoneIndex = _progressManager.CurrentMilestoneData != null
-                ? _progressManager.CurrentMilestoneData.MilestoneIndex
-                : -1;
-            int highestCompleted = _progressManager.HighestCompletedMilestoneIndex;
+            int currentMilestone = _progressManager.CurrentMilestoneIndex;
+            int storedMilestone = _progressManager.StoredMilestoneIndex;
 
-            if (milestoneIndex <= highestCompleted)
+            if (currentMilestone <= storedMilestone)
             {
                 //Debug.Log($"[TourManager] Milestone {milestoneIndex} reached, but highest completed is {highestCompleted}. Marking tour as completed.");
                 _currentTour.MarkAsCompleted();
