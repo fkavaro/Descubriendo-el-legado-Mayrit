@@ -63,7 +63,6 @@ public class TourManager : MonoBehaviour
         _scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
         _uiManager.PlayTourClickedEvent += OnPlayTourClicked;
         _uiManager.ResetTourClickedEvent += OnResetTourClicked;
-        _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
 
         _pathVisualizer = new PathVisualizer(
             GetComponent<LineRenderer>(),
@@ -97,7 +96,6 @@ public class TourManager : MonoBehaviour
 
         _uiManager.PlayTourClickedEvent -= OnPlayTourClicked;
         _uiManager.ResetTourClickedEvent -= OnResetTourClicked;
-        _progressManager.MilestoneChangedEvent -= OnMilestoneChanged;
 
         DetachFromCurrentTour();
 
@@ -139,6 +137,25 @@ public class TourManager : MonoBehaviour
         {
             AttachToTour(ServiceLocator.Instance.Get<Tour>());
             _uiManager.ContextualPanelHiddenEvent += OnContextualPanelHidden;
+            _playableCharacter = ServiceLocator.Instance.Get<PlayableCharacter>();
+
+            if (_playableCharacter == null)
+            {
+                Debug.LogWarning($"[TourManager] PlayableCharacter not found in ServiceLocator.");
+                return;
+            }
+
+            int milestoneIndex = _progressManager.CurrentMilestoneData != null
+                ? _progressManager.CurrentMilestoneData.MilestoneIndex
+                : -1;
+            int highestCompleted = _progressManager.HighestCompletedMilestoneIndex;
+
+            if (milestoneIndex <= highestCompleted)
+            {
+                //Debug.Log($"[TourManager] Milestone {milestoneIndex} reached, but highest completed is {highestCompleted}. Marking tour as completed.");
+                _currentTour.MarkAsCompleted();
+                _playableCharacter.LocateAt(_currentTour.LastPOIinList.transform);
+            }
         }
     }
 
@@ -177,27 +194,6 @@ public class TourManager : MonoBehaviour
     {
         _currentTour.Reset();
         OnPlayTourClicked();
-    }
-
-    private void OnMilestoneChanged(Milestone_DataSO milestoneData)
-    {
-        _playableCharacter = ServiceLocator.Instance.Get<PlayableCharacter>();
-
-        if (_playableCharacter == null)
-        {
-            Debug.LogWarning($"[TourManager] PlayableCharacter not found in ServiceLocator.");
-            return;
-        }
-
-        int milestoneIndex = milestoneData.MilestoneIndex;
-        int highestCompleted = _progressManager.HighestCompletedMilestoneIndex;
-
-        if (milestoneIndex < highestCompleted)
-        {
-            //Debug.Log($"[TourManager] Milestone {milestoneIndex} reached, but highest completed is {highestCompleted}. Marking tour as completed.");
-            _currentTour.MarkAsCompleted();
-            _playableCharacter.LocateAt(_currentTour.LastPOIinList.transform);
-        }
     }
     #endregion
 }

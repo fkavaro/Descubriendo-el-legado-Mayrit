@@ -7,7 +7,8 @@ public class MainMenu_UIState : AUIState
     #region PROPERTIES
     VisualElement _menu;
 
-    Button _playButton,
+    Button _newGameButton,
+        _loadGameButton,
         _settingsButton,
         _quitButton;
     #endregion
@@ -21,14 +22,17 @@ public class MainMenu_UIState : AUIState
     protected override void ConfigureUIElementsOnAwake()
     {
         _menu = _screen.Q<VisualElement>("Menu");
-        _playButton = _screen.Q<Button>("PlayButton");
+        _newGameButton = _screen.Q<Button>("NewGameButton");
+        _loadGameButton = _screen.Q<Button>("LoadGameButton");
         _settingsButton = _screen.Q<Button>("SettingsButton");
         _quitButton = _screen.Q<Button>("QuitButton");
 
         if (_menu == null)
             Debug.LogWarning("_menu not found");
-        if (_playButton == null)
-            Debug.LogWarning("_playButton not found");
+        if (_newGameButton == null)
+            Debug.LogWarning("_newGameButton not found");
+        if (_loadGameButton == null)
+            Debug.LogWarning("_loadGameButton not found");
         if (_settingsButton == null)
             Debug.LogWarning("_settingsButton not found");
         if (_quitButton == null)
@@ -37,9 +41,17 @@ public class MainMenu_UIState : AUIState
 
     protected override void RegisterUICallbacksOnAwake()
     {
-        _playButton.RegisterCallback<ClickEvent>(OnPlayClicked);
+        _newGameButton.RegisterCallback<ClickEvent>(OnNewGameClicked);
+        _loadGameButton.RegisterCallback<ClickEvent>(OnLoadGameClicked);
         _settingsButton.RegisterCallback<ClickEvent>(OnSettingsClicked);
         _quitButton.RegisterCallback<ClickEvent>(OnQuitClicked);
+    }
+
+    public override void StartState()
+    {
+        CheckLoadButtonAvailability();
+
+        base.StartState();
     }
 
     public override void ExitState()
@@ -51,8 +63,22 @@ public class MainMenu_UIState : AUIState
     }
     #endregion
 
+    void CheckLoadButtonAvailability()
+    {
+        // Check if game can be loaded to enable/disable Load Game button
+        bool canLoadGame = GameSaveSystem.IsThereStoredData();
+        _loadGameButton.SetEnabled(canLoadGame);
+    }
+
     #region CALLBACK METHODS
-    void OnPlayClicked(ClickEvent evt)
+    void OnNewGameClicked(ClickEvent evt)
+    {
+        GameSaveSystem.Clear();
+        _gameManager.SwitchToGamePlayState();
+        _soundManager.PlayButtonClickSFX();
+    }
+
+    void OnLoadGameClicked(ClickEvent evt)
     {
         _gameManager.SwitchToGamePlayState();
         _soundManager.PlayButtonClickSFX();

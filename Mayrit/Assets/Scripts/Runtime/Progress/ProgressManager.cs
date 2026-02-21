@@ -7,7 +7,8 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
 {
     #region PROPERTY HELPERS
     public Milestone_DataSO CurrentMilestoneData => _milestonesData[_currentMilestoneIndex];
-    public SceneDatabase.SceneName StoredMilestoneScene => _milestonesData[_highestCompletedMilestoneIndex].SceneName;
+    public SceneDatabase.SceneName StoredMilestoneScene => _milestonesData[GetStoredMilestone()].SceneName;
+
     public int HighestCompletedMilestoneIndex => _highestCompletedMilestoneIndex;
     #endregion
 
@@ -99,11 +100,6 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
 
     protected override void Start()
     {
-        PlayerProgressData saveData = GameSaveSystem.Load();
-        int maxIndex = Mathf.Max(0, _milestonesData.Count - 1);
-        _highestCompletedMilestoneIndex = Mathf.Clamp(saveData.HighestCompletedMilestoneIndex, 0, maxIndex);
-        _currentMilestoneIndex = _highestCompletedMilestoneIndex;
-
         _scenesController = ServiceLocator.Instance.Get<ScenesController>();
         _scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
         _scenesController.ScenesLoadedFullyEvent += OnScenesLoadedFully;
@@ -155,6 +151,14 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     //     return null;
     // }
 
+    int GetStoredMilestone()
+    {
+        PlayerProgressData saveData = GameSaveSystem.Load();
+        _highestCompletedMilestoneIndex = saveData.HighestCompletedMilestoneIndex;
+        _currentMilestoneIndex = Mathf.Clamp(saveData.HighestCompletedMilestoneIndex, 0, _milestonesData.Count - 1);
+        return _currentMilestoneIndex;
+    }
+
     void UpdateHighestCompletedMilestone()
     {
         _highestCompletedMilestoneIndex = Mathf.Max(_highestCompletedMilestoneIndex, _currentMilestoneIndex);
@@ -163,6 +167,8 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     void SaveProgress()
     {
         GameSaveSystem.Save(_highestCompletedMilestoneIndex);
+        if (DebugMode)
+            Debug.Log($"ProgressManager: Progress saved. Highest completed milestone index: {_highestCompletedMilestoneIndex}");
     }
     #endregion
 
@@ -184,6 +190,7 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
             _fsm.SetInitialStateFromSequence(_currentMilestoneIndex);
             base.Start();
         }
+
         // If milestone loaded, invoke event
         if (loadedScenes.TryGetValue(SceneDatabase.SceneType.Milestone, out var milestoneScene))
         {
@@ -197,6 +204,7 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     {
         UpdateHighestCompletedMilestone();
         SaveProgress();
+        _tourManager.TourCompletedEvent -= OnTourCompleted;
     }
     #endregion
 }

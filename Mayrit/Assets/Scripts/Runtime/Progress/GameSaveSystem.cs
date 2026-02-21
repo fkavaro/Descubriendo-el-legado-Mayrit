@@ -6,7 +6,7 @@ public class PlayerProgressData
 {
     // Highest milestone the player has reached at least once.
     // The game restores this value on startup to load the corresponding scene/state.
-    public int HighestCompletedMilestoneIndex = 0;
+    public int HighestCompletedMilestoneIndex = -1;
 }
 
 public static class GameSaveSystem
@@ -61,5 +61,26 @@ public static class GameSaveSystem
     {
         PlayerPrefs.DeleteKey(SaveKey);
         PlayerPrefs.Save();
+    }
+
+    public static bool IsThereStoredData()
+    {
+        if (!PlayerPrefs.HasKey(SaveKey))
+            return false;
+
+        string json = PlayerPrefs.GetString(SaveKey, string.Empty);
+        if (string.IsNullOrEmpty(json))
+            return false;
+
+        try
+        {
+            PlayerProgressData data = JsonUtility.FromJson<PlayerProgressData>(json);
+            data.HighestCompletedMilestoneIndex = Mathf.Max(0, data.HighestCompletedMilestoneIndex);
+            return data != null;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }
