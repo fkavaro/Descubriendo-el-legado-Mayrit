@@ -147,12 +147,8 @@ public class TourManager : MonoBehaviour
                 return;
             }
 
-            int currentMilestone = _progressManager.CurrentMilestoneIndex;
-            int storedMilestone = _progressManager.StoredMilestoneIndex;
-
-            if (currentMilestone <= storedMilestone)
+            if (_progressManager.WasCurrentMilestoneCompleted)
             {
-                //Debug.Log($"[TourManager] Milestone {milestoneIndex} reached, but highest completed is {highestCompleted}. Marking tour as completed.");
                 _currentTour.MarkAsCompleted();
                 _playableCharacter.LocateAt(_currentTour.LastPOIinList.transform);
             }
@@ -180,7 +176,7 @@ public class TourManager : MonoBehaviour
         }
     }
 
-    private void OnTourCompleted()
+    void OnTourCompleted()
     {
         TourCompletedEvent?.Invoke(_currentTour);
     }

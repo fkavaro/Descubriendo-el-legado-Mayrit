@@ -8,8 +8,7 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     #region PROPERTY HELPERS
     public Milestone_DataSO CurrentMilestoneData => _milestonesData[_currentMilestoneIndex];
     public SceneDatabase.SceneName StoredMilestoneScene => _milestonesData[GetStoredMilestone()].SceneName;
-    public int StoredMilestoneIndex => _storedMilestoneIndex;
-    public int CurrentMilestoneIndex => _currentMilestoneIndex;
+    public bool WasCurrentMilestoneCompleted => _currentMilestoneIndex <= _storedMilestoneIndex;
     #endregion
 
     #region EDITOR PROPERTIES
