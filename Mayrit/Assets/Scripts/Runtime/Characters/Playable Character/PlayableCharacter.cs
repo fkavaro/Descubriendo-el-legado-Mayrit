@@ -13,14 +13,18 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     public LayerMask ObstacleLayers => _obstacleLayers;
     #endregion
 
-    #region INTERNAL PROPERTIES
-    Vector3 _originalPosition;
-    Quaternion _originalRotation;
-    PlayableCharacterMovementController _movementController;
-
+    #region EDITOR FIELDS
     [Header("Playable Character Settings")]
     [SerializeField] DataSO _characterData;
     [SerializeField] LayerMask _obstacleLayers;
+    #endregion
+
+    #region INTERNAL PROPERTIES
+    public event Action PositionResetEvent;
+
+    Vector3 _originalPosition;
+    Quaternion _originalRotation;
+    PlayableCharacterMovementController _movementController;
 
     // State machine and states
     FiniteStateMachine<APlayableCharacterState> _fsm;
@@ -32,7 +36,6 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     TourManager _tourManager;
     UIManager _uiManager;
     CameraManager _cameraManager;
-    ProgressManager _progressManager;
     #endregion
 
     #region INHERITED
@@ -78,7 +81,6 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
         _tourManager = ServiceLocator.Instance.Get<TourManager>();
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
-        _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
 
         _originalPosition = transform.position;
         _originalRotation = transform.rotation;
@@ -143,6 +145,7 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     {
         SwitchToControlledState();
         GO.transform.SetPositionAndRotation(_originalPosition, _originalRotation);
+        PositionResetEvent?.Invoke();
     }
 
     void OnContextualPanelHidden()

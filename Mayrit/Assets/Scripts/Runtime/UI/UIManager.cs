@@ -265,8 +265,16 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     void OnResetTourClicked()
     {
         _playerHUDState._showTourEnd = false;
-        SwitchToPlayerHUDState();
+        StartCoroutine(ResetTourWithBlackFadeCoroutine());
+    }
+
+    IEnumerator ResetTourWithBlackFadeCoroutine()
+    {
+        yield return FadeInBlackLoadingScreenCoroutine();
         ResetTourClickedEvent?.Invoke();
+        yield return new WaitForSeconds(1f);
+        yield return FadeOutBlackLoadingScreenCoroutine();
+        SwitchToPlayerHUDState();
     }
 
     void OnModernVisualizationToggled(bool value)

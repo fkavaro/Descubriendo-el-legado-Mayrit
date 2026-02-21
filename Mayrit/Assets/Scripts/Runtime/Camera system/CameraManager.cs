@@ -90,10 +90,8 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
 
         // Subscribe to events
         _uiManager.EdgeScrollingToggledEvent += _spectatorCameraData.OnIsEdgeScrollingToggled;
-        //_spectatorState.ObjectSelectedEvent += SwitchToOrbitalCamera;
         _uiManager.ContextualPanelHiddenEvent += OnContextualPanelHidden;
-        _uiManager.PlayTourClickedEvent += OnPlayCharacterClicked;
-        _uiManager.ResetTourClickedEvent += OnPlayCharacterClicked;
+        _uiManager.PlayTourClickedEvent += SwitchToThirdPersonCamera;
         _tourManager.POIVisitedEvent += OnTourPOIVisited;
 
         // Set camera target at min height
@@ -118,10 +116,8 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     void OnDisable()
     {
         // Unsubscribe from events
-        //_spectatorState.ObjectSelectedEvent -= SwitchToOrbitalCamera;
         _uiManager.ContextualPanelHiddenEvent -= OnContextualPanelHidden;
-        _uiManager.PlayTourClickedEvent -= OnPlayCharacterClicked;
-        _uiManager.ResetTourClickedEvent -= OnPlayCharacterClicked;
+        _uiManager.PlayTourClickedEvent -= SwitchToThirdPersonCamera;
         _tourManager.POIVisitedEvent -= OnTourPOIVisited;
 
         ServiceLocator.Instance.Unregister(this);
@@ -138,6 +134,9 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
             TransitionFromThirdPersonToSpectator();
         else if (IsInOrbitalState)
             TransitionFromOrbitalToSpectator();
+
+        if (_playableCharacter != null)
+            _playableCharacter.PositionResetEvent -= SwitchToThirdPersonCamera;
     }
 
     public void SwitchToOrbitalCamera(OrbitalStateSetting orbitalStateSetting)
@@ -152,6 +151,12 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
             Debug.Log($"Switched to orbital camera around '{orbitalStateSetting.Target.name}'.");
 
         CameraStateChangedEvent?.Invoke();
+
+        if (orbitalStateSetting.IsForCharacter)
+        {
+            _playableCharacter = ServiceLocator.Instance.Get<PlayableCharacter>();
+            _playableCharacter.PositionResetEvent += SwitchToThirdPersonCamera;
+        }
     }
 
     // TODO: remove later
@@ -368,8 +373,6 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     #endregion
 
     #region EVENT CALLBACKS
-    void OnPlayCharacterClicked() => SwitchToThirdPersonCamera();
-
     void OnContextualPanelHidden()
     {
         if (IsInOrbitalState)
