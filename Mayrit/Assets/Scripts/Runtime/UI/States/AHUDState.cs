@@ -12,10 +12,13 @@ public abstract class AHUDState : AUIState
     public event Action ContextualPanelHiddenEvent;
 
     protected ContextualPanel _contextualPanel;
+    protected CompassUI _compass;
     protected bool _wasContextualPanelShown;
 
-    VisualElement _contextualPanelRoot,
-        _controlsVisualRoot;
+    VisualElement _hudScreen,
+        _contextualPanelRoot,
+        _controlsVisualRoot,
+        _compassVisualRoot;
     #endregion
 
     #region CONSTRUCTOR
@@ -35,6 +38,16 @@ public abstract class AHUDState : AUIState
             return;
         }
 
+        if (_compassVisualRoot == null)
+            InitializeCompassOnAwake();
+
+        if (_compass == null)
+        {
+            Debug.LogWarning($"{_stateName} HUD State: Compass is null!");
+            return;
+        }
+
+
         base.AwakeState();
     }
 
@@ -44,23 +57,6 @@ public abstract class AHUDState : AUIState
 
         if (_controlsVisualRoot == null)
             Debug.LogWarning($"{_stateName} HUD State: _controlsVisualRoot not found");
-    }
-
-    public override void StartState()
-    {
-        base.StartState();
-
-        // Show contextual panel root if it was shown before
-        if (_wasContextualPanelShown)
-            _contextualPanelRoot.style.display = DisplayStyle.Flex;
-
-        // Show controls visual according to UIManager setting
-        _controlsVisualRoot.style.display = _uiManager.ControlsVisibilityValueSet ?
-            DisplayStyle.Flex :
-            DisplayStyle.None;
-
-        _gameManager.InputActions.UI.Enable();
-        _gameManager.InputActions.UI.Pause.performed += OnPauseKeyPressed;
     }
 
     protected override void SubscribeToServicesEventsOnStart()
@@ -83,6 +79,31 @@ public abstract class AHUDState : AUIState
         _uiManager.ContextualPanelHiddenEvent -= HideContextualPanel;
     }
 
+    public override void StartState()
+    {
+        base.StartState();
+
+        // Show contextual panel root if it was shown before
+        if (_wasContextualPanelShown)
+            _contextualPanelRoot.style.display = DisplayStyle.Flex;
+
+        // Show controls visual according to UIManager setting
+        _controlsVisualRoot.style.display = _uiManager.ControlsVisibilityValueSet ?
+            DisplayStyle.Flex :
+            DisplayStyle.None;
+
+        _gameManager.InputActions.UI.Enable();
+        _gameManager.InputActions.UI.Pause.performed += OnPauseKeyPressed;
+
+        _compass.Start();
+    }
+
+    public override void UpdateState()
+    {
+        base.UpdateState();
+        _compass.Update();
+    }
+
     public override void ExitState()
     {
         base.ExitState();
@@ -92,6 +113,8 @@ public abstract class AHUDState : AUIState
 
         _gameManager.InputActions.UI.Disable();
         _gameManager.InputActions.UI.Pause.performed -= OnPauseKeyPressed;
+
+        _compass.IsShown(false);
     }
 
     public override bool IsCursorOverUI()
@@ -106,38 +129,48 @@ public abstract class AHUDState : AUIState
     {
         _wasContextualPanelShown = true;
         _contextualPanel.ShowInfo(data, isCharacterData);
+        _compass.IsShown(false);
     }
     void HideContextualPanel()
     {
         _contextualPanel.Hide();
         OnContextualPanelHidden();
+        _compass.IsShown(true);
     }
     #endregion
 
     #region PRIVATE METHODS
-    void InitializeContextualPanelOnAwake()
+    bool ValidateUIDocument()
     {
         if (_UIDocument == null)
         {
             Debug.LogError($"{_stateName} HUD State: UIDocument is null!");
-            return;
+            return false;
         }
 
         if (_UIDocument.rootVisualElement == null)
         {
-            Debug.LogWarning($"{_stateName} HUD State: UIDocument rootVisualElement is null!");
-            return;
+            Debug.LogError($"{_stateName} HUD State: UIDocument rootVisualElement is null!");
+            return false;
         }
 
-        VisualElement hudScreen = _UIDocument.rootVisualElement.Q<VisualElement>("HUD");
+        _hudScreen = _UIDocument.rootVisualElement.Q<VisualElement>("HUD");
 
-        if (hudScreen == null)
+        if (_hudScreen == null)
         {
             Debug.LogWarning($"{_stateName} HUD element not found in UIDocument");
-            return;
+            return false;
         }
 
-        _contextualPanelRoot = hudScreen.Q<VisualElement>("ContextualPanel");
+        return true;
+    }
+
+    void InitializeContextualPanelOnAwake()
+    {
+        if (!ValidateUIDocument())
+            return;
+
+        _contextualPanelRoot = _hudScreen.Q<VisualElement>("ContextualPanel");
 
         if (_contextualPanelRoot == null)
         {
@@ -146,6 +179,22 @@ public abstract class AHUDState : AUIState
         }
 
         _contextualPanel = new(_contextualPanelRoot);
+    }
+
+    void InitializeCompassOnAwake()
+    {
+        if (!ValidateUIDocument())
+            return;
+
+        _compassVisualRoot = _hudScreen.Q<VisualElement>("Compass");
+
+        if (_compassVisualRoot == null)
+        {
+            Debug.LogWarning($"{_stateName} _compassVisualRoot not found");
+            return;
+        }
+
+        _compass = new(_compassVisualRoot);
     }
     #endregion
 

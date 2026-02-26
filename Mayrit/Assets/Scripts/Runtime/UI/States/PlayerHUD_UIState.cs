@@ -62,6 +62,7 @@ public class PlayerHUD_UIState : AHUDState
         base.StartState();
 
         ShowTourEndVisual(_showTourEnd);
+        _compass.IsNextPOIShown(true);
     }
 
     public override void ExitState()
@@ -70,6 +71,8 @@ public class PlayerHUD_UIState : AHUDState
 
         // Unlock cursor and make it visible (has been lock in 3rd person camera state start)
         UnityEngine.Cursor.lockState = CursorLockMode.None;
+
+        _compass.IsNextPOIShown(false);
     }
     #endregion
 
