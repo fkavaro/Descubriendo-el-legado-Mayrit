@@ -19,6 +19,7 @@ public class PointOfInterest : MonoBehaviour
     [Tooltip("Layer mask used for trigger checks (defaults to PlayableCharacter layer if present)")]
     [SerializeField] LayerMask _detectionMask = ~0;
     [SerializeField] float _colliderRadius = 2f;
+    [SerializeField] GameObject _vfxGO;
 
     [Header("Camera")]
     [SerializeField] CinemachineCamera _camera;
@@ -26,6 +27,8 @@ public class PointOfInterest : MonoBehaviour
 
     #region INTERNAL PROPERTIES
     public event Action<PointOfInterest> OnVisitedEvent;
+
+    bool _isActive;
     SphereCollider _sphereCollider;
     #endregion
 
@@ -46,6 +49,8 @@ public class PointOfInterest : MonoBehaviour
             if (playableLayer != -1)
                 _detectionMask = 1 << playableLayer;
         }
+
+        Deactivate();
     }
 
     /// <summary>
@@ -61,6 +66,16 @@ public class PointOfInterest : MonoBehaviour
 
         SetAsVisited();
     }
+
+    void Update()
+    {
+        if (!_isActive) return;
+
+        // TODO
+        //! Rotate VFX
+        if (_vfxGO != null)
+            _vfxGO.transform.Rotate(Vector3.up, 50f * Time.deltaTime, Space.World);
+    }
     #endregion
 
     #region PUBLIC METHODS
@@ -68,12 +83,18 @@ public class PointOfInterest : MonoBehaviour
     {
         if (_sphereCollider != null)
             _sphereCollider.enabled = true;
+
+        _vfxGO.SetActive(true);
+        _isActive = true;
     }
 
     public void Deactivate()
     {
         if (_sphereCollider != null)
             _sphereCollider.enabled = false;
+
+        _vfxGO.SetActive(false);
+        _isActive = false;
     }
 
     public void Reset()
