@@ -236,6 +236,20 @@
     right: -90px;
 }
 
+.smallButtonBlurBg {
+    background-color: rgb(0, 0, 0);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    filter: blur(15);
+}
+
 Switch {
     margin-top: 2.5px;
     margin-right: 5px;
