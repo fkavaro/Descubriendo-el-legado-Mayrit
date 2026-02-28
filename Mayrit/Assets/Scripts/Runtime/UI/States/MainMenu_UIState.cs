@@ -88,7 +88,7 @@ public class MainMenu_UIState : AUIState
         if (GameSaveSystem.IsThereStoredData())
         {
             _newGameWarningPopup.style.display = DisplayStyle.Flex;
-            _buttons.style.display = DisplayStyle.None;
+            //_buttons.style.display = DisplayStyle.None;
         }
         else
         {
@@ -108,7 +108,7 @@ public class MainMenu_UIState : AUIState
     {
         _soundManager.PlayButtonClickSFX();
         _newGameWarningPopup.style.display = DisplayStyle.None;
-        _buttons.style.display = DisplayStyle.Flex;
+        //_buttons.style.display = DisplayStyle.Flex;
     }
 
     void OnLoadGameClicked(ClickEvent evt)

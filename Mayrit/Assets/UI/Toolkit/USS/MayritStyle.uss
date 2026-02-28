@@ -2,13 +2,8 @@
 }
 
 .title {
-    position: absolute;
-    top: 180px;
-    bottom: auto;
-    right: auto;
-    left: auto;
     color: rgb(245, 245, 245);
-    font-size: 80px;
+    font-size: 100px;
     align-self: center;
     margin-top: 0;
     margin-right: 0;
@@ -19,9 +14,30 @@
     padding-bottom: 0;
     padding-left: 0;
     -unity-text-outline-width: 5px;
-    -unity-text-outline-color: rgb(51, 51, 51);
+    -unity-text-outline-color: rgb(102, 102, 102);
     -unity-font-style: bold;
     letter-spacing: 15px;
+    white-space: normal;
+    -unity-text-align: upper-center;
+}
+
+.subtitle {
+    color: rgb(245, 245, 245);
+    font-size: 60px;
+    align-self: center;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    -unity-font-style: bold;
+    white-space: normal;
+    -unity-text-align: upper-center;
+    -unity-text-outline-width: 3px;
+    -unity-text-outline-color: rgb(51, 51, 51);
 }
 
 .header {
