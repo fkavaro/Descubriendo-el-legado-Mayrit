@@ -232,27 +232,23 @@
 }
 
 .contextualPanel {
-    right: 0;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 35%;
-    flex-grow: 1;
+    width: 670px;
     padding-top: 50px;
     padding-right: 50px;
     padding-bottom: 50px;
     padding-left: 40px;
-    justify-content: center;
+    height: 100%;
 }
 
 .contextualPanelBlurBg {
     position: absolute;
     width: 120%;
     height: 120%;
-    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.99);
     filter: blur(20);
     align-self: center;
     right: -90px;
+    top: -120px;
 }
 
 .smallButtonBlurBg {
@@ -270,10 +266,10 @@
 }
 
 Switch {
-    margin-top: 2.5px;
-    margin-right: 5px;
-    margin-bottom: 2.5px;
-    margin-left: 5px;
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
     flex-direction: row;
 }
 
@@ -281,7 +277,7 @@ Switch Label {
     color: rgb(255, 255, 255);
     font-size: 20px;
     -unity-font-style: normal;
-    margin-left: 10px;
+    margin-left: 20px;
     -unity-text-align: middle-left;
     padding-top: 0;
     padding-right: 0;
