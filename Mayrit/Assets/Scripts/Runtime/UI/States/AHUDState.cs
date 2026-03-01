@@ -91,9 +91,18 @@ public abstract class AHUDState : AUIState
 
         base.StartState();
 
-        // Show contextual panel root if it was shown before
+        _compass.Start();
+
         if (_wasContextualPanelShown)
+        {
             _contextualPanelRoot.style.display = DisplayStyle.Flex;
+            _compass.IsShown(false);
+        }
+        else
+        {
+            _contextualPanelRoot.style.display = DisplayStyle.None;
+            _compass.IsShown(true);
+        }
 
         // Show controls visual according to UIManager setting
         _controlsVisualRoot.style.display = _uiManager.ControlsVisibilityValueSet ?
@@ -102,8 +111,6 @@ public abstract class AHUDState : AUIState
 
         _gameManager.InputActions.UI.Enable();
         _gameManager.InputActions.UI.Pause.performed += OnPauseKeyPressed;
-
-        _compass.Start();
     }
 
     public override void UpdateState()
@@ -118,13 +125,11 @@ public abstract class AHUDState : AUIState
 
         base.ExitState();
 
-        // Hide contextual panel root
         _contextualPanelRoot.style.display = DisplayStyle.None;
+        _compass.IsShown(false);
 
         _gameManager.InputActions.UI.Disable();
         _gameManager.InputActions.UI.Pause.performed -= OnPauseKeyPressed;
-
-        _compass.IsShown(false);
     }
 
     public override bool IsCursorOverUI()

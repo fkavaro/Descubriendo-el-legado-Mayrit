@@ -15,6 +15,7 @@ public class TourManager : MonoBehaviour
     [SerializeField] Tour _currentTour;
     [SerializeField] PointOfInterest _nextPOI;
 
+    /* TODO remove
     [Header("Path visualizer settings")]
     [Tooltip("Meters between samples along segments. Lower = smoother")]
     [SerializeField] float _pointSpacing = 0.5f;
@@ -28,6 +29,7 @@ public class TourManager : MonoBehaviour
     [SerializeField] int _maxPointCount = 2000;
     [Tooltip("Maximum distance from start to render (trail cutoff)")]
     [SerializeField] int _maxTrailLength = 100;
+    */
     #endregion
 
     #region INTERNAL PROPERTIES

@@ -42,7 +42,6 @@ public class CompassUI
     {
         _mainCamera = Camera.main; // TODO get from Camera Manager
         FixCardinalDirections();
-        IsShown(true);
     }
 
     public void Update()
