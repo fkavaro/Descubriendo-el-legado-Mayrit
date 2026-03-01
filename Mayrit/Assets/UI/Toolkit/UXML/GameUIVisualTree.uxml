@@ -13,7 +13,7 @@
                 <ui:Label text="Menú principal" name="Title" class="subtitle"/>
             </ui:VisualElement>
             <ui:VisualElement name="Buttons" style="display: flex; margin-top: 70px;">
-                <ui:Button text="Cargar partida" name="LoadGameButton" class="button"/>
+                <ui:Button text="Cargar partida" name="LoadGameButton" class="button highlighted"/>
                 <ui:Button text="Nueva partida" name="NewGameButton" class="button"/>
                 <ui:Button text="Ajustes" name="SettingsButton" class="button"/>
                 <ui:Button text="Salir" name="QuitButton" class="button" style="margin-top: 130px;"/>
@@ -26,7 +26,7 @@
                     </ui:VisualElement>
                     <ui:VisualElement style="justify-content: space-between; align-self: stretch; flex-direction: row; padding-top: 0; padding-right: 30px; padding-bottom: 30px; padding-left: 30px;">
                         <ui:Button text="Sí" name="ConfirmNewGameButton" class="button mediumButton" style="width: 180px; position: relative;"/>
-                        <ui:Button text="No" name="CancelNewGameButton" class="button mediumButton" style="width: 180px; position: relative; background-color: rgb(37, 41, 58); border-left-color: rgb(64, 73, 118); border-right-color: rgb(64, 73, 118); border-top-color: rgb(64, 73, 118); border-bottom-color: rgb(64, 73, 118);"/>
+                        <ui:Button text="No" name="CancelNewGameButton" class="button mediumButton highlighted" style="width: 180px; position: relative;"/>
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
@@ -41,7 +41,7 @@
                         <ui:Button text="| |" name="PauseButton" class="button smallButton" style="align-self: flex-start; position: relative; flex-direction: row; font-size: 20px;"/>
                         <ui:VisualElement name="MilestoneButtons" style="flex-grow: 1; flex-direction: row; display: flex;">
                             <ui:Button name="PreviousMilestoneButton" class="smallButton button" style="position: relative; background-image: url(&quot;project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1008301579157283121&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-left@2x&quot;); align-self: flex-start; margin-right: 7.5px;"/>
-                            <ui:Button name="NextMilestoneButton" text="Siguiente hito" class="button mediumButton" style="position: relative; margin-left: 7.5px; padding-left: 50px; width: 220px; align-self: flex-start;">
+                            <ui:Button name="NextMilestoneButton" text="Siguiente hito" class="button mediumButton highlighted" style="position: relative; margin-left: 7.5px; padding-left: 50px; width: 220px; align-self: flex-start;">
                                 <ui:Image source="project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1087164816274819069&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-right@2x" style="position: absolute; top: -7px; left: 0; right: auto; bottom: -7px; width: 60px;"/>
                             </ui:Button>
                         </ui:VisualElement>
@@ -233,7 +233,7 @@
             </ui:VisualElement>
             <ui:VisualElement name="Down" style="flex-grow: 1; flex-direction: row; justify-content: space-between; align-self: stretch; height: 120px; display: flex; margin-left: 20px; margin-right: 20px;">
                 <ui:Button text="Reiniciar" name="ResetTourButton" class="mediumButton button" style="display: flex; position: relative; align-self: flex-end; flex-shrink: 1; flex-grow: 1; margin-top: 0; margin-right: 25px; margin-bottom: 0; margin-left: 0; width: 65px;"/>
-                <ui:Button text="Jugar" name="StartTourButton" class="mediumButton button" style="display: flex; position: relative; align-self: flex-end; flex-grow: 1; margin-left: 0; margin-right: 0; margin-bottom: 0; margin-top: 0; width: auto; flex-shrink: 1;"/>
+                <ui:Button text="Jugar" name="StartTourButton" class="mediumButton button highlighted" style="display: flex; position: relative; align-self: flex-end; flex-grow: 1; margin-left: 0; margin-right: 0; margin-bottom: 0; margin-top: 0; width: auto; flex-shrink: 1;"/>
             </ui:VisualElement>
             <ui:Button text="X" name="CloseButton" class="button closeButton" style="top: 30px; left: auto; right: 30px;"/>
         </ui:VisualElement>
@@ -308,7 +308,7 @@
                 <ui:Label text="Pausa" class="subtitle" style="top: auto;"/>
             </ui:VisualElement>
             <ui:VisualElement name="Buttons" style="justify-content: center; align-self: stretch; margin-top: 70px;">
-                <ui:Button name="PlayButton" text="Reanudar" class="button" style="align-self: center; position: relative;"/>
+                <ui:Button name="PlayButton" text="Reanudar" class="button highlighted" style="align-self: center; position: relative;"/>
                 <ui:Button text="Ajustes" name="SettingsButton" class="button" style="position: relative;"/>
                 <ui:Button text="Inicio" name="MainMenuButton" class="button" style="position: relative;"/>
                 <ui:Button text="Salir" name="QuitButton" class="button" style="position: relative; margin-top: 130px;"/>
@@ -494,7 +494,7 @@
                     <ui:VisualElement name="LoadingAnimation" style="position: absolute; justify-content: center; align-self: center;">
                         <ui:Label text="Cargando..." name="LoadingLabel" class="subHeader" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; display: flex;"/>
                     </ui:VisualElement>
-                    <ui:Button text="Continuar" name="ContinueButton" class="button mediumButton" style="display: flex;"/>
+                    <ui:Button text="Continuar" name="ContinueButton" class="button mediumButton highlighted" style="display: flex;"/>
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>

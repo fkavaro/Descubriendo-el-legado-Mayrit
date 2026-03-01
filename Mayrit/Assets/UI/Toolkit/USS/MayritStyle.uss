@@ -109,10 +109,10 @@
     -unity-font-style: bold;
     color: rgb(255, 255, 255);
     background-color: rgb(24, 24, 24);
-    border-left-color: rgb(45, 45, 45);
-    border-right-color: rgb(45, 45, 45);
-    border-top-color: rgb(45, 45, 45);
-    border-bottom-color: rgb(45, 45, 45);
+    border-left-color: rgb(55, 55, 55);
+    border-right-color: rgb(55, 55, 55);
+    border-top-color: rgb(55, 55, 55);
+    border-bottom-color: rgb(55, 55, 55);
     border-top-width: 3px;
     border-right-width: 3px;
     border-bottom-width: 3px;
@@ -134,15 +134,87 @@
 }
 
 .button:hover {
-    background-color: rgb(37, 41, 58);
+    background-color: rgb(34, 34, 34);
     scale: 1.05 1.05;
+    border-left-color: rgb(60, 60, 60);
+    border-right-color: rgb(60, 60, 60);
+    border-top-color: rgb(60, 60, 60);
+    border-bottom-color: rgb(60, 60, 60);
+}
+
+.button.highlighted {
+    width: 250px;
+    height: 70px;
+    align-self: center;
+    font-size: 25px;
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+    background-color: rgb(37, 41, 58);
     border-left-color: rgb(64, 73, 118);
     border-right-color: rgb(64, 73, 118);
     border-top-color: rgb(64, 73, 118);
     border-bottom-color: rgb(64, 73, 118);
+    border-top-width: 3px;
+    border-right-width: 3px;
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+    border-top-left-radius: 17px;
+    border-top-right-radius: 17px;
+    border-bottom-right-radius: 17px;
+    border-bottom-left-radius: 17px;
+    margin-top: 15px;
+    -unity-text-align: middle-center;
+    transition-duration: 0.2s;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    margin-left: 15px;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+}
+
+.button.highlighted:hover {
+    width: 250px;
+    height: 70px;
+    align-self: center;
+    font-size: 25px;
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+    background-color: rgb(49, 56, 87);
+    border-left-color: rgb(76, 87, 142);
+    border-right-color: rgb(76, 87, 142);
+    border-top-color: rgb(76, 87, 142);
+    border-bottom-color: rgb(76, 87, 142);
+    border-top-width: 3px;
+    border-right-width: 3px;
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+    border-top-left-radius: 17px;
+    border-top-right-radius: 17px;
+    border-bottom-right-radius: 17px;
+    border-bottom-left-radius: 17px;
+    margin-top: 15px;
+    -unity-text-align: middle-center;
+    transition-duration: 0.2s;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    margin-left: 15px;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
 }
 
 .button.mediumButton {
+    position: absolute;
+    width: 200px;
+    font-size: 20px;
+    -unity-font-style: bold;
+    height: 60px;
+}
+
+.button.mediumButton.highlighted {
     position: absolute;
     width: 200px;
     font-size: 20px;
