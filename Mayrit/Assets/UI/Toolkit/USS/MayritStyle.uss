@@ -370,3 +370,39 @@ Switch Label {
     scale: 1.1 1.1;
     background-color: rgb(53, 60, 99);
 }
+
+.playerButton {
+    transition-duration: 0.2s;
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+    border-bottom-right-radius: 40px;
+    border-bottom-left-radius: 40px;
+    border-left-color: rgb(76, 87, 142);
+    border-right-color: rgb(76, 87, 142);
+    border-top-color: rgb(76, 87, 142);
+    border-bottom-color: rgb(76, 87, 142);
+    background-color: rgb(49, 56, 87);
+    width: 80px;
+    height: 80px;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    border-top-width: 3px;
+    border-right-width: 3px;
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+}
+
+.playerButton:hover {
+    scale: 1.1 1.1;
+    border-left-color: rgb(87, 103, 185);
+    border-right-color: rgb(87, 103, 185);
+    border-top-color: rgb(87, 103, 185);
+    border-bottom-color: rgb(87, 103, 185);
+    background-color: rgb(62, 70, 108);
+}
