@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityEngine.InputSystem;
 
 public class SpectatorHUD_UIState : AHUDState
 {
@@ -17,7 +16,8 @@ public class SpectatorHUD_UIState : AHUDState
         _previousMilestoneButton;
     VisualElement _milestoneArea,
         _playerFollower,
-        _switches;
+        _switches,
+        _milestoneButtons;
 
     public Switch _modernVisualizactionSwitch,
         _landmarkVisualizationSwitch;
@@ -39,12 +39,13 @@ public class SpectatorHUD_UIState : AHUDState
         _milestoneInfoButton = _milestoneArea.Q<Button>("InfoButton");
         _milestoneName = _milestoneArea.Q<Label>("Name");
         _milestoneDate = _milestoneArea.Q<Label>("Date");
-        _nextMilestoneButton = _milestoneArea.Q<Button>("NextMilestoneButton");
-        _previousMilestoneButton = _milestoneArea.Q<Button>("PreviousMilestoneButton");
         _playerFollower = _screen.Q<VisualElement>("PlayerFollower");
         _switches = _screen.Q<VisualElement>("Switches");
         _modernVisualizactionSwitch = _switches.Q<Switch>("ModernVisualizationSwitch");
         _landmarkVisualizationSwitch = _switches.Q<Switch>("LandmarkVisualizationSwitch");
+        _milestoneButtons = _screen.Q<VisualElement>("MilestoneButtons");
+        _nextMilestoneButton = _milestoneButtons.Q<Button>("NextMilestoneButton");
+        _previousMilestoneButton = _milestoneButtons.Q<Button>("PreviousMilestoneButton");
 
         if (_pauseButton == null)
             Debug.LogWarning("_pauseButton not found");
@@ -70,6 +71,8 @@ public class SpectatorHUD_UIState : AHUDState
             Debug.LogWarning("_modernVisualizactionSwitch not found");
         if (_landmarkVisualizationSwitch == null)
             Debug.LogWarning("_landmarkVisualizationSwitch not found");
+        if (_milestoneButtons == null)
+            Debug.LogWarning("_milestoneButtons not found");
 
         _playerFollowerComponent = new PlayerFollower(_playerFollower);
     }
@@ -106,13 +109,8 @@ public class SpectatorHUD_UIState : AHUDState
     {
         base.StartState();
 
-        if (_wasContextualPanelShown)
-            _milestoneArea.style.display = DisplayStyle.None;
-        else
-        {
-            _switches.style.display = DisplayStyle.Flex;
-            _milestoneArea.style.display = DisplayStyle.Flex;
-        }
+        _switches.style.display = _wasContextualPanelShown ? DisplayStyle.None : DisplayStyle.Flex;
+        _milestoneArea.style.display = _wasContextualPanelShown ? DisplayStyle.None : DisplayStyle.Flex;
 
         _nextMilestoneButton.SetEnabled(_progressManager.IsNextMilestoneAvailable());
         _nextMilestoneButton.pickingMode = _progressManager.IsNextMilestoneAvailable() ? PickingMode.Position : PickingMode.Ignore;
@@ -141,14 +139,16 @@ public class SpectatorHUD_UIState : AHUDState
     #region HUD STATE INHERITED METHODS
     protected override void OnContextualPanelShown()
     {
-        _milestoneArea.style.display = DisplayStyle.None;
         _switches.style.display = DisplayStyle.None;
+        _milestoneButtons.style.display = DisplayStyle.None;
+        _milestoneArea.style.display = DisplayStyle.None;
     }
 
     protected override void OnContextualPanelHidden()
     {
-        _milestoneArea.style.display = DisplayStyle.Flex;
         _switches.style.display = DisplayStyle.Flex;
+        _milestoneButtons.style.display = DisplayStyle.Flex;
+        _milestoneArea.style.display = DisplayStyle.Flex;
     }
     #endregion
 
@@ -171,6 +171,7 @@ public class SpectatorHUD_UIState : AHUDState
         _soundManager.PlayButtonClickSFX();
     }
 
+    // TODO move to SoundManager
     private void OnModernSuperpositionToggled(bool value)
     {
         _soundManager.PlayButtonClickSFX();

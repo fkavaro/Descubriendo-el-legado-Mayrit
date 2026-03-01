@@ -27,8 +27,13 @@ public abstract class AHUDState : AUIState
     #endregion
 
     #region INHERITED METHODS
-    public override void AwakeState()
+    protected override void ConfigureUIElementsOnAwake()
     {
+        _controlsVisualRoot = _screen.Q<VisualElement>("ControlsVisual");
+
+        if (_controlsVisualRoot == null)
+            Debug.LogWarning($"{_stateName}: 'ControlsVisual' not found");
+
         _hudScreen = _UIDocument.rootVisualElement.Q<VisualElement>("HUD");
 
         if (_hudScreen == null)
@@ -53,16 +58,6 @@ public abstract class AHUDState : AUIState
             Debug.LogWarning($"{_stateName}: Compass is null!");
             return;
         }
-
-        base.AwakeState();
-    }
-
-    protected override void ConfigureUIElementsOnAwake()
-    {
-        _controlsVisualRoot = _screen.Q<VisualElement>("ControlsVisual");
-
-        if (_controlsVisualRoot == null)
-            Debug.LogWarning($"{_stateName} HUD State: _controlsVisualRoot not found");
     }
 
     protected override void SubscribeToServicesEventsOnStart()
@@ -145,12 +140,16 @@ public abstract class AHUDState : AUIState
         _wasContextualPanelShown = true;
         _contextualPanel.ShowInfo(data, isCharacterData);
         _compass.IsShown(false);
+        _controlsVisualRoot.style.display = DisplayStyle.None;
     }
     void HideContextualPanel()
     {
         _contextualPanel.Hide();
         OnContextualPanelHidden();
         _compass.IsShown(true);
+        _controlsVisualRoot.style.display = _uiManager.ControlsVisibilityValueSet ?
+            DisplayStyle.Flex :
+            DisplayStyle.None;
     }
     #endregion
 
