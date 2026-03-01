@@ -13,8 +13,8 @@
                 <ui:Label text="Menú principal" name="Title" class="subtitle"/>
             </ui:VisualElement>
             <ui:VisualElement name="Buttons" style="align-self: stretch; justify-content: center; padding-bottom: 0; margin-top: 50px;">
-                <ui:Button text="Nueva partida" name="NewGameButton" class="button"/>
                 <ui:Button text="Cargar partida" name="LoadGameButton" class="button"/>
+                <ui:Button text="Nueva partida" name="NewGameButton" class="button"/>
                 <ui:Button text="Ajustes" name="SettingsButton" class="button"/>
                 <ui:Button text="Salir" name="QuitButton" class="button" style="margin-top: 120px;"/>
             </ui:VisualElement>
