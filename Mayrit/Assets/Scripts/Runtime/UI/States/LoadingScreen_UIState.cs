@@ -14,7 +14,8 @@ public class LoadingScreen_UIState : AUIState
 
     Label _header,
         _subHeader,
-        _description;
+        _description,
+        _imageCaption;
 
     Button _continueButton;
 
@@ -23,7 +24,7 @@ public class LoadingScreen_UIState : AUIState
         _image,
         _loadingAnimation;
 
-    DataSO _currentMilestone;
+    DataSO _milestoneData;
     #endregion
 
     #region CONSTRUCTOR
@@ -47,6 +48,7 @@ public class LoadingScreen_UIState : AUIState
         _description = _infoLoadingScreen.Q<Label>("Description");
         _continueButton = _infoLoadingScreen.Q<Button>("ContinueButton");
         _image = _infoLoadingScreen.Q<VisualElement>("Image");
+        _imageCaption = _infoLoadingScreen.Q<Label>("Caption");
         _loadingAnimation = _infoLoadingScreen.Q<VisualElement>("LoadingAnimation");
 
         if (_infoLoadingScreen == null)
@@ -61,6 +63,8 @@ public class LoadingScreen_UIState : AUIState
             Debug.LogWarning("LoadingScreenController: No Button with name 'ContinueButton' found.");
         if (_image == null)
             Debug.LogWarning("LoadingScreenController: No VisualElement with name 'Image' found.");
+        if (_imageCaption == null)
+            Debug.LogWarning("LoadingScreenController: No Label with name 'Caption' found.");
         if (_loadingAnimation == null)
             Debug.LogWarning("LoadingScreenController: No VisualElement with name 'LoadingAnimation' found.");
     }
@@ -87,25 +91,29 @@ public class LoadingScreen_UIState : AUIState
         _scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
 
         // Get current milestone data
-        _currentMilestone = _progressManager.CurrentMilestoneData;
+        _milestoneData = _progressManager.CurrentMilestoneData;
 
-        if (_currentMilestone != null)
+        if (_milestoneData != null)
         {
             // Update UI with milestone data
-            _header.text = _currentMilestone.Header;
-            _subHeader.text = _currentMilestone.SubHeader;
-            _description.text = _currentMilestone.Description;
+            _header.text = _milestoneData.Header;
+            _subHeader.text = _milestoneData.SubHeader;
+            _description.text = _milestoneData.Description;
 
-            if (_currentMilestone.Image != null)
+            if (_milestoneData.Image != null)
             {
-                _image.style.backgroundImage = new StyleBackground(_currentMilestone.Image);
+                _image.style.backgroundImage = new StyleBackground(_milestoneData.Image);
+                _imageCaption.text = _milestoneData.ImageCaption;
                 _image.style.display = DisplayStyle.Flex;
+                _imageCaption.style.display = DisplayStyle.Flex;
             }
-            // else
-            // {
-            //     _image.style.backgroundImage = new StyleBackground();
-            //     _image.style.display = DisplayStyle.None;
-            // }
+            else
+            {
+                _image.style.backgroundImage = new StyleBackground();
+                _image.style.display = DisplayStyle.None;
+                _imageCaption.style.display = DisplayStyle.None;
+                _imageCaption.text = string.Empty;
+            }
         }
         else
         {

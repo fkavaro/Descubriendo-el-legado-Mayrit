@@ -121,6 +121,7 @@ public class ContextualPanel
             _image.style.backgroundImage = new StyleBackground();
             _image.style.display = DisplayStyle.None;
             _imageCaption.style.display = DisplayStyle.None;
+            _imageCaption.text = string.Empty;
             _hadImage = false;
         }
 
