@@ -217,7 +217,7 @@ public abstract class AUIState : AState
 
         visualElement.style.opacity = targetAlpha;
 
-        Debug.Log($"{_stateName}: Finished fade animation to {targetAlpha} alpha for {visualElement.name}.");
+        //Debug.Log($"{_stateName}: Finished fade animation to {targetAlpha} alpha for {visualElement.name}.");
     }
     #endregion
 }
