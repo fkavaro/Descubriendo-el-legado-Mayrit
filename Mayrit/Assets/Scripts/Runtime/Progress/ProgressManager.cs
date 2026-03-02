@@ -38,7 +38,6 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
 
     ScenesController _scenesController;
     TourManager _tourManager;
-
     #endregion
 
     #region INHERITED
@@ -46,9 +45,8 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     {
         _fsm = new(this);
 
-        // Build state for each milestone scene
-        for (int i = 0; i < _milestonesData.Count; i++)
-            _fsm.AddStateToSequence(new MilestoneState(_milestonesData[i]));
+        foreach (var data in _milestonesData)
+            _fsm.AddStateToSequence(new MilestoneState(data));
 
         return _fsm;
     }
