@@ -123,11 +123,12 @@ public class SpectatorHUD_UIState : AHUDState
         _soundManager.PlayButtonClickSFX();
     }
 
-    void OnModernSuperpositionToggled(ChangeEvent<bool> evt)
+    // TODO: move to uiManager
+    void OnModernSuperpositionToggled(bool newValue)
     {
         _soundManager.PlayButtonClickSFX();
     }
-    void OnLandmarkVisualizationToggled(ChangeEvent<bool> evt)
+    void OnLandmarkVisualizationToggled(bool newValue)
     {
         _soundManager.PlayButtonClickSFX();
     }

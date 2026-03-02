@@ -50,15 +50,15 @@ public class SettingsMenu_UIState : AUIState
             _uiManager.SwitchToPauseState();
     }
 
-    void OnEdgeScrollingToggled(ChangeEvent<bool> evt)
+    void OnEdgeScrollingToggled(bool newValue)
     {
-        _uiManager.InvokeEdgeScrollingToggledEvent(evt.newValue);
+        _uiManager.InvokeEdgeScrollingToggledEvent(newValue);
         _soundManager.PlayButtonClickSFX();
     }
 
-    void OnShowControlsToggled(ChangeEvent<bool> evt)
+    void OnShowControlsToggled(bool newValue)
     {
-        _uiManager.SetControlsVisibility(evt.newValue);
+        _uiManager.SetControlsVisibility(newValue);
         _soundManager.PlayButtonClickSFX();
     }
 

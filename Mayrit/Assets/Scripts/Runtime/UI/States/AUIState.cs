@@ -61,6 +61,12 @@ public abstract class AUIState : AState
 
     public override void StartState()
     {
+        if (_screen == null)
+        {
+            Debug.LogWarning($"{_stateName}: Cannot start state because screen VisualElement is null.");
+            return;
+        }
+
         // TODO: fade in coroutine
         _screen.style.display = DisplayStyle.Flex; // Show
         base.StartState();
@@ -113,12 +119,12 @@ public abstract class AUIState : AState
         return button;
     }
 
-    protected Switch GetSwitchAndRegisterCallback(string switchName, EventCallback<ChangeEvent<bool>> callbackMethod, VisualElement parent = null)
+    protected Switch GetSwitchAndRegisterCallback(string switchName, System.Action<bool> callbackMethod, VisualElement parent = null)
     {
         if (GetByName<Switch>(switchName, parent) is not Switch switchElement)
             return null;
 
-        switchElement.RegisterCallback(callbackMethod);
+        switchElement.Toggled += callbackMethod;
 
         return switchElement;
     }
