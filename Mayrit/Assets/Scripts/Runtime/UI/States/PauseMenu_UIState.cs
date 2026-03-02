@@ -22,28 +22,10 @@ public class PauseMenu_UIState : AUIState
     #region INHERITED METHODS
     protected override void ConfigureUIElementsOnAwake()
     {
-        _screen = _UIDocument.rootVisualElement.Q<VisualElement>("PauseMenu");
-        _playButton = _screen.Q<Button>("PlayButton");
-        _mainMenuButton = _screen.Q<Button>("MainMenuButton");
-        _settingsButton = _screen.Q<Button>("SettingsButton");
-        _quitButton = _screen.Q<Button>("QuitButton");
-
-        if (_playButton == null)
-            Debug.LogWarning("_playButton not found");
-        if (_mainMenuButton == null)
-            Debug.LogWarning("_mainMenuButton not found");
-        if (_settingsButton == null)
-            Debug.LogWarning("_settingsButton not found");
-        if (_quitButton == null)
-            Debug.LogWarning("_quitButton not found");
-    }
-
-    protected override void RegisterUICallbacksOnAwake()
-    {
-        _playButton.RegisterCallback<ClickEvent>(OnPlayClicked);
-        _mainMenuButton.RegisterCallback<ClickEvent>(OnMainMenuClicked);
-        _settingsButton.RegisterCallback<ClickEvent>(OnSettingsClicked);
-        _quitButton.RegisterCallback<ClickEvent>(OnQuitClicked);
+        _playButton = GetButtonAndRegisterCallback("PlayButton", OnPlayClicked);
+        _mainMenuButton = GetButtonAndRegisterCallback("MainMenuButton", OnMainMenuClicked);
+        _settingsButton = GetButtonAndRegisterCallback("SettingsButton", OnSettingsClicked);
+        _quitButton = GetButtonAndRegisterCallback("QuitButton", OnQuitClicked);
     }
 
     protected override void GetServicesDependenciesOnStart()

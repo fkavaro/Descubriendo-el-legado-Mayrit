@@ -5,17 +5,16 @@ using UnityEngine.UIElements;
 public class SpectatorHUD_UIState : AHUDState
 {
     #region PROPERTIES
-    PlayerFollower _playerFollowerComponent;
+    PlayerFollower _playerFollower;
 
-    Label _tooltip,
-        _milestoneName,
+    Label _milestoneName,
         _milestoneDate;
     Button _pauseButton,
         _milestoneInfoButton,
         _nextMilestoneButton,
         _previousMilestoneButton;
     VisualElement _milestoneArea,
-        _playerFollower,
+        _playerFollowerRoot,
         _switches,
         _milestoneButtons;
 
@@ -33,59 +32,20 @@ public class SpectatorHUD_UIState : AHUDState
     {
         base.ConfigureUIElementsOnAwake();
 
-        _pauseButton = _screen.Q<Button>("PauseButton");
-        _tooltip = _screen.Q<Label>("Tooltip");
-        _milestoneArea = _screen.Q<VisualElement>("MilestoneArea");
-        _milestoneInfoButton = _milestoneArea.Q<Button>("InfoButton");
-        _milestoneName = _milestoneArea.Q<Label>("Name");
-        _milestoneDate = _milestoneArea.Q<Label>("Date");
-        _playerFollower = _screen.Q<VisualElement>("PlayerFollower");
-        _switches = _screen.Q<VisualElement>("Switches");
-        _modernVisualizactionSwitch = _switches.Q<Switch>("ModernVisualizationSwitch");
-        _landmarkVisualizationSwitch = _switches.Q<Switch>("LandmarkVisualizationSwitch");
-        _milestoneButtons = _screen.Q<VisualElement>("MilestoneButtons");
-        _nextMilestoneButton = _milestoneButtons.Q<Button>("NextMilestoneButton");
-        _previousMilestoneButton = _milestoneButtons.Q<Button>("PreviousMilestoneButton");
+        _pauseButton = GetButtonAndRegisterCallback("PauseButton", OnPauseClicked);
+        _milestoneArea = GetByName<VisualElement>("MilestoneArea");
+        _milestoneInfoButton = GetButtonAndRegisterCallback("InfoButton", OnMilestoneClicked, _milestoneArea);
+        _milestoneName = GetByName<Label>("Name", _milestoneArea);
+        _milestoneDate = GetByName<Label>("Date", _milestoneArea);
+        _playerFollowerRoot = GetByName<VisualElement>("PlayerFollower");
+        _switches = GetByName<VisualElement>("Switches");
+        _modernVisualizactionSwitch = GetSwitchAndRegisterCallback("ModernVisualizationSwitch", OnModernSuperpositionToggled, _switches);
+        _landmarkVisualizationSwitch = GetSwitchAndRegisterCallback("LandmarkVisualizationSwitch", OnLandmarkVisualizationToggled, _switches);
+        _milestoneButtons = GetByName<VisualElement>("MilestoneButtons");
+        _nextMilestoneButton = GetButtonAndRegisterCallback("NextMilestoneButton", OnNextMilestoneClicked, _milestoneButtons);
+        _previousMilestoneButton = GetButtonAndRegisterCallback("PreviousMilestoneButton", OnPreviousMilestoneClicked, _milestoneButtons);
 
-        if (_pauseButton == null)
-            Debug.LogWarning("_pauseButton not found");
-        if (_tooltip == null)
-            Debug.LogWarning("_tooltip not found");
-        if (_milestoneArea == null)
-            Debug.LogWarning("_milestoneArea not found");
-        if (_milestoneInfoButton == null)
-            Debug.LogWarning("_eventInfoButton button not found");
-        if (_milestoneName == null)
-            Debug.LogWarning("_milestoneName not found");
-        if (_milestoneDate == null)
-            Debug.LogWarning("_milestoneDate not found");
-        if (_nextMilestoneButton == null)
-            Debug.LogWarning("_nextMilestoneButton button not found");
-        if (_previousMilestoneButton == null)
-            Debug.LogWarning("_previousMilestoneButton button not found");
-        if (_playerFollower == null)
-            Debug.LogWarning("_playerFollower not found");
-        if (_switches == null)
-            Debug.LogWarning("_switches not found");
-        if (_modernVisualizactionSwitch == null)
-            Debug.LogWarning("_modernVisualizactionSwitch not found");
-        if (_landmarkVisualizationSwitch == null)
-            Debug.LogWarning("_landmarkVisualizationSwitch not found");
-        if (_milestoneButtons == null)
-            Debug.LogWarning("_milestoneButtons not found");
-
-        _playerFollowerComponent = new PlayerFollower(_playerFollower);
-    }
-
-    protected override void RegisterUICallbacksOnAwake()
-    {
-        _pauseButton.RegisterCallback<ClickEvent>(OnPauseClicked);
-        _milestoneInfoButton.RegisterCallback<ClickEvent>(OnMilestoneClicked);
-        _nextMilestoneButton.RegisterCallback<ClickEvent>(OnNextMilestoneClicked);
-        _previousMilestoneButton.RegisterCallback<ClickEvent>(OnPreviousMilestoneClicked);
-
-        _modernVisualizactionSwitch.Toggled += OnModernSuperpositionToggled;
-        _landmarkVisualizationSwitch.Toggled += OnLandmarkVisualizationToggled;
+        _playerFollower = new PlayerFollower(_playerFollowerRoot);
     }
 
     protected override void GetServicesDependenciesOnStart()
@@ -99,10 +59,6 @@ public class SpectatorHUD_UIState : AHUDState
     {
         base.SubscribeToServicesEventsOnStart();
         _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
-
-        // TODO: remove later
-        //_uiManager.ShowTooltipEvent += OnShowTooltip;
-        //_uiManager.HideTooltipEvent += OnHideTooltip;
     }
 
     public override void StartState()
@@ -115,24 +71,20 @@ public class SpectatorHUD_UIState : AHUDState
         _nextMilestoneButton.SetEnabled(_progressManager.IsNextMilestoneAvailable());
         _nextMilestoneButton.pickingMode = _progressManager.IsNextMilestoneAvailable() ? PickingMode.Position : PickingMode.Ignore;
 
-        _playerFollowerComponent.Start();
+        _playerFollower.Start();
     }
 
     public override void UpdateState()
     {
         base.UpdateState();
 
-        _playerFollowerComponent.Update();
+        _playerFollower.Update();
     }
 
     protected override void UnsubscribeToServicesEventsOnExit()
     {
         base.UnsubscribeToServicesEventsOnExit();
         _progressManager.MilestoneChangedEvent -= OnMilestoneChanged;
-
-        // TODO: remove later
-        //_uiManager.ShowTooltipEvent -= OnShowTooltip;
-        //_uiManager.HideTooltipEvent -= OnHideTooltip;
     }
     #endregion
 
@@ -171,12 +123,11 @@ public class SpectatorHUD_UIState : AHUDState
         _soundManager.PlayButtonClickSFX();
     }
 
-    // TODO move to SoundManager
-    private void OnModernSuperpositionToggled(bool value)
+    void OnModernSuperpositionToggled(ChangeEvent<bool> evt)
     {
         _soundManager.PlayButtonClickSFX();
     }
-    private void OnLandmarkVisualizationToggled(bool value)
+    void OnLandmarkVisualizationToggled(ChangeEvent<bool> evt)
     {
         _soundManager.PlayButtonClickSFX();
     }
@@ -195,32 +146,7 @@ public class SpectatorHUD_UIState : AHUDState
         _previousMilestoneButton.SetEnabled(!_progressManager.AtFirstMilestone());
         _previousMilestoneButton.pickingMode = !_progressManager.AtFirstMilestone() ? PickingMode.Position : PickingMode.Ignore;
 
-        _playerFollowerComponent.PlayerTransform = ServiceLocator.Instance.Get<PlayableCharacter>().transform;
+        _playerFollower.PlayerTransform = ServiceLocator.Instance.Get<PlayableCharacter>().transform;
     }
-
-    // TODO: remove later
-    // void OnShowTooltip(DataSO data)
-    // {
-    //     if (!_cameraManager.IsInSpectatorState || data == null)
-    //     {
-    //         OnHideTooltip();
-    //         return;
-    //     }
-
-    //     if (_tooltip.text != data.Header)
-    //         _tooltip.text = data.Header;
-    //     if (_tooltip.style.display != DisplayStyle.Flex)
-    //         _tooltip.style.display = DisplayStyle.Flex;
-    //     Vector2 _cursorScreenPos = Mouse.current.position.ReadValue();
-    //     // UI Toolkit's Y axis is from top to bottom, 
-    //     // while screen coordinates are from bottom to top
-    //     _tooltip.style.left = _cursorScreenPos.x + _uiManager.TooltipOffset.x; ;
-    //     _tooltip.style.top = Screen.height - _cursorScreenPos.y + _uiManager.TooltipOffset.y;
-    // }
-    // void OnHideTooltip()
-    // {
-    //     if (_tooltip.style.display != DisplayStyle.None)
-    //         _tooltip.style.display = DisplayStyle.None;
-    // }
     #endregion
 }

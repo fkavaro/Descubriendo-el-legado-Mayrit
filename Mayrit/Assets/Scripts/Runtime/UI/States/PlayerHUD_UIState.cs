@@ -24,27 +24,11 @@ public class PlayerHUD_UIState : AHUDState
     {
         base.ConfigureUIElementsOnAwake();
 
-        _pauseButton = _screen.Q<Button>("PauseButton");
-        _tourArea = _screen.Q<VisualElement>("TourArea");
-        _tourName = _tourArea.Q<Label>("Name");
-        _tourDescription = _tourArea.Q<Label>("Description");
-        _onTourEndVisual = _screen.Q<VisualElement>("OnTourEnd");
-
-        if (_pauseButton == null)
-            Debug.LogWarning("_pauseButton not found");
-        if (_tourArea == null)
-            Debug.LogWarning("TourArea not found");
-        if (_tourName == null)
-            Debug.LogWarning("_tourName not found");
-        if (_tourDescription == null)
-            Debug.LogWarning("_tourDescription not found");
-        if (_onTourEndVisual == null)
-            Debug.LogWarning("_onTourEndVisual not found");
-    }
-
-    protected override void RegisterUICallbacksOnAwake()
-    {
-        _pauseButton.RegisterCallback<ClickEvent>(OnPauseClicked);
+        _pauseButton = GetButtonAndRegisterCallback("PauseButton", OnPauseClicked);
+        _tourArea = GetByName<VisualElement>("TourArea");
+        _tourName = GetByName<Label>("Name", _tourArea);
+        _tourDescription = GetByName<Label>("Description", _tourArea);
+        _onTourEndVisual = GetByName<VisualElement>("OnTourEnd");
     }
 
     protected override void GetServicesDependenciesOnStart()

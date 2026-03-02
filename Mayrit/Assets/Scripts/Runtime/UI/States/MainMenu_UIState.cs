@@ -24,44 +24,17 @@ public class MainMenu_UIState : AUIState
     #region INHERITED METHODS
     protected override void ConfigureUIElementsOnAwake()
     {
-        _buttons = _screen.Q<VisualElement>("Buttons");
-        _newGameButton = _buttons.Q<Button>("NewGameButton");
-        _loadGameButton = _buttons.Q<Button>("LoadGameButton");
-        _settingsButton = _buttons.Q<Button>("SettingsButton");
-        _quitButton = _buttons.Q<Button>("QuitButton");
+        _buttons = GetByName<VisualElement>("Buttons");
+        _newGameButton = GetButtonAndRegisterCallback("NewGameButton", OnNewGameClicked, _buttons);
+        _loadGameButton = GetButtonAndRegisterCallback("LoadGameButton", OnLoadGameClicked, _buttons);
+        _settingsButton = GetButtonAndRegisterCallback("SettingsButton", OnSettingsClicked, _buttons);
+        _quitButton = GetButtonAndRegisterCallback("QuitButton", OnQuitClicked, _buttons);
 
-        _newGameWarningPopup = _screen.Q<VisualElement>("NewGameWarning");
-        _confirmNewGameButton = _newGameWarningPopup.Q<Button>("ConfirmNewGameButton");
-        _cancelNewGameButton = _newGameWarningPopup.Q<Button>("CancelNewGameButton");
-
-        if (_buttons == null)
-            Debug.LogWarning($"{_stateName}: 'Buttons' not found");
-        if (_newGameButton == null)
-            Debug.LogWarning($"{_stateName}: 'NewGameButton' not found");
-        if (_loadGameButton == null)
-            Debug.LogWarning($"{_stateName}: 'LoadGameButton' not found");
-        if (_settingsButton == null)
-            Debug.LogWarning($"{_stateName}: 'SettingsButton' not found");
-        if (_quitButton == null)
-            Debug.LogWarning($"{_stateName}: 'QuitButton' not found");
-        if (_newGameWarningPopup == null)
-            Debug.LogWarning($"{_stateName}: 'NewGameWarning' not found");
-        if (_confirmNewGameButton == null)
-            Debug.LogWarning($"{_stateName}: 'ConfirmNewGameButton' not found");
-        if (_cancelNewGameButton == null)
-            Debug.LogWarning($"{_stateName}: 'CancelNewGameButton' not found");
+        _newGameWarningPopup = GetByName<VisualElement>("NewGameWarning");
+        _confirmNewGameButton = GetButtonAndRegisterCallback("ConfirmNewGameButton", OnConfirmNewGameClicked, _newGameWarningPopup);
+        _cancelNewGameButton = GetButtonAndRegisterCallback("CancelNewGameButton", OnCancelNewGameClicked, _newGameWarningPopup);
 
         _newGameWarningPopup.style.display = DisplayStyle.None;
-    }
-
-    protected override void RegisterUICallbacksOnAwake()
-    {
-        _newGameButton.RegisterCallback<ClickEvent>(OnNewGameClicked);
-        _loadGameButton.RegisterCallback<ClickEvent>(OnLoadGameClicked);
-        _settingsButton.RegisterCallback<ClickEvent>(OnSettingsClicked);
-        _quitButton.RegisterCallback<ClickEvent>(OnQuitClicked);
-        _confirmNewGameButton.RegisterCallback<ClickEvent>(OnConfirmNewGameClicked);
-        _cancelNewGameButton.RegisterCallback<ClickEvent>(OnCancelNewGameClicked);
     }
 
     public override void StartState()

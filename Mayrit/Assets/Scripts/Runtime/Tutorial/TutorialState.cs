@@ -15,9 +15,4 @@ public class TutorialState : AUIState
     {
 
     }
-
-    protected override void RegisterUICallbacksOnAwake()
-    {
-
-    }
 }

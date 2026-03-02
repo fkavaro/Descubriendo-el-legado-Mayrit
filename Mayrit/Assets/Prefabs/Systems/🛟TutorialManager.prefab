@@ -44,3 +44,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db16b75e390822e4c88c375c99599dd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Mayrit::TutorialManager
+  _debugMode: 0
+  _isExecutionPaused: 0
+  _currentActionInfo: 
+  _uiDocument: {fileID: 0}
+  _tutorialStepsData:
+  - {fileID: 11400000, guid: 576ecce811f957e48942f8ab196de22a, type: 2}
+  - {fileID: 11400000, guid: 7123d9c0c1251af49ad1256869232b68, type: 2}
+  - {fileID: 11400000, guid: d1c9caff75c79b348b5eeb2be8d3d61b, type: 2}
+  - {fileID: 11400000, guid: 8d0985a5b5f513a48b6a4fb468c6574f, type: 2}
+  - {fileID: 11400000, guid: e042649145137e342858c4450385154f, type: 2}
+  - {fileID: 11400000, guid: 62107228b4dac5949a10fcb72de1a687, type: 2}
+  - {fileID: 11400000, guid: 1ca59ddfabad3c2489a9b375d673d247, type: 2}

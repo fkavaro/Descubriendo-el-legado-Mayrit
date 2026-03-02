@@ -5,8 +5,8 @@ using UnityEngine.InputSystem;
 public abstract class AUIState : AState
 {
     #region PROPERTIES
-    public UIDocument _UIDocument;
-    public VisualElement _screen;
+    protected UIDocument _UIDocument;
+    VisualElement _screen;
 
     // Dependency Injection
     protected ScenesController _scenesController;
@@ -39,17 +39,10 @@ public abstract class AUIState : AState
             return;
         }
 
-        _screen = _UIDocument.rootVisualElement.Q<VisualElement>(_stateName);
+        _screen = GetByName<VisualElement>(_stateName, _UIDocument.rootVisualElement);
+        _screen.style.display = DisplayStyle.None;
 
-        if (_screen == null)
-        {
-            Debug.LogWarning($"{_stateName} UI State: No VisualElement with name '{_stateName}' found.");
-            return;
-        }
-
-        _screen.style.display = DisplayStyle.None; // Hide
         ConfigureUIElementsOnAwake();
-        RegisterUICallbacksOnAwake();
     }
 
     protected override void GetServicesDependenciesOnStart()
@@ -68,6 +61,7 @@ public abstract class AUIState : AState
 
     public override void StartState()
     {
+        // TODO: fade in coroutine
         _screen.style.display = DisplayStyle.Flex; // Show
         base.StartState();
     }
@@ -75,6 +69,7 @@ public abstract class AUIState : AState
     public override void ExitState()
     {
         base.ExitState();
+        // TODO: fade out coroutine
         _screen.style.display = DisplayStyle.None; // Hide
     }
     #endregion
@@ -91,6 +86,53 @@ public abstract class AUIState : AState
     #endregion
 
     #region PRIVATE METHODS
+    protected T GetByName<T>(string elementName, VisualElement parent = null) where T : VisualElement
+    {
+        parent ??= _screen;
+
+        if (parent is null)
+        {
+            Debug.LogWarning($"{_stateName} UI State: Cannot search for '{elementName}' in null parent.");
+            return null;
+        }
+
+        T element = parent.Q<T>(elementName);
+        if (element is null)
+            Debug.LogWarning($"{_stateName}: No VisualElement with name '{elementName}' found.");
+
+        return element;
+    }
+
+    protected Button GetButtonAndRegisterCallback(string buttonName, EventCallback<ClickEvent> callbackMethod, VisualElement parent = null)
+    {
+        if (GetByName<Button>(buttonName, parent) is not Button button)
+            return null;
+
+        button.RegisterCallback(callbackMethod);
+
+        return button;
+    }
+
+    protected Switch GetSwitchAndRegisterCallback(string switchName, EventCallback<ChangeEvent<bool>> callbackMethod, VisualElement parent = null)
+    {
+        if (GetByName<Switch>(switchName, parent) is not Switch switchElement)
+            return null;
+
+        switchElement.RegisterCallback(callbackMethod);
+
+        return switchElement;
+    }
+
+    protected Slider GetSliderAndRegisterCallback(string sliderName, EventCallback<ChangeEvent<float>> callbackMethod, VisualElement parent = null)
+    {
+        if (GetByName<Slider>(sliderName, parent) is not Slider slider)
+            return null;
+
+        slider.RegisterCallback(callbackMethod);
+
+        return slider;
+    }
+
     protected bool IsCursorOver(VisualElement uiElement)
     {
         // Get the current mouse position
@@ -113,6 +155,5 @@ public abstract class AUIState : AState
 
     #region ABSTRACT METHODS
     protected abstract void ConfigureUIElementsOnAwake();
-    protected abstract void RegisterUICallbacksOnAwake();
     #endregion
 }

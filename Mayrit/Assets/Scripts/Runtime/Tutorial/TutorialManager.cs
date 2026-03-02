@@ -25,8 +25,6 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
         foreach (var data in _tutorialStepsData)
             _fsm.AddStateToSequence(new TutorialState(data, _uiDocument));
 
-        _fsm.SetInitialStateFromSequence(0);
-
         return _fsm;
     }
     #endregion

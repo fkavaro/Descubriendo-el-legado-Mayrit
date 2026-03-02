@@ -3,10 +3,12 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class CompassUI
+public class CompassUI : AUIState
 {
     #region PROPERTIES
-    readonly VisualElement _root, _cardinalDirections, _nextPOIVisual, _nextPoiDirection;
+    readonly VisualElement _root;
+
+    VisualElement _cardinalDirections, _nextPOIVisual, _nextPoiDirection;
 
     bool _isNextPOIShown;
     Camera _mainCamera;
@@ -17,27 +19,36 @@ public class CompassUI
     #endregion
 
     #region CONSTRUCTOR
-    public CompassUI(VisualElement root)
+    public CompassUI(UIDocument uIDocument, VisualElement root) : base("ContextualPanel", uIDocument)
     {
+        if (root == null)
+        {
+            Debug.LogError("CompassUI: Root VisualElement is null");
+            return;
+        }
+
         _root = root;
+    }
 
-        _cardinalDirections = _root.Q<VisualElement>("CardinalDirections");
-        _nextPOIVisual = _root.Q<VisualElement>("NextPOI");
-        _nextPoiDirection = _root.Q<VisualElement>("NextPOIDirection");
+    protected override void ConfigureUIElementsOnAwake()
+    {
+        _cardinalDirections = GetByName<VisualElement>("CardinalDirections", _root);
+        _nextPOIVisual = GetByName<VisualElement>("NextPOI", _root);
+        _nextPoiDirection = GetByName<VisualElement>("NextPOIDirection", _root);
 
-        if (_cardinalDirections == null)
-            Debug.LogWarning("CompassUI: 'CardinalDirections' not found");
-        if (_nextPOIVisual == null)
-            Debug.LogWarning("CompassUI: 'NextPOI' not found");
-        if (_nextPoiDirection == null)
-            Debug.LogWarning("CompassUI: 'POIDirection' not found");
 
-        IsShown(false);
-        IsNextPOIShown(false);
     }
     #endregion
 
     #region PUBLIC METHODS
+    public override void AwakeState()
+    {
+        base.AwakeState();
+
+        IsShown(false);
+        IsNextPOIShown(false);
+    }
+
     public void Start()
     {
         _mainCamera = Camera.main; // TODO get from Camera Manager

@@ -20,32 +20,11 @@ public class SettingsMenu_UIState : AUIState
     #region OVERRIDDEN METHODS
     protected override void ConfigureUIElementsOnAwake()
     {
-        _closeButton = _screen.Q<Button>("CloseButton");
-        _edgeScrollingSwitch = _screen.Q<Switch>("EdgeScrollingSwitch");
-        _showControlsSwitch = _screen.Q<Switch>("ShowControlsSwitch");
-        _musicVolumeSlider = _screen.Q<Slider>("MusicVolumeSlider");
-        _sfxVolumeSlider = _screen.Q<Slider>("SFXVolumeSlider");
-
-        if (_closeButton == null)
-            Debug.LogWarning("_closeButton not found");
-        if (_edgeScrollingSwitch == null)
-            Debug.LogWarning("_edgeScrollingSwitch not found");
-        if (_showControlsSwitch == null)
-            Debug.LogWarning("_showControlsSwitch not found");
-        if (_musicVolumeSlider == null)
-            Debug.LogWarning("_musicVolumeSlider not found");
-        if (_sfxVolumeSlider == null)
-            Debug.LogWarning("_sfxVolumeSlider not found");
-    }
-
-    protected override void RegisterUICallbacksOnAwake()
-    {
-        _closeButton.RegisterCallback<ClickEvent>(OnCloseClicked);
-        _musicVolumeSlider.RegisterCallback<ChangeEvent<float>>(OnMusicVolumeChanged);
-        _sfxVolumeSlider.RegisterCallback<ChangeEvent<float>>(OnSFXVolumeChanged);
-
-        _edgeScrollingSwitch.Toggled += OnEdgeScrollingToggled;
-        _showControlsSwitch.Toggled += OnShowControlsToggled;
+        _closeButton = GetButtonAndRegisterCallback("CloseButton", OnCloseClicked);
+        _edgeScrollingSwitch = GetSwitchAndRegisterCallback("EdgeScrollingSwitch", OnEdgeScrollingToggled);
+        _showControlsSwitch = GetSwitchAndRegisterCallback("ShowControlsSwitch", OnShowControlsToggled);
+        _musicVolumeSlider = GetSliderAndRegisterCallback("MusicVolumeSlider", OnMusicVolumeChanged);
+        _sfxVolumeSlider = GetSliderAndRegisterCallback("SFXVolumeSlider", OnSFXVolumeChanged);
     }
 
     public override void StartState()
@@ -71,15 +50,15 @@ public class SettingsMenu_UIState : AUIState
             _uiManager.SwitchToPauseState();
     }
 
-    void OnEdgeScrollingToggled(bool value)
+    void OnEdgeScrollingToggled(ChangeEvent<bool> evt)
     {
-        _uiManager.InvokeEdgeScrollingToggledEvent(value);
+        _uiManager.InvokeEdgeScrollingToggledEvent(evt.newValue);
         _soundManager.PlayButtonClickSFX();
     }
 
-    void OnShowControlsToggled(bool value)
+    void OnShowControlsToggled(ChangeEvent<bool> evt)
     {
-        _uiManager.SetControlsVisibility(value);
+        _uiManager.SetControlsVisibility(evt.newValue);
         _soundManager.PlayButtonClickSFX();
     }
 

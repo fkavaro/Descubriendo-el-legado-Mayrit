@@ -41,37 +41,15 @@ public class LoadingScreen_UIState : AUIState
     #region INHERITED METHODS
     protected override void ConfigureUIElementsOnAwake()
     {
-        _infoLoadingScreen = _screen.Q<VisualElement>("InfoLoadingScreen");
-        _blackLoadingScreen = _screen.Q<VisualElement>("BlackLoadingScreen");
-        _header = _infoLoadingScreen.Q<Label>("Header");
-        _subHeader = _infoLoadingScreen.Q<Label>("SubHeader");
-        _description = _infoLoadingScreen.Q<Label>("Description");
-        _continueButton = _infoLoadingScreen.Q<Button>("ContinueButton");
-        _image = _infoLoadingScreen.Q<VisualElement>("Image");
-        _imageCaption = _infoLoadingScreen.Q<Label>("Caption");
-        _loadingAnimation = _infoLoadingScreen.Q<VisualElement>("LoadingAnimation");
-
-        if (_infoLoadingScreen == null)
-            Debug.LogWarning("LoadingScreenController: No VisualElement with name 'LoadingScreen' found.");
-        if (_header == null)
-            Debug.LogWarning("LoadingScreenController: No Label with name 'Header' found.");
-        if (_subHeader == null)
-            Debug.LogWarning("LoadingScreenController: No Label with name 'SubHeader' found.");
-        if (_description == null)
-            Debug.LogWarning("LoadingScreenController: No Label with name 'Description' found.");
-        if (_continueButton == null)
-            Debug.LogWarning("LoadingScreenController: No Button with name 'ContinueButton' found.");
-        if (_image == null)
-            Debug.LogWarning("LoadingScreenController: No VisualElement with name 'Image' found.");
-        if (_imageCaption == null)
-            Debug.LogWarning("LoadingScreenController: No Label with name 'Caption' found.");
-        if (_loadingAnimation == null)
-            Debug.LogWarning("LoadingScreenController: No VisualElement with name 'LoadingAnimation' found.");
-    }
-
-    protected override void RegisterUICallbacksOnAwake()
-    {
-        _continueButton.clicked += OnContinueButtonClicked;
+        _blackLoadingScreen = GetByName<VisualElement>("BlackLoadingScreen");
+        _infoLoadingScreen = GetByName<VisualElement>("InfoLoadingScreen");
+        _header = GetByName<Label>("Header", _infoLoadingScreen);
+        _subHeader = GetByName<Label>("SubHeader", _infoLoadingScreen);
+        _description = GetByName<Label>("Description", _infoLoadingScreen);
+        _continueButton = GetButtonAndRegisterCallback("ContinueButton", OnContinueButtonClicked, _infoLoadingScreen);
+        _image = GetByName<VisualElement>("Image", _infoLoadingScreen);
+        _imageCaption = GetByName<Label>("Caption", _infoLoadingScreen);
+        _loadingAnimation = GetByName<VisualElement>("LoadingAnimation", _infoLoadingScreen);
     }
 
     public override void StartState()
@@ -178,7 +156,7 @@ public class LoadingScreen_UIState : AUIState
     }
     #endregion
 
-    void OnContinueButtonClicked()
+    void OnContinueButtonClicked(ClickEvent evt)
     {
         ContinueIsClicked = true;
     }

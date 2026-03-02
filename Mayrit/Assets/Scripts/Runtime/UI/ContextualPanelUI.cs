@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class ContextualPanel
+public class ContextualPanelUI : AUIState
 {
     #region PROPERTIES
     public event Action PlayTourClickedEvent;
@@ -10,21 +10,19 @@ public class ContextualPanel
     public event Action ShownEvent;
     public event Action ClosedEvent;
 
-    readonly Label _header,
+    readonly VisualElement _root;
+
+    Label _header,
         _subHeader,
         _description,
         _imageCaption;
 
-    readonly Button _closeButton,
+    Button _closeButton,
         _startTourButton,
         _resetTourButton;
 
-    readonly VisualElement _root,
-        //_icon,
-        _image;
-
-    // Dependency Injection
-    SoundManager _soundManager;
+    VisualElement _image;
+    //_icon;
 
     Tour CurrentTour => ServiceLocator.Instance.Get<Tour>();
 
@@ -35,45 +33,29 @@ public class ContextualPanel
     #endregion
 
     #region CONSTRUCTOR
-    public ContextualPanel(VisualElement contextualPanelRoot)
+    public ContextualPanelUI(UIDocument uIDocument, VisualElement root) : base("ContextualPanel", uIDocument)
     {
-        _root = contextualPanelRoot;
+        if (root == null)
+        {
+            Debug.LogError("ContextualPanelUI: Root VisualElement is null");
+            return;
+        }
 
-        _header = _root.Q<Label>("Header");
-        _subHeader = _root.Q<Label>("SubHeader");
-        _description = _root.Q<Label>("Description");
-        _closeButton = _root.Q<Button>("CloseButton");
-        //_icon = _root.Q<VisualElement>("Icon");
-        _image = _root.Q<VisualElement>("Image");
-        _imageCaption = _root.Q<Label>("Caption");
-        _startTourButton = _root.Q<Button>("StartTourButton");
-        _resetTourButton = _root.Q<Button>("ResetTourButton");
+        _root = root;
+    }
+    #endregion
 
-        if (_header == null)
-            Debug.LogWarning("_header not found");
-        if (_subHeader == null)
-            Debug.LogWarning("_subHeader not found");
-        if (_description == null)
-            Debug.LogWarning("_description not found");
-        if (_closeButton == null)
-            Debug.LogWarning("_closeButton button not found");
-        if (_image == null)
-            Debug.LogWarning("_image not found");
-        //if (_icon == null)
-        // Debug.LogWarning("_icon not found");
-        if (_imageCaption == null)
-            Debug.LogWarning("_imageCaption not found");
-        if (_startTourButton == null)
-            Debug.LogWarning("_startTourButton button not found");
-        if (_resetTourButton == null)
-            Debug.LogWarning("_resetTourButton button not found");
-
-        _closeButton.RegisterCallback<ClickEvent>(OnCloseButton);
-        _startTourButton.RegisterCallback<ClickEvent>(OnStartTour);
-        _resetTourButton.RegisterCallback<ClickEvent>(OnResetTour);
-
-        // Get dependencies from Service Locator
-        _soundManager = ServiceLocator.Instance.Get<SoundManager>();
+    #region INHERITED METHODS
+    protected override void ConfigureUIElementsOnAwake()
+    {
+        _header = GetByName<Label>("Header", _root);
+        _subHeader = GetByName<Label>("SubHeader", _root);
+        _description = GetByName<Label>("Description", _root);
+        _imageCaption = GetByName<Label>("Caption", _root);
+        _closeButton = GetButtonAndRegisterCallback("CloseButton", OnCloseButton, _root);
+        _image = GetByName<VisualElement>("Image", _root);
+        _startTourButton = GetButtonAndRegisterCallback("StartTourButton", OnStartTour, _root);
+        _resetTourButton = GetButtonAndRegisterCallback("ResetTourButton", OnResetTour, _root);
     }
     #endregion
 
