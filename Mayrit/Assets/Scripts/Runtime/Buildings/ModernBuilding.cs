@@ -47,8 +47,8 @@ public class ModernBuilding : MonoBehaviour
         // Subscribe to events
         _cameraManager.CameraStateChangedEvent += OnCameraStateChanged;
         _uiManager.ModernVisualizationToggled += OnVisualizationToggled;
-        _uiManager.ContextualPanelShownEvent += OnContextualShownPanel;
-        _uiManager.ContextualPanelHiddenEvent += OnContextualHiddenPanel;
+        _uiManager.ContextualPanelShownEvent += OnContextualPanelShown;
+        _uiManager.ContextualPanelHiddenEvent += OnContextualPanelHidden;
     }
 
     void OnDisable()
@@ -56,8 +56,8 @@ public class ModernBuilding : MonoBehaviour
         // Unsubscribe from events
         _cameraManager.CameraStateChangedEvent -= OnCameraStateChanged;
         _uiManager.ModernVisualizationToggled -= OnVisualizationToggled;
-        _uiManager.ContextualPanelShownEvent -= OnContextualShownPanel;
-        _uiManager.ContextualPanelHiddenEvent -= OnContextualHiddenPanel;
+        _uiManager.ContextualPanelShownEvent -= OnContextualPanelShown;
+        _uiManager.ContextualPanelHiddenEvent -= OnContextualPanelHidden;
     }
     #endregion
 
@@ -66,8 +66,6 @@ public class ModernBuilding : MonoBehaviour
     {
         if (_cameraManager.IsInThirdPersonState || _cameraManager.IsInPOIState)
             IsActive = false;
-        else if (_wasActive)
-            IsActive = true;
     }
 
     void OnVisualizationToggled(bool value)
@@ -76,7 +74,7 @@ public class ModernBuilding : MonoBehaviour
         _wasActive = value;
     }
 
-    void OnContextualShownPanel(DataSO data, bool isCharacterData)
+    void OnContextualPanelShown(DataSO data, bool isCharacterData)
     {
         if (isCharacterData)
             IsActive = false;
@@ -87,7 +85,7 @@ public class ModernBuilding : MonoBehaviour
         IsActive = data == _landmarkVisual.Data;
     }
 
-    void OnContextualHiddenPanel()
+    void OnContextualPanelHidden()
     {
         IsActive = _wasActive;
     }
