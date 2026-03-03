@@ -13,8 +13,9 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
     #endregion
 
     #region INTERNAL PROPERTIES
+    int _currentStepIndex = 0;
+    ATutorialStepConditionSO _currentCondition;
     StackFiniteStateMachine<TutorialState> _fsm;
-
     ScenesController _scenesController;
     #endregion
 
@@ -52,18 +53,75 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
         // base.Start(); when gameplay scene loaded, to start behaviour system
     }
 
+    protected override void Update()
+    {
+        if (_currentCondition != null)
+            _currentCondition.Tick(Time.deltaTime);
+    }
+
     void OnDisable()
     {
         _scenesController.ScenesLoadedFullyEvent -= OnScenesLoadedFully;
         ServiceLocator.Instance.Unregister(this);
+        StopCurrentCondition();
+    }
+    #endregion
+
+    #region PRIVATE METHODS
+    void StartCurrentCondition()
+    {
+        if (_currentStepIndex < 0 || _currentStepIndex >= _tutorialStepsData.Count)
+            return;
+
+        ATutorialStepConditionSO condition = _tutorialStepsData[_currentStepIndex].CompletionCondition;
+        if (condition == null)
+        {
+            Debug.LogWarning($"Tutorial step {_currentStepIndex} has no completion condition.");
+            return;
+        }
+
+        // runtime clone avoids shared SO state across runs/steps
+        _currentCondition = Instantiate(condition);
+        _currentCondition.Completed += OnCurrentStepCompleted;
+
+        if (_currentCondition is ClickButtonConditionSO clickCondition)
+            clickCondition.UIDocument = _uiDocument;
+
+        _currentCondition.BeginListening();
+    }
+
+    void StopCurrentCondition()
+    {
+        if (_currentCondition == null) return;
+
+        _currentCondition.Completed -= OnCurrentStepCompleted;
+        _currentCondition.EndListening();
+        Destroy(_currentCondition);
+        _currentCondition = null;
+    }
+
+    void OnCurrentStepCompleted()
+    {
+        StopCurrentCondition();
+
+        _fsm.SwitchToNextStateInSequence(out int nextIndex);
+        _currentStepIndex = nextIndex;
+
+        StartCurrentCondition();
     }
     #endregion
 
     #region CALLBACK METHODS
     void OnScenesLoadedFully(Dictionary<SceneDatabase.SceneType, SceneDatabase.SceneName> loadedScenes, List<SceneDatabase.SceneType> unloadedTypes)
     {
-        if (loadedScenes.TryGetValue(SceneDatabase.SceneType.Milestone, out var milestoneScene))
-            base.Start();
+        if (!loadedScenes.TryGetValue(SceneDatabase.SceneType.Milestone, out var milestoneScene))
+            return;
+
+        base.Start();
+        _currentStepIndex = 0;
+        StartCurrentCondition();
     }
     #endregion
+
+
 }
