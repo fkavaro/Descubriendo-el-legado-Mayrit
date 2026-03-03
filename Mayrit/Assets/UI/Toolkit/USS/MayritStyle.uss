@@ -363,7 +363,7 @@
 }
 
 .tutorialBlurBg {
-    background-color: rgba(37, 41, 58, 0.78);
+    background-color: rgba(37, 41, 58, 0.86);
     position: absolute;
     top: 0;
     left: 0;
@@ -376,8 +376,8 @@
     filter: blur(5);
     border-left-color: rgb(64, 73, 118);
     border-right-color: rgb(64, 73, 118);
-    border-top-color: rgb(64, 73, 118);
-    border-bottom-color: rgb(64, 73, 118);
+    border-top-color: rgb(76, 87, 142);
+    border-bottom-color: rgb(49, 56, 87);
     border-top-width: 5px;
     border-right-width: 5px;
     border-bottom-width: 5px;
@@ -405,17 +405,17 @@ Switch Label {
 }
 
 .switch-border {
-    background-color: rgb(36, 36, 36);
+    background-color: rgb(24, 24, 24);
     width: 45px;
     height: 30px;
     border-top-width: 3px;
     border-right-width: 3px;
     border-bottom-width: 3px;
     border-left-width: 3px;
-    border-left-color: rgb(58, 58, 58);
-    border-right-color: rgb(58, 58, 58);
-    border-top-color: rgb(58, 58, 58);
-    border-bottom-color: rgb(58, 58, 58);
+    border-left-color: rgb(55, 55, 55);
+    border-right-color: rgb(55, 55, 55);
+    border-top-color: rgb(55, 55, 55);
+    border-bottom-color: rgb(55, 55, 55);
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     border-bottom-right-radius: 15px;
@@ -425,17 +425,17 @@ Switch Label {
 }
 
 .switch-border_on {
-    border-left-color: rgb(82, 92, 144);
-    border-right-color: rgb(82, 92, 144);
-    border-top-color: rgb(82, 92, 144);
-    border-bottom-color: rgb(82, 92, 144);
-    background-color: rgb(53, 60, 99);
+    border-left-color: rgb(64, 73, 118);
+    border-right-color: rgb(64, 73, 118);
+    border-top-color: rgb(64, 73, 118);
+    border-bottom-color: rgb(64, 73, 118);
+    background-color: rgb(37, 41, 58);
 }
 
 .switch-knob {
     width: 16px;
     height: 16px;
-    background-color: rgb(128, 128, 128);
+    background-color: rgb(102, 102, 102);
     margin-top: 4px;
     margin-right: 4px;
     margin-bottom: 4px;
@@ -448,7 +448,7 @@ Switch Label {
 }
 
 .switch-knob_on {
-    background-color: rgb(129, 144, 219);
+    background-color: rgb(192, 192, 192);
     translate: 15px 0;
     transition-duration: 0.2s;
 }
@@ -470,13 +470,13 @@ Switch Label {
 }
 
 .switch-border_on:hover {
-    border-left-color: rgb(102, 114, 176);
-    border-right-color: rgb(102, 114, 176);
-    border-top-color: rgb(102, 114, 176);
-    border-bottom-color: rgb(102, 114, 176);
+    border-left-color: rgb(76, 87, 142);
+    border-right-color: rgb(76, 87, 142);
+    border-top-color: rgb(76, 87, 142);
+    border-bottom-color: rgb(76, 87, 142);
     transition-duration: 0.2s;
     scale: 1.1 1.1;
-    background-color: rgb(53, 60, 99);
+    background-color: rgb(49, 56, 87);
 }
 
 .playerButton {
