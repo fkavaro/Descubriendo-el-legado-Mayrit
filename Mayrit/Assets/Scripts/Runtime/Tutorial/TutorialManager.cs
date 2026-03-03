@@ -26,7 +26,13 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
         _fsm = new(this);
 
         foreach (var data in _tutorialStepsData)
-            _fsm.AddStateToSequence(new TutorialState(data, _uiDocument));
+        {
+            TutorialState newState = new(data, _uiDocument);
+            _fsm.AddStateToSequence(newState);
+            newState.AwakeState();
+        }
+
+        _fsm.SetInitialStateFromSequence(0);
 
         return _fsm;
     }
@@ -59,11 +65,8 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
     #region CALLBACK METHODS
     void OnScenesLoadedFully(Dictionary<SceneDatabase.SceneType, SceneDatabase.SceneName> loadedScenes, List<SceneDatabase.SceneType> unloadedTypes)
     {
-        if (loadedScenes.ContainsValue(SceneDatabase.SceneName.GameplayScene))
-        {
-            _fsm.SetInitialStateFromSequence(0);
+        if (loadedScenes.TryGetValue(SceneDatabase.SceneType.Milestone, out var milestoneScene))
             base.Start();
-        }
     }
     #endregion
 }

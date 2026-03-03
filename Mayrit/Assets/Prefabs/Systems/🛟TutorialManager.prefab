@@ -71,12 +71,15 @@ MonoBehaviour:
   _debugMode: 0
   _isExecutionPaused: 0
   _currentActionInfo: 
-  _uiDocument: {fileID: 0}
   _tutorialStepsData:
   - {fileID: 11400000, guid: 576ecce811f957e48942f8ab196de22a, type: 2}
   - {fileID: 11400000, guid: 7123d9c0c1251af49ad1256869232b68, type: 2}
   - {fileID: 11400000, guid: d1c9caff75c79b348b5eeb2be8d3d61b, type: 2}
-  - {fileID: 11400000, guid: 8d0985a5b5f513a48b6a4fb468c6574f, type: 2}
   - {fileID: 11400000, guid: e042649145137e342858c4450385154f, type: 2}
+  - {fileID: 11400000, guid: 81cf47cf31628a9488959f78ff8fe443, type: 2}
   - {fileID: 11400000, guid: 62107228b4dac5949a10fcb72de1a687, type: 2}
+  - {fileID: 11400000, guid: 43e9d7362e6f5094e8ab6a3985d0486d, type: 2}
   - {fileID: 11400000, guid: 1ca59ddfabad3c2489a9b375d673d247, type: 2}
+  - {fileID: 11400000, guid: aacdfdb1349646742b24da81ff9b6e53, type: 2}
+  - {fileID: 11400000, guid: 318edbbef60fb4e4895ba38f8ea63ef1, type: 2}
+  - {fileID: 11400000, guid: 839b13bdba938de4fad0d72b21cc1dc1, type: 2}

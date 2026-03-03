@@ -10,7 +10,7 @@ public abstract class AUIState : AState
     readonly protected float _fadeInDuration;
     readonly protected float _fadeOutDuration;
 
-    VisualElement _screen;
+    protected VisualElement _screen;
 
     // Dependency Injection
     protected ScenesController _scenesController;
@@ -69,7 +69,7 @@ public abstract class AUIState : AState
     {
         if (_screen == null)
         {
-            Debug.LogWarning($"{_stateName}: Cannot start state because screen VisualElement is null.");
+            Debug.LogWarning($"{_stateName}: Cannot start state because _screen is null.");
             return;
         }
 
@@ -79,6 +79,7 @@ public abstract class AUIState : AState
 
     public override void ExitState()
     {
+        if (_screen == null) return;
         base.ExitState();
         _screen.style.display = DisplayStyle.None;
     }

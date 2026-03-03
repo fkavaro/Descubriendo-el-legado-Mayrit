@@ -223,7 +223,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
 
         // A milestone scene loaded
         if (loadedScenes.TryGetValue(SceneDatabase.SceneType.Milestone, out var milestoneScene))
-            StartCoroutine(FadeInSpecatorHUDCoroutine()); // TODO: Improve this
+            SwitchToSpectatorHUDState();
     }
 
     private void OnCameraStateChanged()
