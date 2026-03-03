@@ -73,8 +73,9 @@ MonoBehaviour:
   _currentActionInfo: 
   _fadeInDuration: 1
   _fadeOutDuration: 1
-  _tooltipOffset: {x: -30, y: -30}
+  _playerFollowerScreenMargin: {x: 100, y: 100}
+  _playerFollowerPositionOffset: {x: 25, y: 25}
   _edgeScrollingValueSet: 1
-  _controlsVisibilityValueSet: 1
+  _controlsVisibilityValueSet: 0
   _musicVolumeValueSet: 1
   _sfxVolumeValueSet: 1

@@ -67,10 +67,7 @@ public class SpectatorHUD_UIState : AHUDState
 
         _switches.style.display = _wasContextualPanelShown ? DisplayStyle.None : DisplayStyle.Flex;
         _milestoneArea.style.display = _wasContextualPanelShown ? DisplayStyle.None : DisplayStyle.Flex;
-
-        _nextMilestoneButton.SetEnabled(_progressManager.IsNextMilestoneAvailable());
-        _nextMilestoneButton.pickingMode = _progressManager.IsNextMilestoneAvailable() ? PickingMode.Position : PickingMode.Ignore;
-
+        _milestoneButtons.style.display = _wasContextualPanelShown ? DisplayStyle.None : DisplayStyle.Flex;
         _playerFollower.Start();
     }
 

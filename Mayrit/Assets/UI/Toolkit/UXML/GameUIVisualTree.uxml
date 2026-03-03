@@ -218,8 +218,8 @@
             <ui:VisualElement name="InformationArea" style="flex-grow: 1;">
                 <ui:VisualElement name="UpperArea" style="flex-direction: row-reverse; flex-grow: 0; flex-shrink: 0; margin-bottom: 40px;">
                     <ui:VisualElement name="Headers" style="flex-grow: 1;">
-                        <ui:Label name="Header" text="*Mezquita aljama" class="header" style="flex-grow: 1; width: 492px; -unity-text-align: upper-left;"/>
-                        <ui:Label name="SubHeader" text="*Segunda mitad s.IX" class="subHeader" style="flex-grow: 1; display: flex; -unity-text-align: upper-left; margin-left: 15px;"/>
+                        <ui:Label name="Header" text="*Mezquita aljama" class="header" style="width: 485px;"/>
+                        <ui:Label name="SubHeader" text="*Segunda mitad s.IX" class="subHeader" style="flex-grow: 1; display: flex; margin-left: 15px;"/>
                     </ui:VisualElement>
                 </ui:VisualElement>
                 <ui:ScrollView focusable="false" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Auto" enabled="true" mode="Vertical" name="ScrollView" style="display: flex;">
@@ -260,42 +260,42 @@
             </ui:VisualElement>
             <ui:VisualElement style="background-image: url(&quot;project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1304905567622442630&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-down@2x&quot;); width: 50px; height: 40px; align-self: center; position: absolute; top: -40px; left: auto; rotate: 180deg; -unity-background-image-tint-color: rgb(255, 255, 255);"/>
         </ui:VisualElement>
-        <ui:VisualElement name="TutorialSteps" style="flex-grow: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0; flex-direction: row; display: none;">
+        <ui:VisualElement name="TutorialSteps" picking-mode="Ignore" style="flex-grow: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0; flex-direction: row; display: none;">
             <ui:VisualElement name="ZoomOut" style="position: absolute; top: auto; left: 37%; right: auto; bottom: 130px; align-self: center; flex-direction: column; justify-content: center; display: none; width: 500px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
                 <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
-                <ui:Label text="Alejar cámara" name="Subheader" class="subHeader" style="margin-top: 0;"/>
+                <ui:Label text="Alejar cámara" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
                 <ui:Label text="Deliza hacia abajo la rueda del ratón." name="Text" class="text" style="-unity-text-align: middle-center;"/>
             </ui:VisualElement>
             <ui:VisualElement name="ZoomIn" style="align-self: center; flex-direction: column; justify-content: center; display: none; position: absolute; width: 500px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px; left: 37%; bottom: 130px;">
                 <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
-                <ui:Label text="Acercar cámara" name="Subheader" class="subHeader" style="margin-top: 0;"/>
+                <ui:Label text="Acercar cámara" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
                 <ui:Label text="Deliza hacia arriba la rueda del ratón." name="Text" class="text" style="-unity-text-align: middle-center;"/>
             </ui:VisualElement>
             <ui:VisualElement name="Orbit" style="position: absolute; top: auto; left: 37%; right: auto; bottom: 130px; align-self: center; flex-direction: column; justify-content: center; display: none; width: 500px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
                 <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
-                <ui:Label text="Orbitar cámara" name="Subheader" class="subHeader" style="margin-top: 0;"/>
+                <ui:Label text="Orbitar cámara" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
                 <ui:Label text="Mantén pulsada la rueda del ratón y muévelo." name="Text" class="text" style="-unity-text-align: middle-center;"/>
             </ui:VisualElement>
             <ui:VisualElement name="Move" style="align-self: center; flex-direction: column; justify-content: center; display: none; width: 500px; position: absolute; left: 37%; bottom: 130px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
                 <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
-                <ui:Label text="Mover cámara" name="Subheader" class="subHeader" style="margin-top: 0;"/>
+                <ui:Label text="Mover cámara" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
                 <ui:Label text="Pulsa las teclas W,A,S o D. También la tecla SHIFT para ir rápido." name="Text" class="text" style="-unity-text-align: middle-center;"/>
             </ui:VisualElement>
             <ui:VisualElement name="Pause" style="position: absolute; top: 170px; left: 30px; right: auto; bottom: auto; align-self: center; flex-direction: column; justify-content: center; display: none; width: 500px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
                 <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
-                <ui:Label text="Pausar juego" name="Subheader" class="subHeader" style="margin-top: 0;"/>
+                <ui:Label text="Pausar juego" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
                 <ui:Label text="Selecciona el botón de pausa o pulsa ESC." name="Text" class="text" style="-unity-text-align: middle-center;"/>
                 <ui:Image source="project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=6936960519852013934&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-up@2x" name="Image" tint-color="rgba(76, 87, 142, 0.78)" scale-mode="StretchToFill" style="display: flex; position: absolute; top: -55px; left: -13px; width: 117px; height: 63px; align-self: center;"/>
             </ui:VisualElement>
             <ui:VisualElement name="ShowMilestoneInfo" style="position: absolute; top: 180px; left: auto; right: 30px; bottom: auto; align-self: center; flex-direction: column; justify-content: center; display: none; width: 500px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
                 <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
-                <ui:Label text="Mostrar información actual" name="Subheader" class="subHeader" style="margin-top: 0;"/>
+                <ui:Label text="Mostrar información actual" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
                 <ui:Label text="Selecciona con el botón izquierdo del ratón." name="Text" class="text" style="-unity-text-align: middle-center;"/>
                 <ui:Image source="project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=6936960519852013934&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-up@2x" name="Image" tint-color="rgba(76, 87, 142, 0.78)" scale-mode="StretchToFill" style="display: flex; position: absolute; top: -55px; left: auto; width: 117px; height: 63px; right: 0;"/>
             </ui:VisualElement>
             <ui:VisualElement name="ShowLandmarkInfo" style="position: absolute; top: auto; left: 37%; right: auto; bottom: 130px; align-self: center; flex-direction: column; justify-content: center; display: none; width: 500px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
                 <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
-                <ui:Label text="Mostrar información destacada" name="Subheader" class="subHeader" style="margin-top: 0;"/>
+                <ui:Label text="Mostrar información destacada" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
                 <ui:Label text="Selecciona algo destacado en la escena. Luce así:" name="Text" class="text" style="-unity-text-align: middle-center;"/>
                 <ui:Button text="Button" class="landmarkVisual" style="position: absolute; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 10px; padding-bottom: 0; padding-left: 10px; top: auto; left: auto; right: auto; bottom: -100px; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; height: auto; align-self: center;">
                     <ui:VisualElement name="Blur" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgb(0, 0, 0); border-top-left-radius: 30px; border-top-right-radius: 30px; border-bottom-right-radius: 30px; border-bottom-left-radius: 30px; filter: blur(20);"/>
@@ -304,25 +304,25 @@
             </ui:VisualElement>
             <ui:VisualElement name="StartTour" style="position: absolute; top: auto; left: 37%; right: auto; bottom: 30px; align-self: center; flex-direction: column; justify-content: flex-start; display: none; width: 500px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px; height: 240px; align-items: center;">
                 <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
-                <ui:Label text="Comenzar tour" name="Subheader" class="subHeader" style="margin-top: 0;"/>
+                <ui:Label text="Comenzar tour" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
                 <ui:Label text="Selecciona el botón para controlar al personaje. Luce así:" name="Text" class="text" style="-unity-text-align: middle-center;"/>
                 <ui:Instance template="PlayerVisualTree" style="align-self: center; margin-top: 20px;"/>
             </ui:VisualElement>
             <ui:VisualElement name="CharacterControls" style="position: absolute; top: auto; left: 37%; right: auto; bottom: 70px; align-self: center; flex-direction: column; justify-content: center; display: none; width: 500px; align-items: center; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
                 <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
-                <ui:Label text="Controles de personaje" name="Subheader" class="subHeader" style="margin-top: 0;"/>
+                <ui:Label text="Controles de personaje" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
                 <ui:Label text="Para moverlo pulsa las teclas W,A,S o D. También la tecla SHIFT para ir rápido o la tecla SPACE para saltar. Mueve el ratón para orientar la cámara. Pulsa la tecla TAB para volver a la cámara aérea." name="Text" class="text" style="-unity-text-align: middle-center;"/>
                 <ui:Image source="project://database/Assets/Imports/External/European%20Forests%20-%20Realistic%20Trees/Source/Textures/Ash/Ash_Bark.png?fileID=2800000&amp;guid=155b3dfe4ba28214384025db4839ab67&amp;type=3#Ash_Bark" name="Image" style="margin-top: 10px; display: none;"/>
             </ui:VisualElement>
             <ui:VisualElement name="Compass" style="position: absolute; top: auto; left: auto; right: 230px; bottom: 40px; align-self: center; flex-direction: column; justify-content: center; display: none; width: 500px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
                 <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
-                <ui:Label text="Alcanzar Punto de Interés" name="Subheader" class="subHeader" style="margin-top: 0;"/>
+                <ui:Label text="Alcanzar Punto de Interés" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
                 <ui:Label text="Sigue la flecha amarilla de la brújula. Completarás el tour tras visitar todos los Puntos de Interés." name="Text" class="text" style="-unity-text-align: middle-center;"/>
                 <ui:Image source="project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1087164816274819069&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-right@2x" name="Image" tint-color="rgba(76, 87, 142, 0.78)" scale-mode="StretchToFill" style="display: flex; width: 80px; align-self: center; position: absolute; right: -69px; top: 15px; bottom: auto; height: 110px;"/>
             </ui:VisualElement>
             <ui:VisualElement name="MilestoneButtons" style="position: absolute; top: 170px; left: 30px; right: auto; bottom: auto; align-self: center; flex-direction: column; justify-content: center; display: none; width: 500px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
                 <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
-                <ui:Label text="Avanzar en el tiempo" name="Subheader" class="subHeader" style="margin-top: 0;"/>
+                <ui:Label text="Avanzar en el tiempo" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
                 <ui:Label text="Puedes hacerlo tras completar el tour. También puedes retroceder con el botón a la izquierda." name="Text" class="text" style="-unity-text-align: middle-center;"/>
                 <ui:Image source="project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=6936960519852013934&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-up@2x" name="Image" tint-color="rgba(76, 87, 142, 0.78)" scale-mode="StretchToFill" style="display: flex; position: absolute; top: -55px; left: auto; width: 117px; height: 63px; align-self: center;"/>
             </ui:VisualElement>
@@ -537,7 +537,7 @@
     </ui:VisualElement>
     <ui:VisualElement name="LoadingScreen" picking-mode="Ignore" style="flex-grow: 1; flex-direction: row; justify-content: space-between; position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: none;">
         <ui:VisualElement name="BlackLoadingScreen" style="flex-grow: 1; background-color: rgb(0, 0, 0); display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0;"/>
-        <ui:VisualElement name="InfoLoadingScreen" style="flex-grow: 1; display: none; background-color: rgb(0, 0, 0); flex-direction: row-reverse;">
+        <ui:VisualElement name="InfoLoadingScreen" style="flex-grow: 1; display: flex; background-color: rgb(0, 0, 0); flex-direction: row-reverse;">
             <ui:VisualElement name="BgImage" style="background-image: url(&quot;project://database/Assets/Imports/Mayrit%20BG.png?fileID=2800000&amp;guid=dc96fb47ec256064d9e5056199f72ec6&amp;type=3#Mayrit BG&quot;); position: absolute; background-size: 100% 100%; width: 100%; height: 100%; display: flex;"/>
             <ui:VisualElement name="RightPanel" class="contextualPanel" style="display: flex; justify-content: space-between;">
                 <ui:VisualElement name="Bg" class="contextualPanelBlurBg"/>

@@ -62,7 +62,7 @@
     text-shadow: -3px -3px 2px rgba(20, 20, 20, 0);
     -unity-font-style: normal;
     white-space: normal;
-    -unity-text-align: upper-center;
+    -unity-text-align: upper-left;
     margin-top: 10px;
     margin-right: 10px;
     margin-bottom: 10px;
@@ -75,11 +75,7 @@
 
 .text {
     -unity-paragraph-spacing: 80px;
-    white-space: normal;
-    font-size: 18px;
     color: rgb(255, 255, 255);
-    -unity-font-style: normal;
-    -unity-text-align: middle-left;
     margin-top: 5px;
     margin-right: 5px;
     margin-bottom: 5px;
@@ -88,6 +84,8 @@
     padding-right: 0;
     padding-bottom: 0;
     padding-left: 0;
+    font-size: 18px;
+    white-space: normal;
 }
 
 .tooltip {
