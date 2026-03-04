@@ -8,7 +8,7 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
 {
     #region EDITOR PROPERTIES
     [Header("Tutorial Settings")]
-    [SerializeField] UIDocument _uiDocument;
+    [SerializeField] UIManager _uiManager;
     [SerializeField] int _currentStepIndex = 0;
     [SerializeField] List<TutorialStepSO> _tutorialStepsData = new();
     #endregion
@@ -25,7 +25,7 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
 
         foreach (var data in _tutorialStepsData)
         {
-            TutorialState newState = new(data, _uiDocument, _fsm);
+            TutorialState newState = new(data, _uiManager, _fsm);
             _fsm.AddStateToSequence(newState);
             newState.AwakeState();
         }

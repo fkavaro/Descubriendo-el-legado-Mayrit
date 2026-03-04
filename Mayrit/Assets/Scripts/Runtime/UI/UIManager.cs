@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
 {
     #region PROPERTY HELPERS
+    public UIDocument UIDocument => _uiDocument;
     public bool IsInMainMenuState => _sfsm.IsCurrentState(_mainMenuState);
     public bool IsInSpectatorHUDState => _sfsm.IsCurrentState(_spectatorHUDState);
     public bool IsInPlayerHUDState => _sfsm.IsCurrentState(_playerHUDState);

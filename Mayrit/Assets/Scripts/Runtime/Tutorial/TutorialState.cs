@@ -9,12 +9,17 @@ public class TutorialState : AUIState
 
     VisualElement _tutorialScreen;
 
-    public TutorialState(TutorialStepSO tutorialStepData, UIDocument uiDocument, AStateMachine<TutorialState> fsm)
-    : base(tutorialStepData.VisualElementName, uiDocument)
+    public TutorialState(TutorialStepSO tutorialStepData, UIManager uiManager, AStateMachine<TutorialState> fsm)
+    : base(tutorialStepData.VisualElementName, uiManager.UIDocument)
     {
         _data = tutorialStepData;
         _completionCondition = _data.CompletionCondition;
+
         _completionCondition.SetUIDocument(_UIDocument);
+
+        if (_completionCondition is ContextualPanelShownConditionSO selectionCondition)
+            selectionCondition.SetUIManager(uiManager);
+
         _fsm = fsm;
     }
 
