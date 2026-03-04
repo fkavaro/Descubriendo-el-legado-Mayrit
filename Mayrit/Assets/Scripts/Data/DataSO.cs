@@ -28,6 +28,7 @@ public class DataSO : ScriptableObject
     [SerializeField] string _imageCaption;
 
     // PROPERTY HELPERS
+    public DataType Type => _dataType;
     public bool IsMilestone => _dataType == DataType.Milestone;
     public bool IsPlayer => _dataType == DataType.Player;
     public bool IsLandmark => _dataType == DataType.Landmark;
