@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "ASelection_TutorialStepConditionSO", menuName = "Scriptable Objects/Tutorial Conditions/Selection")]
 public class ContextualPanelShownConditionSO : ATutorialStepConditionSO
 {
-    [SerializeField] List<DataSO.DataType> _dataTypes = new List<DataSO.DataType>();
+    [SerializeField] List<DataSO.DataType> _dataTypes = new();
     UIManager _uiManager;
 
     public void SetUIManager(UIManager uiManager)

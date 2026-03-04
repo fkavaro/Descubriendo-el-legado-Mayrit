@@ -235,7 +235,7 @@
                 <ui:Button text="Reiniciar" name="ResetTourButton" class="mediumButton button" style="display: flex; position: relative; align-self: flex-end; flex-shrink: 1; flex-grow: 1; margin-top: 0; margin-right: 25px; margin-bottom: 0; margin-left: 0; width: 65px;"/>
                 <ui:Button text="Jugar" name="StartTourButton" class="mediumButton button highlighted" style="display: flex; position: relative; align-self: flex-end; flex-grow: 1; margin-left: 0; margin-right: 0; margin-bottom: 0; margin-top: 0; width: auto; flex-shrink: 1;"/>
             </ui:VisualElement>
-            <ui:Button text="X" name="CloseButton" class="button closeButton smallButton" style="top: 30px; left: auto; right: 30px;"/>
+            <ui:Button text="X" name="CloseContextualPanelButton" class="button closeButton smallButton" style="top: 30px; left: auto; right: 30px;"/>
         </ui:VisualElement>
         <ui:VisualElement name="Compass" style="flex-grow: 1; position: absolute; bottom: 0; right: 0; width: 150px; height: 150px; display: none; margin-top: 30px; margin-right: 30px; margin-bottom: 30px; margin-left: 30px;">
             <ui:VisualElement name="BlurBG" class="smallButtonBlurBg" style="flex-grow: 1; border-top-left-radius: 100px; border-top-right-radius: 100px; border-bottom-right-radius: 100px; border-bottom-left-radius: 100px;"/>
@@ -260,6 +260,7 @@
             <ui:VisualElement style="background-image: url(&quot;project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1304905567622442630&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-down@2x&quot;); width: 50px; height: 40px; align-self: center; position: absolute; top: -40px; left: auto; rotate: 180deg; -unity-background-image-tint-color: rgb(255, 255, 255);"/>
         </ui:VisualElement>
         <ui:VisualElement name="TutorialSteps" picking-mode="Ignore" style="flex-grow: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0; flex-direction: row; display: none;">
+            <ui:VisualElement name="WaitToCloseContextualPanel" picking-mode="Ignore" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: none;"/>
             <ui:VisualElement name="ZoomOut" style="position: absolute; top: auto; left: 37%; right: auto; bottom: 130px; align-self: center; flex-direction: column; justify-content: center; display: none; width: 500px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
                 <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
                 <ui:Label text="Alejar cámara" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>

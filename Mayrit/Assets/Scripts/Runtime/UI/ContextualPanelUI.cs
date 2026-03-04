@@ -52,7 +52,7 @@ public class ContextualPanelUI : AUIState
         _subHeader = GetByName<Label>("SubHeader", _root);
         _description = GetByName<Label>("Description", _root);
         _imageCaption = GetByName<Label>("Caption", _root);
-        _closeButton = GetButtonAndRegisterCallback("CloseButton", OnCloseButton, _root);
+        _closeButton = GetButtonAndRegisterCallback("CloseContextualPanelButton", OnCloseButton, _root);
         _image = GetByName<VisualElement>("Image", _root);
         _startTourButton = GetButtonAndRegisterCallback("StartTourButton", OnStartTour, _root);
         _resetTourButton = GetButtonAndRegisterCallback("ResetTourButton", OnResetTour, _root);
