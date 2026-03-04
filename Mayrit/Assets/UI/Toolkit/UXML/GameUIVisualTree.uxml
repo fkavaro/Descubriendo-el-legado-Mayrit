@@ -511,10 +511,11 @@
         </ui:VisualElement>
         <ui:VisualElement name="Right" class="contextualPanel" style="right: 0;">
             <ui:VisualElement name="Bg" class="contextualPanelBlurBg"/>
-            <ui:VisualElement style="justify-content: center; align-self: stretch; height: 300px;">
+            <ui:Button text="X" name="CloseButton" class="button closeButton smallButton" style="top: 30px; left: auto; right: 30px; bottom: auto;"/>
+            <ui:VisualElement picking-mode="Ignore" style="justify-content: center; align-self: stretch; height: 300px;">
                 <ui:Label text="Ajustes" class="subtitle" style="top: auto;"/>
             </ui:VisualElement>
-            <ui:VisualElement name="ControlsSettings" style="margin-top: 70px; margin-right: 30px; margin-bottom: 15px; margin-left: 30px; background-color: rgb(24, 24, 24); border-top-left-radius: 30px; border-top-right-radius: 30px; border-bottom-right-radius: 30px; border-bottom-left-radius: 30px; padding-top: 10px; padding-right: 30px; padding-bottom: 25px; padding-left: 30px; align-self: stretch; border-left-color: rgb(34, 34, 34); border-right-color: rgb(34, 34, 34); border-top-color: rgb(34, 34, 34); border-bottom-color: rgb(34, 34, 34); border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px;">
+            <ui:VisualElement name="ControlsSettings" style="margin-top: 15px; margin-right: 15px; margin-bottom: 15px; margin-left: 15px; background-color: rgb(24, 24, 24); border-top-left-radius: 30px; border-top-right-radius: 30px; border-bottom-right-radius: 30px; border-bottom-left-radius: 30px; padding-top: 10px; padding-right: 30px; padding-bottom: 25px; padding-left: 30px; align-self: stretch; border-left-color: rgb(34, 34, 34); border-right-color: rgb(34, 34, 34); border-top-color: rgb(34, 34, 34); border-bottom-color: rgb(34, 34, 34); border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px;">
                 <ui:VisualElement name="Title">
                     <ui:Label text="Control" class="header" style="-unity-text-align: upper-center;"/>
                 </ui:VisualElement>
@@ -523,7 +524,7 @@
                     <Switch text="Mostrar controles en el juego" name="ShowControlsSwitch" value="true"/>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="AudioSettings" style="margin-top: 15px; margin-right: 30px; margin-bottom: 30px; margin-left: 30px; background-color: rgb(24, 24, 24); border-top-left-radius: 30px; border-top-right-radius: 30px; border-bottom-right-radius: 30px; border-bottom-left-radius: 30px; padding-top: 10px; padding-right: 30px; padding-bottom: 20px; padding-left: 30px; align-self: stretch; border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px; border-left-color: rgb(34, 34, 34); border-right-color: rgb(34, 34, 34); border-top-color: rgb(34, 34, 34); border-bottom-color: rgb(34, 34, 34);">
+            <ui:VisualElement name="AudioSettings" style="margin-top: 15px; margin-right: 15px; margin-bottom: 15px; margin-left: 15px; background-color: rgb(24, 24, 24); border-top-left-radius: 30px; border-top-right-radius: 30px; border-bottom-right-radius: 30px; border-bottom-left-radius: 30px; padding-top: 10px; padding-right: 30px; padding-bottom: 20px; padding-left: 30px; align-self: stretch; border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px; border-left-color: rgb(34, 34, 34); border-right-color: rgb(34, 34, 34); border-top-color: rgb(34, 34, 34); border-bottom-color: rgb(34, 34, 34);">
                 <ui:VisualElement name="Title">
                     <ui:Label text="Audio" class="header" style="-unity-text-align: upper-center;"/>
                 </ui:VisualElement>
@@ -532,7 +533,10 @@
                     <ui:Slider label="Música" value="42" high-value="1" name="MusicVolumeSlider" fill="true" style="color: rgb(255, 255, 255); font-size: 20px; margin-top: 5px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px;"/>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:Button text="X" name="CloseButton" class="button closeButton smallButton" style="top: 30px; left: auto; right: 30px; bottom: auto;"/>
+            <ui:VisualElement name="TutorialSettings" style="flex-direction: row;">
+                <ui:Button text="Reiniciar tutorial" name="ResetTutorialButton" class="button mediumButton" style="align-self: flex-start;"/>
+                <ui:Label text="Reaparecerá la próxima vez que cambies de época." name="TutorialResetInfo" class="text" style="flex-shrink: 1; flex-grow: 1; align-self: center; display: flex;"/>
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="LoadingScreen" picking-mode="Ignore" style="flex-grow: 1; flex-direction: row; justify-content: space-between; position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: none;">

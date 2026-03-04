@@ -5,11 +5,14 @@ using UnityEngine.UIElements;
 public class SettingsMenu_UIState : AUIState
 {
     #region PROPERTIES
-    Button _closeButton;
+    Button _closeButton,
+        _resetTutorialButton;
     Switch _edgeScrollingSwitch,
         _showControlsSwitch;
     Slider _musicVolumeSlider,
         _sfxVolumeSlider;
+
+    VisualElement _tutorialSettings;
     #endregion
 
     #region CONSTRUCTOR
@@ -25,6 +28,8 @@ public class SettingsMenu_UIState : AUIState
         _showControlsSwitch = GetSwitchAndRegisterCallback("ShowControlsSwitch", OnShowControlsToggled);
         _musicVolumeSlider = GetSliderAndRegisterCallback("MusicVolumeSlider", OnMusicVolumeChanged);
         _sfxVolumeSlider = GetSliderAndRegisterCallback("SFXVolumeSlider", OnSFXVolumeChanged);
+        _tutorialSettings = GetByName<VisualElement>("TutorialSettings");
+        _resetTutorialButton = GetButtonAndRegisterCallback("ResetTutorialButton", OnResetTutorialClicked, _tutorialSettings);
     }
 
     public override void StartState()
@@ -35,6 +40,7 @@ public class SettingsMenu_UIState : AUIState
         _sfxVolumeSlider.value = _soundManager.EffectsVolume;
         _showControlsSwitch.Value = _uiManager.ControlsVisibilityValueSet;
         _edgeScrollingSwitch.Value = _uiManager.EdgeScrollingValueSet;
+        _tutorialSettings.style.display = GameSaveSystem.LoadTutorialCompletion() ? DisplayStyle.Flex : DisplayStyle.None;
     }
     #endregion
 
@@ -70,6 +76,12 @@ public class SettingsMenu_UIState : AUIState
     void OnSFXVolumeChanged(ChangeEvent<float> evt)
     {
         _uiManager.InvokeSFXVolumeChangedEvent(evt.newValue);
+    }
+
+    void OnResetTutorialClicked(ClickEvent evt)
+    {
+        GameSaveSystem.SaveTutorial(false);
+        _tutorialSettings.style.display = DisplayStyle.None;
     }
     #endregion
 }
