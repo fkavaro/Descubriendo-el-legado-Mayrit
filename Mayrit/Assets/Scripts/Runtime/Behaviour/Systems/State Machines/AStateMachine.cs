@@ -6,15 +6,16 @@ using UnityEngine;
 /// <summary>
 /// Abstract class for a state machine that handles the states of a controller.
 /// </summary>
-public abstract class AStateMachine<StateType> : ABehaviourSystem
-where StateType : AState
+public abstract class AStateMachine<GenericState> : ABehaviourSystem
+where GenericState : AState
 {
     #region PROPERTIES
-    public StateType CurrentState => _currentState;
-    protected StateType _currentState, _initialState;
-    protected List<StateType> _statesSequence = new();
+    readonly List<GenericState> _statesSequence = new();
+    public GenericState CurrentState => _currentState;
+    protected GenericState _currentState, _initialState;
+    protected int CurrentStateIndex => _statesSequence.IndexOf(_currentState);
 
-    public event Action SwitchedStateEvent;
+    public event Action<int> SwitchedStateEvent;
     #endregion
 
     #region CONSTRUCTOR
@@ -23,9 +24,9 @@ where StateType : AState
     #endregion
 
     #region TO BE IMPLEMENTED METHODS
-    public virtual void SwitchState(StateType newState)
+    public virtual void SwitchState(GenericState newState)
     {
-        SwitchedStateEvent?.Invoke();
+        SwitchedStateEvent?.Invoke(CurrentStateIndex);
     }
     #endregion
 
@@ -48,19 +49,19 @@ where StateType : AState
     #endregion
 
     #region PUBLIC METHODS
-    public virtual void SetInitialState(StateType state)
+    public virtual void SetInitialState(GenericState state)
     {
         if (state == _currentState) return;
 
         _initialState = state;
     }
 
-    public bool IsCurrentState(StateType state)
+    public bool IsCurrentState(GenericState state)
     {
         return _currentState == state && _currentState != null;
     }
 
-    public virtual void ForceState(StateType newState)
+    public virtual void ForceState(GenericState newState)
     {
         if (newState == _currentState) return;
 
@@ -73,7 +74,7 @@ where StateType : AState
     /// <summary>
     /// Coroutine to wait for a random amount of time before switching to the next state.
     /// </summary>
-    public IEnumerator SwitchStateAfterRandomTime(StateType nextState, int min = 5, int max = 21)
+    public IEnumerator SwitchStateAfterRandomTime(GenericState nextState, int min = 5, int max = 21)
     {
         int waitTime = UnityEngine.Random.Range(min, max);
         return SwitchStateAfterCertainTime(nextState, waitTime);
@@ -82,7 +83,7 @@ where StateType : AState
     /// <summary>
     /// Coroutine to wait for a specified amount of time before switching to the next state.
     /// </summary>
-    public virtual IEnumerator SwitchStateAfterCertainTime(StateType nextState, float waitTime)
+    public virtual IEnumerator SwitchStateAfterCertainTime(GenericState nextState, float waitTime)
     {
         _behaviourEntity.IsExecutionPaused = true;
 
@@ -94,7 +95,7 @@ where StateType : AState
     #endregion
 
     #region STATE SEQUENCE METHODS
-    public void AddStateToSequence(StateType state)
+    public void AddStateToSequence(GenericState state)
     {
         if (_statesSequence.Contains(state)) return;
         _statesSequence.Add(state);
@@ -104,19 +105,19 @@ where StateType : AState
     /// <summary>
     /// Switches to the previous state in the list.
     /// </summary>
-    public bool SwitchToPreviousStateInSequence(out int previousStateIndex)
+    public bool SwitchToPreviousStateInSequence()
     {
-        previousStateIndex = -1;
-        if (_statesSequence.Count == 0 || _currentState == null) return false;
-
-        int currentIndex = _statesSequence.IndexOf(_currentState);
-
-        if (currentIndex <= 0) // First state
+        if (_statesSequence.Count == 0 || _currentState == null)
             return false;
 
-        StateType previousState = _statesSequence[currentIndex - 1];
 
-        previousStateIndex = currentIndex - 1;
+        if (CurrentStateIndex <= 0) // First state
+        {
+            _currentState.ExitState();
+            return false;
+        }
+
+        GenericState previousState = _statesSequence[CurrentStateIndex - 1];
         SwitchState(previousState);
         return true;
     }
@@ -124,20 +125,18 @@ where StateType : AState
     /// <summary>
     /// Switches to the next state in the list.
     /// </summary>
-    public virtual bool SwitchToNextStateInSequence(out int nextStateIndex)
+    public virtual bool SwitchToNextStateInSequence()
     {
-        nextStateIndex = -1;
-
-        if (_statesSequence.Count == 0 || _currentState == null) return false;
-
-        int currentIndex = _statesSequence.IndexOf(_currentState);
-
-        if (currentIndex >= _statesSequence.Count - 1) // Last state
+        if (_statesSequence.Count == 0 || _currentState == null)
             return false;
 
-        StateType nextState = _statesSequence[currentIndex + 1];
+        if (CurrentStateIndex >= _statesSequence.Count - 1) // Last state
+        {
+            _currentState.ExitState();
+            return false;
+        }
 
-        nextStateIndex = currentIndex + 1;
+        GenericState nextState = _statesSequence[CurrentStateIndex + 1];
         SwitchState(nextState);
         return true;
     }

@@ -66,6 +66,18 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
     #endregion
 
     #region CALLBACK METHODS
+    void OnSwitchedState(int newStateIndex)
+    {
+        Debug.Log($"TutorialManager: Switched to state index {newStateIndex}");
+        _currentStepIndex = newStateIndex;
+
+        if (_currentStepIndex >= _tutorialStepsData.Count - 1)
+        {
+            _hasCompletedTutorial = true;
+            GameSaveSystem.SaveTutorial(true);
+        }
+    }
+
     void OnScenesLoadedFully(Dictionary<SceneDatabase.SceneType, SceneDatabase.SceneName> loadedScenes, List<SceneDatabase.SceneType> unloadedTypes)
     {
         if (!loadedScenes.TryGetValue(SceneDatabase.SceneType.Milestone, out var milestoneScene))
@@ -76,21 +88,7 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
         if (_hasCompletedTutorial)
             return;
 
-        _currentStepIndex = -1;
         base.Start();
     }
-
-    void OnSwitchedState()
-    {
-        _currentStepIndex++;
-
-        if (_currentStepIndex >= _tutorialStepsData.Count - 1)
-        {
-            _hasCompletedTutorial = true;
-            GameSaveSystem.SaveTutorial(true);
-        }
-    }
     #endregion
-
-
 }
