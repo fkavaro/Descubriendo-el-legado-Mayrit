@@ -9,12 +9,11 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
     #region EDITOR PROPERTIES
     [Header("Tutorial Settings")]
     [SerializeField] UIDocument _uiDocument;
+    [SerializeField] int _currentStepIndex = 0;
     [SerializeField] List<TutorialStepSO> _tutorialStepsData = new();
     #endregion
 
     #region INTERNAL PROPERTIES
-    int _currentStepIndex = 0;
-    ATutorialStepConditionSO _currentCondition;
     StackFiniteStateMachine<TutorialState> _fsm;
     ScenesController _scenesController;
     #endregion
@@ -26,12 +25,14 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
 
         foreach (var data in _tutorialStepsData)
         {
-            TutorialState newState = new(data, _uiDocument);
+            TutorialState newState = new(data, _uiDocument, _fsm);
             _fsm.AddStateToSequence(newState);
             newState.AwakeState();
         }
 
-        _fsm.SetInitialStateFromSequence(0);
+        _fsm.SwitchedStateEvent += OnSwitchedState;
+        _currentStepIndex = 0;
+        _fsm.SetInitialStateFromSequence(_currentStepIndex);
 
         return _fsm;
     }
@@ -53,62 +54,12 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
         // base.Start(); when gameplay scene loaded, to start behaviour system
     }
 
-    protected override void Update()
-    {
-        if (_currentCondition != null)
-            _currentCondition.Tick(Time.deltaTime);
-    }
-
     void OnDisable()
     {
         if (_scenesController != null)
             _scenesController.ScenesLoadedFullyEvent -= OnScenesLoadedFully;
 
         ServiceLocator.Instance.Unregister(this);
-        StopCurrentCondition();
-    }
-    #endregion
-
-    #region PRIVATE METHODS
-    void StartCurrentCondition()
-    {
-        if (_currentStepIndex < 0 || _currentStepIndex >= _tutorialStepsData.Count)
-            return;
-
-        ATutorialStepConditionSO condition = _tutorialStepsData[_currentStepIndex].CompletionCondition;
-        if (condition == null)
-        {
-            Debug.LogWarning($"Tutorial step {_currentStepIndex} has no completion condition.");
-            return;
-        }
-
-        // runtime clone avoids shared SO state across runs/steps
-        _currentCondition = Instantiate(condition);
-        _currentCondition.Completed += OnCurrentStepCompleted;
-
-        _currentCondition.SetUIDocument(_uiDocument);
-
-        _currentCondition.BeginListening();
-    }
-
-    void StopCurrentCondition()
-    {
-        if (_currentCondition == null) return;
-
-        _currentCondition.Completed -= OnCurrentStepCompleted;
-        _currentCondition.EndListening();
-        Destroy(_currentCondition);
-        _currentCondition = null;
-    }
-
-    void OnCurrentStepCompleted()
-    {
-        StopCurrentCondition();
-
-        _fsm.SwitchToNextStateInSequence(out int nextIndex);
-        _currentStepIndex = nextIndex;
-
-        StartCurrentCondition();
     }
     #endregion
 
@@ -119,8 +70,11 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
             return;
 
         base.Start();
-        _currentStepIndex = 0;
-        StartCurrentCondition();
+    }
+
+    private void OnSwitchedState()
+    {
+        _currentStepIndex = (_currentStepIndex + 1) % _tutorialStepsData.Count;
     }
     #endregion
 
