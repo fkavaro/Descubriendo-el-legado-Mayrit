@@ -3,7 +3,17 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "DataSO", menuName = "Scriptable Objects/Data")]
 public class DataSO : ScriptableObject
 {
+    public enum DataType
+    {
+        Milestone,
+        Player,
+        ModernBuilding,
+        Other
+    }
+
+
     [Header("General information")]
+    [SerializeField] DataType _dataType = DataType.Other;
     [SerializeField] string _header;
     [SerializeField] string _subHeader;
 
@@ -17,6 +27,10 @@ public class DataSO : ScriptableObject
     [SerializeField] string _imageCaption;
 
     // PROPERTY HELPERS
+    public bool IsMilestone => _dataType == DataType.Milestone;
+    public bool IsPlayer => _dataType == DataType.Player;
+    public bool IsModernBuilding => _dataType == DataType.ModernBuilding;
+    public bool IsOther => _dataType == DataType.Other;
     public string Header => _header;
     public string SubHeader => _subHeader;
     public string Description => _description;

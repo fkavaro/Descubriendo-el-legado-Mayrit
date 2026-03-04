@@ -47,7 +47,7 @@ public class Orbital_CameraState : ACameraState
         _gameManager.InputActions.Camera.ExitMode.performed += OnExitCameraMode;
 
         _controller.Start(_setting);
-        _uiManager.ShowContextualPanel(_setting.DataToShow, _setting.IsForCharacter);
+        _uiManager.ShowContextualPanel(_setting.DataToShow);
     }
 
     public override void LateUpdateState()

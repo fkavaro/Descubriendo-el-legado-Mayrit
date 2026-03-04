@@ -115,10 +115,10 @@ public abstract class AHUDState : AUIState
     #endregion
 
     #region PROTECTED METHODS
-    protected void ShowContextualPanel(DataSO data, bool isCharacterData = false)
+    protected void ShowContextualPanel(DataSO data)
     {
         _wasContextualPanelShown = true;
-        _contextualPanel.ShowInfo(data, isCharacterData);
+        _contextualPanel.ShowInfo(data);
         _compass.IsShown(false);
         _controlsVisualRoot.style.display = DisplayStyle.None;
     }

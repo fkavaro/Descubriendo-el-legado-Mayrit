@@ -60,7 +60,7 @@ public class ContextualPanelUI : AUIState
     #endregion
 
     #region PUBLIC METHODS
-    public void ShowInfo(DataSO data, bool isCharacterData)
+    public void ShowInfo(DataSO data)
     {
         // Clear previous content
         _header.text = data.Header;
@@ -108,7 +108,7 @@ public class ContextualPanelUI : AUIState
         }
 
         // Handle tour butons
-        if (isCharacterData)
+        if (data.IsPlayer)
         {
             if (!_hadPlayButton)
             {

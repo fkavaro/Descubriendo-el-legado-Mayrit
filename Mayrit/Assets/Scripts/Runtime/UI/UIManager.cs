@@ -43,7 +43,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     UIDocument _uiDocument;
 
     // Events
-    public event Action<DataSO, bool> ContextualPanelShownEvent;
+    public event Action<DataSO> ContextualPanelShownEvent;
     public event Action ContextualPanelHiddenEvent;
 
     public event Action PlayTourClickedEvent;
@@ -138,9 +138,9 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     #endregion
 
     #region PUBLIC METHODS
-    public void ShowContextualPanel(DataSO data, bool isCharacterData = false)
+    public void ShowContextualPanel(DataSO data)
     {
-        ContextualPanelShownEvent?.Invoke(data, isCharacterData);
+        ContextualPanelShownEvent?.Invoke(data);
     }
 
     public void HideContextualPanel()

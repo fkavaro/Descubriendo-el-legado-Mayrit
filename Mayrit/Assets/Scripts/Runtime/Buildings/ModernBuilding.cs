@@ -74,13 +74,13 @@ public class ModernBuilding : MonoBehaviour
         _wasActive = value;
     }
 
-    void OnContextualPanelShown(DataSO data, bool isCharacterData)
+    void OnContextualPanelShown(DataSO data)
     {
-        if (isCharacterData)
+        if (!data.IsModernBuilding)
+        {
             IsActive = false;
-
-        if (data == null || _landmarkVisual.Data == null)
             return;
+        }
 
         IsActive = data == _landmarkVisual.Data;
     }
