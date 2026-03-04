@@ -53,7 +53,7 @@ public class MainMenu_UIState : AUIState
     void CheckLoadButtonAvailability()
     {
         // Check if game can be loaded to enable/disable Load Game button
-        bool canLoadGame = GameSaveSystem.IsThereStoredData();
+        bool canLoadGame = GameSaveSystem.IsThereStoredMilestoneIdx();
         _loadGameButton.SetEnabled(canLoadGame);
         _loadGameButton.pickingMode = canLoadGame ? PickingMode.Position : PickingMode.Ignore;
     }
@@ -63,14 +63,14 @@ public class MainMenu_UIState : AUIState
     {
         _soundManager.PlayButtonClickSFX();
 
-        if (GameSaveSystem.IsThereStoredData())
+        if (GameSaveSystem.IsThereStoredMilestoneIdx())
         {
             _newGameWarningPopup.style.display = DisplayStyle.Flex;
             _buttons.style.display = DisplayStyle.None;
         }
         else
         {
-            GameSaveSystem.Clear();
+            GameSaveSystem.ClearAllData();
             _gameManager.SwitchToGamePlayState();
         }
     }
@@ -78,7 +78,7 @@ public class MainMenu_UIState : AUIState
     void OnConfirmNewGameClicked(ClickEvent evt)
     {
         _soundManager.PlayButtonClickSFX();
-        GameSaveSystem.Clear();
+        GameSaveSystem.ClearAllData();
         _gameManager.SwitchToGamePlayState();
     }
 

@@ -15,9 +15,6 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     [Header("Debug tweaks")]
     [SerializeField] bool _canSkipTours = false;
 
-    // TODO: remove eventually
-    // [Tooltip("Wether to update scene at milestone changes in editor")]
-    // [SerializeField] bool _updateInEditor = false;
     [Header("Milestones")]
     [Range(-1, 7)]
     [SerializeField] int _storedMilestoneIndex;
@@ -28,11 +25,6 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
 
     #region INTERNAL PROPERTIES
     public event Action<Milestone_DataSO> MilestoneChangedEvent;
-
-    // TODO: remove eventually
-    // public event Action<bool> OnEditorUpdateChangedEvent;
-    // int _lastValidatedMilestoneIndex;
-    // bool _lastUpdateInEditor;
 
     FiniteStateMachine<MilestoneState> _fsm;
 
@@ -53,43 +45,6 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     #endregion
 
     #region LIFE CYCLE
-    // TODO remove eventually
-    //     // Called when the script is loaded or a value is changed in the inspector
-    //     void OnValidate()
-    //     {
-    // #if UNITY_EDITOR
-    //         if (Application.isPlaying)
-    //             return;
-
-    //         // Invoke milestone changed event when _currentMilestoneIndex is changed in inspector
-    //         // and _updateInInspector is true
-    //         if (_lastValidatedMilestoneIndex != _currentMilestoneIndex)
-    //         {
-    //             _lastValidatedMilestoneIndex = _currentMilestoneIndex;
-
-    //             if (_updateInEditor)
-    //             {
-    //                 _currentMilestoneMapping = _milestoneMappings[_currentMilestoneIndex];
-    //                 // To avoid issues with re-entrancy
-    //                 UnityEditor.EditorApplication.delayCall += () => MilestoneChangedEvent?.Invoke(CurrentMilestoneMapping);
-    //             }
-    //         }
-
-    //         // Invoke editor update changed event when _updateInEditor is changed in inspector
-    //         if (_lastUpdateInEditor != _updateInEditor)
-    //         {
-    //             _lastUpdateInEditor = _updateInEditor;
-
-    //             if (_updateInEditor)
-    //                 _currentMilestoneMapping = _milestoneMappings[_currentMilestoneIndex];
-    //             else
-    //                 _currentMilestoneMapping = null;
-
-    //             UnityEditor.EditorApplication.delayCall += () => OnEditorUpdateChangedEvent?.Invoke(_updateInEditor);
-    //         }
-    // #endif
-    //     }
-
     protected override void Awake()
     {
         ServiceLocator.Instance.Register(this);
@@ -138,21 +93,9 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     #endregion
 
     #region PRIVATE METHODS
-    // TODO: remove eventually
-    // MilestoneMapping GetMappingForIndex(int index)
-    // {
-    //     if (_milestonesMappings == null)
-    //         BuildMappingCache();
-
-    //     if (_milestonesMappings.TryGetValue(index, out MilestoneMapping mapping))
-    //         return mapping;
-
-    //     return null;
-    // }
-
     int GetStoredMilestone()
     {
-        PlayerProgressData saveData = GameSaveSystem.Load();
+        PlayerProgressData saveData = GameSaveSystem.LoadAllData();
         _storedMilestoneIndex = Mathf.Clamp(saveData.StoredMilestoneIndex, -1, _milestonesData.Count - 1); // Could be -1 if no valid data found
         _currentMilestoneIndex = _storedMilestoneIndex;
 
@@ -172,7 +115,7 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
 
     void SaveProgress()
     {
-        GameSaveSystem.Save(_storedMilestoneIndex);
+        GameSaveSystem.SaveMilestoneIdx(_storedMilestoneIndex);
         if (DebugMode)
             Debug.Log($"ProgressManager: Progress saved. Highest completed milestone index: {_storedMilestoneIndex}");
     }

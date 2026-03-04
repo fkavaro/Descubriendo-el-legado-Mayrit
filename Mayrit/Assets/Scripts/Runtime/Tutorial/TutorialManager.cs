@@ -8,6 +8,7 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
 {
     #region EDITOR PROPERTIES
     [Header("Tutorial Settings")]
+    [SerializeField] bool _hasCompletedTutorial = false;
     [SerializeField] UIManager _uiManager;
     [SerializeField] int _currentStepIndex = 0;
     [SerializeField] List<TutorialStepSO> _tutorialStepsData = new();
@@ -31,7 +32,6 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
         }
 
         _fsm.SwitchedStateEvent += OnSwitchedState;
-        _currentStepIndex = 0;
         _fsm.SetInitialStateFromSequence(_currentStepIndex);
 
         return _fsm;
@@ -42,6 +42,8 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
     protected override void Awake()
     {
         ServiceLocator.Instance.Register(this);
+
+        _hasCompletedTutorial = GameSaveSystem.LoadTutorialCompletion();
 
         base.Awake();
     }
@@ -69,12 +71,23 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
         if (!loadedScenes.TryGetValue(SceneDatabase.SceneType.Milestone, out var milestoneScene))
             return;
 
+        if (_hasCompletedTutorial)
+            return;
+
+        _currentStepIndex = 0;
         base.Start();
     }
 
-    private void OnSwitchedState()
+    void OnSwitchedState()
     {
-        _currentStepIndex = (_currentStepIndex + 1) % _tutorialStepsData.Count;
+        _currentStepIndex++;
+
+        if (_currentStepIndex >= _tutorialStepsData.Count)
+        {
+            _hasCompletedTutorial = true;
+            GameSaveSystem.SaveTutorial(_hasCompletedTutorial);
+            Debug.Log("Tutorial completed!");
+        }
     }
     #endregion
 

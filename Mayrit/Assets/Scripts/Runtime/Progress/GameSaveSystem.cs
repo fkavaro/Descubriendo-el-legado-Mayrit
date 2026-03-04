@@ -4,21 +4,15 @@ using System;
 [Serializable]
 public class PlayerProgressData
 {
-    // Highest milestone the player has reached at least once.
-    // The game restores this value on startup to load the corresponding scene/state.
-    public int StoredMilestoneIndex = -1;
+    public int StoredMilestoneIndex = -1; // Highest milestone index reached. -1 means no progress.
+    public bool HasCompletedTutorial = false;
 }
 
 public static class GameSaveSystem
 {
-    // Single PlayerPrefs entry that stores the whole progress payload as JSON.
-    const string SaveKey = "Mayrit.PlayerProgress.v1";
+    const string SaveKey = "Mayrit.PlayerProgress";
 
-    /// <summary>
-    /// Loads player progress from PlayerPrefs. If no valid save exists, returns a new Player
-    /// ProgressData instance with default values.
-    /// </summary>
-    public static PlayerProgressData Load()
+    public static PlayerProgressData LoadAllData()
     {
         // First launch or cleared save.
         if (!PlayerPrefs.HasKey(SaveKey))
@@ -41,29 +35,55 @@ public static class GameSaveSystem
         }
     }
 
-    /// <summary>
-    /// Saves player progress to PlayerPrefs as JSON. Overwrites any existing save.
-    /// </summary>
-    public static void Save(int milestoneIndex)
+    public static int LoadMilestoneIdx()
     {
-        PlayerProgressData data = new()
-        {
-            StoredMilestoneIndex = Mathf.Max(0, milestoneIndex)
-        };
+        PlayerProgressData data = LoadAllData();
+        return data.StoredMilestoneIndex;
+    }
+
+    public static bool LoadTutorialCompletion()
+    {
+        PlayerProgressData data = LoadAllData();
+        return data.HasCompletedTutorial;
+    }
+
+    public static void SaveMilestoneIdx(int milestoneIndex)
+    {
+        PlayerProgressData data = LoadAllData(); // Load existing progress to preserve tutorial completion status.
+        data.StoredMilestoneIndex = milestoneIndex;
 
         string json = JsonUtility.ToJson(data);
         PlayerPrefs.SetString(SaveKey, json);
-        // Force write to disk now (important before app quit/crash scenarios).
         PlayerPrefs.Save();
     }
 
-    public static void Clear()
+    public static void SaveTutorial(bool hasCompletedTutorial)
+    {
+        PlayerProgressData data = LoadAllData(); // Load existing progress to preserve milestone index.
+        data.HasCompletedTutorial = hasCompletedTutorial;
+
+        string json = JsonUtility.ToJson(data);
+        PlayerPrefs.SetString(SaveKey, json);
+        PlayerPrefs.Save();
+    }
+
+    public static void ClearAllData()
     {
         PlayerPrefs.DeleteKey(SaveKey);
         PlayerPrefs.Save();
     }
 
-    public static bool IsThereStoredData()
+    public static void ResetTutorial()
+    {
+        PlayerProgressData data = LoadAllData();
+        data.HasCompletedTutorial = false;
+
+        string json = JsonUtility.ToJson(data);
+        PlayerPrefs.SetString(SaveKey, json);
+        PlayerPrefs.Save();
+    }
+
+    public static bool IsThereStoredMilestoneIdx()
     {
         if (!PlayerPrefs.HasKey(SaveKey))
             return false;
@@ -75,8 +95,7 @@ public static class GameSaveSystem
         try
         {
             PlayerProgressData data = JsonUtility.FromJson<PlayerProgressData>(json);
-            data.StoredMilestoneIndex = Mathf.Max(0, data.StoredMilestoneIndex);
-            return data != null;
+            return data != null && data.StoredMilestoneIndex >= 0;
         }
         catch
         {
