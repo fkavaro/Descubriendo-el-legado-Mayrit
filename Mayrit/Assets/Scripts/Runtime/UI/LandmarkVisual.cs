@@ -178,7 +178,7 @@ public class LandmarkVisual : Billboard
 
     void OnShowLandmarkVisualsTutorialEvent(bool areShown)
     {
-        IsShown = areShown && _uiManager.IsLandmarkVisualizationOn;
+        IsShown = areShown && _uiManager.IsLandmarkVisualizationOn && !IsBlocked;
     }
 
     void OnTutorialCompleted()
