@@ -42,11 +42,13 @@
                     <ui:VisualElement name="Buttons" style="flex-grow: 1; align-self: flex-start; flex-direction: row;">
                         <ui:VisualElement name="BlurBg" class="smallButtonBlurBg" style="display: flex;"/>
                         <ui:Button text="| |" name="PauseButton" class="button smallButton" style="align-self: flex-start; position: relative; flex-direction: row; font-size: 20px;"/>
-                        <ui:VisualElement name="MilestoneButtons" style="flex-grow: 1; flex-direction: row; display: flex;">
-                            <ui:Button name="PreviousMilestoneButton" class="smallButton button" style="position: relative; background-image: url(&quot;project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1008301579157283121&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-left@2x&quot;); align-self: flex-start; margin-right: 7.5px;"/>
-                            <ui:Button name="NextMilestoneButton" text="Siguiente hito" class="button mediumButton highlighted" style="position: relative; margin-left: 7.5px; padding-left: 50px; width: 220px; align-self: flex-start;">
-                                <ui:Image source="project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1087164816274819069&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-right@2x" style="position: absolute; top: -7px; left: 0; right: auto; bottom: -7px; width: 60px;"/>
-                            </ui:Button>
+                        <ui:VisualElement name="TutorialMilestoneButtons" style="flex-grow: 1; flex-direction: row; display: flex;">
+                            <ui:VisualElement name="MilestoneButtons" style="flex-grow: 1; flex-direction: row; display: flex;">
+                                <ui:Button name="PreviousMilestoneButton" class="smallButton button" style="position: relative; background-image: url(&quot;project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1008301579157283121&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-left@2x&quot;); align-self: flex-start; margin-right: 7.5px;"/>
+                                <ui:Button name="NextMilestoneButton" text="Siguiente hito" class="button mediumButton highlighted" style="position: relative; margin-left: 7.5px; padding-left: 50px; width: 220px; align-self: flex-start;">
+                                    <ui:Image source="project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1087164816274819069&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-right@2x" style="position: absolute; top: -7px; left: 0; right: auto; bottom: -7px; width: 60px;"/>
+                                </ui:Button>
+                            </ui:VisualElement>
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
@@ -105,10 +107,12 @@
                             </ui:VisualElement>
                         </ui:VisualElement>
                     </ui:VisualElement>
-                    <ui:VisualElement name="Switches" style="flex-grow: 1; align-self: flex-start; justify-content: center; align-items: flex-start; display: flex; padding-top: 15px; padding-right: 15px; padding-bottom: 15px; padding-left: 15px;">
-                        <ui:VisualElement name="BlurBg" class="smallButtonBlurBg"/>
-                        <Switch text="Visualización destacada" name="LandmarkVisualizationSwitch" value="true"/>
-                        <Switch text="Visualización actual" value="false" name="ModernVisualizationSwitch"/>
+                    <ui:VisualElement name="TutorialSwitches" style="flex-grow: 1;">
+                        <ui:VisualElement name="Switches" style="flex-grow: 1; align-self: flex-start; justify-content: center; align-items: flex-start; display: flex; padding-top: 15px; padding-right: 15px; padding-bottom: 15px; padding-left: 15px;">
+                            <ui:VisualElement name="BlurBg" class="smallButtonBlurBg"/>
+                            <Switch text="Visualización destacada" name="LandmarkVisualizationSwitch" value="true"/>
+                            <Switch text="Visualización actual" value="false" name="ModernVisualizationSwitch"/>
+                        </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>

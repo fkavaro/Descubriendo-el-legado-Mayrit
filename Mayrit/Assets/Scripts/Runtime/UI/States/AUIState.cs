@@ -95,6 +95,12 @@ public abstract class AUIState : AState
     #region PRIVATE METHODS
     protected T GetByName<T>(string elementName, VisualElement parent = null) where T : VisualElement
     {
+        if (string.IsNullOrEmpty(elementName))
+        {
+            Debug.LogWarning($"{_stateName} UI State: Element name is null or empty.");
+            return null;
+        }
+
         parent ??= _screen;
 
         if (parent is null)

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -6,8 +8,9 @@ public class TutorialState : AUIState
     readonly TutorialStepSO _data;
     readonly AStateMachine<TutorialState> _fsm;
     readonly ATutorialStepConditionSO _completionCondition;
+    readonly List<VisualElement> _hiddenElements = new();
 
-    VisualElement _tutorialScreen;
+    VisualElement _hudScreen, _tutorialStepsParent;
 
     public TutorialState(TutorialStepSO tutorialStepData, UIManager uiManager, AStateMachine<TutorialState> fsm)
     : base(tutorialStepData.VisualElementName, uiManager.UIDocument)
@@ -25,10 +28,19 @@ public class TutorialState : AUIState
 
     protected override void ConfigureUIElementsOnAwake()
     {
-        _tutorialScreen = GetByName<VisualElement>("TutorialSteps", _UIDocument.rootVisualElement);
+        _hudScreen = GetByName<VisualElement>("HUD", _UIDocument.rootVisualElement);
+        _tutorialStepsParent = GetByName<VisualElement>("TutorialSteps", _hudScreen);
 
-        if (_tutorialScreen.style.display != DisplayStyle.None)
-            _tutorialScreen.style.display = DisplayStyle.None;
+        if (_tutorialStepsParent.style.display != DisplayStyle.None)
+            _tutorialStepsParent.style.display = DisplayStyle.None;
+
+        foreach (UIElementsToHide elementName in _data.VisualElementsToHide)
+        {
+            VisualElement elementToHide = GetByName<VisualElement>(elementName.ToString(), _hudScreen);
+
+            if (elementToHide != null)
+                _hiddenElements.Add(elementToHide);
+        }
     }
 
     public override void StartState()
@@ -36,8 +48,15 @@ public class TutorialState : AUIState
         _completionCondition.Completed += OnCompletionConditionCompleted;
         _completionCondition.BeginListening();
 
-        if (_tutorialScreen.style.display != DisplayStyle.Flex)
-            _tutorialScreen.style.display = DisplayStyle.Flex;
+        if (_tutorialStepsParent.style.display != DisplayStyle.Flex)
+            _tutorialStepsParent.style.display = DisplayStyle.Flex;
+
+        foreach (VisualElement element in _hiddenElements)
+        {
+            element.style.display = DisplayStyle.None;
+            Debug.Log($"{_stateName}: Hiding element {element.name}");
+        }
+
 
         base.StartState();
     }
@@ -46,6 +65,11 @@ public class TutorialState : AUIState
     {
         _completionCondition.Completed -= OnCompletionConditionCompleted;
         _completionCondition.EndListening();
+
+        foreach (VisualElement element in _hiddenElements)
+            element.style.display = DisplayStyle.Flex;
+
+        _hiddenElements.Clear();
 
         _fsm.SwitchToNextStateInSequence(out int newStateIndex);
     }
