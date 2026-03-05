@@ -68,6 +68,7 @@ public class SpectatorHUD_UIState : AHUDState
         _switches.style.display = _wasContextualPanelShown ? DisplayStyle.None : DisplayStyle.Flex;
         _milestoneArea.style.display = _wasContextualPanelShown ? DisplayStyle.None : DisplayStyle.Flex;
         _milestoneButtons.style.display = _wasContextualPanelShown ? DisplayStyle.None : DisplayStyle.Flex;
+        CheckMilestoneButtonsAvailability();
         _playerFollower.Start();
     }
 
@@ -98,6 +99,17 @@ public class SpectatorHUD_UIState : AHUDState
         _switches.style.display = DisplayStyle.Flex;
         _milestoneButtons.style.display = DisplayStyle.Flex;
         _milestoneArea.style.display = DisplayStyle.Flex;
+    }
+    #endregion
+
+    #region PRIVATE METHODS
+    void CheckMilestoneButtonsAvailability()
+    {
+        _nextMilestoneButton.SetEnabled(_progressManager.IsNextMilestoneAvailable());
+        _nextMilestoneButton.pickingMode = _progressManager.IsNextMilestoneAvailable() ? PickingMode.Position : PickingMode.Ignore;
+
+        _previousMilestoneButton.SetEnabled(!_progressManager.AtFirstMilestone());
+        _previousMilestoneButton.pickingMode = !_progressManager.AtFirstMilestone() ? PickingMode.Position : PickingMode.Ignore;
     }
     #endregion
 
@@ -132,17 +144,12 @@ public class SpectatorHUD_UIState : AHUDState
 
     void OnMilestoneChanged(Milestone_DataSO mapping)
     {
+        CheckMilestoneButtonsAvailability();
         _switches.style.display = DisplayStyle.Flex;
 
         // Overwrite milestone area
         _milestoneName.text = mapping.Header;
         _milestoneDate.text = mapping.SubHeader;
-
-        _nextMilestoneButton.SetEnabled(_progressManager.IsNextMilestoneAvailable());
-        _nextMilestoneButton.pickingMode = _progressManager.IsNextMilestoneAvailable() ? PickingMode.Position : PickingMode.Ignore;
-
-        _previousMilestoneButton.SetEnabled(!_progressManager.AtFirstMilestone());
-        _previousMilestoneButton.pickingMode = !_progressManager.AtFirstMilestone() ? PickingMode.Position : PickingMode.Ignore;
 
         _playerFollower.PlayerTransform = ServiceLocator.Instance.Get<PlayableCharacter>().transform;
     }
