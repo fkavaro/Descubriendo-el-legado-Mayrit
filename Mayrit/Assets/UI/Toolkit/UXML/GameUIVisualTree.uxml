@@ -1,7 +1,7 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:Template name="PlayerVisualTree" src="project://database/Assets/UI/Toolkit/UXML/PlayerVisualTree.uxml?fileID=9197481963319205126&amp;guid=1f3fc5bf0d1b2d545b5129799909dbff&amp;type=3#PlayerVisualTree"/>
     <Style src="project://database/Assets/UI/Toolkit/USS/MayritStyle.uss?fileID=7433441132597879392&amp;guid=7a6c8e791557401438e2762dac509247&amp;type=3#MayritStyle"/>
-    <ui:VisualElement name="MainMenu" style="-unity-text-align: middle-center; flex-grow: 1; justify-content: center; align-self: stretch; display: flex; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgb(17, 17, 17); flex-direction: row;">
+    <ui:VisualElement name="MainMenu" style="-unity-text-align: middle-center; flex-grow: 1; justify-content: center; align-self: stretch; display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgb(17, 17, 17); flex-direction: row;">
         <ui:VisualElement name="MainMenuBgImage" style="background-image: url(&quot;project://database/Assets/Imports/Background%201.png?fileID=2800000&amp;guid=45191b62e64522742a762b45f9987ec1&amp;type=3#Background 1&quot;); position: absolute; top: -10px; left: -633px; right: auto; bottom: auto; width: 2567px; height: 1473px;"/>
         <ui:VisualElement name="Menu" style="flex-grow: 1; flex-direction: row;">
             <ui:VisualElement name="LogoArea" style="flex-grow: 1;">
