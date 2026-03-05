@@ -47,7 +47,7 @@ public class TutorialState : AUIState
         _completionCondition.Completed -= OnCompletionConditionCompleted;
         _completionCondition.EndListening();
 
-        _fsm.SwitchToNextStateInSequence();
+        _fsm.SwitchToNextStateInSequence(out int newStateIndex);
     }
 
     public override void UpdateState()

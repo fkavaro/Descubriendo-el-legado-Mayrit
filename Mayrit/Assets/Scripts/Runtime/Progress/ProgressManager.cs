@@ -40,8 +40,6 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
         foreach (var data in _milestonesData)
             _fsm.AddStateToSequence(new MilestoneState(data));
 
-        _fsm.SwitchedStateEvent += OnSwitchedState;
-
         return _fsm;
     }
     #endregion
@@ -72,8 +70,8 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     #endregion
 
     #region PUBLIC METHODS
-    public void SwitchToNextMilestone() => _fsm.SwitchToNextStateInSequence();
-    public void SwitchToPreviousMilestone() => _fsm.SwitchToPreviousStateInSequence();
+    public void SwitchToNextMilestone() => _fsm.SwitchToNextStateInSequence(out _currentMilestoneIndex);
+    public void SwitchToPreviousMilestone() => _fsm.SwitchToPreviousStateInSequence(out _currentMilestoneIndex);
     public bool AtFirstMilestone() => _fsm.AtFistStateInSequence();
     public bool AtLastMilestone() => _fsm.AtLastStateInSequence();
 
@@ -124,10 +122,6 @@ public class ProgressManager : ABehaviourEntity<FiniteStateMachine<MilestoneStat
     #endregion
 
     #region CALLBACK METHODS
-    void OnSwitchedState(int newStateIndex)
-    {
-        _currentMilestoneIndex = newStateIndex;
-    }
 
     void OnSceneLoadedPartially(SceneDatabase.SceneType type, SceneDatabase.SceneName name)
     {

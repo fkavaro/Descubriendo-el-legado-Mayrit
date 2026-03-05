@@ -66,9 +66,9 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
     #endregion
 
     #region CALLBACK METHODS
-    void OnSwitchedState(int newStateIndex)
+    void OnSwitchedState()
     {
-        _currentStepIndex = newStateIndex;
+        _currentStepIndex = _fsm.CurrentStateIndex;
 
         if (_currentStepIndex >= _tutorialStepsData.Count - 1)
         {

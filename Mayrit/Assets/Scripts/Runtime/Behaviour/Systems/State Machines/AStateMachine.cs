@@ -13,9 +13,9 @@ where GenericState : AState
     readonly List<GenericState> _statesSequence = new();
     public GenericState CurrentState => _currentState;
     protected GenericState _currentState, _initialState;
-    protected int CurrentStateIndex => _statesSequence.IndexOf(_currentState);
+    public int CurrentStateIndex => _statesSequence.IndexOf(_currentState);
 
-    public event Action<int> SwitchedStateEvent;
+    public event Action SwitchedStateEvent;
     #endregion
 
     #region CONSTRUCTOR
@@ -26,7 +26,7 @@ where GenericState : AState
     #region TO BE IMPLEMENTED METHODS
     public virtual void SwitchState(GenericState newState)
     {
-        SwitchedStateEvent?.Invoke(CurrentStateIndex);
+        SwitchedStateEvent?.Invoke();
     }
     #endregion
 
@@ -105,8 +105,10 @@ where GenericState : AState
     /// <summary>
     /// Switches to the previous state in the list.
     /// </summary>
-    public bool SwitchToPreviousStateInSequence()
+    public bool SwitchToPreviousStateInSequence(out int previousStateIndex)
     {
+        previousStateIndex = -1;
+
         if (_statesSequence.Count == 0 || _currentState == null)
             return false;
 
@@ -117,7 +119,8 @@ where GenericState : AState
             return false;
         }
 
-        GenericState previousState = _statesSequence[CurrentStateIndex - 1];
+        previousStateIndex = CurrentStateIndex - 1;
+        GenericState previousState = _statesSequence[previousStateIndex];
         SwitchState(previousState);
         return true;
     }
@@ -125,8 +128,10 @@ where GenericState : AState
     /// <summary>
     /// Switches to the next state in the list.
     /// </summary>
-    public virtual bool SwitchToNextStateInSequence()
+    public virtual bool SwitchToNextStateInSequence(out int nextStateIndex)
     {
+        nextStateIndex = -1;
+
         if (_statesSequence.Count == 0 || _currentState == null)
             return false;
 
@@ -136,7 +141,8 @@ where GenericState : AState
             return false;
         }
 
-        GenericState nextState = _statesSequence[CurrentStateIndex + 1];
+        nextStateIndex = CurrentStateIndex + 1;
+        GenericState nextState = _statesSequence[nextStateIndex];
         SwitchState(nextState);
         return true;
     }
