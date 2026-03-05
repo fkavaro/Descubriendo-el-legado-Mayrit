@@ -1,33 +1,35 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:Template name="PlayerVisualTree" src="project://database/Assets/UI/Toolkit/UXML/PlayerVisualTree.uxml?fileID=9197481963319205126&amp;guid=1f3fc5bf0d1b2d545b5129799909dbff&amp;type=3#PlayerVisualTree"/>
     <Style src="project://database/Assets/UI/Toolkit/USS/MayritStyle.uss?fileID=7433441132597879392&amp;guid=7a6c8e791557401438e2762dac509247&amp;type=3#MayritStyle"/>
-    <ui:VisualElement name="MainMenu" style="-unity-text-align: middle-center; flex-grow: 1; justify-content: center; align-self: stretch; display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgb(17, 17, 17); flex-direction: row;">
-        <ui:VisualElement style="flex-grow: 1;">
-            <ui:VisualElement name="Image" style="background-image: url(&quot;project://database/Assets/Imports/Background%201.png?fileID=2800000&amp;guid=45191b62e64522742a762b45f9987ec1&amp;type=3#Background 1&quot;); position: absolute; top: -10px; left: -633px; right: auto; bottom: auto; width: 2567px; height: 1473px;"/>
-            <ui:VisualElement name="Logo" style="position: relative; top: 100px; left: 0; right: 0;">
-                <ui:Label text="MAYRIT" class="title"/>
+    <ui:VisualElement name="MainMenu" style="-unity-text-align: middle-center; flex-grow: 1; justify-content: center; align-self: stretch; display: flex; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgb(17, 17, 17); flex-direction: row;">
+        <ui:VisualElement name="MainMenuBgImage" style="background-image: url(&quot;project://database/Assets/Imports/Background%201.png?fileID=2800000&amp;guid=45191b62e64522742a762b45f9987ec1&amp;type=3#Background 1&quot;); position: absolute; top: -10px; left: -633px; right: auto; bottom: auto; width: 2567px; height: 1473px;"/>
+        <ui:VisualElement name="Menu" style="flex-grow: 1; flex-direction: row;">
+            <ui:VisualElement name="LogoArea" style="flex-grow: 1;">
+                <ui:VisualElement name="Logo" style="position: relative; top: 100px; left: 0; right: 0;">
+                    <ui:Label text="MAYRIT" class="title"/>
+                </ui:VisualElement>
             </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:VisualElement name="RightPanel" class="contextualPanel" style="position: relative; flex-shrink: 0; flex-grow: 0; display: flex;">
-            <ui:VisualElement name="BlurBg" class="contextualPanelBlurBg"/>
-            <ui:VisualElement style="justify-content: center; align-self: center; height: 300px;">
-                <ui:Label text="Menú principal" name="Title" class="subtitle"/>
-            </ui:VisualElement>
-            <ui:VisualElement name="Buttons" style="display: flex; margin-top: 70px;">
-                <ui:Button text="Cargar partida" name="LoadGameButton" class="button highlighted"/>
-                <ui:Button text="Nueva partida" name="NewGameButton" class="button"/>
-                <ui:Button text="Ajustes" name="SettingsButton" class="button"/>
-                <ui:Button text="Salir" name="QuitButton" class="button" style="margin-top: 130px;"/>
-            </ui:VisualElement>
-            <ui:VisualElement name="NewGameWarning" style="display: none; position: absolute; align-self: center; top: 450px;">
-                <ui:VisualElement name="Pop-up" style="flex-grow: 0; width: 490px; height: 300px; justify-content: space-between; align-self: center; background-color: rgb(17, 17, 17); display: flex; border-top-left-radius: 25px; border-top-right-radius: 25px; border-bottom-right-radius: 25px; border-bottom-left-radius: 25px; border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px; border-left-color: rgb(26, 26, 26); border-right-color: rgb(26, 26, 26); border-top-color: rgb(26, 26, 26); border-bottom-color: rgb(26, 26, 26);">
-                    <ui:VisualElement style="justify-content: space-between; align-self: stretch; padding-top: 35px; padding-right: 40px; padding-bottom: 0; padding-left: 40px;">
-                        <ui:Label text="¿Seguro que quieres empezar una nueva partida?" class="subHeader" style="margin-top: 0; margin-right: 0; margin-bottom: 30px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: upper-center;"/>
-                        <ui:Label text="Se borrará la partida anterior." class="text" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: middle-center;"/>
-                    </ui:VisualElement>
-                    <ui:VisualElement style="justify-content: space-between; align-self: stretch; flex-direction: row; padding-top: 0; padding-right: 30px; padding-bottom: 30px; padding-left: 30px;">
-                        <ui:Button text="Sí" name="ConfirmNewGameButton" class="button mediumButton" style="width: 180px; position: relative;"/>
-                        <ui:Button text="No" name="CancelNewGameButton" class="button mediumButton highlighted" style="width: 180px; position: relative;"/>
+            <ui:VisualElement name="RightPanel" class="contextualPanel" style="position: relative; flex-shrink: 0; flex-grow: 0; display: flex;">
+                <ui:VisualElement name="BlurBg" class="contextualPanelBlurBg"/>
+                <ui:VisualElement name="TitleArea" style="justify-content: center; align-self: center; height: 300px;">
+                    <ui:Label text="Menú principal" name="Title" class="subtitle"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="Buttons" style="display: flex; margin-top: 70px;">
+                    <ui:Button text="Cargar partida" name="LoadGameButton" class="button highlighted"/>
+                    <ui:Button text="Nueva partida" name="NewGameButton" class="button"/>
+                    <ui:Button text="Ajustes" name="SettingsButton" class="button"/>
+                    <ui:Button text="Salir" name="QuitButton" class="button" style="margin-top: 130px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="NewGameWarning" style="display: none; position: absolute; align-self: center; top: 450px;">
+                    <ui:VisualElement name="Pop-up" style="flex-grow: 0; width: 490px; height: 300px; justify-content: space-between; align-self: center; background-color: rgb(17, 17, 17); display: flex; border-top-left-radius: 25px; border-top-right-radius: 25px; border-bottom-right-radius: 25px; border-bottom-left-radius: 25px; border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px; border-left-color: rgb(26, 26, 26); border-right-color: rgb(26, 26, 26); border-top-color: rgb(26, 26, 26); border-bottom-color: rgb(26, 26, 26);">
+                        <ui:VisualElement style="justify-content: space-between; align-self: stretch; padding-top: 35px; padding-right: 40px; padding-bottom: 0; padding-left: 40px;">
+                            <ui:Label text="¿Seguro que quieres empezar una nueva partida?" class="subHeader" style="margin-top: 0; margin-right: 0; margin-bottom: 30px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: upper-center;"/>
+                            <ui:Label text="Se borrará la partida anterior." class="text" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: middle-center;"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement style="justify-content: space-between; align-self: stretch; flex-direction: row; padding-top: 0; padding-right: 30px; padding-bottom: 30px; padding-left: 30px;">
+                            <ui:Button text="Sí" name="ConfirmNewGameButton" class="button mediumButton" style="width: 180px; position: relative;"/>
+                            <ui:Button text="No" name="CancelNewGameButton" class="button mediumButton highlighted" style="width: 180px; position: relative;"/>
+                        </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
