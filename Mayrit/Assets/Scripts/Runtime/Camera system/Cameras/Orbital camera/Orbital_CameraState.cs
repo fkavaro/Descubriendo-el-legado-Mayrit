@@ -6,13 +6,6 @@ using UnityEngine.InputSystem;
 public class Orbital_CameraState : ACameraState
 {
     #region PROPERTIES HELPERS
-    // TODO: check
-    // public SelectableObject SelectedObject
-    // {
-    //     get => _selectedObject;
-    //     set => _selectedObject = value;
-    // }
-
     public OrbitalStateSetting Setting
     {
         get => _setting;
@@ -21,10 +14,7 @@ public class Orbital_CameraState : ACameraState
     #endregion
 
     #region PROPERTIES
-
     readonly OrbitalCameraController _controller;
-
-    //SelectableObject _selectedObject;
     OrbitalStateSetting _setting;
     #endregion
 
@@ -41,11 +31,6 @@ public class Orbital_CameraState : ACameraState
     {
         base.StartState();
 
-        //Transform objectToOrbitAround = _selectedObject.transform;
-
-        _gameManager.InputActions.Camera.Enable();
-        _gameManager.InputActions.Camera.ExitMode.performed += OnExitCameraMode;
-
         _controller.Start(_setting);
         _uiManager.ShowContextualPanel(_setting.DataToShow);
     }
@@ -58,21 +43,5 @@ public class Orbital_CameraState : ACameraState
         _controller.LateUpdate();
     }
 
-    public override void ExitState()
-    {
-        base.ExitState();
-
-        _gameManager.InputActions.Camera.Disable();
-        _gameManager.InputActions.Camera.ExitMode.performed -= OnExitCameraMode;
-    }
-
-    #endregion
-
-    #region CALLBACK METHODS
-    void OnExitCameraMode(InputAction.CallbackContext context)
-    {
-        _cameraManager.SwitchToSpectatorCamera();
-        _uiManager.HideContextualPanel();
-    }
     #endregion
 }

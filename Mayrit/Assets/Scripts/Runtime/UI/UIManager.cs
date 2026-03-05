@@ -146,7 +146,6 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
 
     public void HideContextualPanel()
     {
-        //HideContextualPanelEvent?.Invoke();
         ContextualPanelHiddenEvent?.Invoke();
     }
 

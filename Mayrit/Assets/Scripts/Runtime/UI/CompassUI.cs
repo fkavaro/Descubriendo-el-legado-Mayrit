@@ -19,7 +19,7 @@ public class CompassUI : AUIState
     #endregion
 
     #region CONSTRUCTOR
-    public CompassUI(UIDocument uIDocument, VisualElement root) : base("ContextualPanel", uIDocument)
+    public CompassUI(UIDocument uIDocument, VisualElement root) : base("Compass", uIDocument)
     {
         if (root == null)
         {
@@ -35,8 +35,6 @@ public class CompassUI : AUIState
         _cardinalDirections = GetByName<VisualElement>("CardinalDirections", _root);
         _nextPOIVisual = GetByName<VisualElement>("NextPOI", _root);
         _nextPoiDirection = GetByName<VisualElement>("NextPOIDirection", _root);
-
-
     }
     #endregion
 
@@ -49,13 +47,13 @@ public class CompassUI : AUIState
         IsNextPOIShown(false);
     }
 
-    public void Start()
+    public override void StartState()
     {
         _mainCamera = Camera.main; // TODO get from Camera Manager
         FixCardinalDirections();
     }
 
-    public void Update()
+    public override void UpdateState()
     {
         _mainCamera = Camera.main; // TODO get from Camera Manager
         FixCardinalDirections();

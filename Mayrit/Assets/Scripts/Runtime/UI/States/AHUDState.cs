@@ -65,8 +65,7 @@ public abstract class AHUDState : AUIState
         _hudScreen.style.display = DisplayStyle.Flex;
 
         base.StartState();
-
-        _compass.Start();
+        _compass.StartState();
 
         if (_wasContextualPanelShown)
         {
@@ -91,7 +90,7 @@ public abstract class AHUDState : AUIState
     public override void UpdateState()
     {
         base.UpdateState();
-        _compass.Update();
+        _compass.UpdateState();
     }
 
     public override void ExitState()
@@ -122,6 +121,8 @@ public abstract class AHUDState : AUIState
         _compass.IsShown(false);
         _controlsVisualRoot.style.display = DisplayStyle.None;
     }
+
+    // TODO is this necessary?
     void HideContextualPanel()
     {
         _contextualPanel.Hide();

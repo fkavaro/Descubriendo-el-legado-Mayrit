@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 public class ContextualPanelUI : AUIState
@@ -62,6 +63,10 @@ public class ContextualPanelUI : AUIState
     #region PUBLIC METHODS
     public void ShowInfo(DataSO data)
     {
+        if (_gameManager == null)
+            _gameManager = ServiceLocator.Instance.Get<GameManager>();
+        _gameManager.InputActions.UI.CloseContextualPanel.performed += OnCloseAction;
+
         // Clear previous content
         _header.text = data.Header;
         _subHeader.text = data.SubHeader;
@@ -136,6 +141,10 @@ public class ContextualPanelUI : AUIState
 
     public void Hide()
     {
+        if (_gameManager == null)
+            _gameManager = ServiceLocator.Instance.Get<GameManager>();
+        _gameManager.InputActions.UI.CloseContextualPanel.performed -= OnCloseAction;
+
         _root.style.display = DisplayStyle.None; // Hide
 
         // TODO remove later
@@ -177,6 +186,12 @@ public class ContextualPanelUI : AUIState
             _soundManager = ServiceLocator.Instance.Get<SoundManager>();
 
         _soundManager.PlayButtonClickSFX();
+    }
+
+    void OnCloseAction(InputAction.CallbackContext context)
+    {
+        Hide();
+        ClosedEvent?.Invoke();
     }
 
     void OnStartTour(ClickEvent evt)
