@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.InputSystem;
@@ -10,7 +11,7 @@ public abstract class AUIState : AState
     readonly protected float _fadeInDuration;
     readonly protected float _fadeOutDuration;
 
-    VisualElement _screen;
+    protected VisualElement _screen;
 
     // Dependency Injection
     protected ScenesController _scenesController;
@@ -195,6 +196,34 @@ public abstract class AUIState : AState
     {
         yield return FadeToAlpha(visualElement, 0f, _fadeOutDuration);
         visualElement.style.display = DisplayStyle.None;
+    }
+
+    protected IEnumerator ScalePunchAnimation(VisualElement element, float peakScale, float duration, Action onComplete = null)
+    {
+        float halfDuration = duration * 0.5f;
+        float elapsed = 0f;
+
+        while (elapsed < halfDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / halfDuration);
+            element.style.scale = new Scale(new Vector2(Mathf.Lerp(1f, peakScale, t), Mathf.Lerp(1f, peakScale, t)));
+            yield return null;
+        }
+
+        element.style.scale = new Scale(new Vector2(peakScale, peakScale));
+        elapsed = 0f;
+
+        while (elapsed < halfDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / halfDuration);
+            element.style.scale = new Scale(new Vector2(Mathf.Lerp(peakScale, 1f, t), Mathf.Lerp(peakScale, 1f, t)));
+            yield return null;
+        }
+
+        element.style.scale = new Scale(new Vector2(1f, 1f));
+        onComplete?.Invoke();
     }
 
     protected IEnumerator FadeToAlpha(VisualElement visualElement, float targetAlpha, float duration)

@@ -50,23 +50,31 @@ public class TutorialState : AUIState
         base.StartState();
     }
 
-    private void OnCompletionConditionCompleted()
-    {
-        _completionCondition.Completed -= OnCompletionConditionCompleted;
-        _completionCondition.EndListening();
-
-        foreach (VisualElement element in _hiddenElements)
-            element.style.display = DisplayStyle.Flex;
-
-        _hiddenElements.Clear();
-
-        _fsm.SwitchToNextStateInSequence(out int newStateIndex);
-    }
-
     public override void UpdateState()
     {
         base.UpdateState();
 
         _completionCondition.Tick(Time.deltaTime);
+    }
+
+    void OnCompletionConditionCompleted()
+    {
+        _completionCondition.Completed -= OnCompletionConditionCompleted;
+        _completionCondition.EndListening();
+
+        if (_data.AnimationDuration <= 0f)
+            OnAnimationComplete();
+        else
+            _uiManager.StartCoroutine(ScalePunchAnimation(_screen, _data.AnimationPeakScale, _data.AnimationDuration, OnAnimationComplete));
+    }
+
+    void OnAnimationComplete()
+    {
+        foreach (VisualElement element in _hiddenElements)
+            element.style.display = DisplayStyle.Flex;
+
+        _hiddenElements.Clear();
+
+        _fsm.SwitchToNextStateInSequence(out _);
     }
 }
