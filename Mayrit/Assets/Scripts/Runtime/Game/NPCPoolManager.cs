@@ -1,6 +1,4 @@
 using UnityEngine;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Pool;
 
@@ -28,6 +26,8 @@ public class NPCPoolManager : MonoBehaviour
     public LayerMask _villagerLayer;
     [Tooltip("Maximum number of collider hits to consider in a single proximity query")]
     public int _maxOverlapResults = 32;
+    [Tooltip("Max villagers to spawn or return to pool per frame. Higher = faster recovery after population changes; lower = smoother frame budget.")]
+    public int _poolAdjustmentBatchSize = 1;
     #endregion
 
     #region INTERNAL PROPERTIES
@@ -35,6 +35,9 @@ public class NPCPoolManager : MonoBehaviour
 
     Collider[] _overlapResults; // Cached buffer for OverlapSphereNonAlloc
     Dictionary<Collider, Villager> _colliderToVillager; // Cache to avoid GetComponent calls on colliders returned by physics queries
+    readonly List<Villager> _nearbyBuffer = new(); // Reusable scratch buffer for proximity queries — do not store returned references across frames
+    bool _physicsQueryReady; // True when physics overlap queries are usable (cached in Awake)
+    readonly Queue<Villager> _pendingRelease = new(); // Villagers that failed setup and must be returned to the pool next frame
 
     // Dependency Injection
     TownManager _townManager;
@@ -63,8 +66,9 @@ public class NPCPoolManager : MonoBehaviour
             actionOnDestroy: (villager) => Destroy(villager.gameObject)
         );
 
-        // Allocate cached overlap buffer
-        _overlapResults = new Collider[_maxOverlapResults];
+        // Allocate cached overlap buffer (guard against zero/negative inspector value)
+        _overlapResults = new Collider[Mathf.Max(1, _maxOverlapResults)];
+        _physicsQueryReady = _villagerLayer != 0;
         // Initialize collider->villager cache
         _colliderToVillager = new Dictionary<Collider, Villager>(_maxActiveVillagers > 0 ? _maxActiveVillagers * 2 : 32);
 
@@ -86,11 +90,18 @@ public class NPCPoolManager : MonoBehaviour
         if (_uiManager.IsInLoadingScreenState)
             return;
 
+        // Drain villagers that failed setup last frame (avoids reentrancy with ObjectPool.Get)
+        while (_pendingRelease.Count > 0)
+            _villagerPool.Release(_pendingRelease.Dequeue());
+
         int activeDifference = _maxActiveVillagers - _activeVillagers.Count;
+        int batch = Mathf.Min(Mathf.Abs(activeDifference), _poolAdjustmentBatchSize);
         if (activeDifference < 0)
-            _villagerPool.Release(_activeVillagers[^1]); // Return last active villager to pool
+            for (int i = 0; i < batch; i++)
+                _villagerPool.Release(_activeVillagers[^1]); // Return last active villager to pool
         else if (activeDifference > 0)
-            _villagerPool.Get();
+            for (int i = 0; i < batch; i++)
+                _villagerPool.Get();
     }
 
     void OnDisable()
@@ -114,121 +125,71 @@ public class NPCPoolManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns a list of active villagers within the specified range from a position.
-    /// The optional exclude parameter can be used to ignore a specific villager (usually the caller).
-    /// </summary>
-    public List<Villager> GetNearbyVillagers(Vector3 position, float range, Villager exclude = null)
-    {
-        var nearbyVillagers = new List<Villager>();
-
-        // Prefer physics-based broadphase if a layer mask and overlap buffer are available.
-        try
-        {
-            if (_overlapResults != null && _overlapResults.Length > 0 && _villagerLayer != 0)
-            {
-                int mask = _villagerLayer.value;
-                int hits = Physics.OverlapSphereNonAlloc(position, range, _overlapResults, mask, QueryTriggerInteraction.Collide);
-                for (int i = 0; i < hits; i++)
-                {
-                    var collider = _overlapResults[i];
-                    if (collider == null) continue;
-
-                    if (_colliderToVillager != null && _colliderToVillager.TryGetValue(collider, out Villager villager))
-                    {
-                        // got cached villager
-                    }
-                    else
-                    {
-                        // fallback: try to resolve and cache
-                        villager = collider.GetComponentInParent<Villager>();
-                        if (villager != null && _colliderToVillager != null)
-                        {
-                            try { _colliderToVillager[collider] = villager; } catch { }
-                        }
-                    }
-
-                    if (villager == null) continue;
-                    if (villager == exclude) continue;
-                    if (!villager.GO.activeInHierarchy) continue;
-
-                    // check exact distance to be safe
-                    if ((villager.GO.transform.position - position).sqrMagnitude <= range * range)
-                        nearbyVillagers.Add(villager);
-                }
-
-                return nearbyVillagers;
-            }
-        }
-        catch
-        {
-            // Fallback: iterate managed active villager list
-            if (_activeVillagers == null || _activeVillagers.Count == 0) return nearbyVillagers;
-            float sqrRange = range * range;
-            foreach (var villager in _activeVillagers)
-            {
-                if (villager == null) continue;
-                if (villager == exclude) continue;
-                if (!villager.gameObject.activeInHierarchy) continue;
-
-                if ((villager.transform.position - position).sqrMagnitude <= sqrRange)
-                    nearbyVillagers.Add(villager);
-            }
-        }
-
-        return nearbyVillagers;
-    }
-
-    /// <summary>
-    /// GC-free: returns the first nearby Villager found within range (or null).
-    /// Useful when you only need one target (avoids allocating a results list).
-    /// </summary>
-    public Villager GetAnyNearbyVillager(Vector3 position, float range, Villager exclude = null)
-    {
-        // Reuse existing GetNearbyVillagers implementation to avoid duplicating physics/cache logic.
-        var list = GetNearbyVillagers(position, range, exclude);
-        if (list != null && list.Count > 0) return list[0];
-        return null;
-    }
-
-    /// <summary>
-    /// GC-free boolean check: returns true if any villager is nearby (uses GetAnyNearbyVillager under the hood).
-    /// </summary>
-    public bool IsAnyVillagerNearby(Vector3 position, float range, Villager exclude = null)
-    {
-        return GetAnyNearbyVillager(position, range, exclude) != null;
-    }
-
-    /// <summary>
     /// Generic version: returns the first nearby NPC of type T within range (or null).
     /// Filters results to only return NPCs of the specified type.
     /// </summary>
     public T GetAnyNearby<T>(Vector3 position, float range, INPC exclude = null) where T : class, INPC
     {
-        // For Villager type, use the optimized Villager-specific method
         if (typeof(T) == typeof(Villager))
         {
             Villager excludeVillager = exclude as Villager;
             return GetAnyNearbyVillager(position, range, excludeVillager) as T;
         }
 
-        // Generic fallback: check all active villagers and filter by type
-        var list = GetNearbyVillagers(position, range, exclude as Villager);
-        if (list != null && list.Count > 0)
-        {
-            foreach (var npc in list)
-            {
-                if (npc is T typedNpc)
-                    return typedNpc;
-            }
-        }
+        // No more types
         return null;
     }
     #endregion
 
     #region PRIVATE METHODS
-    /// <summary>
-    /// Handle town population change events: spawn or retire villagers proportionally to population
-    /// </summary>
+    public Villager GetAnyNearbyVillager(Vector3 position, float range, Villager exclude = null)
+    {
+        if (_physicsQueryReady)
+        {
+            try
+            {
+                int mask = _villagerLayer.value;
+                int hits = Physics.OverlapSphereNonAlloc(position, range, _overlapResults, mask, QueryTriggerInteraction.Collide);
+                float sqrRange = range * range;
+                for (int i = 0; i < hits; i++)
+                {
+                    var collider = _overlapResults[i];
+                    if (collider == null) continue;
+
+                    if (_colliderToVillager == null || !_colliderToVillager.TryGetValue(collider, out Villager villager))
+                    {
+                        villager = collider.GetComponentInParent<Villager>();
+                        if (villager != null && _colliderToVillager != null)
+                            try { _colliderToVillager[collider] = villager; } catch { }
+                    }
+
+                    if (villager == null) continue;
+                    if (villager == exclude) continue;
+                    if (!villager.GO.activeInHierarchy) continue;
+                    if ((villager.GO.transform.position - position).sqrMagnitude > sqrRange) continue;
+
+                    return villager;
+                }
+                return null;
+            }
+            catch { }
+        }
+
+        // Fallback: iterate active villager list
+        float sqrRangeFallback = range * range;
+        foreach (var villager in _activeVillagers)
+        {
+            if (villager == null) continue;
+            if (villager == exclude) continue;
+            if (!villager.gameObject.activeInHierarchy) continue;
+            if ((villager.transform.position - position).sqrMagnitude <= sqrRangeFallback)
+                return villager;
+        }
+        return null;
+    }
+    #endregion
+
+    #region EVENT HANDLERS
     void OnTownPopulationChanged(int newPopulation)
     {
         //Debug.Log($"NPCPoolManager: Town population changed to {newPopulation}. Updating active villagers...");
@@ -287,6 +248,7 @@ public class NPCPoolManager : MonoBehaviour
         if (randomFreeHouse == null)
         {
             Debug.LogError("NPCPoolManager.GetVillager: No houses available to assign to new villager.");
+            _pendingRelease.Enqueue(villager); // Return to pool next frame — avoids reentrancy with ObjectPool
             return;
         }
         villager.AssignHome(randomFreeHouse);
@@ -299,6 +261,7 @@ public class NPCPoolManager : MonoBehaviour
         if (nearestSanctuary == null)
         {
             Debug.LogError("NPCPoolManager.GetVillager: No sanctuaries available to assign to new villager.");
+            _pendingRelease.Enqueue(villager);
             return;
         }
         villager.AssignSanctuary(nearestSanctuary);
@@ -307,12 +270,12 @@ public class NPCPoolManager : MonoBehaviour
         if (randomMarket == null)
         {
             Debug.LogError("NPCPoolManager.GetVillager: No markets available to assign to new villager.");
+            _pendingRelease.Enqueue(villager);
             return;
         }
         villager.AssignMarket(randomMarket);
 
-        if (!_activeVillagers.Contains(villager))
-            _activeVillagers.Add(villager);
+        _activeVillagers.Add(villager);
 
         // Activate and reset components
         villager.gameObject.SetActive(true);
@@ -332,9 +295,7 @@ public class NPCPoolManager : MonoBehaviour
         // Let the villager clear references/state before deactivation
         try { villager.OnReleasedFromPool(); } catch { }
 
-        // Track active
-        if (_activeVillagers.Contains(villager))
-            _activeVillagers.Remove(villager);
+        _activeVillagers.Remove(villager);
     }
     #endregion
 }
