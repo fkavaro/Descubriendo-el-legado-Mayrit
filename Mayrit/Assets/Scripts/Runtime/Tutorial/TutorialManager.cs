@@ -6,6 +6,8 @@ using UnityEngine.UIElements;
 
 public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<TutorialState>>
 {
+    public bool HasCompletedTutorial => _hasCompletedTutorial;
+
     #region EDITOR PROPERTIES
     [Header("Tutorial Settings")]
     [SerializeField] bool _hasCompletedTutorial = false;

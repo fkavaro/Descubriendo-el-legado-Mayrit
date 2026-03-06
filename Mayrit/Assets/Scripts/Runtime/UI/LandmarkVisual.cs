@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -20,22 +22,18 @@ public class LandmarkVisual : Billboard
     public DataSO Data => _orbitalStateSetting.DataToShow;
 
     float OriginalHeight => _originalPosition.y;
-    float CameraDistance
-    {
-        get
-        {
-            return Vector3.Distance(_originalPosition, _mainCamera.transform.position);
-        }
-    }
+    float CameraDistance => Vector3.Distance(_originalPosition, _mainCamera.transform.position);
 
-    VisualElement _rootVisual;
+    UIDocument _uiDocument;
     Label _nameLabel;
     Button _nameButton;
     Vector3 _originalPosition;
     [HideInInspector] public bool IsBlocked = false;
     [HideInInspector] public bool IsSetAsShown = false;
+    bool _shownDueToTutorial = true;
 
     // Dependency Injection
+    ScenesController _scenesController;
     UIManager _uiManager;
     SoundManager _soundManager;
     CameraManager _cameraManager;
@@ -43,6 +41,18 @@ public class LandmarkVisual : Billboard
     #endregion
 
     #region LIFE CYCLE
+    void Awake()
+    {
+        _uiDocument = GetComponent<UIDocument>();
+        _originalPosition = transform.position;
+    }
+
+    protected void Start()
+    {
+        _scenesController = ServiceLocator.Instance.Get<ScenesController>();
+        _scenesController.ScenesLoadedFullyEvent += OnScenesLoadedFully;
+    }
+
     void OnEnable()
     {
         if (_orbitalStateSetting.DataToShow == null)
@@ -52,29 +62,10 @@ public class LandmarkVisual : Billboard
         }
 
         if (_orbitalStateSetting.Target == null)
-            _orbitalStateSetting.Target = transform; // Default to self if no target assigned
+            _orbitalStateSetting.Target = transform;
 
-        _rootVisual = GetComponent<UIDocument>().rootVisualElement;
+        if (!SetupElements()) return;
 
-        _nameLabel = _rootVisual.Q<Label>("Name");
-        _nameButton = _rootVisual.Q<Button>("NameButton");
-
-        if (_nameLabel == null)
-        {
-            Debug.LogWarning("[LandmarkVisual] No Label with name 'Name' was found in the UIDocument.", this);
-            return;
-        }
-
-        if (_nameButton == null)
-        {
-            Debug.LogWarning("[LandmarkVisual] No Button with name 'NameButton' was found in the UIDocument., this");
-            return;
-        }
-
-        _nameLabel.text = _orbitalStateSetting.DataToShow.Header;
-        _nameButton.RegisterCallback<ClickEvent>(OnClicked);
-
-        // Get dependencies from Service Locator
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
         _soundManager = ServiceLocator.Instance.Get<SoundManager>();
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
@@ -84,68 +75,100 @@ public class LandmarkVisual : Billboard
         _uiManager.LandmarkVisualizationToggled += OnVisualizationToggled;
         _tutorialManager.ShowLandmarkVisualsEvent += OnShowLandmarkVisualsTutorialEvent;
         _tutorialManager.TutorialCompletedEvent += OnTutorialCompleted;
-
-        IsShown = _uiManager.IsLandmarkVisualizationOn;
-
-        _originalPosition = transform.position;
     }
 
     protected override void Update()
     {
-        base.Update();
+        if (IsShown)
+            base.Update();
 
         if (_hideIfTooFar)
-        {
-            if (_isTooFar)
-            {
-                if (_rootVisual.style.display != DisplayStyle.None)
-                    _rootVisual.style.display = DisplayStyle.None;
-            }
-            else
-            {
-                if (_rootVisual.style.display != DisplayStyle.Flex)
-                    _rootVisual.style.display = DisplayStyle.Flex;
-            }
-        }
+            IsShown = !_isTooFar;
 
         if (!_fixHeight) return;
 
-        _currentHeightOffset = _heightMultiplierCurve.Evaluate(CameraDistance);
         _cameraDistance = CameraDistance;
+        _currentHeightOffset = _heightMultiplierCurve.Evaluate(_cameraDistance);
 
         transform.position = new Vector3(transform.position.x, OriginalHeight + _currentHeightOffset, transform.position.z);
     }
 
     void OnDisable()
     {
-        _nameButton.UnregisterCallback<ClickEvent>(OnClicked);
-        _cameraManager.CameraStateChangedEvent -= OnCameraStateChanged;
-        _uiManager.LandmarkVisualizationToggled -= OnVisualizationToggled;
-        _tutorialManager.ShowLandmarkVisualsEvent -= OnShowLandmarkVisualsTutorialEvent;
-        _tutorialManager.TutorialCompletedEvent -= OnTutorialCompleted;
+        _nameButton?.UnregisterCallback<ClickEvent>(OnClicked);
+        if (_scenesController != null) _scenesController.ScenesLoadedFullyEvent -= OnScenesLoadedFully;
+        if (_cameraManager != null) _cameraManager.CameraStateChangedEvent -= OnCameraStateChanged;
+        if (_uiManager != null) _uiManager.LandmarkVisualizationToggled -= OnVisualizationToggled;
+        if (_tutorialManager != null)
+        {
+            _tutorialManager.ShowLandmarkVisualsEvent -= OnShowLandmarkVisualsTutorialEvent;
+            _tutorialManager.TutorialCompletedEvent -= OnTutorialCompleted;
+        }
+    }
+    #endregion
+
+    #region PRIVATE METHODS
+    bool SetupElements()
+    {
+        var root = _uiDocument.rootVisualElement;
+        _nameButton?.UnregisterCallback<ClickEvent>(OnClicked);
+        _nameLabel = root.Q<Label>("Name");
+        _nameButton = root.Q<Button>("NameButton");
+
+        if (_nameLabel == null)
+        {
+            Debug.LogWarning("[LandmarkVisual] No Label with name 'Name' was found in the UIDocument.", this);
+            return false;
+        }
+
+        if (_nameButton == null)
+        {
+            Debug.LogWarning("[LandmarkVisual] No Button with name 'NameButton' was found in the UIDocument.", this);
+            return false;
+        }
+
+        _nameLabel.text = _orbitalStateSetting.DataToShow.Header;
+        _nameButton.RegisterCallback<ClickEvent>(OnClicked);
+        return true;
     }
     #endregion
 
     #region PUBLIC METHODS
     public bool IsShown
     {
-        get
-        {
-            //return _rootVisual.style.display == DisplayStyle.Flex;
-            return _rootVisual.visible;
-        }
+        get => _uiDocument.enabled;
         set
         {
-            // This causes jittering
-            // _rootVisual.style.display = value ?
-            //     DisplayStyle.Flex :
-            //     DisplayStyle.None;
-            _rootVisual.visible = value && _uiManager.IsLandmarkVisualizationOn && _cameraManager.IsInSpectatorState;
+            if (_uiManager == null || _cameraManager == null) return;
+
+            bool resolvedValue = value
+                && (!IsBlocked || IsSetAsShown)
+                && _uiManager.IsLandmarkVisualizationOn
+                && _cameraManager.IsInSpectatorState
+                && _shownDueToTutorial;
+
+            if (_uiDocument.enabled == resolvedValue) return;
+
+            _uiDocument.enabled = resolvedValue;
+
+            if (resolvedValue)
+            {
+                base.Update();
+                SetupElements();
+            }
         }
     }
     #endregion
 
     #region CALLBACK METHODS
+    void OnScenesLoadedFully(Dictionary<SceneDatabase.SceneType, SceneDatabase.SceneName> loadedScenes, List<SceneDatabase.SceneType> list)
+    {
+        if (loadedScenes.TryGetValue(SceneDatabase.SceneType.Milestone, out var milestoneScene) && _tutorialManager.HasCompletedTutorial)
+            IsShown = true;
+        else
+            IsShown = false;
+    }
+
     void OnClicked(ClickEvent evt)
     {
         _uiManager.ShowContextualPanel(_orbitalStateSetting.DataToShow);
@@ -160,25 +183,14 @@ public class LandmarkVisual : Billboard
         _cameraManager.SwitchToOrbitalCamera(_orbitalStateSetting);
     }
 
-    void OnCameraStateChanged()
-    {
-        if (_cameraManager.IsInThirdPersonState || _cameraManager.IsInPOIState || _cameraManager.IsInOrbitalState)
-            IsShown = false;
-        else if (!IsBlocked)
-            IsShown = _uiManager.IsLandmarkVisualizationOn;
-    }
+    void OnCameraStateChanged() => IsShown = _uiManager.IsLandmarkVisualizationOn;
 
-    void OnVisualizationToggled(bool value)
-    {
-        if (!IsBlocked)
-            IsShown = value;
-        else
-            IsShown = IsSetAsShown && value;
-    }
+    void OnVisualizationToggled(bool value) => IsShown = value;
 
     void OnShowLandmarkVisualsTutorialEvent(bool areShown)
     {
-        IsShown = areShown && _uiManager.IsLandmarkVisualizationOn && !IsBlocked;
+        _shownDueToTutorial = areShown;
+        IsShown = _shownDueToTutorial;
     }
 
     void OnTutorialCompleted()

@@ -17,8 +17,8 @@ public class ModernBuilding : MonoBehaviour
         set
         {
             _isActive = value;
-            _landmarkVisual.IsShown = _isActive;
             _landmarkVisual.IsSetAsShown = _isActive;
+            _landmarkVisual.IsShown = _isActive;
             _model.SetActive(_isActive);
         }
     }
