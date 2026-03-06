@@ -33,7 +33,6 @@ public class LandmarkVisual : Billboard
     bool _shownDueToTutorial = true;
 
     // Dependency Injection
-    ScenesController _scenesController;
     UIManager _uiManager;
     SoundManager _soundManager;
     CameraManager _cameraManager;
@@ -45,12 +44,6 @@ public class LandmarkVisual : Billboard
     {
         _uiDocument = GetComponent<UIDocument>();
         _originalPosition = transform.position;
-    }
-
-    protected void Start()
-    {
-        _scenesController = ServiceLocator.Instance.Get<ScenesController>();
-        _scenesController.ScenesLoadedFullyEvent += OnScenesLoadedFully;
     }
 
     void OnEnable()
@@ -96,7 +89,6 @@ public class LandmarkVisual : Billboard
     void OnDisable()
     {
         _nameButton?.UnregisterCallback<ClickEvent>(OnClicked);
-        if (_scenesController != null) _scenesController.ScenesLoadedFullyEvent -= OnScenesLoadedFully;
         if (_cameraManager != null) _cameraManager.CameraStateChangedEvent -= OnCameraStateChanged;
         if (_uiManager != null) _uiManager.LandmarkVisualizationToggled -= OnVisualizationToggled;
         if (_tutorialManager != null)
@@ -161,13 +153,6 @@ public class LandmarkVisual : Billboard
     #endregion
 
     #region CALLBACK METHODS
-    void OnScenesLoadedFully(Dictionary<SceneDatabase.SceneType, SceneDatabase.SceneName> loadedScenes, List<SceneDatabase.SceneType> list)
-    {
-        if (loadedScenes.TryGetValue(SceneDatabase.SceneType.Milestone, out var milestoneScene) && _tutorialManager.HasCompletedTutorial)
-            IsShown = true;
-        else
-            IsShown = false;
-    }
 
     void OnClicked(ClickEvent evt)
     {
