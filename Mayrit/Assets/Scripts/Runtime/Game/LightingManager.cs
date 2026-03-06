@@ -113,9 +113,13 @@ public class LightingManager : MonoBehaviour
         // If dynamic time is enabled or if the wanted time has not been reached yet
         if (!_gameManager.IsInPauseState && (_isDynamic || !_isWantedTimeReached))
         {
+            float prevTime = _currentTime;
             UpdateTimeOfDay();
-            UpdateLighting();
-            CheckActiveLightSource();
+            if (Mathf.Abs(_currentTime - prevTime) > 0.001f)
+            {
+                UpdateLighting();
+                CheckActiveLightSource();
+            }
         }
     }
 
