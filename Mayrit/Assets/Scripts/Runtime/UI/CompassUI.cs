@@ -6,16 +6,19 @@ using UnityEngine.UIElements;
 public class CompassUI : AUIState
 {
     #region PROPERTIES
+    readonly VisualElement _rootParent;
     readonly VisualElement _root;
 
-    VisualElement _cardinalDirections, _nextPOIVisual, _nextPoiDirection;
+    VisualElement _cardinalDirections;
+    VisualElement _nextPOIVisual;
+    VisualElement _nextPoiDirection;
 
-    bool _isNextPOIShown;
     Camera _mainCamera;
     PointOfInterest _nextPOI;
 
     // Dependency Injection
     TourManager _tourManager;
+    TutorialManager _tutorialManager;
     #endregion
 
     #region CONSTRUCTOR
@@ -28,6 +31,7 @@ public class CompassUI : AUIState
         }
 
         _root = root;
+        _rootParent = _root.parent;
     }
 
     protected override void ConfigureUIElementsOnAwake()
@@ -38,58 +42,69 @@ public class CompassUI : AUIState
     }
     #endregion
 
-    #region PUBLIC METHODS
+    #region INHERITED METHODS
     public override void AwakeState()
     {
         base.AwakeState();
 
-        IsShown(false);
-        IsNextPOIShown(false);
+        IsShown = false;
+        IsNextPOIShown = false;
     }
 
     public override void StartState()
     {
+        _tutorialManager = ServiceLocator.Instance.Get<TutorialManager>();
+
+        if (!_tutorialManager.HasCompletedTutorial)
+            _tutorialManager.ShowCompassTutorialEvent += OnShowCompassTutorialEvent;
+        else
+            _rootParent.style.display = DisplayStyle.Flex;
+
         _mainCamera = Camera.main; // TODO get from Camera Manager
         FixCardinalDirections();
     }
 
     public override void UpdateState()
     {
-        _mainCamera = Camera.main; // TODO get from Camera Manager
         FixCardinalDirections();
 
-        if (_isNextPOIShown)
+        if (IsNextPOIShown)
             FixPOIDirection();
     }
+    #endregion
 
-    public void IsShown(bool isShown)
+    #region PUBLIC METHODS
+    public bool IsShown
     {
-        _root.style.display = isShown ? DisplayStyle.Flex : DisplayStyle.None;
+        get => _rootParent.style.display == DisplayStyle.Flex && _root.style.display == DisplayStyle.Flex;
+        set => _root.style.display = value ? DisplayStyle.Flex : DisplayStyle.None;
     }
 
-    public void IsNextPOIShown(bool isShown)
+    public bool IsNextPOIShown
     {
-        _isNextPOIShown = isShown;
-
-        if (isShown)
+        get => _nextPOIVisual.style.display == DisplayStyle.Flex;
+        set
         {
-            _nextPOIVisual.style.display = DisplayStyle.Flex;
-
-            if (_tourManager == null)
-                _tourManager = ServiceLocator.Instance.Get<TourManager>();
-
-            if (_tourManager == null)
+            if (value)
             {
-                Debug.LogWarning("CompassUI: TourManager not found in ServiceLocator");
-                _isNextPOIShown = false;
-            }
-        }
-        else
-        {
-            _nextPOIVisual.style.display = DisplayStyle.None;
-            _nextPoiDirection.style.display = DisplayStyle.None;
+                if (_tourManager == null)
+                    _tourManager = ServiceLocator.Instance.Get<TourManager>();
 
-            _tourManager = null;
+                if (_tourManager == null)
+                {
+                    Debug.LogWarning("CompassUI: TourManager not found in ServiceLocator");
+                    return;
+                }
+
+                _nextPOIVisual.style.display = DisplayStyle.Flex;
+            }
+            else
+            {
+                _nextPOIVisual.style.display = DisplayStyle.None;
+                _nextPoiDirection.style.display = DisplayStyle.None;
+
+                _tourManager = null;
+            }
         }
     }
     #endregion
@@ -131,4 +146,12 @@ public class CompassUI : AUIState
             _nextPoiDirection.style.display = DisplayStyle.Flex;
     }
     #endregion
+
+    void OnShowCompassTutorialEvent(bool isShown)
+    {
+        _rootParent.style.display = isShown ? DisplayStyle.Flex : DisplayStyle.None;
+        IsShown = isShown;
+
+        if (isShown) _tutorialManager.ShowCompassTutorialEvent -= OnShowCompassTutorialEvent;
+    }
 }

@@ -19,6 +19,7 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
     #region INTERNAL PROPERTIES
     public event Action<bool> ShowPlayerFollowerEvent;
     public event Action<bool> ShowLandmarkVisualsEvent;
+    public event Action<bool> ShowCompassTutorialEvent;
     public event Action TutorialCompletedEvent;
 
     StackFiniteStateMachine<TutorialState> _fsm;
@@ -82,15 +83,9 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
             TutorialCompletedEvent?.Invoke();
         }
 
-        if (_fsm.CurrentState.Data.VisualElementsToHide.Contains(UIElementsToHide.TutorialPlayerFollower))
-            ShowPlayerFollowerEvent?.Invoke(false);
-        else
-            ShowPlayerFollowerEvent?.Invoke(true);
-
-        if (_fsm.CurrentState.Data.VisualElementsToHide.Contains(UIElementsToHide.TutorialSwitches))
-            ShowLandmarkVisualsEvent?.Invoke(false);
-        else
-            ShowLandmarkVisualsEvent?.Invoke(true);
+        ShowPlayerFollowerEvent?.Invoke(!_fsm.CurrentState.Data.VisualElementsToHide.Contains(UIElementsToHide.TutorialPlayerFollower));
+        ShowLandmarkVisualsEvent?.Invoke(!_fsm.CurrentState.Data.VisualElementsToHide.Contains(UIElementsToHide.TutorialSwitches));
+        ShowCompassTutorialEvent?.Invoke(!_fsm.CurrentState.Data.VisualElementsToHide.Contains(UIElementsToHide.TutorialCompass));
     }
 
     private void OnSceneLoadedPartially(SceneDatabase.SceneType type, SceneDatabase.SceneName name)

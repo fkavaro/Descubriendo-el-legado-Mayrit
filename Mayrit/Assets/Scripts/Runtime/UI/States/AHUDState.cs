@@ -70,12 +70,12 @@ public abstract class AHUDState : AUIState
         if (_wasContextualPanelShown)
         {
             _contextualPanelRoot.style.display = DisplayStyle.Flex;
-            _compass.IsShown(false);
+            _compass.IsShown = false;
         }
         else
         {
             _contextualPanelRoot.style.display = DisplayStyle.None;
-            _compass.IsShown(true);
+            _compass.IsShown = true;
         }
 
         // Show controls visual according to UIManager setting
@@ -100,7 +100,7 @@ public abstract class AHUDState : AUIState
         base.ExitState();
 
         _contextualPanelRoot.style.display = DisplayStyle.None;
-        _compass.IsShown(false);
+        _compass.IsShown = false;
 
         _gameManager.InputActions.UI.Disable();
         _gameManager.InputActions.UI.Pause.performed -= OnPauseKeyPressed;
@@ -118,7 +118,7 @@ public abstract class AHUDState : AUIState
     {
         _wasContextualPanelShown = true;
         _contextualPanel.ShowInfo(data);
-        _compass.IsShown(false);
+        _compass.IsShown = false;
         _controlsVisualRoot.style.display = DisplayStyle.None;
     }
 
@@ -127,7 +127,7 @@ public abstract class AHUDState : AUIState
     {
         _contextualPanel.Hide();
         OnContextualPanelHidden();
-        _compass.IsShown(true);
+        _compass.IsShown = true;
         _controlsVisualRoot.style.display = _uiManager.ControlsVisibilityValueSet ?
             DisplayStyle.Flex :
             DisplayStyle.None;
