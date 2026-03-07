@@ -11,7 +11,7 @@ public class UIDebugOverlay : MonoBehaviour
     GameManager _gameManager;
     ProgressManager _progressManager;
     CameraManager _cameraManager;
-    LightingManager _timeManager;
+    EnvironmentManager _environmentManager;
     TownManager _townManager;
     NPCPoolManager _npcPoolManager;
     PlayableCharacter _playableCharacter;
@@ -54,7 +54,7 @@ public class UIDebugOverlay : MonoBehaviour
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
-        _timeManager = ServiceLocator.Instance.Get<LightingManager>();
+        _environmentManager = ServiceLocator.Instance.Get<EnvironmentManager>();
         _townManager = ServiceLocator.Instance.Get<TownManager>();
         _npcPoolManager = ServiceLocator.Instance.Get<NPCPoolManager>();
         _playableCharacter = ServiceLocator.Instance.Get<PlayableCharacter>();
@@ -85,8 +85,8 @@ public class UIDebugOverlay : MonoBehaviour
         else
             GUILayout.Label("PlayableCharacter: <null>");
 
-        if (_timeManager != null)
-            GUILayout.Label($"TimeManager current time: {_timeManager.CurrentTime:F0}h");
+        if (_environmentManager != null)
+            GUILayout.Label($"Current time: {_environmentManager.CurrentTime:F0}h");
         else
             GUILayout.Label("TimeManager: <null>");
 

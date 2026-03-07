@@ -1397,7 +1397,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5284671780804002193, guid: da3a56083b7325b4e8667eeafb70b3c7, type: 3}
       propertyPath: m_Name
-      value: "\U0001F324\uFE0FLightingManager"
+      value: "\U0001F324\uFE0FEnvironmentManager"
+      objectReference: {fileID: 0}
+    - target: {fileID: 6097541470270510900, guid: da3a56083b7325b4e8667eeafb70b3c7, type: 3}
+      propertyPath: m_ColorTemperature
+      value: 5074.074
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

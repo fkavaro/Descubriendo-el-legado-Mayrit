@@ -1,9 +1,6 @@
 using UnityEngine;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 
-public class LightingManager : MonoBehaviour
+public class EnvironmentManager : MonoBehaviour
 {
     #region PROPERTIES HELPERS
     public float CurrentTime => _currentTime;
@@ -50,11 +47,8 @@ public class LightingManager : MonoBehaviour
 
     #region INTERNAL PROPERTIES
     [HideInInspector] public bool _isDayTime = true; // Whether current time is between 6 and 18 hours or not
-    bool _isWantedTimeReached; // Whether the current time is close enough to the wanted time
     float _normalisedTime; // Normalised time value between 0 and 1, where 0 is midnight and 1 is the next midnight
     float _timeVelocity; // Velocity for SmoothDamp
-
-    MilestoneSetting _milestoneSetting;
 
     // Dependency Injection
     ProgressManager _progressManager;
@@ -68,11 +62,12 @@ public class LightingManager : MonoBehaviour
         if (Application.isPlaying)
             return;
 
-        _milestoneSetting = GetComponentInParent<MilestoneSetting>();
+        MilestoneSetting _milestoneSetting = GetComponentInParent<MilestoneSetting>();
 
         _currentTime = _milestoneSetting.MilestonePreviewIndex >= 0
         ? _milestoneTimes.List[_milestoneSetting.MilestonePreviewIndex]._time
-        : 10f; // Default to 10am if no milestone preview index is set
+        : 10f; // Default to 10am if no milestone preview index is set'
+        _wantedTime = _currentTime;
 
         UpdateLighting();
         CheckActiveLightSource();
@@ -87,18 +82,21 @@ public class LightingManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if (!_hasTransitions)
-            return;
+        MilestoneSetting _milestoneSetting = GetComponentInParent<MilestoneSetting>();
+
+        _currentTime = _milestoneSetting.MilestonePreviewIndex >= 0
+        ? _milestoneTimes.List[_milestoneSetting.MilestonePreviewIndex]._time
+        : 10f; // Default to 10am if no milestone preview index is set'
+        _wantedTime = _currentTime;
+
+        UpdateLighting();
 
         // Get dependencies from ServiceLocator
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
-        //_currentTime = _progressManager.CurrentMilestoneData.WantedTime;
 
         // Subscribe to ProgressManager event to set the wanted time when the game starts
         _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
-
-        UpdateLighting();
     }
 
     // Update is called once per frame
@@ -107,11 +105,9 @@ public class LightingManager : MonoBehaviour
         if (!_hasTransitions)
             return;
 
-        // Difference between current time and wanted time is less than threshold of 0.1f
-        _isWantedTimeReached = Mathf.Abs(_currentTime - _wantedTime) < 0.1f;
-
         // If dynamic time is enabled or if the wanted time has not been reached yet
-        if (!_gameManager.IsInPauseState && (_isDynamic || !_isWantedTimeReached))
+        bool isWantedTimeReached = !_isDynamic && Mathf.Abs(_currentTime - _wantedTime) < 0.1f;
+        if (!_gameManager.IsInPauseState && !isWantedTimeReached)
         {
             float prevTime = _currentTime;
             UpdateTimeOfDay();
@@ -134,13 +130,29 @@ public class LightingManager : MonoBehaviour
     #region PRIVATE METHODS
     void UpdateTimeOfDay()
     {
-        // Smoothly interpolate towards wanted time with damping for smooth transitions
-        const float smoothTime = 1f; // Time to reach wanted time
-        _currentTime = Mathf.SmoothDamp(_currentTime, _wantedTime, ref _timeVelocity, smoothTime, Mathf.Infinity, Time.unscaledDeltaTime * _transitionSpeed);
+        if (_isDynamic)
+        {
+            // Advance time continuously through the full day/night cycle
+            _currentTime += Time.unscaledDeltaTime * _transitionSpeed;
 
-        // Ensure current time wraps around after 24 hours
-        if (_currentTime >= 24f)
-            _currentTime = 0f;
+            if (_currentTime >= 24f)
+                _currentTime -= 24f;
+        }
+        else
+        {
+            // Resolve shortest wrap-around path (e.g. 23h → 1h goes forward, not backward)
+            float target = _wantedTime;
+            float diff = target - _currentTime;
+            if (diff > 12f) target -= 24f;
+            else if (diff < -12f) target += 24f;
+
+            // Smoothly interpolate towards wanted time with damping for smooth transitions
+            const float smoothTime = 1f;
+            _currentTime = Mathf.SmoothDamp(_currentTime, target, ref _timeVelocity, smoothTime, Mathf.Infinity, Time.unscaledDeltaTime * _transitionSpeed);
+
+            if (_currentTime < 0f) _currentTime += 24f;
+            else if (_currentTime >= 24f) _currentTime -= 24f;
+        }
     }
 
     void UpdateLighting()

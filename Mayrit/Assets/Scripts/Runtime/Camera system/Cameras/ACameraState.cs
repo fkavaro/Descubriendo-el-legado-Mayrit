@@ -20,7 +20,6 @@ public abstract class ACameraState : AState
     protected readonly float _simulationSpeed;
 
     // Dependency Injection
-    protected LightingManager _timeManager;
     protected UIManager _uiManager;
     protected GameManager _gameManager;
     protected CameraManager _cameraManager;
@@ -40,7 +39,6 @@ public abstract class ACameraState : AState
     #region INHERITED METHODS
     protected override void GetServicesDependenciesOnStart()
     {
-        _timeManager = ServiceLocator.Instance.Get<LightingManager>();
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
