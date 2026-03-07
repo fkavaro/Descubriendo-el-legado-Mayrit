@@ -295,19 +295,20 @@
     right: 0;
     height: 100%;
     transition-duration: 0.2s;
-    padding-top: 50px;
-    padding-right: 50px;
-    padding-bottom: 50px;
-    padding-left: 50px;
-    border-top-left-radius: 200px;
-    border-top-right-radius: 200px;
-    border-bottom-right-radius: 200px;
-    border-bottom-left-radius: 200px;
+    padding-top: 30px;
+    padding-right: 30px;
+    padding-bottom: 30px;
+    padding-left: 30px;
+    border-top-left-radius: 130px;
+    border-top-right-radius: 130px;
+    border-bottom-right-radius: 130px;
+    border-bottom-left-radius: 130px;
 }
 
 .landmarkVisual:hover {
     transition-duration: 0.2s;
     scale: 1.1 1.1 1.1;
+    background-color: rgba(34, 34, 34, 0.86);
 }
 
 .landmarkVisualBlurBg {

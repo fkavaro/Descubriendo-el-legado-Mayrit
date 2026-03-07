@@ -80,6 +80,7 @@ public class MainMenu_UIState : AUIState
         _soundManager.PlayButtonClickSFX();
         GameSaveSystem.ClearAllData();
         _gameManager.SwitchToGamePlayState();
+        _newGameWarningPopup.style.display = DisplayStyle.None;
     }
 
     void OnCancelNewGameClicked(ClickEvent evt)
