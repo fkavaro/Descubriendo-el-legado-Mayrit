@@ -51,7 +51,6 @@ public class EnvironmentManager : MonoBehaviour
     float _timeVelocity; // Velocity for SmoothDamp
 
     // Dependency Injection
-    ProgressManager _progressManager;
     GameManager _gameManager;
     #endregion
 
@@ -59,16 +58,7 @@ public class EnvironmentManager : MonoBehaviour
 #if UNITY_EDITOR
     void OnValidate()
     {
-        if (Application.isPlaying)
-            return;
-
-        MilestoneSetting _milestoneSetting = GetComponentInParent<MilestoneSetting>();
-
-        _currentTime = _milestoneSetting.MilestonePreviewIndex >= 0
-        ? _milestoneTimes.List[_milestoneSetting.MilestonePreviewIndex]._time
-        : 10f; // Default to 10am if no milestone preview index is set'
         _wantedTime = _currentTime;
-
         UpdateLighting();
         CheckActiveLightSource();
     }
@@ -90,13 +80,10 @@ public class EnvironmentManager : MonoBehaviour
         _wantedTime = _currentTime;
 
         UpdateLighting();
+        CheckActiveLightSource();
 
         // Get dependencies from ServiceLocator
-        _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
-
-        // Subscribe to ProgressManager event to set the wanted time when the game starts
-        _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
     }
 
     // Update is called once per frame
@@ -121,8 +108,6 @@ public class EnvironmentManager : MonoBehaviour
 
     void OnDisable()
     {
-        if (_hasTransitions)
-            _progressManager.MilestoneChangedEvent -= OnMilestoneChanged;
         ServiceLocator.Instance.Unregister(this);
     }
     #endregion
@@ -215,14 +200,6 @@ public class EnvironmentManager : MonoBehaviour
         bool shouldMoonBeActive = !(_currentTime >= 6f - hysteresis && _currentTime < 17f + hysteresis);
         if (_moonSource.gameObject.activeSelf != shouldMoonBeActive)
             _moonSource.gameObject.SetActive(shouldMoonBeActive);
-    }
-    #endregion
-
-    #region EVENT METHODS
-    void OnMilestoneChanged(Milestone_DataSO mapping)
-    {
-        // if (mapping != null)
-        //     _wantedTime = mapping.WantedTime;
     }
     #endregion
 }
