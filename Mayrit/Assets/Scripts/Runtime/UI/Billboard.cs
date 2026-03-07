@@ -24,13 +24,20 @@ public class Billboard : MonoBehaviour
     #endregion
 
     #region MONOBEHAVIOUR
-    protected virtual void Update()
+    void Start()
     {
         _mainCamera = Camera.main;
+    }
+
+    protected virtual void Update()
+    {
+        if (_mainCamera == null)
+            _mainCamera = Camera.main;
         if (_mainCamera == null) return;
+        float distance = Vector3.Distance(transform.position, _mainCamera.transform.position);
         ApplyRotation();
-        ApplyScaling();
-        CheckIfTooFar();
+        ApplyScaling(distance);
+        CheckIfTooFar(distance);
     }
     #endregion
 
@@ -43,12 +50,9 @@ public class Billboard : MonoBehaviour
             transform.rotation = _mainCamera.transform.rotation;
     }
 
-    void ApplyScaling()
+    void ApplyScaling(float distance)
     {
         if (!_dynamicScaling) return;
-
-        // Scale based on distance to camera: closer -> smaller, farther -> bigger
-        float distance = Vector3.Distance(transform.position, _mainCamera.transform.position);
 
         // Ensure to treat x as min and y as max for distances and scales
         float minDistance = Mathf.Min(distanceRange.x, distanceRange.y);
@@ -66,9 +70,8 @@ public class Billboard : MonoBehaviour
         transform.localScale = new Vector3(scaleUniform, scaleUniform, transform.localScale.z);
     }
 
-    void CheckIfTooFar()
+    void CheckIfTooFar(float distance)
     {
-        float distance = Vector3.Distance(transform.position, _mainCamera.transform.position);
         float maxDistance = Mathf.Max(distanceRange.x, distanceRange.y);
 
         _isTooFar = distance > maxDistance;
