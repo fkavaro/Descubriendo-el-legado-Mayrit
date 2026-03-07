@@ -31,6 +31,8 @@ public class Orbital_CameraState : ACameraState
     {
         base.StartState();
 
+        _gameManager.InputActions.Camera.Enable();
+
         _controller.Start(_setting);
         _uiManager.ShowContextualPanel(_setting.DataToShow);
     }
@@ -43,5 +45,11 @@ public class Orbital_CameraState : ACameraState
         _controller.LateUpdate();
     }
 
+    public override void ExitState()
+    {
+        base.ExitState();
+
+        _gameManager.InputActions.Camera.Disable();
+    }
     #endregion
 }
