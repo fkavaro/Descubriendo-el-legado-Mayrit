@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2963802708733175785}
   - component: {fileID: 6354518598366967083}
   - component: {fileID: 5795229730612990247}
+  - component: {fileID: 8866597934866581004}
   m_Layer: 5
   m_Name: "\U0001F39E\uFE0FUIManager"
   m_TagString: Untagged
@@ -79,3 +80,22 @@ MonoBehaviour:
   _controlsVisibilityValueSet: 0
   _musicVolumeValueSet: 1
   _sfxVolumeValueSet: 1
+--- !u!114 &8866597934866581004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8119952740670593480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52937dbad44b4ff4db4117f0056ae245, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.HighDefinition.Runtime::HDDynamicResolution
+  DefaultTargetFrameRate: 60
+  EvaluationFrameCount: 15
+  ScaleUpDuration: 8
+  ScaleDownDuration: 4
+  ScaleUpStepCount: 5
+  ScaleDownStepCount: 2
+  EnableDebugView: 0
