@@ -122,6 +122,7 @@ Transform:
   m_Children:
   - {fileID: 517577119801176873}
   - {fileID: 2811216079245053655}
+  - {fileID: 6422370810081674421}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &4108713595183347009
@@ -144,7 +145,7 @@ LODGroup:
     - renderer: {fileID: 5982730828341500979}
     - renderer: {fileID: 2929497393205433229}
     - renderer: {fileID: 1890511855388491115}
-  - screenRelativeHeight: 0.6
+  - screenRelativeHeight: 0.5
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 2731086316450629016}
@@ -162,11 +163,82 @@ LODGroup:
     - renderer: {fileID: 105137711910865242}
     - renderer: {fileID: 7555111560434670833}
     - renderer: {fileID: 6767060350274880348}
-  - screenRelativeHeight: 0.015
+  - screenRelativeHeight: 0.05
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 1322672966334616228}
+  - screenRelativeHeight: 0.015
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 7677725526543380779}
   m_Enabled: 1
+--- !u!1001 &3154432392794662728
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6618603885870759573}
+    m_Modifications:
+    - target: {fileID: 7777473374416633770, guid: fb488f72918c3544288500e7edd9b8f9, type: 3}
+      propertyPath: m_Name
+      value: Birch 4_Billboard_Renderer (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8279326633584976893, guid: fb488f72918c3544288500e7edd9b8f9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8279326633584976893, guid: fb488f72918c3544288500e7edd9b8f9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8279326633584976893, guid: fb488f72918c3544288500e7edd9b8f9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8279326633584976893, guid: fb488f72918c3544288500e7edd9b8f9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8279326633584976893, guid: fb488f72918c3544288500e7edd9b8f9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8279326633584976893, guid: fb488f72918c3544288500e7edd9b8f9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8279326633584976893, guid: fb488f72918c3544288500e7edd9b8f9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8279326633584976893, guid: fb488f72918c3544288500e7edd9b8f9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8279326633584976893, guid: fb488f72918c3544288500e7edd9b8f9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8279326633584976893, guid: fb488f72918c3544288500e7edd9b8f9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fb488f72918c3544288500e7edd9b8f9, type: 3}
+--- !u!4 &6422370810081674421 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8279326633584976893, guid: fb488f72918c3544288500e7edd9b8f9, type: 3}
+  m_PrefabInstance: {fileID: 3154432392794662728}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &7677725526543380779 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4704582915186742883, guid: fb488f72918c3544288500e7edd9b8f9, type: 3}
+  m_PrefabInstance: {fileID: 3154432392794662728}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3157870468110458661
 PrefabInstance:
   m_ObjectHideFlags: 0

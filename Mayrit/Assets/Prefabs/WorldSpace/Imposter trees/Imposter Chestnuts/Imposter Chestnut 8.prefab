@@ -122,6 +122,7 @@ Transform:
   m_Children:
   - {fileID: 2931034312971914920}
   - {fileID: 6693534445802083099}
+  - {fileID: 271248734351610732}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &7279368957827514560
@@ -132,8 +133,8 @@ LODGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8487649076732704616}
   serializedVersion: 2
-  m_LocalReferencePoint: {x: -0.08037758, y: 3.2181268, z: 0.0002501011}
-  m_Size: 6.922885
+  m_LocalReferencePoint: {x: 0, y: 6.5362535, z: 0}
+  m_Size: 13.559138
   m_FadeMode: 0
   m_AnimateCrossFading: 0
   m_LastLODIsBillboard: 0
@@ -146,7 +147,7 @@ LODGroup:
     - renderer: {fileID: 5304679639169395215}
     - renderer: {fileID: 1957556801814670137}
     - renderer: {fileID: 3429162395716345564}
-  - screenRelativeHeight: 0.6
+  - screenRelativeHeight: 0.5
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 3306207076699256832}
@@ -170,10 +171,14 @@ LODGroup:
     - renderer: {fileID: 2971928938950443091}
     - renderer: {fileID: 551628685881052576}
     - renderer: {fileID: 877363859988834072}
-  - screenRelativeHeight: 0.015
+  - screenRelativeHeight: 0.05
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 906029981035827445}
+  - screenRelativeHeight: 0.015
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 539400225143034046}
   m_Enabled: 1
 --- !u!1001 &866383644738597911
 PrefabInstance:
@@ -457,4 +462,71 @@ MeshRenderer:
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8141264714494784750, guid: 33323fba0177e5f46a9c0f208b3b3d8d, type: 3}
   m_PrefabInstance: {fileID: 866383644738597911}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1000671312406015559
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5657331934856341591}
+    m_Modifications:
+    - target: {fileID: 1018009266036882731, guid: eb69358749b2ad14cb96b6d2bd4a9b76, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1018009266036882731, guid: eb69358749b2ad14cb96b6d2bd4a9b76, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1018009266036882731, guid: eb69358749b2ad14cb96b6d2bd4a9b76, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1018009266036882731, guid: eb69358749b2ad14cb96b6d2bd4a9b76, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1018009266036882731, guid: eb69358749b2ad14cb96b6d2bd4a9b76, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1018009266036882731, guid: eb69358749b2ad14cb96b6d2bd4a9b76, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1018009266036882731, guid: eb69358749b2ad14cb96b6d2bd4a9b76, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1018009266036882731, guid: eb69358749b2ad14cb96b6d2bd4a9b76, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1018009266036882731, guid: eb69358749b2ad14cb96b6d2bd4a9b76, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1018009266036882731, guid: eb69358749b2ad14cb96b6d2bd4a9b76, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5587763164590728167, guid: eb69358749b2ad14cb96b6d2bd4a9b76, type: 3}
+      propertyPath: m_Name
+      value: Chestnut 8_Billboard_Renderer (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: eb69358749b2ad14cb96b6d2bd4a9b76, type: 3}
+--- !u!4 &271248734351610732 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1018009266036882731, guid: eb69358749b2ad14cb96b6d2bd4a9b76, type: 3}
+  m_PrefabInstance: {fileID: 1000671312406015559}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &539400225143034046 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 765415005348232953, guid: eb69358749b2ad14cb96b6d2bd4a9b76, type: 3}
+  m_PrefabInstance: {fileID: 1000671312406015559}
   m_PrefabAsset: {fileID: 0}

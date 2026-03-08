@@ -32,6 +32,7 @@ Transform:
   m_Children:
   - {fileID: 4796610143845369908}
   - {fileID: 4193255264499932689}
+  - {fileID: 6045832993296137686}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &3729863678399019880
@@ -53,7 +54,7 @@ LODGroup:
     renderers:
     - renderer: {fileID: 3871201326368661115}
     - renderer: {fileID: 498187387798224294}
-  - screenRelativeHeight: 0.6
+  - screenRelativeHeight: 0.5
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 8193850024487681897}
@@ -68,10 +69,14 @@ LODGroup:
     renderers:
     - renderer: {fileID: 2983052797196829587}
     - renderer: {fileID: 532429895674227612}
-  - screenRelativeHeight: 0.015
+  - screenRelativeHeight: 0.05
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 8772273971976341251}
+  - screenRelativeHeight: 0.015
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 5653922475536207813}
   m_Enabled: 1
 --- !u!1 &9070042331706535106
 GameObject:
@@ -163,6 +168,73 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1001 &5497177615681473070
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1343455722398522581}
+    m_Modifications:
+    - target: {fileID: 2283035812829132792, guid: 649e4ad866d73144db4113d0a3f7468b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2283035812829132792, guid: 649e4ad866d73144db4113d0a3f7468b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2283035812829132792, guid: 649e4ad866d73144db4113d0a3f7468b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2283035812829132792, guid: 649e4ad866d73144db4113d0a3f7468b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2283035812829132792, guid: 649e4ad866d73144db4113d0a3f7468b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2283035812829132792, guid: 649e4ad866d73144db4113d0a3f7468b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2283035812829132792, guid: 649e4ad866d73144db4113d0a3f7468b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2283035812829132792, guid: 649e4ad866d73144db4113d0a3f7468b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2283035812829132792, guid: 649e4ad866d73144db4113d0a3f7468b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2283035812829132792, guid: 649e4ad866d73144db4113d0a3f7468b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2810653539222021172, guid: 649e4ad866d73144db4113d0a3f7468b, type: 3}
+      propertyPath: m_Name
+      value: Weeping_Willow 6_Billboard_Renderer (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 649e4ad866d73144db4113d0a3f7468b, type: 3}
+--- !u!23 &5653922475536207813 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 161884823579952619, guid: 649e4ad866d73144db4113d0a3f7468b, type: 3}
+  m_PrefabInstance: {fileID: 5497177615681473070}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6045832993296137686 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2283035812829132792, guid: 649e4ad866d73144db4113d0a3f7468b, type: 3}
+  m_PrefabInstance: {fileID: 5497177615681473070}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7413411063547849987
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -32,6 +32,7 @@ Transform:
   m_Children:
   - {fileID: 1227453339276736728}
   - {fileID: 3700992696644287007}
+  - {fileID: 5731757839795704953}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &2056233976927567779
@@ -54,7 +55,7 @@ LODGroup:
     - renderer: {fileID: 2963927141996815966}
     - renderer: {fileID: 566634561337328237}
     - renderer: {fileID: 6801673595754364970}
-  - screenRelativeHeight: 0.6
+  - screenRelativeHeight: 0.5
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 4631268510279453728}
@@ -72,10 +73,14 @@ LODGroup:
     - renderer: {fileID: 8270952140103166874}
     - renderer: {fileID: 2866878356545241875}
     - renderer: {fileID: 7962356017561492162}
-  - screenRelativeHeight: 0.015
+  - screenRelativeHeight: 0.05
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 1090112776257017074}
+  - screenRelativeHeight: 0.015
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 8991300007561491396}
   m_Enabled: 1
 --- !u!1 &9019034608468532809
 GameObject:
@@ -369,4 +374,71 @@ MeshRenderer:
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 7488921823568905226, guid: 92ffb0927ddfa4a47b5d13cc9d48018c, type: 3}
   m_PrefabInstance: {fileID: 1483747957099078856}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3657342212902917138
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 88482291327186542}
+    m_Modifications:
+    - target: {fileID: 3641958666063593701, guid: 8f7230a2f02a50e4089fbdff3283c7ce, type: 3}
+      propertyPath: m_Name
+      value: Spruce 8_Billboard_Renderer (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028088044637110379, guid: 8f7230a2f02a50e4089fbdff3283c7ce, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028088044637110379, guid: 8f7230a2f02a50e4089fbdff3283c7ce, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028088044637110379, guid: 8f7230a2f02a50e4089fbdff3283c7ce, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028088044637110379, guid: 8f7230a2f02a50e4089fbdff3283c7ce, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028088044637110379, guid: 8f7230a2f02a50e4089fbdff3283c7ce, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028088044637110379, guid: 8f7230a2f02a50e4089fbdff3283c7ce, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028088044637110379, guid: 8f7230a2f02a50e4089fbdff3283c7ce, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028088044637110379, guid: 8f7230a2f02a50e4089fbdff3283c7ce, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028088044637110379, guid: 8f7230a2f02a50e4089fbdff3283c7ce, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028088044637110379, guid: 8f7230a2f02a50e4089fbdff3283c7ce, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8f7230a2f02a50e4089fbdff3283c7ce, type: 3}
+--- !u!4 &5731757839795704953 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9028088044637110379, guid: 8f7230a2f02a50e4089fbdff3283c7ce, type: 3}
+  m_PrefabInstance: {fileID: 3657342212902917138}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &8991300007561491396 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5622461446294464470, guid: 8f7230a2f02a50e4089fbdff3283c7ce, type: 3}
+  m_PrefabInstance: {fileID: 3657342212902917138}
   m_PrefabAsset: {fileID: 0}

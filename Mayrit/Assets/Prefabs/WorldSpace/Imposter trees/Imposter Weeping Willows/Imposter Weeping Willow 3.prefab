@@ -122,6 +122,7 @@ Transform:
   m_Children:
   - {fileID: 1866205260055815595}
   - {fileID: 1345736321093789563}
+  - {fileID: 6681953772424181989}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &4087574224229832473
@@ -143,7 +144,7 @@ LODGroup:
     renderers:
     - renderer: {fileID: 3952451836408345349}
     - renderer: {fileID: 2459384791929461109}
-  - screenRelativeHeight: 0.6
+  - screenRelativeHeight: 0.5
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 7846413283503883356}
@@ -158,10 +159,14 @@ LODGroup:
     renderers:
     - renderer: {fileID: 3428530662894860893}
     - renderer: {fileID: 7703542684849489142}
-  - screenRelativeHeight: 0.015
+  - screenRelativeHeight: 0.05
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 4957412808356952690}
+  - screenRelativeHeight: 0.015
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 7966210524809330139}
   m_Enabled: 1
 --- !u!1001 &4438110916820566172
 PrefabInstance:
@@ -325,4 +330,71 @@ MeshRenderer:
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 5869132675167044800, guid: 3c8b184950b283d4bba65fb105f8f1ab, type: 3}
   m_PrefabInstance: {fileID: 4438110916820566172}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7240879408843890315
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 9081307194439910169}
+    m_Modifications:
+    - target: {fileID: 4091472951654229614, guid: 60277eb0293834b48888bf69b6216eaa, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4091472951654229614, guid: 60277eb0293834b48888bf69b6216eaa, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4091472951654229614, guid: 60277eb0293834b48888bf69b6216eaa, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4091472951654229614, guid: 60277eb0293834b48888bf69b6216eaa, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4091472951654229614, guid: 60277eb0293834b48888bf69b6216eaa, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4091472951654229614, guid: 60277eb0293834b48888bf69b6216eaa, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4091472951654229614, guid: 60277eb0293834b48888bf69b6216eaa, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4091472951654229614, guid: 60277eb0293834b48888bf69b6216eaa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4091472951654229614, guid: 60277eb0293834b48888bf69b6216eaa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4091472951654229614, guid: 60277eb0293834b48888bf69b6216eaa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8788111902094146327, guid: 60277eb0293834b48888bf69b6216eaa, type: 3}
+      propertyPath: m_Name
+      value: Weeping_Willow 3_Billboard_Renderer (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 60277eb0293834b48888bf69b6216eaa, type: 3}
+--- !u!4 &6681953772424181989 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4091472951654229614, guid: 60277eb0293834b48888bf69b6216eaa, type: 3}
+  m_PrefabInstance: {fileID: 7240879408843890315}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &7966210524809330139 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 788533690046636880, guid: 60277eb0293834b48888bf69b6216eaa, type: 3}
+  m_PrefabInstance: {fileID: 7240879408843890315}
   m_PrefabAsset: {fileID: 0}

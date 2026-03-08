@@ -32,6 +32,7 @@ Transform:
   m_Children:
   - {fileID: 5239827840636620542}
   - {fileID: 8788880804606635685}
+  - {fileID: 3521350953893519179}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &7298703682216195698
@@ -42,7 +43,7 @@ LODGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 761739866045158929}
   serializedVersion: 2
-  m_LocalReferencePoint: {x: -0.03824973, y: 4.3052197, z: 0.00024986267}
+  m_LocalReferencePoint: {x: -0.03824973, y: 4.30522, z: 0.00024986267}
   m_Size: 10.926247
   m_FadeMode: 0
   m_AnimateCrossFading: 0
@@ -53,7 +54,7 @@ LODGroup:
     renderers:
     - renderer: {fileID: 2405640019464103394}
     - renderer: {fileID: 5067595567877827419}
-  - screenRelativeHeight: 0.6
+  - screenRelativeHeight: 0.5
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 8584816153628109817}
@@ -68,10 +69,14 @@ LODGroup:
     renderers:
     - renderer: {fileID: 4121210769918679258}
     - renderer: {fileID: 9065601152549528160}
-  - screenRelativeHeight: 0.015
+  - screenRelativeHeight: 0.05
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 4898522426024485933}
+  - screenRelativeHeight: 0.015
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 8293327195311295892}
   m_Enabled: 1
 --- !u!1 &2942065878224217367
 GameObject:
@@ -163,6 +168,77 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1001 &3714051009510576297
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2682523370606660891}
+    m_Modifications:
+    - target: {fileID: 240009911738650594, guid: c1157f5a258d7f749937c6eba465a97a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 240009911738650594, guid: c1157f5a258d7f749937c6eba465a97a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 240009911738650594, guid: c1157f5a258d7f749937c6eba465a97a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 240009911738650594, guid: c1157f5a258d7f749937c6eba465a97a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 240009911738650594, guid: c1157f5a258d7f749937c6eba465a97a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 240009911738650594, guid: c1157f5a258d7f749937c6eba465a97a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 240009911738650594, guid: c1157f5a258d7f749937c6eba465a97a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 240009911738650594, guid: c1157f5a258d7f749937c6eba465a97a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 240009911738650594, guid: c1157f5a258d7f749937c6eba465a97a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 240009911738650594, guid: c1157f5a258d7f749937c6eba465a97a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 240009911738650594, guid: c1157f5a258d7f749937c6eba465a97a, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7031030743121505783, guid: c1157f5a258d7f749937c6eba465a97a, type: 3}
+      propertyPath: m_Name
+      value: Weeping_Willow 7_Billboard_Renderer (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c1157f5a258d7f749937c6eba465a97a, type: 3}
+--- !u!4 &3521350953893519179 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 240009911738650594, guid: c1157f5a258d7f749937c6eba465a97a, type: 3}
+  m_PrefabInstance: {fileID: 3714051009510576297}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &8293327195311295892 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4655917807594298685, guid: c1157f5a258d7f749937c6eba465a97a, type: 3}
+  m_PrefabInstance: {fileID: 3714051009510576297}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7838192163322145737
 PrefabInstance:
   m_ObjectHideFlags: 0
