@@ -199,6 +199,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
+    - target: {fileID: 1975824595705658974, guid: ac32ab3df139eb24dbab7f275ce1574b, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -7206142297946275351, guid: 1a59981b9b4445c469b74964f678852b, type: 3}
     - target: {fileID: 1991462268964490261, guid: ac32ab3df139eb24dbab7f275ce1574b, type: 3}
       propertyPath: m_Name
       value: Chestnut 5
