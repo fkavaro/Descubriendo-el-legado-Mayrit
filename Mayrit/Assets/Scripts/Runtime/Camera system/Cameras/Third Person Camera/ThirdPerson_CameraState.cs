@@ -32,6 +32,11 @@ public class ThirdPerson_CameraState : ACameraState
         Cursor.lockState = CursorLockMode.Locked;
     }
 
+    public void SyncToRotation(float pitch, float yaw)
+    {
+        _cameraController.SetTargetRotation(pitch, yaw);
+    }
+
     public override void LateUpdateState()
     {
         if (_gameManager.IsInPauseState || _uiManager.IsInLoadingScreenState)

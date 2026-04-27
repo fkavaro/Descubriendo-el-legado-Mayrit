@@ -190,13 +190,13 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
             Debug.LogError("Cannot switch to third person camera: PlayableCharacter is null.");
             return;
         }
+        _thirdPersonCamera.LookAt.position = _playableCharacter.transform.position;
 
         if (IsInOrbitalState)
             SyncThirdPersonWithOrbital();
         else if (IsInTourStopState)
             SyncThirdPersonWithTourStop();
 
-        _thirdPersonCamera.LookAt.position = _playableCharacter.transform.position;
         _fsm.SwitchState(_thirdPersonState);
 
         if (DebugMode)
@@ -209,7 +209,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     /// Switches to TourStop camera mode.
     /// </summary>
     /// <param name="camera">The TourStop camera to switch to.</param>
-    public void SwitchToTourSTOPCamera(CinemachineCamera camera)
+    public void SwitchToTourStopCamera(CinemachineCamera camera)
     {
         _soundManager.PlayCameraTransitionSFX();
         _tourStopState.Camera = camera;
@@ -307,7 +307,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         Vector2 limits = _thirdPersonCameraData._orbitClamp;
         float clampedPitch = Mathf.Clamp(pitch, limits.x, limits.y);
 
-        _thirdPersonCamera.LookAt.rotation = Quaternion.Euler(clampedPitch, yaw, 0f);
+        _thirdPersonState.SyncToRotation(clampedPitch, yaw);
     }
 
     void SyncThirdPersonWithTourStop()
@@ -322,7 +322,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         Vector2 limits = _thirdPersonCameraData._orbitClamp;
         float clampedPitch = Mathf.Clamp(pitch, limits.x, limits.y);
 
-        _thirdPersonCamera.LookAt.rotation = Quaternion.Euler(clampedPitch, yaw, 0f);
+        _thirdPersonState.SyncToRotation(clampedPitch, yaw);
     }
     #endregion
 
@@ -389,7 +389,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
             return;
         }
 
-        SwitchToTourSTOPCamera(tourStop.Camera);
+        SwitchToTourStopCamera(tourStop.Camera);
     }
     #endregion
 }
