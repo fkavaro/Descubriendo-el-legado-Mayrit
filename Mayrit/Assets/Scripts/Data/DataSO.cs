@@ -7,7 +7,7 @@ public class DataSO : ScriptableObject
     {
         Milestone,
         Player,
-        Landmark,
+        POI,
         ModernBuilding,
         Other
     }
@@ -31,7 +31,7 @@ public class DataSO : ScriptableObject
     public DataType Type => _dataType;
     public bool IsMilestone => _dataType == DataType.Milestone;
     public bool IsPlayer => _dataType == DataType.Player;
-    public bool IsLandmark => _dataType == DataType.Landmark;
+    public bool IsPOI => _dataType == DataType.POI;
     public bool IsModernBuilding => _dataType == DataType.ModernBuilding;
     public bool IsOther => _dataType == DataType.Other;
     public string Header => _header;

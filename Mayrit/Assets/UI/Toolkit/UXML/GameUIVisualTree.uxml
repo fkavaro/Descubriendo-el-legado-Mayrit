@@ -110,8 +110,8 @@
                     <ui:VisualElement name="TutorialSwitches" style="flex-grow: 1;">
                         <ui:VisualElement name="Switches" style="flex-grow: 1; align-self: flex-start; justify-content: center; align-items: flex-start; display: flex; padding-top: 15px; padding-right: 15px; padding-bottom: 15px; padding-left: 15px;">
                             <ui:VisualElement name="BlurBg" class="smallButtonBlurBg"/>
-                            <Switch text="Visualización destacada" name="LandmarkVisualizationSwitch" value="true"/>
-                            <Switch text="Visualización actual" value="false" name="ModernVisualizationSwitch"/>
+                            <Switch text="Puntos de Interés" name="POIVisualizationSwitch" value="true"/>
+                            <Switch text="Edificios modernos" value="false" name="ModernVisualizationSwitch"/>
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
@@ -176,11 +176,11 @@
                     <ui:Label text="Pulsa este recuadro." name="Text" class="text" style="-unity-text-align: middle-center;"/>
                     <ui:Image source="project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=6936960519852013934&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-up@2x" name="Image" tint-color="rgb(220, 220, 220)" scale-mode="StretchToFill" style="display: flex; position: absolute; top: -55px; left: auto; width: 117px; height: 63px; right: 0;"/>
                 </ui:VisualElement>
-                <ui:VisualElement name="ShowLandmarkInfo" style="position: absolute; top: auto; left: 37%; right: auto; bottom: 60px; align-self: center; flex-direction: column; justify-content: flex-start; display: none; width: 500px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px; height: 250px;">
+                <ui:VisualElement name="ShowPOIInfo" style="position: absolute; top: auto; left: 37%; right: auto; bottom: 60px; align-self: center; flex-direction: column; justify-content: flex-start; display: none; width: 500px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px; height: 250px;">
                     <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex; top: 0; left: 0; right: 0; bottom: 0;"/>
                     <ui:Label text="Mostrar información destacada" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
                     <ui:Label text="Pulsa el nombre de algún sitio destacado en la escena. Luce así:" name="Text" class="text" style="-unity-text-align: middle-center;"/>
-                    <ui:Button text="Button" class="landmarkVisual" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 10px; padding-bottom: 0; padding-left: 10px; top: auto; left: auto; right: auto; bottom: 40px; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; height: auto; align-self: center; position: absolute;">
+                    <ui:Button text="Button" class="poiVisual" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 10px; padding-bottom: 0; padding-left: 10px; top: auto; left: auto; right: auto; bottom: 40px; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; height: auto; align-self: center; position: absolute;">
                         <ui:VisualElement name="Blur" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgb(0, 0, 0); border-top-left-radius: 30px; border-top-right-radius: 30px; border-bottom-right-radius: 30px; border-bottom-left-radius: 30px; filter: blur(20);"/>
                         <ui:Label text="Sitio destacado" name="Text" class="header" style="-unity-text-align: middle-center;"/>
                     </ui:Button>

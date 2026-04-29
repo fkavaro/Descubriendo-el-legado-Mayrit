@@ -55,7 +55,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     public event Action<bool> ModernVisualizationToggled;
     public event Action<bool> PointOfInterestVisualizationToggledEvent;
     public bool IsModernVisualizationOn { get => _aerialHUDState._modernVisualizactionSwitch.Value; }
-    public bool ArePointsOfInterestShown { get => _aerialHUDState._landmarkVisualizationSwitch.Value; }
+    public bool ArePointsOfInterestShown { get => _aerialHUDState._POIVisualizationSwitch.Value; }
 
     // Stack FSM
     StackFiniteStateMachine<AUIState> _sfsm;
@@ -189,7 +189,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
             _aerialHUDState.PlayTourEvent -= OnPlayTourClicked;
             _aerialHUDState.ResetTourEvent -= OnResetTourClicked;
             _aerialHUDState._modernVisualizactionSwitch.Toggled -= OnModernVisualizationToggled;
-            _aerialHUDState._landmarkVisualizationSwitch.Toggled -= OnLandmarkVisualizationToggled;
+            _aerialHUDState._POIVisualizationSwitch.Toggled -= OnPOIVisualizationToggled;
 
             if (_tourManager != null)
             {
@@ -216,7 +216,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
             _aerialHUDState.PlayTourEvent += OnPlayTourClicked;
             _aerialHUDState.ResetTourEvent += OnResetTourClicked;
             _aerialHUDState._modernVisualizactionSwitch.Toggled += OnModernVisualizationToggled;
-            _aerialHUDState._landmarkVisualizationSwitch.Toggled += OnLandmarkVisualizationToggled;
+            _aerialHUDState._POIVisualizationSwitch.Toggled += OnPOIVisualizationToggled;
             _tourManager.TourStopVisitedEvent += OnTourStopVisited;
             _cameraManager.CameraStateChangedEvent += OnCameraStateChanged;
         }
@@ -261,7 +261,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
         ModernVisualizationToggled?.Invoke(value);
     }
 
-    void OnLandmarkVisualizationToggled(bool value)
+    void OnPOIVisualizationToggled(bool value)
     {
         PointOfInterestVisualizationToggledEvent?.Invoke(value);
     }
