@@ -58,6 +58,17 @@ public class ThirdPersonCameraController
         _targetYaw = Mathf.DeltaAngle(0f, eulerAngles.y);
     }
 
+    public void SetTargetRotation(float pitch, float yaw)
+    {
+        if (_cameraTarget == null)
+            return;
+
+        _targetPitch = Mathf.Clamp(pitch, _bottomClamp, _topClamp);
+        _targetYaw = NormalizeAngle(yaw);
+
+        _cameraTarget.rotation = Quaternion.Euler(_targetPitch, _targetYaw, 0f);
+    }
+
     /// <summary>
     /// Updates camera rotation based on mouse input.
     /// Applies vertical (pitch) and horizontal (yaw) rotation to the camera target.
