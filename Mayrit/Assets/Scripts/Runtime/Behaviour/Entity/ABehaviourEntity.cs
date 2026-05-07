@@ -10,7 +10,11 @@ where BehaviourSystemType : ABehaviourSystem
     #region PROPERTIES HELPERS
     public string Name => gameObject.name;
     public GameObject GO => gameObject;
-    public BehaviourSystemType BehaviourSystem => _behaviourSystem;
+    public BehaviourSystemType BehaviourSystem
+    {
+        get => _behaviourSystem;
+        set => _behaviourSystem = value;
+    }
 
     public bool IsExecutionPaused
     {

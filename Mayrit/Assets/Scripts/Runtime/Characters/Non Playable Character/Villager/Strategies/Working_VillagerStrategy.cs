@@ -1,29 +1,28 @@
+using System;
 using UnityEngine;
 
 public class Working_VillagerStrategy : ATimedNPCStrategy<Villager>
 {
+    readonly Spot _workplaceSpot;
+
     bool _waitingForClientSpotClear;
 
-    public Working_VillagerStrategy(Villager villager, float min = 30, float max = 120)
-    : base(villager, min, max) { }
+    public Working_VillagerStrategy(Villager villager, Spot workplaceSpot, float min = 30, float max = 120)
+    : base(villager, min, max)
+    {
+        _workplaceSpot = workplaceSpot;
+    }
 
     public override Node.Status Start()
     {
         CleanupStaleConversation();
 
-        if (_npc.Workplace == null)
+        if (_workplaceSpot == null)
         {
-            if (_npc.DebugMode)
-                Debug.LogWarning($"[{_npc.Name}.Working_VillagerStrategy.Start()] has null workplace", _npc.GO);
+            Debug.LogWarning($"[{_npc.Name}.Working_VillagerStrategy.Start()] has null workplace", _npc.GO);
             return Node.Status.Failure;
         }
-
-        if (!_npc.MovementController.IsNearAnyWorkSpotPositionOf(_npc.Workplace))
-        {
-            if (_npc.DebugMode)
-                Debug.LogWarning($"[{_npc.Name}.Working_VillagerStrategy.Start()] not in workplace", _npc.GO);
-            return Node.Status.Failure;
-        }
+        _npc.MovementController.PlaceAtSpot(_workplaceSpot, true);
 
         if (_npc.Workplace.IsInterior)
             // Deactivate model and agent
@@ -32,13 +31,11 @@ public class Working_VillagerStrategy : ATimedNPCStrategy<Villager>
         {
             _npc.AnimationController.ChangeToIdle();
             _npc.MovementController.IsAgentStopped = true;
+            _npc.SetCharacterAndAgentActive(true);
         }
 
         _npc.Workplace.IsOpen = true;
         _waitingForClientSpotClear = false;
-
-        // if (_npc.DebugMode)
-        //     Debug.Log($"{_npc.Name} started working", _npc.GO);
 
         return Node.Status.Success;
     }

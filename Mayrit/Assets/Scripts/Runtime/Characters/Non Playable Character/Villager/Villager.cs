@@ -3,14 +3,13 @@ using UnityEngine;
 
 public class Villager : ANPC<BehaviourTree>
 {
+    Spot _sanctuaryEntrance;
+    Spot _workplaceEntrance;
+    Spot _homeEntrance;
+
     #region BEHAVIOUR SYSTEM DEFINITION
     public override BehaviourTree DefineBehaviourSystemOnAwake()
     {
-        // Lazy spot getters
-        Spot getSanctuaryEntrance() => _sanctuary != null ? _sanctuary.GetRandomAccessSpot() : null;
-        Spot getWorkingSpot() => _workplace != null ? _workplace.GetRandomWorkingSpot() : null;
-        Spot getHomeEntrance() => _home != null ? _home.GetRandomAccessSpot() : null;
-
         // Conversation sequence
         ConditionStrategy notInAccessZoneStrategy = new(() => !InAccessZone);
         ConditionStrategy isFollowingConversationStrategy = new(() => _interactionController.IsFollowingConversation());
@@ -49,26 +48,27 @@ public class Villager : ANPC<BehaviourTree>
         // Routine sequence
         SequenceNode routineSequence = new(this);
 
-        if (getSanctuaryEntrance() != null)
+        // Exit home
+        ExitHome_VillagerStrategy exitHomeStrategy = new(this, _homeEntrance);
+        LeafNode exitHomeLeaf = new(this, "Exiting home", exitHomeStrategy);
+        routineSequence.AddChild(exitHomeLeaf);
+
+        // Pray at sanctuary
+        GoToDestinationStrategy<Villager> goToSanctuaryStrategy = new(this, _sanctuaryEntrance);
+        InInteriorStrategy<Villager> prayingStrategy = new(this, _sanctuaryEntrance);
+        SequenceNode prayingSequence = new(this, "Praying");
+        LeafNode goToSanctuaryLeaf = new(this, "Going to sanctuary", goToSanctuaryStrategy);
+        LeafNode prayLeaf = new(this, "Praying", prayingStrategy);
+        prayingSequence.AddChild(goToSanctuaryLeaf);
+        prayingSequence.AddChild(prayLeaf);
+        routineSequence.AddChild(prayingSequence);
+
+        if (_workplaceEntrance != null)
         {
-            GoToDestinationStrategy<Villager> goToSanctuaryStrategy = new(this, getSanctuaryEntrance);
-            InInteriorStrategy<Villager> prayingStrategy = new(this);
+            GoToDestinationStrategy<Villager> goToWorkStrategy = new(this, _workplaceEntrance, true);
+            Working_VillagerStrategy workingStrategy = new(this, _workplaceEntrance, 60, 180);
 
-            SequenceNode prayingSequence = new(this);
-            LeafNode goToSanctuaryLeaf = new(this, "Going to sanctuary", goToSanctuaryStrategy);
-            LeafNode prayLeaf = new(this, "Praying", prayingStrategy);
-            prayingSequence.AddChild(goToSanctuaryLeaf);
-            prayingSequence.AddChild(prayLeaf);
-
-            routineSequence.AddChild(prayingSequence);
-        }
-
-        if (getWorkingSpot() != null)
-        {
-            GoToDestinationStrategy<Villager> goToWorkStrategy = new(this, getWorkingSpot, true);
-            Working_VillagerStrategy workingStrategy = new(this, 60, 180);
-
-            SequenceNode workingSequence = new(this);
+            SequenceNode workingSequence = new(this, "Working");
             LeafNode goToWorkLeaf = new(this, "Going to work", goToWorkStrategy);
             LeafNode workLeaf = new(this, "Working", workingStrategy);
             workingSequence.AddChild(goToWorkLeaf);
@@ -77,6 +77,7 @@ public class Villager : ANPC<BehaviourTree>
             routineSequence.AddChild(workingSequence);
         }
 
+        SuccederNode shoppingSucceeder = new(this, "Shopping");
         if (_market != null)
         {
             GoToMarket_VillagerStrategy goToMarketStrategy = new(this);
@@ -92,24 +93,23 @@ public class Villager : ANPC<BehaviourTree>
             RepetitionNode shoppingRepetition = new(this, randomRepetitions, shoppingSequence);
 
             // So that in case of failure (e.g., market closed), routine continues
-            SuccederNode shoppingSucceeder = new(this);
             shoppingSucceeder.AddChild(shoppingRepetition);
 
             routineSequence.AddChild(shoppingSucceeder);
         }
 
-        if (getHomeEntrance() != null)
+        if (_homeEntrance != null)
         {
-            GoToDestinationStrategy<Villager> goToHomeStrategy = new(this, getHomeEntrance, true);
-            AtHome_VillagerStrategy atHomeStrategy = new(this);
+            GoToDestinationStrategy<Villager> goToHomeStrategy = new(this, _homeEntrance, true);
+            EnterHome_VillagerStrategy enterHomeStrategy = new(this);
 
-            SequenceNode atHomeSequence = new(this);
+            SequenceNode enterHomeSequence = new(this, "Going home");
             LeafNode goHomeLeaf = new(this, "Going home", goToHomeStrategy);
-            LeafNode restLeaf = new(this, "Resting", atHomeStrategy);
-            atHomeSequence.AddChild(goHomeLeaf);
-            atHomeSequence.AddChild(restLeaf);
+            LeafNode enterHomeLeaf = new(this, "Resting", enterHomeStrategy);
+            enterHomeSequence.AddChild(goHomeLeaf);
+            enterHomeSequence.AddChild(enterHomeLeaf);
 
-            routineSequence.AddChild(atHomeSequence);
+            routineSequence.AddChild(enterHomeSequence);
         }
 
         // Behaviour sequence
@@ -127,46 +127,62 @@ public class Villager : ANPC<BehaviourTree>
     #region PUBLIC METHODS
     public void AssignHome(House home)
     {
-        if (home != null)
+        if (home == null)
         {
-            _home = home;
+            if (DebugMode)
+                Debug.LogWarning("Trying to assign null Home to " + name);
+            return;
+        }
 
-            // Add to its residents
-            home.AddNewAssigned(this);
-        }
-        else
-        {
-            Debug.LogWarning("Trying to assign null Home to " + name);
-        }
+        _home = home;
+        home.AddNewAssigned(this);
+        _homeEntrance = _home.GetRandomAccessSpot();
+
     }
 
     public void AssignWorkplace(Workplace workPlace)
     {
-        if (workPlace != null)
+        if (workPlace == null)
         {
-            _workplace = workPlace;
-
-            // Add to its employees
-            workPlace.AddNewAssigned(this);
+            if (DebugMode)
+                Debug.LogWarning("Trying to assign null Workplace to " + name);
+            return;
         }
+
+        _workplace = workPlace;
+        workPlace.AddNewAssigned(this);
+        _workplaceEntrance = _workplace.GetRandomWorkingSpot();
     }
 
     public void AssignSanctuary(Sanctuary sanctuary)
     {
-        if (sanctuary != null)
-            _sanctuary = sanctuary;
+        if (sanctuary == null)
+        {
+            if (DebugMode)
+                Debug.LogWarning("Trying to assign null Sanctuary to " + name);
+            return;
+        }
+
+        _sanctuary = sanctuary;
+        _sanctuaryEntrance = _sanctuary.GetRandomAccessSpot();
     }
 
     public void AssignMarket(Market randomMarket)
     {
-        if (randomMarket != null)
-            _market = randomMarket;
+        if (randomMarket == null)
+        {
+            if (DebugMode)
+                Debug.LogWarning("Trying to assign null Market to " + name);
+            return;
+        }
+
+        _market = randomMarket;
     }
 
-    public void OnReleasedFromPool()
+    public void ReturnToPool()
     {
         gameObject.SetActive(false);
-        Agent.enabled = false;
+        SetCharacterAndAgentActive(false);
 
         if (_home != null)
             _home.RemoveAssigned(this);
@@ -175,9 +191,16 @@ public class Villager : ANPC<BehaviourTree>
             _workplace.RemoveAssigned(this);
 
         _home = null;
+        _homeEntrance = null;
         _workplace = null;
+        _workplaceEntrance = null;
         _sanctuary = null;
+        _sanctuaryEntrance = null;
         _market = null;
+        _marketStall = null;
+
+        NPCPoolManager poolManager = ServiceLocator.Instance.Get<NPCPoolManager>();
+        poolManager.ReturnVillagerToPool(this);
     }
     #endregion
 }

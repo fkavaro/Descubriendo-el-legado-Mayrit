@@ -278,13 +278,12 @@ public class NPCPoolManager : MonoBehaviour
         _activeVillagers.Add(villager);
 
         // Activate and reset components
+        villager.CharacterModel.SetActive(false);
         villager.gameObject.SetActive(true);
-        randomFreeHouse.PlaceAtRandomAccess(villager);
-        villager.BehaviourSystem.Reset();
+        villager.BehaviourSystem = villager.DefineBehaviourSystemOnAwake(); // Re-define behaviour system to reset its state
         villager.MovementController.Reset();
         villager.InteractionController.Reset();
         villager.AnimationController.Reset();
-        villager.Agent.enabled = true; // Activated once its placed
     }
 
     /// <summary>
@@ -292,9 +291,6 @@ public class NPCPoolManager : MonoBehaviour
     /// </summary>
     void ReleaseVillager(Villager villager)
     {
-        // Let the villager clear references/state before deactivation
-        try { villager.OnReleasedFromPool(); } catch { }
-
         _activeVillagers.Remove(villager);
     }
     #endregion

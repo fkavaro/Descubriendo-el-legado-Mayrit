@@ -484,7 +484,7 @@ public class NPCMovementController
     #endregion
 
     #region PLACEMENT METHODS
-    public void PlaceAtSpot(Spot spot)
+    public void PlaceAtSpot(Spot spot, bool fixRotation = false)
     {
         if (spot == null)
         {
@@ -494,6 +494,7 @@ public class NPCMovementController
         }
 
         PlaceAt(spot.transform.position);
+        if (fixRotation) ForceRotation(spot.WorldDirection);
         spot.SetOccupied(true);
     }
 

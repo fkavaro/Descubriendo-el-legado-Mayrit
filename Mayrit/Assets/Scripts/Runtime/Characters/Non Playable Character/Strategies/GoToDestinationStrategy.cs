@@ -4,22 +4,19 @@ using UnityEngine;
 public class GoToDestinationStrategy<NPCtype> : ANPCStrategy<NPCtype>
 where NPCtype : INPC
 {
-    readonly Func<Spot> _destinationResolver; // Lazy resolver to avoid stale cached spots
-    Spot _destinationSpot;
+    readonly Spot _destinationSpot;
     private readonly bool _fixRotation;
 
-    public GoToDestinationStrategy(NPCtype npc, Func<Spot> destinationResolver, bool fixRotation = false)
+    public GoToDestinationStrategy(NPCtype npc, Spot destinationSpot, bool fixRotation = false)
     : base(npc)
     {
-        _destinationResolver = destinationResolver;
+        _destinationSpot = destinationSpot;
         _fixRotation = fixRotation;
     }
 
     public override Node.Status Start()
     {
         CleanupStaleConversation();
-
-        _destinationSpot = _destinationResolver?.Invoke();
 
         if (_destinationSpot == null)
         {
@@ -34,6 +31,8 @@ where NPCtype : INPC
                 Debug.LogWarning($"[{_npc.Name}.GoToDestinationStrategy.Start()] could not set destination", _npc.GO);
             return Node.Status.Failure;
         }
+
+        _npc.SetCharacterAndAgentActive(true);
 
         return Node.Status.Success;
     }
