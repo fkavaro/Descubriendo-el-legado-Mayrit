@@ -48,6 +48,7 @@ public class CharacterAnimationController
         {
             if (_behaviourEntity.DebugMode)
                 Debug.LogWarning($"[AnimationController.ChangeAnimationTo()] {_behaviourEntity.Name}: Animator not available", _behaviourEntity.GO);
+            return;
         }
 
         // Determine effective state (current or next when in transition)
@@ -143,6 +144,9 @@ public class CharacterAnimationController
     // Returns the active state's shortNameHash, considering ongoing transitions
     int GetEffectiveStateHash(int layer)
     {
+        if (!IsAnimatorAvailable())
+            return 0;
+
         if (_animator.IsInTransition(layer))
         {
             AnimatorStateInfo next = _animator.GetNextAnimatorStateInfo(layer);
