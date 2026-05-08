@@ -51,9 +51,6 @@ public class MilestoneSetting : MonoBehaviour
             // Update the tracker's children
             tracker.SetChildrenActiveGivenIndex(_milestonePreview);
         }
-
-        // Mark the scene as dirty so changes are saved
-        EditorUtility.SetDirty(gameObject);
     }
 
     // Add a context menu option to manually refresh if needed
