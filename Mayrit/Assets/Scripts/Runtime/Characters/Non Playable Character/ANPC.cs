@@ -122,7 +122,7 @@ where BehaviourSystemType : ABehaviourSystem
         _agent = GetComponent<NavMeshAgent>();
         _movementController = new(this);
         _interactionController = new(this, _agent, _interactionRange, _conversationCooldownNode);
-        //base.Awake();
+        base.Awake();
     }
 
     protected override void Update()

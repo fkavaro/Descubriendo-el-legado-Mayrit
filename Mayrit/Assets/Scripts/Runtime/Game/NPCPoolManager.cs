@@ -62,7 +62,6 @@ public class NPCPoolManager : MonoBehaviour
         _villagerPool = new ObjectPool<Villager>(
             createFunc: CreateVillager,
             actionOnGet: GetVillager,
-            actionOnRelease: ReleaseVillager,
             actionOnDestroy: (villager) => Destroy(villager.gameObject)
         );
 
@@ -122,6 +121,7 @@ public class NPCPoolManager : MonoBehaviour
         if (_villagerPool == null || villager == null) return;
 
         _villagerPool.Release(villager);
+        _activeVillagers.Remove(villager);
     }
 
     /// <summary>
@@ -278,21 +278,12 @@ public class NPCPoolManager : MonoBehaviour
         _activeVillagers.Add(villager);
 
         // Activate and reset components
-        villager.CharacterModel.SetActive(false);
         villager.gameObject.SetActive(true);
-        villager.BehaviourSystem = villager.DefineBehaviourSystem();
+        villager.CharacterModel.SetActive(false);
         villager.MovementController.Reset();
         villager.InteractionController.Reset();
         villager.AnimationController.Reset();
-    }
-
-    /// <summary>
-    /// Release method for villagers pool: deactivates villager gameobject.
-    /// </summary>
-    void ReleaseVillager(Villager villager)
-    {
-        _activeVillagers.Remove(villager);
-        villager.BehaviourSystem = null;
+        villager.BehaviourSystem ??= villager.DefineBehaviourSystem();
     }
     #endregion
 }

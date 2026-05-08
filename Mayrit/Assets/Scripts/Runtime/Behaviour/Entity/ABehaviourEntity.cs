@@ -45,7 +45,7 @@ where BehaviourSystemType : ABehaviourSystem
     #endregion
 
     #region INTERNAL PROPERTIES
-    BehaviourSystemType _behaviourSystem;
+    protected BehaviourSystemType _behaviourSystem;
     #endregion
 
     #region TO BE IMPLEMENTED METHODS

@@ -7,6 +7,10 @@ public class Villager : ANPC<BehaviourTree>
     Spot _workplaceEntrance;
     Spot _homeEntrance;
 
+    SequenceNode _routineSequence;
+    SequenceNode _enterHomeSequence;
+    SuccederNode _shoppingSucceeder;
+
     #region BEHAVIOUR SYSTEM DEFINITION
     public override BehaviourTree DefineBehaviourSystem()
     {
@@ -46,12 +50,12 @@ public class Villager : ANPC<BehaviourTree>
         initiateConversationSequence.AddChild(initiateConversationLeaf);
 
         // Routine sequence
-        SequenceNode routineSequence = new(this);
+        _routineSequence = new(this);
 
         // Exit home
         ExitHome_VillagerStrategy exitHomeStrategy = new(this, _homeEntrance);
         LeafNode exitHomeLeaf = new(this, "Exiting home", exitHomeStrategy);
-        routineSequence.AddChild(exitHomeLeaf);
+        _routineSequence.AddChild(exitHomeLeaf);
 
         // Pray at sanctuary
         GoToDestinationStrategy<Villager> goToSanctuaryStrategy = new(this, _sanctuaryEntrance);
@@ -61,8 +65,9 @@ public class Villager : ANPC<BehaviourTree>
         LeafNode prayLeaf = new(this, "Praying", prayingStrategy);
         prayingSequence.AddChild(goToSanctuaryLeaf);
         prayingSequence.AddChild(prayLeaf);
-        routineSequence.AddChild(prayingSequence);
+        _routineSequence.AddChild(prayingSequence);
 
+        // Work
         if (_workplaceEntrance != null)
         {
             GoToDestinationStrategy<Villager> goToWorkStrategy = new(this, _workplaceEntrance, true);
@@ -74,15 +79,16 @@ public class Villager : ANPC<BehaviourTree>
             workingSequence.AddChild(goToWorkLeaf);
             workingSequence.AddChild(workLeaf);
 
-            routineSequence.AddChild(workingSequence);
+            _routineSequence.AddChild(workingSequence);
         }
 
-        SuccederNode shoppingSucceeder = new(this, "Shopping sequence");
+        // Shop at market
         if (_market != null)
         {
             GoToMarket_VillagerStrategy goToMarketStrategy = new(this);
             Shopping_VillagerStrategy shoppingStrategy = new(this, 15, 45);
 
+            _shoppingSucceeder = new(this, "Shopping sequence");
             SequenceNode shoppingSequence = new(this);
             LeafNode goToMarketStallLeaf = new(this, "Going to market", goToMarketStrategy);
             LeafNode shopLeaf = new(this, "Shopping", shoppingStrategy);
@@ -93,46 +99,25 @@ public class Villager : ANPC<BehaviourTree>
             RepetitionNode shoppingRepetition = new(this, randomRepetitions, shoppingSequence);
 
             // So that in case of failure (e.g., market closed), routine continues
-            shoppingSucceeder.AddChild(shoppingRepetition);
+            _shoppingSucceeder.AddChild(shoppingRepetition);
 
-            routineSequence.AddChild(shoppingSucceeder);
+            _routineSequence.AddChild(_shoppingSucceeder);
         }
 
-        // Random starting node in routine sequence to add variability among villagers
-        Node initialNode = routineSequence.SetRandomCurrentChild();
-
-        // If shopping initially, go from home
-        if (initialNode == shoppingSucceeder)
-        {
-            // Place at home
-            MovementController.PlaceAtSpot(_homeEntrance, true);
-            SetCharacterAndAgentActive(true);
-        }
-        // If initial node has more than 1 child, start with the second (action) instead of the first (going to destination)
-        else if (initialNode._children.Count > 1)
-            initialNode.SetCurrentChild(1); // So that it starts in the action, not in the going to destination part
-
-        if (DebugMode)
-            Debug.Log($"[{name}] Initial node: {initialNode._nodeName}", this);
-
-        if (_homeEntrance != null)
-        {
-            GoToDestinationStrategy<Villager> goToHomeStrategy = new(this, _homeEntrance, true);
-            EnterHome_VillagerStrategy enterHomeStrategy = new(this);
-
-            SequenceNode enterHomeSequence = new(this, "Going home sequence");
-            LeafNode goHomeLeaf = new(this, "Going home", goToHomeStrategy);
-            LeafNode enterHomeLeaf = new(this, "Resting", enterHomeStrategy);
-            enterHomeSequence.AddChild(goHomeLeaf);
-            enterHomeSequence.AddChild(enterHomeLeaf);
-
-            routineSequence.AddChild(enterHomeSequence);
-        }
+        // Finally, go home
+        GoToDestinationStrategy<Villager> goToHomeStrategy = new(this, _homeEntrance, true);
+        EnterHome_VillagerStrategy enterHomeStrategy = new(this);
+        _enterHomeSequence = new(this, "Going home sequence");
+        LeafNode goHomeLeaf = new(this, "Going home", goToHomeStrategy);
+        LeafNode enterHomeLeaf = new(this, "Resting", enterHomeStrategy);
+        _enterHomeSequence.AddChild(goHomeLeaf);
+        _enterHomeSequence.AddChild(enterHomeLeaf);
+        _routineSequence.AddChild(_enterHomeSequence);
 
         // Behaviour sequence
         SelectorNode behaviourSelector = new(this);
         behaviourSelector.AddChild(_conversationCooldownNode); // First: higher priority
-        behaviourSelector.AddChild(routineSequence);
+        behaviourSelector.AddChild(_routineSequence);
 
         InfiniteLoopNode infiniteLoop = new(this, behaviourSelector);
         BehaviourTree villagerBT = new(this, infiniteLoop);
@@ -140,6 +125,12 @@ public class Villager : ANPC<BehaviourTree>
         return villagerBT;
     }
     #endregion
+
+    protected override void Awake()
+    {
+        base.Awake();
+        SetRandomInitialRoutineNode(); // Just once when it is created
+    }
 
     #region PUBLIC METHODS
     public void AssignHome(House home)
@@ -198,6 +189,42 @@ public class Villager : ANPC<BehaviourTree>
 
     public void ReturnToPool()
     {
+        Reset();
+
+        NPCPoolManager poolManager = ServiceLocator.Instance.Get<NPCPoolManager>();
+        poolManager.ReturnVillagerToPool(this);
+    }
+    #endregion
+
+    #region PRIVATE METHODS
+    /// <summary>
+    /// Sets a random initial node in the routine sequence to add variability among villagers.
+    /// </summary>
+    void SetRandomInitialRoutineNode()
+    {
+        Node initialNode;
+        do
+        {
+            initialNode = _routineSequence.SetRandomCurrentChild();
+        } while (initialNode == _enterHomeSequence); // So that not all villagers start at home, which would look weird
+
+        // If shopping initially, go from home
+        if (initialNode == _shoppingSucceeder)
+        {
+            // Place at home
+            MovementController.PlaceAtSpot(_homeEntrance, true);
+            SetCharacterAndAgentActive(true);
+        }
+        // If initial node has more than 1 child, start with the second (action) instead of the first (going to destination)
+        else if (initialNode._children.Count > 1)
+            initialNode.SetCurrentChild(1); // So that it starts in the action, not in the going to destination part
+
+        if (DebugMode)
+            Debug.Log($"[{name}] Random routine start: {initialNode._nodeName}", this);
+    }
+
+    void Reset()
+    {
         gameObject.SetActive(false);
         SetCharacterAndAgentActive(false);
 
@@ -216,8 +243,7 @@ public class Villager : ANPC<BehaviourTree>
         _market = null;
         _marketStall = null;
 
-        NPCPoolManager poolManager = ServiceLocator.Instance.Get<NPCPoolManager>();
-        poolManager.ReturnVillagerToPool(this);
+        _behaviourSystem = null;
     }
     #endregion
 }
