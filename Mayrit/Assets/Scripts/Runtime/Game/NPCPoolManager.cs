@@ -120,6 +120,7 @@ public class NPCPoolManager : MonoBehaviour
     {
         if (_villagerPool == null || villager == null) return;
 
+        villager.Reset();
         _villagerPool.Release(villager);
         _activeVillagers.Remove(villager);
     }
@@ -194,6 +195,11 @@ public class NPCPoolManager : MonoBehaviour
     {
         //Debug.Log($"NPCPoolManager: Town population changed to {newPopulation}. Updating active villagers...");
         _maxActiveVillagers = Mathf.RoundToInt(newPopulation * _activeVillagersRatio);
+
+        // Move all active villagers to pool
+        foreach (var villager in _activeVillagers)
+            if (villager != null)
+                ReturnVillagerToPool(villager);
     }
     #endregion
 

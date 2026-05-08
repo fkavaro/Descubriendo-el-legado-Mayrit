@@ -194,6 +194,29 @@ public class Villager : ANPC<BehaviourTree>
         NPCPoolManager poolManager = ServiceLocator.Instance.Get<NPCPoolManager>();
         poolManager.ReturnVillagerToPool(this);
     }
+
+    public void Reset()
+    {
+        gameObject.SetActive(false);
+        SetCharacterAndAgentActive(false);
+
+        if (_home != null)
+            _home.RemoveAssigned(this);
+
+        if (_workplace != null)
+            _workplace.RemoveAssigned(this);
+
+        _home = null;
+        _homeEntrance = null;
+        _workplace = null;
+        _workplaceEntrance = null;
+        _sanctuary = null;
+        _sanctuaryEntrance = null;
+        _market = null;
+        _marketStall = null;
+
+        _behaviourSystem = null;
+    }
     #endregion
 
     #region PRIVATE METHODS
@@ -221,29 +244,6 @@ public class Villager : ANPC<BehaviourTree>
 
         if (DebugMode)
             Debug.Log($"[{name}] Random routine start: {initialNode._nodeName}", this);
-    }
-
-    void Reset()
-    {
-        gameObject.SetActive(false);
-        SetCharacterAndAgentActive(false);
-
-        if (_home != null)
-            _home.RemoveAssigned(this);
-
-        if (_workplace != null)
-            _workplace.RemoveAssigned(this);
-
-        _home = null;
-        _homeEntrance = null;
-        _workplace = null;
-        _workplaceEntrance = null;
-        _sanctuary = null;
-        _sanctuaryEntrance = null;
-        _market = null;
-        _marketStall = null;
-
-        _behaviourSystem = null;
     }
     #endregion
 }
