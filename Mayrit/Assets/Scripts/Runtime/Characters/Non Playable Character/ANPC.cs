@@ -76,6 +76,8 @@ where BehaviourSystemType : ABehaviourSystem
         get => _isWaitingForAccess;
         set => _isWaitingForAccess = value;
     }
+
+    public float PlayerProximityRadius => _playerProximityRadius;
     #endregion
 
     #region EDITOR PROPERTIES
@@ -99,6 +101,7 @@ where BehaviourSystemType : ABehaviourSystem
     [Tooltip("Random +/- variance applied to walk speed")]
     [SerializeField] protected float _walkSpeedVariance = 0.5f;
     [SerializeField] protected Spot _destinationSpot;
+    [SerializeField] protected float _playerProximityRadius = 2.5f;
     [Header("NPC References")]
     [SerializeField] protected House _home;
     [SerializeField] protected Workplace _workplace;

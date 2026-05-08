@@ -34,6 +34,7 @@ public interface INPC : ICharacter
     public Market Market { get; }
     public Stall MarketStall { get; set; }
     public bool IsWaitingForAccess { get; set; }
+    public float PlayerProximityRadius { get; }
     #endregion
 
     #region METHODS

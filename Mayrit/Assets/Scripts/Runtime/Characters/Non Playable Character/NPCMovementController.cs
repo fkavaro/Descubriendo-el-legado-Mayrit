@@ -25,8 +25,6 @@ public class NPCMovementController
     Vector3 _destinationPos;
     Spot _destinationSpot;
     int _originalAvoidancePriority = -1;
-
-    const float PLAYER_STOP_DISTANCE = 2.5f;
     #endregion
 
     #region CONSTRUCTOR
@@ -531,29 +529,47 @@ public class NPCMovementController
 
     #region PLAYER PROXIMITY METHODS
     /// <summary>
-    /// Checks if the player is too close. If so, stops the agent and clears the current destination to trigger path recalculation.
+    /// Checks if the player is too close and in front. If so, stops the agent and clears the current destination to trigger path recalculation.
     /// </summary>
-    /// <returns>True if the player was too close and the agent was stopped.</returns>
+    /// <returns>True if the player was too close and in front, and the agent was stopped.</returns>
     public bool CheckAndHandlePlayerProximity()
     {
         if (_player == null || !IsAgentValid) return false;
 
         float distanceToPlayer = Vector3.Distance(_npc.GO.transform.position, _player.GO.transform.position);
 
-        if (distanceToPlayer < PLAYER_STOP_DISTANCE)
+        if (distanceToPlayer < _npc.PlayerProximityRadius && IsPlayerInFront())
         {
             // Stop the agent
             IsAgentStopped = true;
             _npc.AnimationController.ChangeToIdle();
-
-            // Clear destination to trigger behavior state to recalculate path
-            ClearDestinationSpot();
-            _destinationPos = Vector3.zero;
-
             return true;
         }
+        else
+        {
+            // Resume movement if previously stopped due to player proximity
+            if (IsAgentStopped)
+            {
+                IsAgentStopped = false;
+                _npc.AnimationController.ChangeToPreviousAnimation();
+            }
 
-        return false;
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Checks if the player is in front of the NPC (within 90 degrees forward cone).
+    /// </summary>
+    private bool IsPlayerInFront()
+    {
+        Vector3 npcForward = _agent.transform.forward;
+        Vector3 directionToPlayer = (_player.GO.transform.position - _agent.transform.position).normalized;
+
+        // Dot product: 1 = directly ahead, 0 = perpendicular, -1 = behind
+        // Use > 0 for a 90 degree cone in front
+        float dotProduct = Vector3.Dot(npcForward, directionToPlayer);
+        return dotProduct > 0f;
     }
     #endregion
 
