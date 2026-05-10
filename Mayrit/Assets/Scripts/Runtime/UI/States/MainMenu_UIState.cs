@@ -14,7 +14,9 @@ public class MainMenu_UIState : AUIState
         _cancelNewGameButton;
 
     VisualElement _newGameWarningPopup,
-        _buttons;
+        _buttons,
+        _logoArea,
+        _rightPanel;
     #endregion
 
     #region CONSTRUCTOR
@@ -25,6 +27,9 @@ public class MainMenu_UIState : AUIState
     #region INHERITED METHODS
     protected override void ConfigureUIElementsOnAwake()
     {
+        _logoArea = GetByName<VisualElement>("LogoArea");
+        _rightPanel = GetByName<VisualElement>("RightPanel");
+
         _buttons = GetByName<VisualElement>("Buttons");
         _newGameButton = GetButtonAndRegisterCallback("NewGameButton", OnNewGameClicked, _buttons);
         _loadGameButton = GetButtonAndRegisterCallback("LoadGameButton", OnLoadGameClicked, _buttons);
@@ -41,7 +46,12 @@ public class MainMenu_UIState : AUIState
 
     public override void StartState()
     {
+        _screen ??= GetByName<VisualElement>(_stateName, _UIDocument.rootVisualElement);
+
         CheckLoadButtonAvailability();
+
+        _logoArea.style.display = DisplayStyle.Flex;
+        _rightPanel.style.display = DisplayStyle.Flex;
 
         base.StartState();
     }
@@ -100,14 +110,17 @@ public class MainMenu_UIState : AUIState
 
     void OnSettingsClicked(ClickEvent evt)
     {
-        base.ExitState();
+        _logoArea.style.display = DisplayStyle.None;
+        _rightPanel.style.display = DisplayStyle.None;
+        _screen = null; // To avoid hiding the background image
         _uiManager.SwitchToSettingsMenuState();
         _soundManager.PlayButtonClickSFX();
     }
 
     void OnCreditsClicked(ClickEvent evt)
     {
-        base.ExitState();
+        _rightPanel.style.display = DisplayStyle.None;
+        _screen = null; // To avoid hiding the background image
         _uiManager.SwitchToCreditsScreenState();
         _soundManager.PlayButtonClickSFX();
     }

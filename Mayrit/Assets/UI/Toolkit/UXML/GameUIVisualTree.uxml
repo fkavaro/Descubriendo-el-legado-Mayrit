@@ -3,9 +3,9 @@
     <Style src="project://database/Assets/UI/Toolkit/USS/MayritStyle.uss?fileID=7433441132597879392&amp;guid=7a6c8e791557401438e2762dac509247&amp;type=3#MayritStyle"/>
     <ui:VisualElement name="MainMenu" style="-unity-text-align: middle-center; flex-grow: 1; justify-content: center; align-self: stretch; display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgb(17, 17, 17); flex-direction: row;">
         <ui:VisualElement name="MainMenuBgImage" style="background-image: url(&quot;project://database/Assets/Imports/Background%201.png?fileID=2800000&amp;guid=45191b62e64522742a762b45f9987ec1&amp;type=3#Background 1&quot;); position: absolute; top: -10px; left: -633px; right: auto; bottom: auto; width: 2567px; height: 1473px;"/>
-        <ui:VisualElement name="Menu" style="flex-grow: 1; flex-direction: row;">
-            <ui:VisualElement name="LogoArea" style="flex-grow: 1;">
-                <ui:VisualElement name="Logo" style="position: relative; top: 100px; left: 0; right: 0;">
+        <ui:VisualElement name="Menu" style="flex-grow: 1; flex-direction: row; justify-content: flex-end;">
+            <ui:VisualElement name="LogoArea" style="flex-grow: 1; position: absolute; align-self: flex-start; left: 0; top: 0; height: 252px; width: 1220px;">
+                <ui:VisualElement name="Logo" style="position: absolute; top: 100px; left: 0; right: 0;">
                     <ui:Label text="MAYRIT" class="title"/>
                 </ui:VisualElement>
             </ui:VisualElement>
@@ -16,8 +16,8 @@
                 </ui:VisualElement>
                 <ui:VisualElement name="Buttons" style="display: flex; margin-top: 50px;">
                     <ui:Button text="Cargar partida" name="LoadGameButton" class="button highlighted"/>
-                    <ui:Button text="Ajustes" name="SettingsButton" class="button"/>
                     <ui:Button text="Nueva partida" name="NewGameButton" class="button"/>
+                    <ui:Button text="Ajustes" name="SettingsButton" class="button"/>
                     <ui:Button text="Créditos" name="CreditsButton" class="button" style="position: relative; margin-top: 100px;"/>
                     <ui:Button text="Salir" name="QuitButton" class="button" style="margin-top: 15px;"/>
                 </ui:VisualElement>
