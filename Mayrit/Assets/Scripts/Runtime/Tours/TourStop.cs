@@ -8,6 +8,7 @@ public class TourStop : MonoBehaviour
     #region PROPERTY HELPERS
     public DataSO Data => _data;
     public CinemachineCamera Camera => _camera;
+    public bool IsVisited => _isVisited;
     #endregion
 
     #region EDITOR PROPERTIES

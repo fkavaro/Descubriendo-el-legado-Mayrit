@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -6,12 +7,15 @@ public class PlayerHUD_UIState : AHUDState
     #region  PROPERTIES
     public bool _showTourEnd;
     Tour _currentTour;
+    TourManager _tourManager;
 
     Button _pauseButton;
     VisualElement _tourArea,
-        _onTourEndVisual;
+        _onTourEndVisual,
+        _tourStopsList;
     Label _tourName,
         _tourDescription;
+    readonly Dictionary<TourStop, Label> _tourStopLabels = new();
     #endregion
 
     #region CONSTRUCTOR
@@ -28,6 +32,7 @@ public class PlayerHUD_UIState : AHUDState
         _tourArea = GetByName<VisualElement>("TourArea");
         _tourName = GetByName<Label>("Name", _tourArea);
         _tourDescription = GetByName<Label>("Description", _tourArea);
+        _tourStopsList = GetByName<VisualElement>("TourStopsList");
         _onTourEndVisual = GetByName<VisualElement>("OnTourEnd");
     }
 
@@ -36,15 +41,20 @@ public class PlayerHUD_UIState : AHUDState
         base.GetServicesDependenciesOnStart();
 
         _currentTour = ServiceLocator.Instance.Get<Tour>();
+        _tourManager = ServiceLocator.Instance.Get<TourManager>();
 
         if (_currentTour == null)
             Debug.LogWarning("PlayerHUD_UIState: No Tour found in ServiceLocator on StartState");
+        if (_tourManager == null)
+            Debug.LogWarning("PlayerHUD_UIState: No TourManager found in ServiceLocator on StartState");
     }
 
     public override void StartState()
     {
         base.StartState();
 
+        PopulateTourStopsUI();
+        SubscribeToTourEvents();
         ShowTourEndVisual(_showTourEnd);
         _compass.IsNextTourStopShown = true;
     }
@@ -52,6 +62,9 @@ public class PlayerHUD_UIState : AHUDState
     public override void ExitState()
     {
         base.ExitState();
+
+        UnsubscribeFromTourEvents();
+        ClearTourStopsUI();
 
         // Unlock cursor and make it visible (has been lock in 3rd person camera state start)
         UnityEngine.Cursor.lockState = CursorLockMode.None;
@@ -64,6 +77,7 @@ public class PlayerHUD_UIState : AHUDState
     protected override void OnContextualPanelShown()
     {
         _tourArea.style.display = DisplayStyle.None;
+        _tourStopsList.style.display = DisplayStyle.None;
         _onTourEndVisual.style.display = DisplayStyle.None;
     }
 
@@ -79,14 +93,64 @@ public class PlayerHUD_UIState : AHUDState
         if (show)
         {
             _tourArea.style.display = DisplayStyle.None;
+            _tourStopsList.style.display = DisplayStyle.None;
             _onTourEndVisual.style.display = DisplayStyle.Flex;
         }
         else
         {
             _onTourEndVisual.style.display = DisplayStyle.None;
             _tourArea.style.display = DisplayStyle.Flex;
+            _tourStopsList.style.display = DisplayStyle.Flex;
             _tourName.text = _currentTour.Data.Header;
             _tourDescription.text = _currentTour.Data.SubHeader;
+        }
+    }
+
+    void PopulateTourStopsUI()
+    {
+        if (_currentTour == null || _tourStopsList == null) return;
+
+        _tourStopsList.Clear();
+        _tourStopLabels.Clear();
+
+        TourStop[] tourStops = _currentTour.GetComponentsInChildren<TourStop>();
+        foreach (TourStop stop in tourStops)
+        {
+            Label label = new(stop.Data.Header);
+            label.AddToClassList("tourStopItem");
+            label.AddToClassList(stop.IsVisited ? "visited" : "unvisited");
+            label.name = $"TourStop_{stop.GetInstanceID()}";
+
+            _tourStopsList.Add(label);
+            _tourStopLabels[stop] = label;
+        }
+    }
+
+    void ClearTourStopsUI()
+    {
+        if (_tourStopsList == null) return;
+        _tourStopsList.Clear();
+        _tourStopLabels.Clear();
+    }
+
+    void SubscribeToTourEvents()
+    {
+        if (_tourManager != null)
+            _tourManager.TourStopVisitedEvent += OnTourStopVisited;
+    }
+
+    void UnsubscribeFromTourEvents()
+    {
+        if (_tourManager != null)
+            _tourManager.TourStopVisitedEvent -= OnTourStopVisited;
+    }
+
+    void OnTourStopVisited(TourStop visitedStop)
+    {
+        if (_tourStopLabels.TryGetValue(visitedStop, out Label label))
+        {
+            label.RemoveFromClassList("unvisited");
+            label.AddToClassList("visited");
         }
     }
     #endregion

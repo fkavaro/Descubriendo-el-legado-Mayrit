@@ -148,6 +148,43 @@
     border-bottom-color: rgb(60, 60, 60);
 }
 
+.tourStopItem {
+    color: rgb(255, 255, 255);
+    font-size: 18px;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 5px;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    white-space: normal;
+    -unity-text-align: upper-right;
+    text-shadow: 0 0 10px rgb(0, 0, 0);
+}
+
+.tourStopItem.visited {
+    color: rgb(150, 150, 150);
+    font-size: 18px;
+    -unity-text-align: upper-right;
+    -unity-font-style: normal;
+}
+
+.tourStopItem.next {
+    color: rgb(255, 255, 255);
+    font-size: 18px;
+    -unity-font-style: bold;
+    -unity-text-align: upper-right;
+}
+
+.tourStopItem.unvisited {
+    color: rgb(255, 255, 255);
+    font-size: 18px;
+    -unity-font-style: normal;
+    -unity-text-align: upper-right;
+}
+
 .button.highlighted {
     width: 250px;
     height: 70px;

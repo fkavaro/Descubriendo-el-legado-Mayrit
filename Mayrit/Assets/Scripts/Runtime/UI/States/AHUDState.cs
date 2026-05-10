@@ -38,6 +38,7 @@ public abstract class AHUDState : AUIState
         _contextualPanel.AwakeState();
         _compass = new(_UIDocument, _compassVisualRoot);
         _compass.AwakeState();
+        _hudScreen.style.display = DisplayStyle.None;
     }
 
     protected override void SubscribeToServicesEventsOnStart()
