@@ -65,6 +65,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     PauseMenu_UIState _pauseState;
     SettingsMenu_UIState _settingsMenuState;
     LoadingScreen_UIState _loadingScreenState;
+    CreditsScreen_UIState _creditsScreenState;
 
     // Dependency Injection
     ScenesController _scenesController;
@@ -86,6 +87,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
         _pauseState = new(_uiDocument, _fadeInDuration, _fadeOutDuration);
         _settingsMenuState = new(_uiDocument, 0f, 0f);
         _loadingScreenState = new(_uiDocument, _fadeInDuration, _fadeOutDuration);
+        _creditsScreenState = new(_uiDocument, 0f, 0f);
 
         // State AwakeState calls
         _mainMenuState.AwakeState();
@@ -94,6 +96,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
         _pauseState.AwakeState();
         _settingsMenuState.AwakeState();
         _loadingScreenState.AwakeState();
+        _creditsScreenState.AwakeState();
 
         _sfsm.SetInitialState(_mainMenuState);
 
@@ -136,6 +139,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     public void SwitchToPauseState() => _sfsm?.SwitchState(_pauseState);
     public void SwitchToSettingsMenuState() => _sfsm?.SwitchState(_settingsMenuState);
     public void SwitchToLoadingScreenState() => _sfsm?.SwitchState(_loadingScreenState);
+    public void SwitchToCreditsScreenState() => _sfsm?.SwitchState(_creditsScreenState);
     #endregion
 
     #region PUBLIC METHODS

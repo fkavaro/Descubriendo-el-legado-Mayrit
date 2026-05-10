@@ -8,6 +8,7 @@ public class MainMenu_UIState : AUIState
     Button _newGameButton,
         _loadGameButton,
         _settingsButton,
+        _creditsButton,
         _quitButton,
         _confirmNewGameButton,
         _cancelNewGameButton;
@@ -28,6 +29,7 @@ public class MainMenu_UIState : AUIState
         _newGameButton = GetButtonAndRegisterCallback("NewGameButton", OnNewGameClicked, _buttons);
         _loadGameButton = GetButtonAndRegisterCallback("LoadGameButton", OnLoadGameClicked, _buttons);
         _settingsButton = GetButtonAndRegisterCallback("SettingsButton", OnSettingsClicked, _buttons);
+        _creditsButton = GetButtonAndRegisterCallback("CreditsButton", OnCreditsClicked, _buttons);
         _quitButton = GetButtonAndRegisterCallback("QuitButton", OnQuitClicked, _buttons);
 
         _newGameWarningPopup = GetByName<VisualElement>("NewGameWarning");
@@ -98,7 +100,15 @@ public class MainMenu_UIState : AUIState
 
     void OnSettingsClicked(ClickEvent evt)
     {
+        base.ExitState();
         _uiManager.SwitchToSettingsMenuState();
+        _soundManager.PlayButtonClickSFX();
+    }
+
+    void OnCreditsClicked(ClickEvent evt)
+    {
+        base.ExitState();
+        _uiManager.SwitchToCreditsScreenState();
         _soundManager.PlayButtonClickSFX();
     }
 

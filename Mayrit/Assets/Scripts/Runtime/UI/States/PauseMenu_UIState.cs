@@ -9,6 +9,7 @@ public class PauseMenu_UIState : AUIState
     Button _playButton,
         _mainMenuButton,
         _settingsButton,
+        _creditsButton,
         _quitButton;
 
     CameraManager _cameraManager;
@@ -25,6 +26,7 @@ public class PauseMenu_UIState : AUIState
         _playButton = GetButtonAndRegisterCallback("PlayButton", OnPlayClicked);
         _mainMenuButton = GetButtonAndRegisterCallback("MainMenuButton", OnMainMenuClicked);
         _settingsButton = GetButtonAndRegisterCallback("SettingsButton", OnSettingsClicked);
+        _creditsButton = GetButtonAndRegisterCallback("CreditsButton", OnCreditsClicked);
         _quitButton = GetButtonAndRegisterCallback("QuitButton", OnQuitClicked);
     }
 
@@ -87,6 +89,13 @@ public class PauseMenu_UIState : AUIState
     {
         base.ExitState();
         _uiManager.SwitchToSettingsMenuState();
+        _soundManager.PlayButtonClickSFX();
+    }
+
+    void OnCreditsClicked(ClickEvent evt)
+    {
+        base.ExitState();
+        _uiManager.SwitchToCreditsScreenState();
         _soundManager.PlayButtonClickSFX();
     }
 
