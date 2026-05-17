@@ -42,28 +42,28 @@
     font-size: 35px;
     color: rgb(255, 255, 255);
     white-space: normal;
-    -unity-text-align: upper-left;
-    margin-top: 15px;
-    margin-right: 15px;
-    margin-bottom: 15px;
-    margin-left: 15px;
+    -unity-text-align: upper-center;
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/ElMessiri-Bold.ttf?fileID=12800000&guid=2d588446ee149eb408d77b917fa04672&type=3#ElMessiri-Bold");
+    text-shadow: 0 2px 5px rgb(102, 102, 102);
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
     padding-top: 0;
     padding-right: 0;
     padding-bottom: 0;
     padding-left: 0;
-    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/ElMessiri-Bold.ttf?fileID=12800000&guid=2d588446ee149eb408d77b917fa04672&type=3#ElMessiri-Bold");
-    text-shadow: 0 2px 5px rgb(102, 102, 102);
 }
 
 .subHeader {
     font-size: 25px;
     color: rgb(255, 255, 255);
     white-space: normal;
-    -unity-text-align: upper-left;
-    margin-top: 10px;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    margin-left: 10px;
+    -unity-text-align: upper-center;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
     padding-top: 0;
     padding-right: 0;
     padding-bottom: 0;
@@ -85,6 +85,7 @@
     font-size: 18px;
     white-space: normal;
     -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/ElMessiri-Regular.ttf?fileID=12800000&guid=c566193adbf5c6d44a80f316aea394d1&type=3#ElMessiri-Regular");
+    -unity-text-align: upper-center;
 }
 
 .tooltip {
@@ -119,7 +120,7 @@
     border-bottom-color: rgb(55, 55, 55);
     border-top-width: 0;
     border-right-width: 0;
-    border-bottom-width: 3px;
+    border-bottom-width: 4px;
     border-left-width: 0;
     border-top-left-radius: 17px;
     border-top-right-radius: 17px;
@@ -402,7 +403,7 @@ Switch Label {
     color: rgb(255, 255, 255);
     font-size: 18px;
     -unity-font-style: normal;
-    margin-left: 15px;
+    margin-left: 30px;
     -unity-text-align: middle-left;
     padding-top: 0;
     padding-right: 0;
@@ -466,7 +467,7 @@ Switch Label {
 .switch-knob {
     width: 20px;
     height: 20px;
-    background-color: rgb(102, 102, 102);
+    background-color: rgb(169, 169, 169);
     margin-top: 4px;
     margin-right: 4px;
     margin-bottom: 4px;
@@ -477,13 +478,29 @@ Switch Label {
     border-bottom-left-radius: 20px;
     transition-duration: 0.2s;
     left: 0;
+    border-top-width: 3px;
+    border-right-width: 3px;
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+    border-left-color: rgb(77, 77, 77);
+    border-right-color: rgb(77, 77, 77);
+    border-top-color: rgb(77, 77, 77);
+    border-bottom-color: rgb(77, 77, 77);
 }
 
 .switch-knob_on {
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(229, 229, 229);
     transition-duration: 0.2s;
     right: 0;
     align-self: flex-end;
+    border-left-color: rgb(169, 169, 169);
+    border-right-color: rgb(169, 169, 169);
+    border-top-color: rgb(169, 169, 169);
+    border-bottom-color: rgb(169, 169, 169);
+    border-top-width: 5px;
+    border-right-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 5px;
 }
 
 .playerButton {
@@ -535,10 +552,33 @@ Switch Label {
     border-right-width: 3px;
     border-bottom-width: 0;
     border-left-width: 3px;
-    border-left-color: rgb(24, 24, 24);
-    border-right-color: rgb(24, 24, 24);
-    border-top-color: rgb(24, 24, 24);
-    border-bottom-color: rgb(24, 24, 24);
+    border-left-color: rgb(60, 60, 60);
+    border-right-color: rgb(60, 60, 60);
+    border-top-color: rgb(60, 60, 60);
+    border-bottom-color: rgb(60, 60, 60);
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    border-bottom-left-radius: 25px;
+}
+
+.section.scrollable {
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 15px;
+    padding-right: 0;
+    padding-bottom: 15px;
+    padding-left: 0;
+    border-top-width: 0;
+    border-right-width: 3px;
+    border-bottom-width: 0;
+    border-left-width: 3px;
+    border-left-color: rgb(60, 60, 60);
+    border-right-color: rgb(60, 60, 60);
+    border-top-color: rgb(60, 60, 60);
+    border-bottom-color: rgb(60, 60, 60);
     border-top-left-radius: 25px;
     border-top-right-radius: 25px;
     border-bottom-right-radius: 25px;
@@ -547,10 +587,10 @@ Switch Label {
 
 .unity-slider {
     justify-content: center;
-    margin-top: 5px;
-    margin-right: 5px;
-    margin-bottom: 5px;
-    margin-left: 5px;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
     padding-top: 0;
     padding-right: 0;
     padding-bottom: 0;
@@ -578,9 +618,9 @@ Switch Label {
     height: 30px;
     align-self: center;
     border-top-width: 0;
-    border-right-width: 7px;
+    border-right-width: 0;
     border-bottom-width: 0;
-    border-left-width: 7px;
+    border-left-width: 0;
     border-left-color: rgb(60, 60, 60);
     border-right-color: rgb(60, 60, 60);
     border-top-color: rgb(60, 60, 60);
@@ -589,25 +629,34 @@ Switch Label {
     border-top-right-radius: 18px;
     border-bottom-right-radius: 18px;
     border-bottom-left-radius: 18px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 0;
+    padding-right: 0;
     transition-duration: 0.2s;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
 }
 
 .unity-slider__input:hover {
-    scale: 1.05 1.05;
-    border-left-width: 4px;
-    border-right-width: 4px;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    overflow: visible;
 }
 
 .unity-base-slider__fill {
-    background-color: rgb(76, 87, 142);
+    background-color: rgb(49, 56, 87);
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
     border-bottom-left-radius: 5px;
     height: 10px;
-    margin-top: 10px;
+    margin-top: 5px;
+    margin-right: 10px;
 }
 
 #unity-drag-container {
@@ -643,24 +692,21 @@ Switch Label {
     border-right-width: 0;
     border-bottom-width: 0;
     border-left-width: 0;
+    overflow: visible;
 }
 
 #unity-tracker-border {
 }
 
 #unity-dragger {
-    border-top-left-radius: 100%;
-    border-top-right-radius: 100%;
-    border-bottom-right-radius: 100%;
-    border-bottom-left-radius: 100%;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
     width: 20px;
     height: 20px;
     align-self: flex-start;
     position: absolute;
-    top: 5px;
-    left: 0;
-    right: 19px;
-    bottom: 0;
     margin-top: 0;
     margin-right: 0;
     margin-bottom: 0;
@@ -669,13 +715,56 @@ Switch Label {
     padding-right: 0;
     padding-bottom: 0;
     padding-left: 0;
-    border-top-width: 0;
-    border-right-width: 0;
-    border-bottom-width: 0;
-    border-left-width: 0;
-    background-color: rgb(255, 255, 255);
-    border-left-color: rgb(128, 128, 128);
-    border-right-color: rgb(128, 128, 128);
-    border-top-color: rgb(128, 128, 128);
-    border-bottom-color: rgb(128, 128, 128);
+    border-top-width: 3px;
+    border-right-width: 3px;
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+    background-color: rgb(169, 169, 169);
+    border-left-color: rgb(77, 77, 77);
+    border-right-color: rgb(77, 77, 77);
+    border-top-color: rgb(77, 77, 77);
+    border-bottom-color: rgb(77, 77, 77);
+    top: 0;
+    left: -10px;
+    right: 0;
+    bottom: 0;
+    transition-duration: 0.2s;
+}
+
+#unity-dragger:hover {
+    width: 20px;
+    height: 20px;
+    align-self: flex-start;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    background-color: rgb(229, 229, 229);
+    overflow: visible;
+    border-left-color: rgb(169, 169, 169);
+    border-right-color: rgb(169, 169, 169);
+    border-top-color: rgb(169, 169, 169);
+    border-bottom-color: rgb(169, 169, 169);
+    border-top-width: 5px;
+    border-right-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 5px;
+}
+
+.unity-scroller {
+    margin-right: 5px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+#unity-low-button {
+    display: none;
+}
+
+#unity-high-button {
+    display: none;
 }
