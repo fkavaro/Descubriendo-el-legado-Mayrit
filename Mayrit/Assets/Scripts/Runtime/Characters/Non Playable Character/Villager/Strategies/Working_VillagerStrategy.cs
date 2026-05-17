@@ -98,7 +98,7 @@ public class Working_VillagerStrategy : ATimedNPCStrategy<Villager>
 
     void FinishWork()
     {
-        if (!_npc.CharacterModel.activeSelf)
+        if (!_npc.IsOutdoors)
             // Reactivate model and agent
             _npc.SetCharacterAndAgentActive(true);
 

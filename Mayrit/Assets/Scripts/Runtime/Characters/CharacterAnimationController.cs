@@ -8,7 +8,7 @@ using System;
 public class CharacterAnimationController
 {
     #region PROPERTIES
-    readonly MonoBehaviour _entity;
+    readonly ICharacter _character;
     readonly IBehaviourEntity _behaviourEntity;
     readonly Animator _animator;
 
@@ -18,25 +18,37 @@ public class CharacterAnimationController
         , _preJumpAnim = Animator.StringToHash("PreJump")
         , _jumpAnim = Animator.StringToHash("Jump")
         , _afterJumpAnim = Animator.StringToHash("AfterJump")
-        , _talkAnim = Animator.StringToHash("Talk") // TODO: import talk animation
+        , _talkAnim = Animator.StringToHash("Talk") // TODO: actual talk animation
         ;
 
-    int _lastPlayedAnimation;
+    int _lastAnimation, _currentAnimation;
     #endregion
 
     #region CONSTRUCTOR
-    public CharacterAnimationController(MonoBehaviour entity, IBehaviourEntity behaviourEntity, Animator animator)
+    public CharacterAnimationController(ICharacter character, IBehaviourEntity behaviourEntity, Animator animator)
     {
-        _entity = entity;
+        _character = character;
         _behaviourEntity = behaviourEntity;
         _animator = animator;
     }
     #endregion
 
     #region PUBLIC METHODS
+    public void TryFixCurrentAnimation()
+    {
+        if (IsAnimatorAvailable() && !IsCurrentAnimation(_currentAnimation))
+        {
+            ChangeAnimationTo(_currentAnimation);
+
+            if (_behaviourEntity.DebugMode)
+                Debug.Log($"[{_behaviourEntity.Name}.AnimationController.TryFixCurrentAnimation()] Current animation was not active. Fixed by reapplying it.", _character.CharacterModel);
+        }
+    }
+
     public void Reset()
     {
-        _lastPlayedAnimation = -1;
+        _lastAnimation = -1;
+        _currentAnimation = -1;
     }
 
     /// <summary>
@@ -51,6 +63,24 @@ public class CharacterAnimationController
             return;
         }
 
+        // Ensure the animator actually contains the requested state. If not, fall back to idle.
+        if (requestedAnimation <= 0 || !_animator.HasState(0, requestedAnimation))
+        {
+            if (_behaviourEntity.DebugMode)
+                Debug.LogWarning($"[AnimationController.ChangeAnimationTo()] {_behaviourEntity.Name}: Requested animation state not found in Animator. Falling back to Idle.", _behaviourEntity.GO);
+
+            requestedAnimation = _idleAnim;
+
+            if (!_animator.HasState(0, requestedAnimation))
+            {
+                if (_behaviourEntity.DebugMode)
+                    Debug.LogWarning($"[AnimationController.ChangeAnimationTo()] {_behaviourEntity.Name}: Idle state also missing. Aborting animation change.", _behaviourEntity.GO);
+                return;
+            }
+        }
+
+        _currentAnimation = requestedAnimation;
+
         // Determine effective state (current or next when in transition)
         int effectiveState = GetEffectiveStateHash(0);
 
@@ -58,7 +88,7 @@ public class CharacterAnimationController
         if (effectiveState != requestedAnimation)
         {
             // Update bookkeeping with current state's shortNameHash
-            _lastPlayedAnimation = _animator.GetCurrentAnimatorStateInfo(0).shortNameHash;
+            _lastAnimation = _animator.GetCurrentAnimatorStateInfo(0).shortNameHash;
 
             // Crossfade to the new animation on base layer (layer 0)
             _animator.CrossFade(requestedAnimation, duration, 0);
@@ -70,7 +100,7 @@ public class CharacterAnimationController
     /// </summary>
     public virtual void ChangeToPreviousAnimation(float duration = 0.2f)
     {
-        ChangeAnimationTo(_lastPlayedAnimation, duration);
+        ChangeAnimationTo(_lastAnimation, duration);
     }
 
     /// <returns> True if the current animation is finished, false otherwise.</returns>
@@ -92,13 +122,13 @@ public class CharacterAnimationController
 
     public void PlayAnimationCertainTime(float waitTime, int animation, string animationName, Action onComplete = null)
     {
-        _entity.StartCoroutine(PlayAnimationCertainTimeCoroutine(waitTime, animation, animationName, onComplete));
+        _character.StartCoroutine(PlayAnimationCertainTimeCoroutine(waitTime, animation, animationName, onComplete));
     }
 
     public void PlayAnimationRandomTime(int animation, string animationName, Action onComplete = null)
     {
         int waitTime = UnityEngine.Random.Range(5, 21);
-        _entity.StartCoroutine(PlayAnimationCertainTimeCoroutine(waitTime, animation, animationName, onComplete));
+        _character.StartCoroutine(PlayAnimationCertainTimeCoroutine(waitTime, animation, animationName, onComplete));
     }
 
     public IEnumerator PlayAnimationCertainTimeCoroutine(float waitTime, int animation, string animationName, Action onComplete = null)
@@ -118,7 +148,7 @@ public class CharacterAnimationController
     #region PRIVATE METHODS
     bool IsAnimatorAvailable()
     {
-        return _animator != null && _animator.isActiveAndEnabled;
+        return _animator != null && _animator.isActiveAndEnabled && _character.CharacterModel.activeInHierarchy;
     }
 
     bool IsCurrentAnimation(int animation)

@@ -18,7 +18,7 @@ public class ExitHome_VillagerStrategy : ANPCStrategy<Villager>
         _npc.MovementController.PlaceAtSpot(_homeSpot, true);
         _villager.SetCharacterAndAgentActive(true);
 
-        if (_villager.CharacterModel.activeSelf == true && _villager.MovementController.IsNearPosition(_homeSpot.transform.position))
+        if (_villager.MovementController.IsNearPosition(_homeSpot.transform.position))
             return Node.Status.Success;
         else
         {

@@ -245,7 +245,7 @@ public class NPCMovementController
         IsAgentStopped = false;
 
         // Update visuals
-        _npc.CharacterModel.SetActive(true);
+        _npc.SetCharacterAndAgentActive(true);
         _npc.AnimationController.ChangeToWalk();
     }
 

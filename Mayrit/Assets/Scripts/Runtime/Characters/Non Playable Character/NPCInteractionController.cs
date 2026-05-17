@@ -48,7 +48,7 @@ public class NPCInteractionController
     public bool IsAvailableForConversation()
     {
         // Check if in access zone and model is active
-        if (_npc.InAccessZone || !_npc.CharacterModel.activeInHierarchy)
+        if (_npc.InAccessZone || !_npc.IsOutdoors)
             return false;
 
         // Check if conversation cooldown has finished (if cooldown system exists)

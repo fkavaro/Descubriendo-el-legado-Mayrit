@@ -45,6 +45,9 @@ where NPCtype : INPC
         if (!TryEnsureDestination(_destinationSpot))
             return Node.Status.Failure;
 
+        if (!_npc.AnimationController.IsWalking())
+            _npc.AnimationController.ChangeToWalk();
+
         // Success if arrived at destination
         return _npc.MovementController.HasArrivedAtDestinationSpot(_destinationSpot, _fixRotation)
             ? Node.Status.Success

@@ -82,6 +82,9 @@ public class GoToMarket_VillagerStrategy : ANPCStrategy<Villager>
         // Still far from stall
         if (!_npc.MovementController.IsNearDestinationSpot(_marketStallSpot))
         {
+            if (!_npc.AnimationController.IsWalking())
+                ResumeMovementToSpot();
+
             _npc.MovementController.CheckAndHandlePlayerProximity();
             return Node.Status.Running;
         }

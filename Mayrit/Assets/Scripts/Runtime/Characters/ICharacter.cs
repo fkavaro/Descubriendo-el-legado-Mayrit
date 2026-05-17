@@ -13,6 +13,8 @@ public interface ICharacter : IBehaviourEntity
     public Animator CharacterAnimator { get; }
     public CharacterAnimationController AnimationController { get; }
     public GameObject CharacterModel { get; }
+    public bool ShouldRenderCharacterModel { get; }
+    public bool IsOutdoors { get; }
     public bool IsFemale { get; }
     public string GivenName { get; }
     public string FamilyName { get; }

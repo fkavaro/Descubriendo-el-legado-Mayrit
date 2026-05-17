@@ -9,6 +9,8 @@ where BehaviourSystemType : ABehaviourSystem
     public CharacterAnimationController AnimationController => _animationController;
 
     public GameObject CharacterModel => _characterModel;
+    public bool ShouldRenderCharacterModel => _shouldRenderCharacterModel;
+    public bool IsOutdoors => _isOutdoors;
     public bool IsFemale => _gender == ICharacter.CharacterGender.Female;
     public string GivenName => _givenName;
     public string FamilyName => _familyName;
@@ -29,6 +31,7 @@ where BehaviourSystemType : ABehaviourSystem
 
     #region EDITOR PROPERTIES
     [Header("Movement")]
+    [SerializeField] protected bool _isOutdoors = true;
     [SerializeField] protected float _walkSpeed = 1f;
     [SerializeField] protected float _sprintSpeed = 3f;
     [SerializeField] protected float _rotationSpeed = 4f;
@@ -48,12 +51,51 @@ where BehaviourSystemType : ABehaviourSystem
     [Header("Character information")]
     [SerializeField] protected ICharacter.CharacterGender _gender = ICharacter.CharacterGender.Male;
     [SerializeField] protected GameObject _characterModel;
+    [SerializeField] protected float _characterModelRenderDistance = 140f;
+    [SerializeField] protected bool _shouldRenderCharacterModel = true;
     [SerializeField] protected string _givenName = "";
     [SerializeField] protected string _familyName = "";
     #endregion
 
     #region INTERNAL PROPERTIES   
     protected CharacterAnimationController _animationController;
+    Camera _mainCamera;
+    #endregion
+
+    #region LIFE CYCLE
+    protected override void Start()
+    {
+        base.Start();
+
+        _mainCamera = Camera.main;
+
+        if (_characterModel == null)
+            Debug.LogWarning($"[{gameObject.name}.ACharacter.Start()] Character Model reference is missing", gameObject);
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        UpdateCharacterModelVisibility();
+    }
+    #endregion
+
+    #region PRIVATE METHODS
+    void UpdateCharacterModelVisibility()
+    {
+        if (_characterModel == null)
+            return;
+
+        _shouldRenderCharacterModel = Vector3.Distance(transform.position, _mainCamera.transform.position) <= _characterModelRenderDistance;
+
+        if (_isOutdoors && _characterModel.activeSelf != _shouldRenderCharacterModel)
+        {
+            _characterModel.SetActive(_shouldRenderCharacterModel);
+
+            if (_shouldRenderCharacterModel)
+                _animationController.TryFixCurrentAnimation();
+        }
+    }
     #endregion
 
     #region CHARACTER INFORMATION METHODS

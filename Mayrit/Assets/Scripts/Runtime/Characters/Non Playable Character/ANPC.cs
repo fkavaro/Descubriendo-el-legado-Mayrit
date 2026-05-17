@@ -155,7 +155,10 @@ where BehaviourSystemType : ABehaviourSystem
             return;
         }
 
-        _characterModel.SetActive(isActive);
+
+
+        _characterModel.SetActive(isActive && _shouldRenderCharacterModel);
         _agent.enabled = isActive;
+        _isOutdoors = isActive;
     }
 }
