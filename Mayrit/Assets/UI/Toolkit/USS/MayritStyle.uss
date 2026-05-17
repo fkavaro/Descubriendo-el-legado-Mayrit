@@ -480,7 +480,7 @@ Switch Label {
 }
 
 .switch-knob_on {
-    background-color: rgb(220, 220, 220);
+    background-color: rgb(255, 255, 255);
     transition-duration: 0.2s;
     right: 0;
     align-self: flex-end;
@@ -543,4 +543,139 @@ Switch Label {
     border-top-right-radius: 25px;
     border-bottom-right-radius: 25px;
     border-bottom-left-radius: 25px;
+}
+
+.unity-slider {
+    justify-content: center;
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    width: 100%;
+    height: auto;
+    transition-duration: 0.2s;
+}
+
+.unity-slider__label {
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/ElMessiri-Regular.ttf?fileID=12800000&guid=c566193adbf5c6d44a80f316aea394d1&type=3#ElMessiri-Regular");
+    font-size: 25px;
+    color: rgb(255, 255, 255);
+}
+
+.unity-slider__input {
+    height: 30px;
+    align-self: center;
+    border-top-width: 0;
+    border-right-width: 7px;
+    border-bottom-width: 0;
+    border-left-width: 7px;
+    border-left-color: rgb(60, 60, 60);
+    border-right-color: rgb(60, 60, 60);
+    border-top-color: rgb(60, 60, 60);
+    border-bottom-color: rgb(60, 60, 60);
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    border-bottom-right-radius: 18px;
+    border-bottom-left-radius: 18px;
+    padding-left: 10px;
+    padding-right: 10px;
+    transition-duration: 0.2s;
+}
+
+.unity-slider__input:hover {
+    scale: 1.05 1.05;
+    border-left-width: 4px;
+    border-right-width: 4px;
+}
+
+.unity-base-slider__fill {
+    background-color: rgb(76, 87, 142);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    height: 10px;
+    margin-top: 10px;
+}
+
+#unity-drag-container {
+    background-color: rgba(0, 0, 0, 0);
+    height: 30px;
+    align-self: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+}
+
+#unity-tracker {
+    height: 100%;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    align-self: center;
+    top: 0;
+    background-color: rgba(255, 255, 255, 0);
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+}
+
+#unity-tracker-border {
+}
+
+#unity-dragger {
+    border-top-left-radius: 100%;
+    border-top-right-radius: 100%;
+    border-bottom-right-radius: 100%;
+    border-bottom-left-radius: 100%;
+    width: 20px;
+    height: 20px;
+    align-self: flex-start;
+    position: absolute;
+    top: 5px;
+    left: 0;
+    right: 19px;
+    bottom: 0;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    background-color: rgb(255, 255, 255);
+    border-left-color: rgb(128, 128, 128);
+    border-right-color: rgb(128, 128, 128);
+    border-top-color: rgb(128, 128, 128);
+    border-bottom-color: rgb(128, 128, 128);
 }

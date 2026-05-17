@@ -557,8 +557,8 @@
                     <ui:Label text="Audio" class="header" style="-unity-text-align: upper-center;"/>
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-grow: 1; justify-content: center; flex-shrink: 1; align-self: stretch;">
-                    <ui:Slider label="Efectos" value="42" name="SFXVolumeSlider" high-value="1" fill="true" style="color: rgb(255, 255, 255); font-size: 20px; flex-direction: row; margin-top: 10px; margin-right: 10px; margin-bottom: 5px; margin-left: 10px; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/ElMessiri-Regular.ttf?fileID=12800000&amp;guid=c566193adbf5c6d44a80f316aea394d1&amp;type=3#ElMessiri-Regular&quot;);"/>
-                    <ui:Slider label="Música" value="42" high-value="1" name="MusicVolumeSlider" fill="true" style="color: rgb(255, 255, 255); font-size: 20px; margin-top: 5px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/ElMessiri-Regular.ttf?fileID=12800000&amp;guid=c566193adbf5c6d44a80f316aea394d1&amp;type=3#ElMessiri-Regular&quot;);"/>
+                    <ui:Slider label="Música" value="42" high-value="1" name="MusicVolumeSlider" fill="true" focusable="false" style="margin-bottom: 15px;"/>
+                    <ui:Slider label="Efectos" value="42" name="SFXVolumeSlider" high-value="1" fill="true" focusable="false"/>
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="TutorialSettings" style="flex-direction: row;">
