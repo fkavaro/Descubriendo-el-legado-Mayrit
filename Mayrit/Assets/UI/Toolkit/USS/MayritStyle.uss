@@ -113,15 +113,14 @@
     font-size: 25px;
     -unity-font-style: normal;
     color: rgb(255, 255, 255);
-    background-color: rgb(24, 24, 24);
     border-left-color: rgb(55, 55, 55);
     border-right-color: rgb(55, 55, 55);
     border-top-color: rgb(55, 55, 55);
     border-bottom-color: rgb(55, 55, 55);
-    border-top-width: 3px;
-    border-right-width: 3px;
+    border-top-width: 0;
+    border-right-width: 0;
     border-bottom-width: 3px;
-    border-left-width: 3px;
+    border-left-width: 0;
     border-top-left-radius: 17px;
     border-top-right-radius: 17px;
     border-bottom-right-radius: 17px;
@@ -138,16 +137,16 @@
     padding-left: 0;
     -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/ElMessiri-Bold.ttf?fileID=12800000&guid=2d588446ee149eb408d77b917fa04672&type=3#ElMessiri-Bold");
     text-shadow: 0 1px 5px rgb(128, 128, 128);
+    background-color: rgba(24, 24, 24, 0);
 }
 
 .button:hover {
-    background-color: rgb(34, 34, 34);
-    scale: 1.05 1.05;
-    border-left-color: rgb(60, 60, 60);
-    border-right-color: rgb(60, 60, 60);
-    border-top-color: rgb(60, 60, 60);
-    border-bottom-color: rgb(60, 60, 60);
+    border-left-color: rgb(105, 105, 105);
+    border-right-color: rgb(105, 105, 105);
+    border-top-color: rgb(105, 105, 105);
+    border-bottom-color: rgb(105, 105, 105);
     -unity-font-style: normal;
+    border-bottom-width: 6px;
 }
 
 .tourStopItem {
@@ -194,20 +193,11 @@
     width: 250px;
     height: 70px;
     align-self: center;
-    background-color: rgb(37, 41, 58);
-    border-left-color: rgb(64, 73, 118);
-    border-right-color: rgb(64, 73, 118);
-    border-top-color: rgb(64, 73, 118);
-    border-bottom-color: rgb(64, 73, 118);
-    border-top-width: 3px;
-    border-right-width: 3px;
-    border-bottom-width: 3px;
-    border-left-width: 3px;
-    border-top-left-radius: 17px;
-    border-top-right-radius: 17px;
-    border-bottom-right-radius: 17px;
-    border-bottom-left-radius: 17px;
     transition-duration: 0.2s;
+    border-left-color: rgb(49, 56, 87);
+    border-right-color: rgb(49, 56, 87);
+    border-top-color: rgb(49, 56, 87);
+    border-bottom-color: rgb(49, 56, 87);
 }
 
 .button.highlighted:hover {
@@ -215,19 +205,6 @@
     height: 70px;
     align-self: center;
     color: rgb(255, 255, 255);
-    background-color: rgb(49, 56, 87);
-    border-left-color: rgb(76, 87, 142);
-    border-right-color: rgb(76, 87, 142);
-    border-top-color: rgb(76, 87, 142);
-    border-bottom-color: rgb(76, 87, 142);
-    border-top-width: 3px;
-    border-right-width: 3px;
-    border-bottom-width: 3px;
-    border-left-width: 3px;
-    border-top-left-radius: 17px;
-    border-top-right-radius: 17px;
-    border-bottom-right-radius: 17px;
-    border-bottom-left-radius: 17px;
     margin-top: 15px;
     -unity-text-align: middle-center;
     transition-duration: 0.2s;
@@ -238,6 +215,10 @@
     padding-right: 0;
     padding-bottom: 0;
     padding-left: 0;
+    border-left-color: rgb(76, 87, 142);
+    border-right-color: rgb(76, 87, 142);
+    border-top-color: rgb(76, 87, 142);
+    border-bottom-color: rgb(76, 87, 142);
 }
 
 .button.mediumButton {
@@ -262,7 +243,6 @@
 }
 
 .button.closeButton {
-    background-color: rgb(51, 25, 25);
     border-left-color: rgb(103, 60, 60);
     border-right-color: rgb(103, 60, 60);
     border-top-color: rgb(103, 60, 60);
@@ -271,12 +251,10 @@
 }
 
 .button.closeButton:hover {
-    background-color: rgb(72, 36, 36);
     border-left-color: rgb(154, 86, 85);
     border-right-color: rgb(154, 86, 85);
     border-top-color: rgb(154, 86, 85);
     border-bottom-color: rgb(154, 86, 85);
-    scale: 1.05 1.05;
 }
 
 .clickableArea {
@@ -369,7 +347,7 @@
     position: absolute;
     width: 120%;
     height: 120%;
-    background-color: rgba(0, 0, 0, 0.98);
+    background-color: rgba(0, 0, 0, 0.96);
     filter: blur(20);
     align-self: center;
     right: -90px;
@@ -377,7 +355,7 @@
 }
 
 .smallButtonBlurBg {
-    background-color: rgba(0, 0, 0, 0.86);
+    background-color: rgba(0, 0, 0, 0.96);
     position: absolute;
     top: 0;
     left: 0;
@@ -434,36 +412,60 @@ Switch Label {
 }
 
 .switch-border {
-    background-color: rgb(24, 24, 24);
-    width: 45px;
+    width: 40px;
     height: 30px;
-    border-top-width: 3px;
-    border-right-width: 3px;
-    border-bottom-width: 3px;
-    border-left-width: 3px;
-    border-left-color: rgb(55, 55, 55);
-    border-right-color: rgb(55, 55, 55);
-    border-top-color: rgb(55, 55, 55);
-    border-bottom-color: rgb(55, 55, 55);
+    border-top-width: 0;
+    border-right-width: 7px;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    border-left-color: rgb(49, 56, 87);
+    border-right-color: rgb(49, 56, 87);
+    border-top-color: rgb(49, 56, 87);
+    border-bottom-color: rgb(49, 56, 87);
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     border-bottom-right-radius: 15px;
     border-bottom-left-radius: 15px;
     justify-content: center;
     align-self: center;
+    -unity-text-align: upper-center;
+}
+
+.switch-border:hover {
+    border-left-color: rgb(220, 220, 220);
+    border-right-color: rgb(220, 220, 220);
+    border-top-color: rgb(220, 220, 220);
+    border-bottom-color: rgb(220, 220, 220);
+    justify-content: center;
+    align-self: center;
+    transition-duration: 0.2s;
+    border-right-width: 4px;
+    scale: 1.1 1.1;
 }
 
 .switch-border_on {
-    border-left-color: rgb(64, 73, 118);
-    border-right-color: rgb(64, 73, 118);
-    border-top-color: rgb(64, 73, 118);
-    border-bottom-color: rgb(64, 73, 118);
-    background-color: rgb(37, 41, 58);
+    border-left-color: rgb(76, 87, 142);
+    border-right-color: rgb(76, 87, 142);
+    border-top-color: rgb(76, 87, 142);
+    border-bottom-color: rgb(76, 87, 142);
+    border-left-width: 7px;
+    border-right-width: 0;
+}
+
+.switch-border_on:hover {
+    transition-duration: 0.2s;
+    border-left-color: rgb(128, 128, 128);
+    border-right-color: rgb(128, 128, 128);
+    border-top-color: rgb(128, 128, 128);
+    border-bottom-color: rgb(128, 128, 128);
+    border-left-width: 4px;
+    border-right-width: 0;
+    scale: 1.1 1.1;
 }
 
 .switch-knob {
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
     background-color: rgb(102, 102, 102);
     margin-top: 4px;
     margin-right: 4px;
@@ -474,38 +476,14 @@ Switch Label {
     border-bottom-right-radius: 20px;
     border-bottom-left-radius: 20px;
     transition-duration: 0.2s;
+    left: 0;
 }
 
 .switch-knob_on {
-    background-color: rgb(192, 192, 192);
-    translate: 15px 0;
+    background-color: rgb(220, 220, 220);
     transition-duration: 0.2s;
-}
-
-.switch-border:hover {
-    background-color: rgb(36, 36, 36);
-    border-top-width: 3px;
-    border-right-width: 3px;
-    border-bottom-width: 3px;
-    border-left-width: 3px;
-    border-left-color: rgb(77, 77, 77);
-    border-right-color: rgb(77, 77, 77);
-    border-top-color: rgb(77, 77, 77);
-    border-bottom-color: rgb(77, 77, 77);
-    justify-content: center;
-    align-self: center;
-    scale: 1.1 1.1;
-    transition-duration: 0.2s;
-}
-
-.switch-border_on:hover {
-    border-left-color: rgb(76, 87, 142);
-    border-right-color: rgb(76, 87, 142);
-    border-top-color: rgb(76, 87, 142);
-    border-bottom-color: rgb(76, 87, 142);
-    transition-duration: 0.2s;
-    scale: 1.1 1.1;
-    background-color: rgb(49, 56, 87);
+    right: 0;
+    align-self: flex-end;
 }
 
 .playerButton {
@@ -542,4 +520,27 @@ Switch Label {
     border-top-color: rgb(87, 103, 185);
     border-bottom-color: rgb(87, 103, 185);
     background-color: rgb(62, 70, 108);
+}
+
+.section {
+    margin-top: 15px;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    margin-left: 15px;
+    padding-top: 10px;
+    padding-right: 30px;
+    padding-bottom: 20px;
+    padding-left: 30px;
+    border-top-width: 0;
+    border-right-width: 3px;
+    border-bottom-width: 0;
+    border-left-width: 3px;
+    border-left-color: rgb(24, 24, 24);
+    border-right-color: rgb(24, 24, 24);
+    border-top-color: rgb(24, 24, 24);
+    border-bottom-color: rgb(24, 24, 24);
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    border-bottom-left-radius: 25px;
 }

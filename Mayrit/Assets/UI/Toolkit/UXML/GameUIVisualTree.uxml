@@ -4,8 +4,8 @@
     <ui:VisualElement name="MainMenu" style="-unity-text-align: middle-center; flex-grow: 1; justify-content: center; align-self: stretch; display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgb(17, 17, 17); flex-direction: row;">
         <ui:VisualElement name="MainMenuBgImage" style="background-image: url(&quot;project://database/Assets/Imports/Background%201.png?fileID=2800000&amp;guid=45191b62e64522742a762b45f9987ec1&amp;type=3#Background 1&quot;); position: absolute; top: -10px; left: -633px; right: auto; bottom: auto; width: 2567px; height: 1473px;"/>
         <ui:VisualElement name="Menu" style="flex-grow: 1; flex-direction: row; justify-content: flex-end;">
-            <ui:VisualElement name="LogoArea" style="flex-grow: 1; position: absolute; align-self: flex-start; left: 0; top: 0; height: 252px; width: 1220px;">
-                <ui:VisualElement name="Logo" style="position: absolute; top: 100px; left: 0; right: 0;">
+            <ui:VisualElement name="LogoArea" style="flex-grow: 1; position: absolute; align-self: flex-start; left: 0; top: 0; height: 215px; width: 1220px; justify-content: flex-end;">
+                <ui:VisualElement name="Logo" style="height: 100px;">
                     <ui:Label text="MAYRIT" enable-rich-text="true" class="title"/>
                 </ui:VisualElement>
             </ui:VisualElement>
@@ -22,12 +22,12 @@
                     <ui:Button text="Salir" name="QuitButton" class="button" style="margin-top: 15px;"/>
                 </ui:VisualElement>
                 <ui:VisualElement name="NewGameWarning" style="display: none; position: absolute; align-self: center; top: 450px;">
-                    <ui:VisualElement name="Pop-up" style="flex-grow: 0; width: 490px; height: 300px; justify-content: space-between; align-self: center; background-color: rgb(17, 17, 17); display: flex; border-top-left-radius: 25px; border-top-right-radius: 25px; border-bottom-right-radius: 25px; border-bottom-left-radius: 25px; border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px; border-left-color: rgb(26, 26, 26); border-right-color: rgb(26, 26, 26); border-top-color: rgb(26, 26, 26); border-bottom-color: rgb(26, 26, 26);">
+                    <ui:VisualElement name="Pop-up" class="section" style="flex-grow: 0; width: 490px; height: 300px; justify-content: space-between; align-self: center; display: flex;">
                         <ui:VisualElement style="justify-content: space-between; align-self: stretch; padding-top: 35px; padding-right: 40px; padding-bottom: 0; padding-left: 40px;">
-                            <ui:Label text="¿Seguro que quieres empezar una nueva partida?" class="subHeader" style="margin-top: 0; margin-right: 0; margin-bottom: 30px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: upper-center;"/>
+                            <ui:Label text="¿Seguro que quieres empezar una nueva partida?" class="subHeader" style="margin-top: 0; margin-right: 0; margin-bottom: 15px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: upper-center;"/>
                             <ui:Label text="Se borrará la partida anterior." class="text" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: middle-center;"/>
                         </ui:VisualElement>
-                        <ui:VisualElement style="justify-content: space-between; align-self: stretch; flex-direction: row; padding-top: 0; padding-right: 30px; padding-bottom: 30px; padding-left: 30px;">
+                        <ui:VisualElement style="justify-content: space-between; align-self: stretch; flex-direction: row;">
                             <ui:Button text="Sí" name="ConfirmNewGameButton" class="button mediumButton" style="width: 180px; position: relative;"/>
                             <ui:Button text="No" name="CancelNewGameButton" class="button mediumButton highlighted" style="width: 180px; position: relative;"/>
                         </ui:VisualElement>
@@ -172,17 +172,17 @@
                     <ui:Label text="Pulsa este botón o pulsa la tecla ESC." name="Text" class="text" style="-unity-text-align: middle-center;"/>
                     <ui:Image source="project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=6936960519852013934&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-up@2x" name="Image" tint-color="rgb(220, 220, 220)" scale-mode="StretchToFill" style="display: flex; position: absolute; top: -55px; left: -13px; width: 117px; height: 63px; align-self: center;"/>
                 </ui:VisualElement>
-                <ui:VisualElement name="ShowMilestoneInfo" style="position: absolute; top: 150px; left: auto; right: 0; bottom: auto; align-self: center; flex-direction: column; justify-content: center; display: none; width: 500px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
+                <ui:VisualElement name="ShowMilestoneInfo" style="position: absolute; top: 150px; left: auto; right: 0; bottom: auto; align-self: center; flex-direction: column; justify-content: center; display: none; width: 470px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
                     <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
-                    <ui:Label text="Mostrar información actual" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
+                    <ui:Label text="Mostrar información del hito actual" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
                     <ui:Label text="Pulsa este recuadro." name="Text" class="text" style="-unity-text-align: middle-center;"/>
                     <ui:Image source="project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=6936960519852013934&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-up@2x" name="Image" tint-color="rgb(220, 220, 220)" scale-mode="StretchToFill" style="display: flex; position: absolute; top: -55px; left: auto; width: 117px; height: 63px; right: 0;"/>
                 </ui:VisualElement>
                 <ui:VisualElement name="ShowPOIInfo" style="position: absolute; top: auto; left: 37%; right: auto; bottom: 60px; align-self: center; flex-direction: column; justify-content: flex-start; display: none; width: 500px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px; height: 250px;">
                     <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex; top: 0; left: 0; right: 0; bottom: 0;"/>
-                    <ui:Label text="Mostrar información destacada" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
+                    <ui:Label text="Mostrar información destacada" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center; margin-bottom: 5px;"/>
                     <ui:Label text="Pulsa el nombre de algún sitio destacado en la escena. Luce así:" name="Text" class="text" style="-unity-text-align: middle-center;"/>
-                    <ui:Button text="Button" class="poiVisual" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 10px; padding-bottom: 0; padding-left: 10px; top: auto; left: auto; right: auto; bottom: 40px; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; height: auto; align-self: center; position: absolute;">
+                    <ui:Button text="Button" class="poiVisual" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 10px; padding-bottom: 0; padding-left: 10px; top: auto; left: auto; right: auto; bottom: 30px; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; height: auto; align-self: center; position: absolute;">
                         <ui:VisualElement name="Blur" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgb(0, 0, 0); border-top-left-radius: 30px; border-top-right-radius: 30px; border-bottom-right-radius: 30px; border-bottom-left-radius: 30px; filter: blur(20);"/>
                         <ui:Label text="Sitio destacado" name="Text" class="header" style="-unity-text-align: middle-center;"/>
                     </ui:Button>
@@ -191,7 +191,7 @@
                     <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
                     <ui:Label text="Comenzar tour" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
                     <ui:Label text="Pulsa el botón que se encuentra encima del personaje jugable. Luce así:" name="Text" class="text" style="-unity-text-align: middle-center; align-self: stretch;"/>
-                    <ui:Instance template="PlayerVisualTree" style="align-self: center; margin-top: 20px;"/>
+                    <ui:Instance template="PlayerVisualTree" style="align-self: center; margin-top: 10px;"/>
                 </ui:VisualElement>
                 <ui:VisualElement name="MilestoneButtonsTutorialStep" style="position: absolute; top: 140px; left: 30px; right: auto; bottom: auto; align-self: center; flex-direction: column; justify-content: center; display: none; width: 500px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
                     <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
@@ -286,13 +286,13 @@
             <ui:VisualElement name="TutorialSteps" picking-mode="Ignore" style="flex-grow: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
                 <ui:VisualElement name="CharacterControls" style="position: absolute; top: auto; left: 37%; right: auto; bottom: 60px; align-self: center; flex-direction: column; justify-content: center; display: none; width: 500px; align-items: center; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
                     <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
-                    <ui:Label text="Controles de personaje" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
+                    <ui:Label text="Controles de personaje" name="Subheader" class="subHeader" style="-unity-text-align: upper-center; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;"/>
                     <ui:Label text="Para orientar la cámara mueve el ratón. Para moverte pulsa las teclas W,A,S o D. Irás más rápido si además pulsas la tecla SHIFT. Para saltar pulsa la tecla SPACE. &#10;Para volver a la cámara aérea pulsa la tecla TAB." name="Text" class="text" style="-unity-text-align: middle-center;"/>
                     <ui:Image source="project://database/Assets/Imports/External/European%20Forests%20-%20Realistic%20Trees/Source/Textures/Ash/Ash_Bark.png?fileID=2800000&amp;guid=155b3dfe4ba28214384025db4839ab67&amp;type=3#Ash_Bark" name="Image" style="margin-top: 10px; display: none;"/>
                 </ui:VisualElement>
-                <ui:VisualElement name="PointOfInterestCompass" style="position: absolute; top: auto; left: auto; right: 230px; bottom: 30px; align-self: center; flex-direction: column; justify-content: center; display: none; width: 500px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
+                <ui:VisualElement name="PointOfInterestCompass" style="position: absolute; top: auto; left: auto; right: 230px; bottom: 17px; align-self: center; flex-direction: column; justify-content: center; display: none; width: 500px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
                     <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
-                    <ui:Label text="Alcanzar las paradas del tour" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
+                    <ui:Label text="Alcanzar las paradas del tour" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center; margin-right: 0; margin-bottom: 0; margin-left: 0;"/>
                     <ui:Label text="Sigue la dirección de la brújula hacia la siguiente  parada. Completarás el tour tras visitarlas todas." name="Text" class="text" style="-unity-text-align: middle-center;"/>
                     <ui:Image source="project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1087164816274819069&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-right@2x" name="Image" tint-color="rgb(220, 220, 220)" scale-mode="StretchToFill" style="display: flex; width: 80px; align-self: center; position: absolute; right: -70px; top: 35px; bottom: auto; height: 110px;"/>
                 </ui:VisualElement>
@@ -338,7 +338,7 @@
                     <ui:Label text="S" name="S" class="text" style="align-self: center; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; position: absolute; top: auto; left: auto; right: auto; bottom: 8px; rotate: 180deg;"/>
                     <ui:Label text="O" name="O" class="text" style="align-self: center; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; position: absolute; top: 61px; left: 15px; right: auto; bottom: auto; rotate: 270deg;"/>
                 </ui:VisualElement>
-                <ui:VisualElement name="Center" style="flex-grow: 1; position: absolute; top: 50%; left: 50%; display: none; -unity-font-style: bold;">
+                <ui:VisualElement name="Center" style="flex-grow: 1; position: absolute; top: 50%; left: 50%; display: flex; -unity-font-style: bold;">
                     <ui:VisualElement name="VisualElement" style="width: 20px; height: 20px; background-color: rgb(24, 24, 24); border-top-left-radius: 30px; border-top-right-radius: 30px; border-bottom-right-radius: 30px; border-bottom-left-radius: 30px; border-left-color: rgb(45, 45, 45); border-right-color: rgb(45, 45, 45); border-top-color: rgb(45, 45, 45); border-bottom-color: rgb(45, 45, 45); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; flex-grow: 1; top: -10px; left: -10px;"/>
                 </ui:VisualElement>
                 <ui:VisualElement name="NextTourStop" style="flex-grow: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: none; -unity-font-style: bold;">
@@ -350,7 +350,7 @@
                         <ui:VisualElement name="VisualElement" style="background-image: url(&quot;project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1304905567622442630&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-down@2x&quot;); width: 40px; height: 30px; align-self: center; position: absolute; top: 28px; left: auto; -unity-background-image-tint-color: rgb(255, 215, 0); rotate: 180deg;"/>
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement style="background-image: url(&quot;project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1304905567622442630&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-down@2x&quot;); width: 50px; height: 40px; align-self: center; position: absolute; top: -40px; left: auto; rotate: 180deg; -unity-background-image-tint-color: rgb(255, 255, 255);"/>
+                <ui:VisualElement style="background-image: url(&quot;project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1304905567622442630&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-down@2x&quot;); width: 50px; height: 40px; align-self: center; position: absolute; top: -10px; left: auto; -unity-background-image-tint-color: rgb(178, 178, 178); scale: 0.5 2;"/>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="BlankTutorialStep" picking-mode="Ignore" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: none;"/>
@@ -537,13 +537,13 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="Right" class="contextualPanel" style="right: 0;">
+        <ui:VisualElement name="Right" class="contextualPanel" style="right: 0; justify-content: space-between;">
             <ui:VisualElement name="Bg" class="contextualPanelBlurBg"/>
             <ui:Button text="X" name="CloseButton" class="button closeButton smallButton" style="top: 30px; left: auto; right: 30px; bottom: auto;"/>
             <ui:VisualElement picking-mode="Ignore" style="justify-content: center; align-self: stretch; height: 300px;">
                 <ui:Label text="Ajustes" class="subtitle" style="top: auto;"/>
             </ui:VisualElement>
-            <ui:VisualElement name="ControlsSettings" style="margin-top: 15px; margin-right: 15px; margin-bottom: 15px; margin-left: 15px; background-color: rgb(24, 24, 24); border-top-left-radius: 30px; border-top-right-radius: 30px; border-bottom-right-radius: 30px; border-bottom-left-radius: 30px; padding-top: 10px; padding-right: 30px; padding-bottom: 25px; padding-left: 30px; align-self: stretch; border-left-color: rgb(34, 34, 34); border-right-color: rgb(34, 34, 34); border-top-color: rgb(34, 34, 34); border-bottom-color: rgb(34, 34, 34); border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px;">
+            <ui:VisualElement name="ControlsSettings" class="section" style="align-self: stretch;">
                 <ui:VisualElement name="Title">
                     <ui:Label text="Control" class="header" style="-unity-text-align: upper-center;"/>
                 </ui:VisualElement>
@@ -552,7 +552,7 @@
                     <Switch text="Mostrar controles en el juego" name="ShowControlsSwitch" value="true"/>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="AudioSettings" style="margin-top: 15px; margin-right: 15px; margin-bottom: 15px; margin-left: 15px; background-color: rgb(24, 24, 24); border-top-left-radius: 30px; border-top-right-radius: 30px; border-bottom-right-radius: 30px; border-bottom-left-radius: 30px; padding-top: 10px; padding-right: 30px; padding-bottom: 20px; padding-left: 30px; align-self: stretch; border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px; border-left-color: rgb(34, 34, 34); border-right-color: rgb(34, 34, 34); border-top-color: rgb(34, 34, 34); border-bottom-color: rgb(34, 34, 34);">
+            <ui:VisualElement name="AudioSettings" class="section" style="align-self: stretch;">
                 <ui:VisualElement name="Title">
                     <ui:Label text="Audio" class="header" style="-unity-text-align: upper-center;"/>
                 </ui:VisualElement>
@@ -563,13 +563,13 @@
             </ui:VisualElement>
             <ui:VisualElement name="TutorialSettings" style="flex-direction: row;">
                 <ui:Button text="Reiniciar tutorial" name="ResetTutorialButton" class="button mediumButton" style="align-self: flex-start;"/>
-                <ui:Label text="Reaparecerá la próxima vez que cambies de época." name="TutorialResetInfo" class="text" style="flex-shrink: 1; flex-grow: 1; align-self: center; display: flex;"/>
+                <ui:Label text="Lo haría al cambiar de hito." name="TutorialResetInfo" class="text" style="flex-shrink: 1; flex-grow: 1; align-self: center; display: flex; margin-left: 10px;"/>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="LoadingScreen" picking-mode="Ignore" style="flex-grow: 1; flex-direction: row; justify-content: space-between; position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: none;">
         <ui:VisualElement name="BlackLoadingScreen" style="flex-grow: 1; background-color: rgb(0, 0, 0); display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0;"/>
-        <ui:VisualElement name="InfoLoadingScreen" style="flex-grow: 1; display: none; background-color: rgb(0, 0, 0); flex-direction: row-reverse;">
+        <ui:VisualElement name="InfoLoadingScreen" style="flex-grow: 1; display: flex; background-color: rgb(0, 0, 0); flex-direction: row-reverse;">
             <ui:VisualElement name="BgImage" style="background-image: url(&quot;project://database/Assets/Imports/Mayrit%20BG.png?fileID=2800000&amp;guid=dc96fb47ec256064d9e5056199f72ec6&amp;type=3#Mayrit BG&quot;); position: absolute; background-size: 100% 100%; width: 100%; height: 100%; display: flex;"/>
             <ui:VisualElement name="RightPanel" class="contextualPanel" style="display: flex; justify-content: space-between;">
                 <ui:VisualElement name="Bg" class="contextualPanelBlurBg"/>
@@ -591,8 +591,8 @@
                     </ui:ScrollView>
                 </ui:VisualElement>
                 <ui:VisualElement name="Down" style="justify-content: flex-end; align-self: stretch; height: 120px; margin-left: 20px; margin-right: 20px;">
-                    <ui:VisualElement name="LoadingAnimation" style="position: absolute; justify-content: center; align-self: center;">
-                        <ui:Label text="Cargando..." name="LoadingLabel" class="subHeader" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; display: flex;"/>
+                    <ui:VisualElement name="LoadingAnimation" style="position: absolute; justify-content: center; align-self: center; bottom: 15px;">
+                        <ui:Label text="Cargando..." name="LoadingLabel" class="text" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; display: flex;"/>
                     </ui:VisualElement>
                     <ui:Button text="Continuar" name="ContinueButton" class="button mediumButton highlighted" style="display: flex;"/>
                 </ui:VisualElement>
@@ -603,7 +603,7 @@
         <ui:VisualElement name="Right" class="contextualPanel" style="right: 0; padding-top: 45px;">
             <ui:VisualElement name="Bg" class="contextualPanelBlurBg"/>
             <ui:Button text="X" name="CloseButton" class="button closeButton smallButton" style="top: 30px; left: auto; right: 30px; bottom: auto;"/>
-            <ui:VisualElement picking-mode="Ignore" name="Title" style="justify-content: flex-start; align-self: stretch; height: 170px;">
+            <ui:VisualElement picking-mode="Ignore" name="Title" style="justify-content: flex-start; align-self: stretch; height: 170px; margin-bottom: 15px;">
                 <ui:Label text="Créditos" class="subtitle"/>
             </ui:VisualElement>
             <ui:ScrollView name="Sections">
