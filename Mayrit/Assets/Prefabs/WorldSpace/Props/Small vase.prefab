@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 5800243407530321538}
   - component: {fileID: 7880872205808633349}
   - component: {fileID: 4492299416724910147}
+  - component: {fileID: 2333029797701752368}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -146,3 +147,20 @@ CapsuleCollider:
   m_Height: 38.84
   m_Direction: 1
   m_Center: {x: -2.1, y: 6.1, z: 0}
+--- !u!114 &2333029797701752368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3006614524387809721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifierVolume
+  m_SerializedVersion: 0
+  m_Size: {x: 9.42933, y: 16.572762, z: 9.341972}
+  m_Center: {x: -2.080937, y: -5.264305, z: -0.12734032}
+  m_Area: 1
+  m_AffectedAgents: ffffffff
