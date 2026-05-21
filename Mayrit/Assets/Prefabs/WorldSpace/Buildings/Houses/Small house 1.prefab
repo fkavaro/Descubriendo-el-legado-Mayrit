@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &4438145219318469750
 Transform:
@@ -62,7 +62,7 @@ LODGroup:
     - renderer: {fileID: 9066595944609520397}
     - renderer: {fileID: 5269513841137823488}
     - renderer: {fileID: 3950791494026207556}
-    - renderer: {fileID: 4536755521870136560}
+    - renderer: {fileID: 0}
   - screenRelativeHeight: 0.0049651624
     fadeTransitionWidth: 0
     renderers:
@@ -138,7 +138,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &5527928283749830625
 Transform:
@@ -404,7 +404,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 3390
+  m_VersionIndex: 3396
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -665,7 +665,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2679141416639759022, guid: 173e4326a44869548943051db7a8c075, type: 3}
       propertyPath: m_VersionIndex
-      value: 2971
+      value: 2977
       objectReference: {fileID: 0}
     - target: {fileID: 2679141416639759022, guid: 173e4326a44869548943051db7a8c075, type: 3}
       propertyPath: m_SelectedEdges.Array.size
@@ -756,11 +756,6 @@ MeshRenderer:
 --- !u!23 &3950791494026207556 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2059041143860715422, guid: 173e4326a44869548943051db7a8c075, type: 3}
-  m_PrefabInstance: {fileID: 3046448669880123098}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &4536755521870136560 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 1491505050495154730, guid: 173e4326a44869548943051db7a8c075, type: 3}
   m_PrefabInstance: {fileID: 3046448669880123098}
   m_PrefabAsset: {fileID: 0}
 --- !u!23 &4687555030433557408 stripped

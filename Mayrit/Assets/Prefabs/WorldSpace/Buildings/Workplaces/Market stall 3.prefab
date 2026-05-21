@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 59667005158909387}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.664, y: 0.61300004, z: -1.305}
+  m_LocalPosition: {x: 1.664, y: 0.9900001, z: -1.305}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -248,7 +248,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1074
+  m_VersionIndex: 1080
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -386,7 +386,7 @@ Transform:
   m_GameObject: {fileID: 1103272407920559668}
   serializedVersion: 2
   m_LocalRotation: {x: 0.07441062, y: -0, z: -0, w: 0.9972277}
-  m_LocalPosition: {x: 1.664, y: 0.533, z: 0.833}
+  m_LocalPosition: {x: 1.664, y: 0.91, z: 0.833}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -604,7 +604,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1063
+  m_VersionIndex: 1069
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -728,7 +728,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &31542145955446966
 Transform:
   m_ObjectHideFlags: 0
@@ -757,8 +757,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifierVolume
   m_SerializedVersion: 0
-  m_Size: {x: 0.9963677, y: 2.9927914, z: 2.4501147}
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Size: {x: 0.45410144, y: 2.9927912, z: 2.3179092}
+  m_Center: {x: 0.27113312, y: 1, z: 0.0661028}
   m_Area: 1
   m_AffectedAgents: ffffffff
 --- !u!1 &2805951002133007793
@@ -786,13 +786,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2805951002133007793}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.855, z: 0}
+  m_LocalRotation: {x: 0.059582017, y: -0, z: -0, w: 0.9982234}
+  m_LocalPosition: {x: 0, y: 2.638, z: 0.115}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 320190753099707645}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 6.832, y: 0, z: 0}
 --- !u!114 &5128152831252914437
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -825,7 +825,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 125
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &4748008336179055123
 Transform:
@@ -890,7 +890,7 @@ Transform:
   m_GameObject: {fileID: 3040092634704950067}
   serializedVersion: 2
   m_LocalRotation: {x: 0.07441062, y: -0, z: -0, w: 0.9972277}
-  m_LocalPosition: {x: -1.565, y: 0.533, z: 0.833}
+  m_LocalPosition: {x: -1.565, y: 0.9100001, z: 0.833}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1108,7 +1108,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1063
+  m_VersionIndex: 1069
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1261,8 +1261,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifierVolume
   m_SerializedVersion: 0
-  m_Size: {x: 0.9963677, y: 2.9927914, z: 2.4501147}
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Size: {x: 0.5625547, y: 2.9927912, z: 2.3179092}
+  m_Center: {x: -0.21690649, y: 1, z: 0.0661028}
   m_Area: 1
   m_AffectedAgents: ffffffff
 --- !u!1 &5176973293477830475
@@ -1317,7 +1317,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 125
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &4981249482307130955
 Transform:
@@ -1367,7 +1367,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 125
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &809512648718293340
 Transform:
@@ -1703,7 +1703,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 507
+  m_VersionIndex: 513
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1841,7 +1841,7 @@ Transform:
   m_GameObject: {fileID: 6775388185340107646}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.572, y: 0.61300004, z: -1.305}
+  m_LocalPosition: {x: -1.572, y: 0.9900001, z: -1.305}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2059,7 +2059,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1074
+  m_VersionIndex: 1080
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -2240,7 +2240,7 @@ Transform:
   m_GameObject: {fileID: 6948043608651048920}
   serializedVersion: 2
   m_LocalRotation: {x: 0.06090048, y: -0, z: -0, w: 0.99814385}
-  m_LocalPosition: {x: 0, y: 2.23, z: -0.06}
+  m_LocalPosition: {x: 0, y: 2.596, z: -0.06}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2309,7 +2309,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 930
+  m_VersionIndex: 936
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -2432,7 +2432,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 125
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &320190753099707645
 Transform:
@@ -3373,7 +3373,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 721091220728713987, guid: 1e397cc9bbfcc3142b92a75a70a4575a, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 125
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3587762985750036060, guid: 1e397cc9bbfcc3142b92a75a70a4575a, type: 3}
       propertyPath: m_Size.x
@@ -3455,7 +3455,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8052746350507524892, guid: f36cb3f02a3290c4f81b5e50f234d98b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.17
+      value: -0.804
       objectReference: {fileID: 0}
     - target: {fileID: 8052746350507524892, guid: f36cb3f02a3290c4f81b5e50f234d98b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3532,6 +3532,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1337160054652924833}
     m_Modifications:
+    - target: {fileID: 46818838899486553, guid: 963e7514ff505524bb6239612fb91a2d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 123016292933878100, guid: 963e7514ff505524bb6239612fb91a2d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 740965876057281226, guid: 963e7514ff505524bb6239612fb91a2d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3712386865440333158, guid: 963e7514ff505524bb6239612fb91a2d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4663268711587924736, guid: 963e7514ff505524bb6239612fb91a2d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.009
@@ -3572,9 +3588,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5875523241891001612, guid: 963e7514ff505524bb6239612fb91a2d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9126214092862664933, guid: 963e7514ff505524bb6239612fb91a2d, type: 3}
       propertyPath: m_Name
       value: Table
+      objectReference: {fileID: 0}
+    - target: {fileID: 9126214092862664933, guid: 963e7514ff505524bb6239612fb91a2d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
