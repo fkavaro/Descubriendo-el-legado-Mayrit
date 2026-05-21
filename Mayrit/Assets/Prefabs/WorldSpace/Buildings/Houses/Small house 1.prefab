@@ -48,7 +48,7 @@ LODGroup:
   m_AnimateCrossFading: 0
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.025
+  - screenRelativeHeight: 0.04121112
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 611383123835911579}
@@ -63,7 +63,7 @@ LODGroup:
     - renderer: {fileID: 5269513841137823488}
     - renderer: {fileID: 3950791494026207556}
     - renderer: {fileID: 4536755521870136560}
-  - screenRelativeHeight: 0.0095
+  - screenRelativeHeight: 0.0049651624
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 2230190553232416963}
@@ -404,7 +404,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 3366
+  m_VersionIndex: 3390
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -665,7 +665,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2679141416639759022, guid: 173e4326a44869548943051db7a8c075, type: 3}
       propertyPath: m_VersionIndex
-      value: 2947
+      value: 2971
       objectReference: {fileID: 0}
     - target: {fileID: 2679141416639759022, guid: 173e4326a44869548943051db7a8c075, type: 3}
       propertyPath: m_SelectedEdges.Array.size

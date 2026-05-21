@@ -248,7 +248,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1065
+  m_VersionIndex: 1074
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -604,7 +604,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1054
+  m_VersionIndex: 1063
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1108,7 +1108,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1054
+  m_VersionIndex: 1063
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1441,7 +1441,7 @@ LODGroup:
     - renderer: {fileID: 2054479805704835478}
     - renderer: {fileID: 7418251715568210162}
     - renderer: {fileID: 1293103049798585191}
-  - screenRelativeHeight: 0.008642532
+  - screenRelativeHeight: 0.017557338
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 3815864239912478570}
@@ -1450,6 +1450,10 @@ LODGroup:
     - renderer: {fileID: 9056860079483372224}
     - renderer: {fileID: 3759297561819175965}
     - renderer: {fileID: 8768061859703435528}
+  - screenRelativeHeight: 0.00846067
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 3815864239912478570}
   m_Enabled: 1
 --- !u!1 &6623217865443442752
 GameObject:
@@ -1699,7 +1703,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 498
+  m_VersionIndex: 507
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -2055,7 +2059,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1065
+  m_VersionIndex: 1074
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -2305,7 +2309,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 921
+  m_VersionIndex: 930
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -2438,7 +2442,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7217276124285102616}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
