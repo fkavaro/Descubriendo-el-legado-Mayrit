@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5052613387788384896}
   - component: {fileID: 8366864667826839170}
   m_Layer: 0
-  m_Name: Milestone 6
+  m_Name: 6-7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,7 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProgressObject
   _isActive: 0
-  milestonesActivated: {x: 6, y: 7}
+  milestonesActivated:
+  - {x: 6, y: 7}
 --- !u!1 &2982713290158410982
 GameObject:
   m_ObjectHideFlags: 0
@@ -58,7 +59,7 @@ GameObject:
   - component: {fileID: 762758000980173841}
   - component: {fileID: 6820073263222402801}
   m_Layer: 0
-  m_Name: Milestone 5
+  m_Name: 5-7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,7 +95,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProgressObject
   _isActive: 0
-  milestonesActivated: {x: 5, y: 7}
+  milestonesActivated:
+  - {x: 5, y: 7}
 --- !u!1 &5051242444759829448
 GameObject:
   m_ObjectHideFlags: 0
@@ -158,7 +160,7 @@ GameObject:
   - component: {fileID: 6523803885964809931}
   - component: {fileID: 726442280751620733}
   m_Layer: 0
-  m_Name: Milestone 4
+  m_Name: 4-7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -194,7 +196,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProgressObject
   _isActive: 0
-  milestonesActivated: {x: 4, y: 7}
+  milestonesActivated:
+  - {x: 4, y: 7}
 --- !u!1 &8619096397475474306
 GameObject:
   m_ObjectHideFlags: 0
@@ -206,7 +209,7 @@ GameObject:
   - component: {fileID: 5337909809088372244}
   - component: {fileID: 269866376107276804}
   m_Layer: 0
-  m_Name: Milestone 7
+  m_Name: 7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -242,7 +245,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProgressObject
   _isActive: 0
-  milestonesActivated: {x: 7, y: 7}
+  milestonesActivated:
+  - {x: 7, y: 7}
 --- !u!1001 &1245181263840158117
 PrefabInstance:
   m_ObjectHideFlags: 0
