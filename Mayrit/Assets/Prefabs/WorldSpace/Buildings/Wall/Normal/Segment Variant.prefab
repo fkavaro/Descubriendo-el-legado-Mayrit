@@ -72,6 +72,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1901910865352794382, guid: 55ab9b9e75d33c242b5f1355d6d81d13, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5050190174503512331, guid: 55ab9b9e75d33c242b5f1355d6d81d13, type: 3}
       propertyPath: m_Name
       value: Segment Variant
