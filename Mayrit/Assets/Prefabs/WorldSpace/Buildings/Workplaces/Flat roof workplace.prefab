@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Workplace
   _accessSpots:
   - {fileID: 9210830510331309233}
-  _capacity: 1
+  _capacity: 2
   _assignedVillagers: []
   _workSpots:
   - {fileID: 9210830510331309233}
