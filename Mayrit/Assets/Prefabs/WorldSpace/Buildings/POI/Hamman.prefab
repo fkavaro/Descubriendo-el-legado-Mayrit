@@ -100,7 +100,7 @@ PrefabInstance:
     - target: {fileID: 5961391977125746939, guid: 20122a36d24c42945ad2861e326b4edc, type: 3}
       propertyPath: _orbitalStateSetting.DataToShow
       value: 
-      objectReference: {fileID: 11400000, guid: 52521f270c6935140b04a0adb9818c19, type: 2}
+      objectReference: {fileID: 11400000, guid: 30cd5a22ab6bd5a4e8f0a0ef2f4c5214, type: 2}
     - target: {fileID: 5961391977125746939, guid: 20122a36d24c42945ad2861e326b4edc, type: 3}
       propertyPath: _orbitalStateSetting._zoomValue
       value: 40
