@@ -90,8 +90,9 @@ MonoBehaviour:
   _debugMode: 0
   _isExecutionPaused: 0
   _currentActionInfo: 
-  _walkSpeed: 1
-  _sprintSpeed: 3
+  _isOutdoors: 1
+  _walkSpeed: 2
+  _sprintSpeed: 4
   _rotationSpeed: 4
   _jumpForce: 2
   _gravityForce: 9
@@ -102,6 +103,8 @@ MonoBehaviour:
   _interactionRange: 3
   _gender: 1
   _characterModel: {fileID: 0}
+  _characterModelRenderDistance: 140
+  _shouldRenderCharacterModel: 1
   _givenName: 
   _familyName: 
   _characterData: {fileID: 0}
