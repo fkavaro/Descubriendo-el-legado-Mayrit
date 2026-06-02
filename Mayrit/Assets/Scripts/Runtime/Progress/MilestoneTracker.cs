@@ -5,7 +5,8 @@ using System.Collections.Generic;
 
 public class MilestoneTracker : MonoBehaviour
 {
-    public bool _isActive = true;
+    public bool IsActive => _isActive;
+    [SerializeField] protected bool _isActive = true;
 
     [Tooltip("Range of milestones where this object is active")]
     [SerializeField] protected List<Vector2> milestonesActivated;

@@ -137,7 +137,6 @@ public class TourManager : MonoBehaviour
     #endregion
 
     #region CALLBACK METHODS
-
     void OnSceneLoadedPartially(SceneDatabase.SceneType type, SceneDatabase.SceneName name)
     {
         // Milestone loaded: attach to its tour
@@ -156,7 +155,7 @@ public class TourManager : MonoBehaviour
             if (_progressManager.WasCurrentMilestoneCompleted)
             {
                 _currentTour.MarkAsCompleted();
-                _playableCharacter.LocateAt(_currentTour.LastTourStopInList.transform);
+                _playableCharacter.LocateAt(_currentTour.LastTourStopinList.transform);
             }
         }
     }
