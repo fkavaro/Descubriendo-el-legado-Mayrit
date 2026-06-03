@@ -8,6 +8,7 @@ public class TourManager : MonoBehaviour
 {
     #region PROPERTY HELPERS
     public Tour CurrentTour => _currentTour;
+    public TourStop NextTourStop => _nextTourStop;
     #endregion
 
     #region EDITOR PROPERTIES
@@ -155,7 +156,7 @@ public class TourManager : MonoBehaviour
             if (_progressManager.WasCurrentMilestoneCompleted)
             {
                 _currentTour.MarkAsCompleted();
-                _playableCharacter.LocateAt(_currentTour.LastTourStopinList.transform);
+                _playableCharacter.LocateAt(_currentTour.LastStopInList.transform);
             }
         }
     }

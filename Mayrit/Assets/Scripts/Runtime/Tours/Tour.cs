@@ -10,8 +10,10 @@ public class Tour : MonoBehaviour
     public DataSO Data => _data;
     public bool IsCompleted => _isCompleted;
     public bool HasBeenCompleted => _hasBeenCompleted;
-    public TourStop NextTourStop => _nextTourStop;
-    public TourStop LastTourStopinList => GetTourStopFromList(_tourStops.Count - 1);
+    public TourStop NextStop => _stops[_nextValidStopIdx];
+    public TourStop LastStopInList => GetTourStopFromList(_stops.Count - 1);
+    public int VisitedStopsCount => _visitedStopsCount;
+    public int TotalStopsCount => _totalValidStopsCount;
     #endregion
 
     #region EDITOR PROPERTIES
@@ -21,45 +23,41 @@ public class Tour : MonoBehaviour
     [Header("Tour Settings")]
     [SerializeField] bool _isCompleted = false;
     [SerializeField] bool _hasBeenCompleted = false;
-    [SerializeField] int _currentTourStopIdx = 0;
+    [SerializeField] int _currentStopIdx = 0;
     [Tooltip("Next TourStop to visit in the tour")]
-    [SerializeField] TourStop _nextTourStop;
+    [SerializeField] TourStop _nextStop;
     [Tooltip("Ordered TourStops for this tour")]
-    [SerializeField] List<TourStop> _tourStops = new();
+    [SerializeField] List<TourStop> _stops = new();
+    [SerializeField] int _totalValidStopsCount = 0;
+    [SerializeField] int _visitedStopsCount = 0;
+    [SerializeField] int _nextValidStopIdx = 0;
     #endregion
 
     #region INTERNAL PROPERTIES
     public event Action<TourStop> OnVisitedTourStopEvent;
     public event Action<TourStop> OnNextTourStopChangeEvent;
     public event Action OnTourCompletedEvent;
-
-    //ProgressManager _progressManager;
     #endregion
 
     #region LIFE CYCLE
-    // TODO: remove eventually
-    // void OnEnable()
-    // {
-    //     SubscribeToRuntimeEvents();
-    // }
-    //     void OnValidate()
-    //     {
-    // #if UNITY_EDITOR
-    //         if (!Application.isPlaying)
-    //             SubscribeToRuntimeEvents();
-    // #endif
-    //     }
 
     void Awake()
     {
         ServiceLocator.Instance.Register(this);
 
-        _tourStops = new List<TourStop>(GetComponentsInChildren<TourStop>());
+        _stops = new List<TourStop>(GetComponentsInChildren<TourStop>());
+
+        // Validate TourStops and count valid ones
+        _totalValidStopsCount = 0;
+        foreach (TourStop stop in _stops)
+        {
+            if (stop.Data != null)
+                _totalValidStopsCount++;
+        }
     }
 
     void OnDisable()
     {
-        //UnsubscribeFromRuntimeEvents();
         ServiceLocator.Instance.Unregister(this);
     }
     #endregion
@@ -76,7 +74,8 @@ public class Tour : MonoBehaviour
     public void Reset()
     {
         _isCompleted = false;
-        _currentTourStopIdx = 0;
+        _currentStopIdx = 0;
+        _visitedStopsCount = 0;
         ResetTourStops();
     }
 
@@ -84,21 +83,35 @@ public class Tour : MonoBehaviour
     {
         _isCompleted = true;
         _hasBeenCompleted = true;
+        _visitedStopsCount = _totalValidStopsCount;
     }
     #endregion
 
     #region PRIVATE METHODS
     void UpdateNextTourStop()
     {
-        _nextTourStop = GetTourStopFromList(_currentTourStopIdx);
+        _nextStop = GetTourStopFromList(_currentStopIdx);
 
-        if (_nextTourStop != null)
-            DetachFromTourStop(_nextTourStop);
+        for (int i = _currentStopIdx; i < _stops.Count; i++)
+        {
+            TourStop stop = GetTourStopFromList(i);
+            if (stop.Data != null)
+            {
+                if (!stop.IsVisited)
+                {
+                    _nextValidStopIdx = i;
+                    break;
+                }
+            }
+        }
 
-        _currentTourStopIdx++;
+        if (_nextStop != null)
+            DetachFromTourStop(_nextStop);
+
+        _currentStopIdx++;
 
         // All TourStops visited
-        if (_currentTourStopIdx >= _tourStops.Count)
+        if (_currentStopIdx >= _stops.Count)
             TourCompleted();
         else
             SetNextTourStop();
@@ -106,28 +119,28 @@ public class Tour : MonoBehaviour
 
     TourStop GetTourStopFromList(int index)
     {
-        return (index >= 0 && index < _tourStops.Count) ?
-            _tourStops[index] :
+        return (index >= 0 && index < _stops.Count) ?
+            _stops[index] :
             null;
     }
 
     void SetNextTourStop()
     {
-        _nextTourStop = GetTourStopFromList(_currentTourStopIdx);
+        _nextStop = GetTourStopFromList(_currentStopIdx);
 
-        if (_nextTourStop == null)
+        if (_nextStop == null)
         {
-            Debug.LogWarning($"[Tour] Next tour stop is null at index {_currentTourStopIdx}");
+            Debug.LogWarning($"[Tour] Next tour stop is null at index {_currentStopIdx}");
             return;
         }
 
-        AttachToTourStop(_nextTourStop);
-        OnNextTourStopChangeEvent?.Invoke(_nextTourStop);
+        AttachToTourStop(_nextStop);
+        OnNextTourStopChangeEvent?.Invoke(_nextStop);
     }
 
     void AttachToTourStop(TourStop tourStop)
     {
-        DetachFromTourStop(_nextTourStop);
+        DetachFromTourStop(_nextStop);
 
         if (tourStop != null)
         {
@@ -157,7 +170,7 @@ public class Tour : MonoBehaviour
 
     void ResetTourStops()
     {
-        foreach (TourStop stop in _tourStops)
+        foreach (TourStop stop in _stops)
             if (stop != null) stop.Reset();
     }
 
@@ -165,7 +178,7 @@ public class Tour : MonoBehaviour
     {
         _isCompleted = true;
         _hasBeenCompleted = true;
-        _nextTourStop = null;
+        _nextStop = null;
         OnTourCompletedEvent?.Invoke();
     }
     #endregion
@@ -173,66 +186,12 @@ public class Tour : MonoBehaviour
     #region CALLBACK METHODS
     void OnTourStopVisited(TourStop tourStop)
     {
+        if (tourStop.Data != null)
+            _visitedStopsCount++;
+
         UpdateNextTourStop();
         OnVisitedTourStopEvent?.Invoke(tourStop);
     }
-
-    // TODO: remove eventually
-    // void OnMilestoneChanged(Milestone_DataSO milestoneMapping)
-    // {
-    //     if (milestoneMapping.Tour == this)
-    //         Activate();
-    //     else
-    //         Deactivate();
-    // }
-    #endregion
-
-    #region EDITOR UPDATES
-    // TODO: remove eventually
-    // void SubscribeToRuntimeEvents()
-    // {
-    //     _progressManager = FindAnyObjectByType<ProgressManager>();
-
-    //     if (_progressManager != null)
-    //     {
-    //         _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
-    //         //_progressManager.OnEditorUpdateChangedEvent += OnEditorUpdateChanged;
-    //     }
-    // }
-
-    // void UnsubscribeFromRuntimeEvents()
-    // {
-    //     _progressManager = FindAnyObjectByType<ProgressManager>();
-
-    //     if (_progressManager != null)
-    //     {
-    //         _progressManager.MilestoneChangedEvent -= OnMilestoneChanged;
-    //         //_progressManager.OnEditorUpdateChangedEvent -= OnEditorUpdateChanged;
-    //     }
-    // }
-
-    //     void OnEditorUpdateChanged(bool updateInEditor)
-    //     {
-    // #if UNITY_EDITOR
-    //         if (Application.isPlaying)
-    //             return;
-
-    //         if (this == null) return;
-
-    //         // Not updated through editor
-    //         if (!updateInEditor)
-    //             // All tours active
-    //             Activate();
-    //         else
-    //         {
-    //             // Only active if corresponding to current milestone
-    //             if (ServiceLocator.Instance.Get<Tour>() == this)
-    //                 Activate();
-    //             else
-    //                 Deactivate();
-    //         }
-    // #endif
-    //     }
     #endregion
 }
 

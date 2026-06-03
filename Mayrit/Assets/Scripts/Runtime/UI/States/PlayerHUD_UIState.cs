@@ -8,13 +8,10 @@ public class PlayerHUD_UIState : AHUDState
     Tour _currentTour;
     TourManager _tourManager;
 
-    Button _pauseButton;
-    VisualElement _tourArea,
-        _onTourEndVisual,
-        _tourStopsList;
-    Label _tourName,
-        _tourDescription;
-    readonly Dictionary<TourStop, Label> _tourStopLabels = new();
+    VisualElement _onTourEndVisual,
+        _tourArea,
+        _stopsArea;
+    Label _nextStopLabel, _completedTourStopsLabel, _totalTourStopsLabel;
     #endregion
 
     #region CONSTRUCTOR
@@ -27,11 +24,11 @@ public class PlayerHUD_UIState : AHUDState
     {
         base.ConfigureUIElementsOnAwake();
 
-        _pauseButton = GetButtonAndRegisterCallback("PauseButton", OnPauseClicked);
         _tourArea = GetByName<VisualElement>("TourArea");
-        _tourName = GetByName<Label>("Name", _tourArea);
-        _tourDescription = GetByName<Label>("Description", _tourArea);
-        _tourStopsList = GetByName<VisualElement>("TourStopsList");
+        _stopsArea = GetByName<VisualElement>("StopsArea", _tourArea);
+        _nextStopLabel = GetByName<Label>("NextStop", _stopsArea);
+        _completedTourStopsLabel = GetByName<Label>("CompletedTourStopsCount");
+        _totalTourStopsLabel = GetByName<Label>("TotalTourStopsCount");
         _onTourEndVisual = GetByName<VisualElement>("OnTourEnd");
     }
 
@@ -52,9 +49,9 @@ public class PlayerHUD_UIState : AHUDState
     {
         base.StartState();
 
-        PopulateTourStopsUI();
         SubscribeToTourEvents();
         ShowTourEndVisual(_currentTour.IsCompleted);
+        UpdateTourStopsUI();
         _compass.IsNextTourStopShown = true;
     }
 
@@ -63,7 +60,6 @@ public class PlayerHUD_UIState : AHUDState
         base.ExitState();
 
         UnsubscribeFromTourEvents();
-        ClearTourStopsUI();
 
         // Unlock cursor and make it visible (has been lock in 3rd person camera state start)
         UnityEngine.Cursor.lockState = CursorLockMode.None;
@@ -76,74 +72,79 @@ public class PlayerHUD_UIState : AHUDState
     protected override void OnContextualPanelShown()
     {
         _tourArea.style.display = DisplayStyle.None;
-        _tourStopsList.style.display = DisplayStyle.None;
         _onTourEndVisual.style.display = DisplayStyle.None;
     }
 
     protected override void OnContextualPanelHidden()
     {
+        _tourArea.style.display = DisplayStyle.Flex;
         ShowTourEndVisual(_currentTour.IsCompleted);
     }
     #endregion
 
-    #region PUBLIC METHODS
-    public void ShowTourEndVisual(bool show)
+    #region PRIVATE METHODS
+    void ShowTourEndVisual(bool show)
     {
         if (show)
         {
-            _tourArea.style.display = DisplayStyle.None;
-            _tourStopsList.style.display = DisplayStyle.None;
+            _stopsArea.style.display = DisplayStyle.None;
             _onTourEndVisual.style.display = DisplayStyle.Flex;
         }
         else
         {
+            _stopsArea.style.display = DisplayStyle.Flex;
             _onTourEndVisual.style.display = DisplayStyle.None;
-            _tourArea.style.display = DisplayStyle.Flex;
-            _tourStopsList.style.display = DisplayStyle.Flex;
-            _tourName.text = _currentTour.Data.Header;
-            _tourDescription.text = _currentTour.Data.SubHeader;
         }
     }
 
-    void PopulateTourStopsUI()
-    {
-        if (_currentTour == null || _tourStopsList == null) return;
-
-        _tourStopsList.Clear();
-        _tourStopLabels.Clear();
-
-        TourStop[] tourStops = _currentTour.GetComponentsInChildren<TourStop>();
-        bool hasSetNextStop = false;
-        foreach (TourStop stop in tourStops)
+    /*
+        void PopulateTourStopsUI()
         {
-            if (stop.Data == null) continue;
+            if (_currentTour == null || _stopsArea == null) return;
 
-            Label label = new(stop.Data.Header);
-            label.AddToClassList("HUDText");
-            if (stop == _currentTour.NextTourStop)
-            {
-                label.AddToClassList("highlighted");
-                hasSetNextStop = true;
-            }
-            else if (!hasSetNextStop && !stop.IsVisited)
-            {
-                label.AddToClassList("highlighted");
-                hasSetNextStop = true;
-            }
-            else if (stop.IsVisited)
-                label.AddToClassList("disabled");
+            _stopsArea.Clear();
+            _tourStopLabels.Clear();
 
-            label.name = $"TourStop_{stop.GetInstanceID()}";
-            _tourStopsList.Add(label);
-            _tourStopLabels[stop] = label;
+            TourStop[] tourStops = _currentTour.GetComponentsInChildren<TourStop>();
+            bool hasSetNextStop = false;
+            foreach (TourStop stop in tourStops)
+            {
+                if (stop.Data == null) continue;
+
+                Label label = new(stop.Data.Header);
+                label.AddToClassList("HUDText");
+                if (stop == _currentTour.NextTourStop)
+                {
+                    label.AddToClassList("highlighted");
+                    hasSetNextStop = true;
+                }
+                else if (!hasSetNextStop && !stop.IsVisited)
+                {
+                    label.AddToClassList("highlighted");
+                    hasSetNextStop = true;
+                }
+                else if (stop.IsVisited)
+                    label.AddToClassList("disabled");
+
+                label.name = $"TourStop_{stop.GetInstanceID()}";
+                _stopsArea.Add(label);
+                _tourStopLabels[stop] = label;
+            }
         }
-    }
 
-    void ClearTourStopsUI()
+        void ClearTourStopsUI()
+        {
+            if (_stopsArea == null) return;
+            _stopsArea.Clear();
+            _tourStopLabels.Clear();
+        }
+        */
+
+    void UpdateTourStopsUI()
     {
-        if (_tourStopsList == null) return;
-        _tourStopsList.Clear();
-        _tourStopLabels.Clear();
+        _nextStopLabel.text = _currentTour.NextStop != null ? $"{_currentTour.NextStop.Data.Header}" : "Tour completado!";
+        _completedTourStopsLabel.text = $"{_currentTour.VisitedStopsCount}";
+        _totalTourStopsLabel.text = $"{_currentTour.TotalStopsCount}";
     }
 
     void SubscribeToTourEvents()
@@ -160,19 +161,7 @@ public class PlayerHUD_UIState : AHUDState
 
     void OnTourStopVisited(TourStop tourStop)
     {
-        if (tourStop.Data == null) return;
-
-        if (_tourStopLabels.TryGetValue(tourStop, out Label label))
-        {
-            label.RemoveFromClassList("highlighted");
-            label.AddToClassList("disabled");
-
-            // Highlight next stop
-            if (_currentTour.NextTourStop != null && _tourStopLabels.TryGetValue(_currentTour.NextTourStop, out Label nextLabel))
-            {
-                nextLabel.AddToClassList("highlighted");
-            }
-        }
+        UpdateTourStopsUI();
     }
     #endregion
 }

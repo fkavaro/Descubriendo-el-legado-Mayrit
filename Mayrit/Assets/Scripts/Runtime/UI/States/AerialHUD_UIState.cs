@@ -12,12 +12,10 @@ public class AerialHUD_UIState : AHUDState
     Button _pauseButton,
         _milestoneInfoButton,
         _nextMilestoneButton,
-        _previousMilestoneButton,
-        _mainMenuButton;
+        _previousMilestoneButton;
     VisualElement _milestoneArea,
         _playerFollowerRoot,
         _switches,
-        _milestoneButtons,
         _nextMilestoneButtonImage;
 
     public Switch _modernVisualizactionSwitch;
@@ -35,17 +33,15 @@ public class AerialHUD_UIState : AHUDState
 
         _pauseButton = GetButtonAndRegisterCallback("PauseButton", OnPauseClicked);
         _milestoneArea = GetByName<VisualElement>("MilestoneArea");
-        _milestoneInfoButton = GetButtonAndRegisterCallback("InfoButton", OnMilestoneClicked, _milestoneArea);
+        _milestoneInfoButton = GetButtonAndRegisterCallback("Info", OnMilestoneClicked, _milestoneArea);
+        _previousMilestoneButton = GetButtonAndRegisterCallback("Previous", OnPreviousMilestoneClicked, _milestoneArea);
+        _nextMilestoneButtonImage = GetByName<VisualElement>("RightArrow", _nextMilestoneButton);
+        _nextMilestoneButton = GetButtonAndRegisterCallback("Next", OnNextMilestoneClicked, _milestoneArea);
         _milestoneName = GetByName<Label>("Name", _milestoneArea);
         _milestoneDate = GetByName<Label>("Date", _milestoneArea);
         _playerFollowerRoot = GetByName<VisualElement>("PlayerFollower");
         _switches = GetByName<VisualElement>("Switches");
         _modernVisualizactionSwitch = GetSwitchAndRegisterCallback("ModernVisualizationSwitch", OnModernSuperpositionToggled, _switches);
-        _milestoneButtons = GetByName<VisualElement>("MilestoneButtons");
-        _previousMilestoneButton = GetButtonAndRegisterCallback("PreviousMilestoneButton", OnPreviousMilestoneClicked, _milestoneButtons);
-        _nextMilestoneButtonImage = GetByName<VisualElement>("RightArrow", _nextMilestoneButton);
-        _nextMilestoneButton = GetButtonAndRegisterCallback("NextMilestoneButton", OnNextMilestoneClicked, _milestoneButtons);
-        _mainMenuButton = GetButtonAndRegisterCallback("MainMenuButton", OnMainMenuClicked);
 
         _playerFollower = new PlayerFollower(_playerFollowerRoot);
     }
@@ -69,7 +65,6 @@ public class AerialHUD_UIState : AHUDState
 
         _switches.style.display = _wasContextualPanelShown ? DisplayStyle.None : DisplayStyle.Flex;
         _milestoneArea.style.display = _wasContextualPanelShown ? DisplayStyle.None : DisplayStyle.Flex;
-        _milestoneButtons.style.display = _wasContextualPanelShown ? DisplayStyle.None : DisplayStyle.Flex;
         CheckMilestoneButtonsAvailability();
         _playerFollower.Start();
     }
@@ -92,14 +87,12 @@ public class AerialHUD_UIState : AHUDState
     protected override void OnContextualPanelShown()
     {
         _switches.style.display = DisplayStyle.None;
-        _milestoneButtons.style.display = DisplayStyle.None;
         _milestoneArea.style.display = DisplayStyle.None;
     }
 
     protected override void OnContextualPanelHidden()
     {
         _switches.style.display = DisplayStyle.Flex;
-        _milestoneButtons.style.display = DisplayStyle.Flex;
         _milestoneArea.style.display = DisplayStyle.Flex;
     }
     #endregion
@@ -110,17 +103,13 @@ public class AerialHUD_UIState : AHUDState
         bool isTherePreviousMilestone = !_progressManager.AtFirstMilestone();
         bool isCurrentMilestoneCompleted = _progressManager.IsCurrentMilestoneCompleted();
         bool atLastMilestone = _progressManager.AtLastMilestone();
-        bool displayMainMenuButton = atLastMilestone && isCurrentMilestoneCompleted;
 
         _previousMilestoneButton.SetEnabled(isTherePreviousMilestone);
         _previousMilestoneButton.pickingMode = isTherePreviousMilestone ? PickingMode.Position : PickingMode.Ignore;
 
-        _nextMilestoneButton.style.display = atLastMilestone ? DisplayStyle.None : DisplayStyle.Flex;
         _nextMilestoneButton.SetEnabled(isCurrentMilestoneCompleted);
         _nextMilestoneButton.pickingMode = isCurrentMilestoneCompleted ? PickingMode.Position : PickingMode.Ignore;
         _nextMilestoneButtonImage.pickingMode = isCurrentMilestoneCompleted ? PickingMode.Position : PickingMode.Ignore;
-
-        _mainMenuButton.style.display = displayMainMenuButton ? DisplayStyle.Flex : DisplayStyle.None;
     }
     #endregion
 

@@ -114,10 +114,10 @@
     font-size: 25px;
     -unity-font-style: normal;
     color: rgb(255, 255, 255);
-    border-left-color: rgb(55, 55, 55);
-    border-right-color: rgb(55, 55, 55);
-    border-top-color: rgb(55, 55, 55);
-    border-bottom-color: rgb(55, 55, 55);
+    border-left-color: rgb(153, 153, 153);
+    border-right-color: rgb(153, 153, 153);
+    border-top-color: rgb(153, 153, 153);
+    border-bottom-color: rgb(153, 153, 153);
     border-top-width: 0;
     border-right-width: 0;
     border-bottom-width: 4px;
@@ -142,13 +142,13 @@
 }
 
 .button:hover {
-    border-left-color: rgb(105, 105, 105);
-    border-right-color: rgb(105, 105, 105);
-    border-top-color: rgb(105, 105, 105);
-    border-bottom-color: rgb(105, 105, 105);
+    border-left-color: rgb(220, 220, 220);
+    border-right-color: rgb(220, 220, 220);
+    border-top-color: rgb(220, 220, 220);
+    border-bottom-color: rgb(220, 220, 220);
     -unity-font-style: normal;
-    border-bottom-width: 6px;
-    background-color: rgba(24, 24, 24, 0.39);
+    background-color: rgba(24, 24, 24, 0.59);
+    scale: 1.05 1.05;
 }
 
 .button.highlighted {
@@ -156,15 +156,13 @@
     height: 70px;
     align-self: center;
     transition-duration: 0.2s;
-    border-left-color: rgb(49, 56, 87);
-    border-right-color: rgb(49, 56, 87);
-    border-top-color: rgb(49, 56, 87);
-    border-bottom-color: rgb(49, 56, 87);
+    border-left-color: rgb(86, 98, 159);
+    border-right-color: rgb(86, 98, 159);
+    border-top-color: rgb(86, 98, 159);
+    border-bottom-color: rgb(86, 98, 159);
 }
 
 .button.highlighted:hover {
-    width: 250px;
-    height: 70px;
     align-self: center;
     color: rgb(255, 255, 255);
     margin-top: 15px;
@@ -177,11 +175,11 @@
     padding-right: 0;
     padding-bottom: 0;
     padding-left: 0;
-    border-left-color: rgb(76, 87, 142);
-    border-right-color: rgb(76, 87, 142);
-    border-top-color: rgb(76, 87, 142);
-    border-bottom-color: rgb(76, 87, 142);
-    background-color: rgba(49, 56, 87, 0.39);
+    border-left-color: rgb(100, 114, 185);
+    border-right-color: rgb(100, 114, 185);
+    border-top-color: rgb(100, 114, 185);
+    border-bottom-color: rgb(100, 114, 185);
+    background-color: rgba(39, 48, 94, 0.59);
 }
 
 .button.mediumButton {
@@ -319,7 +317,7 @@
 }
 
 .smallButtonBlurBg {
-    background-color: rgba(0, 0, 0, 0.78);
+    background-color: rgba(0, 0, 0, 0.55);
     position: absolute;
     top: 0;
     left: 0;
@@ -348,6 +346,28 @@
     border-right-color: rgb(64, 73, 118);
     border-top-color: rgb(76, 87, 142);
     border-bottom-color: rgb(49, 56, 87);
+    border-top-width: 5px;
+    border-right-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 5px;
+}
+
+.tourEndBlurBg {
+    background-color: rgba(94, 81, 11, 0.59);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-bottom-left-radius: 30px;
+    filter: blur(3);
+    border-left-color: rgba(255, 215, 0, 0.59);
+    border-right-color: rgba(255, 215, 0, 0.59);
+    border-top-color: rgba(255, 215, 0, 0.59);
+    border-bottom-color: rgba(255, 215, 0, 0.59);
     border-top-width: 5px;
     border-right-width: 5px;
     border-bottom-width: 5px;
@@ -796,8 +816,6 @@ Switch Label {
     text-shadow: 0 1px 5px rgb(51, 51, 51);
     -unity-text-align: middle-left;
 }
-
-
 
 .HUDtext.highlighted {
     color: rgb(255, 255, 255);
