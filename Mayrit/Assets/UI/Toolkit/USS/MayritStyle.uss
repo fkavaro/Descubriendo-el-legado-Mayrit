@@ -151,46 +151,6 @@
     background-color: rgba(24, 24, 24, 0.39);
 }
 
-.tourStopItem {
-    color: rgb(255, 255, 255);
-    font-size: 18px;
-    margin-top: 0;
-    margin-right: 0;
-    margin-bottom: 5px;
-    margin-left: 0;
-    padding-top: 0;
-    padding-right: 0;
-    padding-bottom: 0;
-    padding-left: 0;
-    white-space: normal;
-    -unity-text-align: upper-right;
-    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/ElMessiri-Regular.ttf?fileID=12800000&guid=c566193adbf5c6d44a80f316aea394d1&type=3#ElMessiri-Regular");
-}
-
-.tourStopItem.visited {
-    color: rgb(178, 178, 178);
-    font-size: 17px;
-    -unity-text-align: upper-right;
-    text-shadow: 0 1px 5px rgb(77, 77, 77);
-}
-
-.tourStopItem.next {
-    color: rgb(255, 255, 255);
-    font-size: 19px;
-    -unity-font-style: normal;
-    -unity-text-align: upper-right;
-    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/ElMessiri-Bold.ttf?fileID=12800000&guid=2d588446ee149eb408d77b917fa04672&type=3#ElMessiri-Bold");
-    text-shadow: 0 1px 5px rgb(51, 51, 51);
-}
-
-.tourStopItem.unvisited {
-    color: rgb(255, 255, 255);
-    font-size: 18px;
-    -unity-font-style: normal;
-    -unity-text-align: upper-right;
-    text-shadow: 0 1px 5px rgb(77, 77, 77);
-}
-
 .button.highlighted {
     width: 250px;
     height: 70px;
@@ -359,7 +319,7 @@
 }
 
 .smallButtonBlurBg {
-    background-color: rgba(0, 0, 0, 0.96);
+    background-color: rgba(0, 0, 0, 0.78);
     position: absolute;
     top: 0;
     left: 0;
@@ -383,7 +343,7 @@
     border-top-right-radius: 30px;
     border-bottom-right-radius: 30px;
     border-bottom-left-radius: 30px;
-    filter: blur(5);
+    filter: blur(3);
     border-left-color: rgb(64, 73, 118);
     border-right-color: rgb(64, 73, 118);
     border-top-color: rgb(76, 87, 142);
@@ -800,4 +760,55 @@ Switch Label {
     height: 30px;
     width: 20px;
     background-color: rgba(0, 0, 0, 0);
+}
+
+.HUDheader {
+    color: rgb(255, 255, 255);
+    font-size: 24px;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    white-space: normal;
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/ElMessiri-Bold.ttf?fileID=12800000&guid=2d588446ee149eb408d77b917fa04672&type=3#ElMessiri-Bold");
+    -unity-font-style: normal;
+    text-shadow: 0 1px 5px rgb(51, 51, 51);
+    -unity-text-align: middle-left;
+}
+
+.HUDtext {
+    color: rgb(255, 255, 255);
+    font-size: 18px;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    white-space: normal;
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/ElMessiri-Regular.ttf?fileID=12800000&guid=c566193adbf5c6d44a80f316aea394d1&type=3#ElMessiri-Regular");
+    text-shadow: 0 1px 5px rgb(51, 51, 51);
+    -unity-text-align: middle-left;
+}
+
+
+
+.HUDtext.highlighted {
+    color: rgb(255, 255, 255);
+    font-size: 19px;
+    -unity-font-style: normal;
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/ElMessiri-Bold.ttf?fileID=12800000&guid=2d588446ee149eb408d77b917fa04672&type=3#ElMessiri-Bold");
+    text-shadow: 0 1px 5px rgb(51, 51, 51);
+}
+
+.HUDtext.disabled {
+    color: rgb(178, 178, 178);
+    font-size: 17px;
+    text-shadow: 0 1px 5px rgb(51, 51, 51);
 }

@@ -119,19 +119,19 @@ public class PlayerHUD_UIState : AHUDState
             if (stop.Data == null) continue;
 
             Label label = new(stop.Data.Header);
-            label.AddToClassList("tourStopItem");
+            label.AddToClassList("HUDText");
             if (stop == _currentTour.NextTourStop)
             {
-                label.AddToClassList("next");
+                label.AddToClassList("highlighted");
                 hasSetNextStop = true;
             }
             else if (!hasSetNextStop && !stop.IsVisited)
             {
-                label.AddToClassList("next");
+                label.AddToClassList("highlighted");
                 hasSetNextStop = true;
             }
-            else
-                label.AddToClassList(stop.IsVisited ? "visited" : "unvisited");
+            else if (stop.IsVisited)
+                label.AddToClassList("disabled");
 
             label.name = $"TourStop_{stop.GetInstanceID()}";
             _tourStopsList.Add(label);
@@ -164,15 +164,13 @@ public class PlayerHUD_UIState : AHUDState
 
         if (_tourStopLabels.TryGetValue(tourStop, out Label label))
         {
-            label.RemoveFromClassList("next");
-            label.RemoveFromClassList("unvisited");
-            label.AddToClassList("visited");
+            label.RemoveFromClassList("highlighted");
+            label.AddToClassList("disabled");
 
             // Highlight next stop
             if (_currentTour.NextTourStop != null && _tourStopLabels.TryGetValue(_currentTour.NextTourStop, out Label nextLabel))
             {
-                nextLabel.RemoveFromClassList("unvisited");
-                nextLabel.AddToClassList("next");
+                nextLabel.AddToClassList("highlighted");
             }
         }
     }
