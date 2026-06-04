@@ -7,7 +7,7 @@ public class TourManager : MonoBehaviour
 {
     #region PROPERTY HELPERS
     public Tour CurrentTour => _currentTour;
-    public TourStop NextTourStop => _currentTour != null ? _currentTour.CurrentValidObjective : null;
+    public TourStop CurrentTourStop => _currentTour != null ? _currentTour.CurrentValidObjective : null;
     #endregion
 
     #region EDITOR PROPERTIES

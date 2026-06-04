@@ -7,12 +7,14 @@ public class PlayerHUD_UIState : AHUDState
     #region  PROPERTIES
     TourManager _tourManager;
     CollectiblesManager _collectiblesManager;
+    Collectible Collectible => _collectiblesManager.CurrentCollectible;
 
     VisualElement _onTourEndVisual,
         _tourArea,
         _stopsArea,
         _collectiblesArea,
-        _hintsArea;
+        _hintsArea,
+        _hintsList;
     Label _nextStopLabel,
         _completedTourStopsLabel,
         _totalTourStopsLabel,
@@ -39,6 +41,7 @@ public class PlayerHUD_UIState : AHUDState
 
         _collectiblesArea = GetByName<VisualElement>("CollectiblesArea");
         _hintsArea = GetByName<VisualElement>("HintsArea", _collectiblesArea);
+        _hintsList = GetByName<VisualElement>("HintsList", _hintsArea);
         _foundCollectiblesLabel = GetByName<Label>("FoundCollectiblesCount", _collectiblesArea);
         _totalCollectiblesLabel = GetByName<Label>("TotalCollectiblesCount", _collectiblesArea);
     }
@@ -114,7 +117,7 @@ public class PlayerHUD_UIState : AHUDState
 
     void UpdateTourStopsUI()
     {
-        _nextStopLabel.text = _tourManager.NextTourStop != null ? $"{_tourManager.NextTourStop.Data.Header}" : "Tour completado";
+        _nextStopLabel.text = _tourManager.CurrentTourStop != null ? $"{_tourManager.CurrentTourStop.Data.Header}" : "Tour completado";
         _completedTourStopsLabel.text = $"{_tourManager.CurrentTour.ReachedCount}";
         _totalTourStopsLabel.text = $"{_tourManager.CurrentTour.TotalCount}";
     }
@@ -130,7 +133,10 @@ public class PlayerHUD_UIState : AHUDState
         if (foundCollectibles >= totalCollectibles)
             _hintsArea.style.display = DisplayStyle.None;
         else
+        {
+            PopulateCollectiblesHints();
             _hintsArea.style.display = DisplayStyle.Flex;
+        }
     }
 
     void OnTourStopVisited(TourStop tourStop)
@@ -144,46 +150,16 @@ public class PlayerHUD_UIState : AHUDState
     }
     #endregion
 
-    /*
-        void PopulateTourStopsUI()
+    void PopulateCollectiblesHints()
+    {
+        _hintsList.Clear();
+
+        foreach (string hint in _collectiblesManager.CurrentCollectible.Data.Hints)
         {
-            if (_currentTour == null || _stopsArea == null) return;
-
-            _stopsArea.Clear();
-            _tourStopLabels.Clear();
-
-            TourStop[] tourStops = _currentTour.GetComponentsInChildren<TourStop>();
-            bool hasSetNextStop = false;
-            foreach (TourStop stop in tourStops)
-            {
-                if (stop.Data == null) continue;
-
-                Label label = new(stop.Data.Header);
-                label.AddToClassList("HUDText");
-                if (stop == _currentTour.NextTourStop)
-                {
-                    label.AddToClassList("highlighted");
-                    hasSetNextStop = true;
-                }
-                else if (!hasSetNextStop && !stop.IsVisited)
-                {
-                    label.AddToClassList("highlighted");
-                    hasSetNextStop = true;
-                }
-                else if (stop.IsVisited)
-                    label.AddToClassList("disabled");
-
-                label.name = $"TourStop_{stop.GetInstanceID()}";
-                _stopsArea.Add(label);
-                _tourStopLabels[stop] = label;
-            }
+            Label hintLabel = new(hint);
+            hintLabel.AddToClassList("HUDtext");
+            hintLabel.name = $"Hint";
+            _hintsList.Add(hintLabel);
         }
-
-        void ClearTourStopsUI()
-        {
-            if (_stopsArea == null) return;
-            _stopsArea.Clear();
-            _tourStopLabels.Clear();
-        }
-    */
+    }
 }

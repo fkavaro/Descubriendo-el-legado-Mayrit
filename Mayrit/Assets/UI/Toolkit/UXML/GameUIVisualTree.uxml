@@ -250,9 +250,9 @@
                     </ui:VisualElement>
                     <ui:VisualElement name="CollectiblesArea">
                         <ui:VisualElement name="HintsArea" style="align-self: flex-start; margin-bottom: 15px;">
-                            <ui:Label text="Pista del siguiente" name="Label" class="tourStopItem HUDtext highlighted" style="align-self: flex-start; margin-bottom: 5px;"/>
+                            <ui:Label text="Pista del siguiente coleccionable" class="tourStopItem HUDtext highlighted" style="align-self: flex-start; margin-bottom: 5px;"/>
                             <ui:VisualElement name="HintsList" style="padding-left: 15px; padding-top: 10px; padding-bottom: 10px; border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; border-left-width: 3px; border-left-color: rgba(76, 87, 142, 0.78); border-right-color: rgba(76, 87, 142, 0.78); border-top-color: rgba(76, 87, 142, 0.78); border-bottom-color: rgba(76, 87, 142, 0.78); align-self: flex-start;">
-                                <ui:Label text="Bajo la ventana" class="tourStopItem HUDtext"/>
+                                <ui:Label text="Texto de pista" name="Label" class="HUDtext"/>
                             </ui:VisualElement>
                         </ui:VisualElement>
                         <ui:VisualElement name="CollectiblesCountArea" style="flex-direction: row; align-self: flex-start; padding-top: 15px; padding-right: 20px; padding-bottom: 15px; padding-left: 15px;">

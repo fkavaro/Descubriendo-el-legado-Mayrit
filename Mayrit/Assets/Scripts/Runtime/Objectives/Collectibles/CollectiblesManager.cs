@@ -7,7 +7,7 @@ public class CollectiblesManager : MonoBehaviour
 {
     #region PROPERTY HELPERS
     public CollectiblesTracker CurrentTracker => _currentTracker;
-    public Collectible NextCollectible => _currentTracker != null ? _currentTracker.CurrentValidObjective : null;
+    public Collectible CurrentCollectible => _currentTracker != null ? _currentTracker.CurrentValidObjective : null;
     public int FoundCollectiblesCount => _currentTracker != null ? _currentTracker.ReachedCount : 0;
     public int TotalCollectiblesCount => _currentTracker != null ? _currentTracker.TotalCount : 0;
     public int AllTotalCollectiblesCount => _allCollectiblesSOs.Count;
