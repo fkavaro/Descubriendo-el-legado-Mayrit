@@ -10,7 +10,7 @@ public class TourStop : ObjectiveObjectBase<TourStop, DataSO>
 
     void Update()
     {
-        if (_model != null)
+        if (_model != null && _model.activeSelf)
             _model.transform.Rotate(Vector3.up, 50f * Time.deltaTime, Space.World);
     }
 
