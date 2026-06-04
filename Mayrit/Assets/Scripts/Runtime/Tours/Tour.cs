@@ -43,17 +43,16 @@ public class Tour : MonoBehaviour
 
     void Awake()
     {
-        ServiceLocator.Instance.Register(this);
-
         _stops = new List<TourStop>(GetComponentsInChildren<TourStop>());
 
-        // Validate TourStops and count valid ones
         _totalValidStopsCount = 0;
         foreach (TourStop stop in _stops)
         {
             if (stop.Data != null)
                 _totalValidStopsCount++;
         }
+
+        ServiceLocator.Instance.Register(this);
     }
 
     void OnDisable()
@@ -88,7 +87,7 @@ public class Tour : MonoBehaviour
     #endregion
 
     #region PRIVATE METHODS
-    void UpdateNextTourStop()
+    void UpdateNextStop()
     {
         _nextStop = GetTourStopFromList(_currentStopIdx);
 
@@ -189,7 +188,7 @@ public class Tour : MonoBehaviour
         if (tourStop.Data != null)
             _visitedStopsCount++;
 
-        UpdateNextTourStop();
+        UpdateNextStop();
         OnVisitedTourStopEvent?.Invoke(tourStop);
     }
     #endregion

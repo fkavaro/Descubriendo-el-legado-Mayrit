@@ -3,43 +3,21 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(LineRenderer))]
 public class TourManager : MonoBehaviour
 {
     #region PROPERTY HELPERS
     public Tour CurrentTour => _currentTour;
-    public TourStop NextTourStop => _nextTourStop;
+    public TourStop NextTourStop => _currentTour != null ? _currentTour.NextStop : null;
     #endregion
 
     #region EDITOR PROPERTIES
-    [Header("Tour manager")]
     [SerializeField] Tour _currentTour;
-    [SerializeField] TourStop _nextTourStop;
-
-    /* TODO remove
-    [Header("Path visualizer settings")]
-    [Tooltip("Meters between samples along segments. Lower = smoother")]
-    [SerializeField] float _pointSpacing = 0.5f;
-    [Tooltip("Max distance to snap player/TourStop to NavMesh")]
-    [SerializeField] float _endpointSnapDistance = 2f;
-    [Tooltip("Max distance to project points down to NavMesh terrain")]
-    [SerializeField] float _terrainProjectionDistance = 1f;
-    [Tooltip("Vertical offset to lift line above ground (prevents z-fighting)")]
-    [SerializeField] float _heightOffset = 0.03f;
-    [Tooltip("Hard limit on total points for performance")]
-    [SerializeField] int _maxPointCount = 2000;
-    [Tooltip("Maximum distance from start to render (trail cutoff)")]
-    [SerializeField] int _maxTrailLength = 100;
-    */
     #endregion
 
     #region INTERNAL PROPERTIES
     public event Action<TourStop> TourStopVisitedEvent;
     public event Action<TourStop> NextTourStopChangeEvent;
     public event Action<Tour> TourCompletedEvent;
-
-    // TODO remove
-    // PathVisualizer _pathVisualizer; 
 
     // Dependency Injection
     ScenesController _scenesController;
@@ -68,35 +46,11 @@ public class TourManager : MonoBehaviour
         _uiManager.PlayTourClickedEvent += OnPlayTourClicked;
         _uiManager.ResetTourClickedEvent += OnResetTourClicked;
 
-        // TODO remove
-        // _pathVisualizer = new PathVisualizer(
-        //     GetComponent<LineRenderer>(),
-        //     _pointSpacing,
-        //     _endpointSnapDistance,
-        //     _terrainProjectionDistance,
-        //     _heightOffset,
-        //     _maxPointCount,
-        //     _maxTrailLength);
-        // _pathVisualizer.Initialize();
-
         AttachToTour(ServiceLocator.Instance.Get<Tour>());
     }
 
-    // TODO remove
-    // void Update()
-    // {
-    //     if (_playableCharacter != null && _playableCharacter.IsBeingControlled &&
-    //         _currentTour != null && !_currentTour.IsCompleted)
-    //         _pathVisualizer.UpdatePath(_playableCharacter.transform);
-    //     else
-    //         _pathVisualizer.Clear();
-    // }
-
     void OnDisable()
     {
-        // TODO remove
-        // // Let the visualizer unsubscribe from ProgressManager and cleanup
-        //_pathVisualizer.Deinitialize();
 
         // Unsubscribe from events
         _scenesController.SceneLoadedPartiallyEvent -= OnSceneLoadedPartially;
@@ -133,7 +87,6 @@ public class TourManager : MonoBehaviour
         _currentTour.OnVisitedTourStopEvent -= OnTourStopVisited;
         _currentTour.OnNextTourStopChangeEvent -= OnNextTourStopChange;
         _currentTour.OnTourCompletedEvent -= OnTourCompleted;
-        _nextTourStop = null;
     }
     #endregion
 
@@ -161,16 +114,9 @@ public class TourManager : MonoBehaviour
         }
     }
 
-    void OnTourStopVisited(TourStop tourStop)
-    {
-        TourStopVisitedEvent?.Invoke(tourStop);
-    }
+    void OnTourStopVisited(TourStop tourStop) => TourStopVisitedEvent?.Invoke(tourStop);
 
-    void OnNextTourStopChange(TourStop tourStop)
-    {
-        NextTourStopChangeEvent?.Invoke(tourStop);
-        _nextTourStop = tourStop;
-    }
+    void OnNextTourStopChange(TourStop tourStop) => NextTourStopChangeEvent?.Invoke(tourStop);
 
     void OnContextualPanelHidden()
     {

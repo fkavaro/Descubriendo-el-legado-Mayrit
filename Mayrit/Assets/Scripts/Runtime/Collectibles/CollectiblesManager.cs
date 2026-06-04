@@ -5,15 +5,28 @@ using System.Collections.Generic;
 
 public class CollectiblesManager : MonoBehaviour
 {
+    #region PROPERTY HELPERS
+    public CollectiblesTracker CurrentTracker => _currentTracker;
+    public Collectible NextCollectible => _currentTracker != null ? _currentTracker.NextCollectible : null;
+    public int FoundCollectiblesCount => _currentTracker != null ? _currentTracker.FoundCollectiblesCount : 0;
+    public int TotalCollectiblesCount => _currentTracker != null ? _currentTracker.TotalCollectiblesCount : 0;
+    public int AllTotalCollectiblesCount => _allCollectiblesSOs.Count;
+    public int AllFoundCollectiblesCount => _allFoundCollectiblesSOs.Count;
+
+    #endregion
+
     #region EDITOR PROPERTIES
     [SerializeField] CollectiblesTracker _currentTracker;
-    [SerializeField] Collectible _nextCollectible;
     [SerializeField] List<CollectibleSO> _allCollectiblesSOs = new();
-    [SerializeField] int _totalCollectiblesCount;
-    [SerializeField] int _foundCollectiblesCount = 0;
+    [SerializeField] List<CollectibleSO> _allFoundCollectiblesSOs = new();
     #endregion
 
     #region INTERNAL PROPERTIES
+    public event Action<Collectible> OnCollectibleFoundEvent;
+
+    private HashSet<CollectibleSO> _allTotalCollectiblesHash;
+    private readonly HashSet<CollectibleSO> _allFoundCollectiblesHash = new();
+
     ScenesController _scenesController;
     SoundManager _soundManager;
     ProgressManager _progressManager;
@@ -22,26 +35,24 @@ public class CollectiblesManager : MonoBehaviour
     #region LIFE CYCLE
     void Awake()
     {
+        _allTotalCollectiblesHash = new HashSet<CollectibleSO>(_allCollectiblesSOs);
+
         ServiceLocator.Instance.Register(this);
     }
 
     void Start()
     {
-        _totalCollectiblesCount = _allCollectiblesSOs.Count;
-
         _scenesController = ServiceLocator.Instance.Get<ScenesController>();
         _soundManager = ServiceLocator.Instance.Get<SoundManager>();
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
 
         _scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
-
     }
 
     void OnDisable()
     {
-        DetachFromTracker();
-
         ServiceLocator.Instance.Unregister(this);
+        DetachFromTracker();
     }
     #endregion
 
@@ -68,13 +79,11 @@ public class CollectiblesManager : MonoBehaviour
 
         // Update current
         _currentTracker = tracker;
-        _nextCollectible = _currentTracker.NextCollectible;
         _currentTracker.OnCollectibleFoundEvent += OnCollectibleFound;
     }
 
     void DetachFromTracker()
     {
-        _nextCollectible = null;
         if (_currentTracker == null) return;
 
         _currentTracker.OnCollectibleFoundEvent -= OnCollectibleFound;
@@ -89,39 +98,33 @@ public class CollectiblesManager : MonoBehaviour
         {
             AttachToTracker(ServiceLocator.Instance.Get<CollectiblesTracker>());
 
-            //TODO: Set found collectibles count based on progress
+            //TODO: Set found collectibles count based on progress on scene load
             //tracker.SetFoundCollectibles = _progressManager.FoundCollectibles;
         }
     }
 
     private void OnCollectibleFound(Collectible collectible)
     {
-        if (collectible.Info == null)
+        var info = collectible.Info;
+        if (info == null) return;
+
+        if (!_allTotalCollectiblesHash.Contains(info))
         {
-            Debug.LogWarning($"Collectible {collectible.name} has no CollectibleSO assigned. Ignoring.");
+            Debug.LogWarning($"[CollectiblesManager] {info.Data.Header} no pertenece a la colección global.");
             return;
         }
 
-        // CollectibleSO not in list, ignore
-        if (!_allCollectiblesSOs.Contains(collectible.Info))
+        if (_allFoundCollectiblesHash.Add(info))
         {
-            Debug.LogWarning($"Collectible {collectible.name} with SO {collectible.Info.Data.Header} not in the list of all collectibles. Ignoring.");
-            return;
+            Debug.Log($"[CollectiblesManager] New collectible found: {info.Data.Header}");
+
+            // TODO: change to custom SFX
+            _soundManager.PlayTourEndSFX();
         }
-
-        Debug.Log($"[Manager] Collectible found: {collectible.Info.Data.Header}");
-
-        //TODO: change to custom SFX
-        _soundManager.PlayTourEndSFX();
-        _foundCollectiblesCount++;
-        Debug.Log($"[Manager] Found {_foundCollectiblesCount}/{_totalCollectiblesCount} collectibles.");
-
-        _nextCollectible = _currentTracker.NextCollectible;
-
-        if (_nextCollectible != null)
-            Debug.Log($"[Manager] Next collectible: {_nextCollectible.Info.Data.Header}");
         else
-            Debug.Log($"[Manager] No more collectibles to find.");
+            Debug.LogWarning($"[CollectiblesManager] {info.Data.Header} had been already found.");
+
+        OnCollectibleFoundEvent?.Invoke(collectible);
     }
     #endregion
 }
