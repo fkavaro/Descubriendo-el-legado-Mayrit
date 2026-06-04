@@ -105,7 +105,7 @@ public class CollectiblesManager : MonoBehaviour
 
     private void OnCollectibleFound(Collectible collectible)
     {
-        var info = collectible.Info;
+        var info = collectible.Data;
         if (info == null) return;
 
         if (!_allTotalCollectiblesHash.Contains(info))

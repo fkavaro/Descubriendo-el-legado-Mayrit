@@ -36,7 +36,7 @@ public class CollectiblesTracker : MonoBehaviour
         _nextCollectibleIdx = -1;
 
         foreach (Collectible collectible in _collectibles)
-            collectible.OnFoundEvent += OnCollectibleFound;
+            collectible.OnReachedEvent += OnCollectibleFound;
 
         ServiceLocator.Instance.Register(this);
     }

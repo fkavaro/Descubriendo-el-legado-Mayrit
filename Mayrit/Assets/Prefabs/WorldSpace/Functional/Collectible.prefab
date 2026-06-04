@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 666289627056501509}
   - component: {fileID: 7044281155472448321}
   m_Layer: 0
-  m_Name: Model LOD
+  m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -119,13 +119,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a39519f1458995d4e8a49d993bd308e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Mayrit::Collectible
-  _collectibleInfo: {fileID: 0}
-  _isFound: 0
+  _data: {fileID: 0}
+  _isReached: 0
+  _colliderRadius: 2
   _detectionMask:
     serializedVersion: 2
     m_Bits: 256
-  _colliderRadius: 2
-  _model: {fileID: 1052337313569172678}
+  _visualFeedback: {fileID: 0}
 --- !u!1 &6484125291366273937
 GameObject:
   m_ObjectHideFlags: 0

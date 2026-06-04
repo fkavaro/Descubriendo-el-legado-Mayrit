@@ -75,7 +75,7 @@ public class Tour : MonoBehaviour
         _isCompleted = false;
         _currentStopIdx = 0;
         _visitedStopsCount = 0;
-        ResetTourStops();
+        ResetAllStops();
     }
 
     public void MarkAsCompleted()
@@ -83,6 +83,7 @@ public class Tour : MonoBehaviour
         _isCompleted = true;
         _hasBeenCompleted = true;
         _visitedStopsCount = _totalValidStopsCount;
+        CompleteAllStops();
     }
     #endregion
 
@@ -96,7 +97,7 @@ public class Tour : MonoBehaviour
             TourStop stop = GetTourStopFromList(i);
             if (stop.Data != null)
             {
-                if (!stop.IsVisited)
+                if (!stop.IsReached)
                 {
                     _nextValidStopIdx = i;
                     break;
@@ -143,8 +144,7 @@ public class Tour : MonoBehaviour
 
         if (tourStop != null)
         {
-            tourStop.OnVisitedEvent += OnTourStopVisited;
-            tourStop.Activate();
+            tourStop.OnReachedEvent += OnTourStopVisited;
         }
     }
 
@@ -152,8 +152,7 @@ public class Tour : MonoBehaviour
     {
         if (tourStop != null)
         {
-            tourStop.OnVisitedEvent -= OnTourStopVisited;
-            tourStop.Deactivate();
+            tourStop.OnReachedEvent -= OnTourStopVisited;
         }
     }
 
@@ -167,10 +166,16 @@ public class Tour : MonoBehaviour
         transform.gameObject.SetActive(false);
     }
 
-    void ResetTourStops()
+    void ResetAllStops()
     {
         foreach (TourStop stop in _stops)
             if (stop != null) stop.Reset();
+    }
+
+    void CompleteAllStops()
+    {
+        foreach (TourStop stop in _stops)
+            if (stop != null) stop.Complete();
     }
 
     void TourCompleted()
