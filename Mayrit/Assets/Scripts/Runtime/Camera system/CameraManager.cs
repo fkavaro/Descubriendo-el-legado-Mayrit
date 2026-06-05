@@ -52,6 +52,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     // Dependency Injection
     UIManager _uiManager;
     TourManager _tourManager;
+    CollectiblesManager _collectiblesManager;
     SoundManager _soundManager;
     PlayableCharacter _playableCharacter;
     #endregion
@@ -86,6 +87,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         // Get dependencies from ServiceLocator
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
         _tourManager = ServiceLocator.Instance.Get<TourManager>();
+        _collectiblesManager = ServiceLocator.Instance.Get<CollectiblesManager>();
         _soundManager = ServiceLocator.Instance.Get<SoundManager>();
 
         // Subscribe to events
@@ -93,6 +95,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         _uiManager.ContextualPanelHiddenEvent += OnContextualPanelHidden;
         _uiManager.PlayTourClickedEvent += SwitchToThirdPersonCamera;
         _tourManager.TourStopVisitedEvent += OnTourStopVisited;
+        _collectiblesManager.OnCollectibleFoundEvent += OnCollectibleFound;
 
         // Set camera target at min height
         CinemachineOrbitalFollow _orbitalFollow = _aerialCamera.GetComponent<CinemachineOrbitalFollow>();
@@ -119,6 +122,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         _uiManager.ContextualPanelHiddenEvent -= OnContextualPanelHidden;
         _uiManager.PlayTourClickedEvent -= SwitchToThirdPersonCamera;
         _tourManager.TourStopVisitedEvent -= OnTourStopVisited;
+        _collectiblesManager.OnCollectibleFoundEvent -= OnCollectibleFound;
 
         ServiceLocator.Instance.Unregister(this);
     }
@@ -158,25 +162,6 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
             _playableCharacter.PositionResetEvent += SwitchToThirdPersonCamera;
         }
     }
-
-    // TODO: remove later
-    // /// <summary>
-    // /// Switches to orbital camera mode around the specified object.
-    // /// </summary>
-    // /// <param name="selectedElement">The object to orbit around.</param>
-    // public void SwitchToOrbitalCamera(SelectableObject selectedElement)
-    // {
-    //     //_orbitalState.SelectedObject = selectedElement;
-    //     _soundManager.PlayCameraTransitionSFX();
-
-    //     SyncOrbitalCameraWithAerial();
-    //     _fsm.SwitchState(_orbitalState);
-
-    //     if (DebugMode)
-    //         Debug.Log($"Switched to orbital camera around '{selectedElement.name}'.");
-
-    //     CameraStateChangedEvent?.Invoke();
-    // }
 
     /// <summary>
     /// Switches to third-person camera mode, following the playable character.
@@ -376,7 +361,12 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     void OnContextualPanelHidden()
     {
         if (IsInOrbitalState)
-            SwitchToAerialCamera();
+        {
+            if (_orbitalState.Setting.TransitionToApply == CameraTransition.ThirdPersonCamera)
+                SwitchToThirdPersonCamera();
+            else
+                SwitchToAerialCamera();
+        }
         else if (IsInTourStopState)
             SwitchToThirdPersonCamera();
     }
@@ -392,6 +382,19 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
 
         if (IsInThirdPersonState)
             SwitchToTourStopCamera(tourStop.Camera);
+    }
+
+    void OnCollectibleFound(Collectible collectible)
+    {
+        if (collectible.Data == null) return;
+        if (!collectible.gameObject.activeInHierarchy)
+        {
+            Debug.LogWarning($"Collectible '{collectible.name}' is not active in hierarchy.");
+            return;
+        }
+
+        if (IsInThirdPersonState)
+            SwitchToOrbitalCamera(collectible.OrbitalStateSetting);
     }
     #endregion
 }

@@ -111,14 +111,12 @@ public class CollectiblesManager : MonoBehaviour
 
         if (!_allTotalCollectiblesHash.Contains(info))
         {
-            Debug.LogWarning($"[CollectiblesManager] {info.Data.Header} no pertenece a la colección global.");
+            Debug.LogWarning($"[CollectiblesManager] {info.Data.Header} is not in the list of all collectibles. Please add it to the list if you want it to be tracked.", collectible);
             return;
         }
 
         if (_allFoundCollectiblesHash.Add(info))
         {
-            Debug.Log($"[CollectiblesManager] New collectible found: {info.Data.Header}");
-
             // TODO: change to custom SFX
             _soundManager.PlayTourEndSFX();
         }

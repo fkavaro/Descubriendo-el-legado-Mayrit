@@ -36,7 +36,6 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     TourManager _tourManager;
     UIManager _uiManager;
     CameraManager _cameraManager;
-    ProgressManager _progressManager;
     #endregion
 
     #region INHERITED
@@ -55,19 +54,6 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     #endregion
 
     #region LIFE CYCLE
-    // TODO: remove eventually
-    // void OnEnable()
-    // {
-    //     SubscribeToRuntimeEvents();
-    // }
-    //     void OnValidate()
-    //     {
-    // #if UNITY_EDITOR
-    //         if (!Application.isPlaying)
-    //             SubscribeToRuntimeEvents();
-    // #endif
-    //     }
-
     protected override void Awake()
     {
         base.Awake();
@@ -82,7 +68,6 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
         _uiManager = ServiceLocator.Instance.Get<UIManager>();
         _tourManager = ServiceLocator.Instance.Get<TourManager>();
         _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
-        _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
 
         _originalPosition = transform.position;
         _originalRotation = transform.rotation;
@@ -99,7 +84,6 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
 
     void OnDisable()
     {
-        //UnsubscribeFromRuntimeEvents();
         UnsubscribeFromServicesEvents();
         ServiceLocator.Instance.Unregister(this);
     }
@@ -123,7 +107,6 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
         _uiManager.ContextualPanelHiddenEvent += OnContextualPanelHidden;
         _tourManager.TourStopVisitedEvent += OnTourStopVisited;
         _cameraManager.CameraStateChangedEvent += OnCameraStateChanged;
-        //_progressManager.MilestoneChangedEvent += OnMilestoneChanged;
     }
 
     void UnsubscribeFromServicesEvents()
@@ -133,7 +116,6 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
         _uiManager.ContextualPanelHiddenEvent -= OnContextualPanelHidden;
         _tourManager.TourStopVisitedEvent -= OnTourStopVisited;
         _cameraManager.CameraStateChangedEvent -= OnCameraStateChanged;
-        //_progressManager.MilestoneChangedEvent -= OnMilestoneChanged;
     }
     #endregion
 
@@ -184,61 +166,5 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
         else
             SwitchToNotControlledState();
     }
-
-    // void OnMilestoneChanged(Milestone_DataSO milestoneData)
-    // {
-    //     int milestoneIndex = milestoneData.MilestoneIndex;
-    //     int highestCompleted = _progressManager.HighestCompletedMilestoneIndex;
-
-    //     if (milestoneIndex < highestCompleted)
-    //     {
-    //         //if (DebugMode)
-    //         Debug.Log($"[PlayableCharacter] Milestone changed to index {milestoneIndex}, which is below the highest completed milestone index {highestCompleted}. Resetting position and rotation to reflect progress.");
-
-    //         ResetPositionAndRotation();
-    //     }
-    // }
-    #endregion
-
-    #region EDITOR UPDATES
-    // TODO: remove eventually
-    // void SubscribeToRuntimeEvents()
-    // {
-    //     _progressManager = FindAnyObjectByType<ProgressManager>();
-    //     if (_progressManager != null)
-    //     {
-    //         _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
-    //         //_progressManager.OnEditorUpdateChangedEvent += OnEditorUpdateChanged;
-    //     }
-    // }
-    // void UnsubscribeFromRuntimeEvents()
-    // {
-    //     _progressManager = FindAnyObjectByType<ProgressManager>();
-    //     if (_progressManager != null)
-    //     {
-    //         _progressManager.MilestoneChangedEvent -= OnMilestoneChanged;
-    //         //_progressManager.OnEditorUpdateChangedEvent -= OnEditorUpdateChanged;
-    //     }
-    // }
-    //     void OnEditorUpdateChanged(bool updateInEditor)
-    //     {
-    // #if UNITY_EDITOR
-    //         if (Application.isPlaying)
-    //             return;
-    //         if (this == null) return;
-    //         // Not updated through editor
-    //         if (!updateInEditor)
-    //             // All playable characters active
-    //             GO.SetActive(true);
-    //         else
-    //         {
-    //             // Only active if corresponding to current milestone
-    //             if (_progressManager.CurrentMilestoneMapping.PlayableCharacter == this)
-    //                 GO.SetActive(true);
-    //             else
-    //                 GO.SetActive(false);
-    //         }
-    // #endif
-    //     }
     #endregion
 }

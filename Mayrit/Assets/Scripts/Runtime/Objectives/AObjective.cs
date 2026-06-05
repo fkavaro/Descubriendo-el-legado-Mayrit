@@ -36,7 +36,7 @@ where T : AObjective<T, TData>
         if (_model == null)
             _model = transform.GetChild(0).gameObject;
 
-        Complete();
+        CompleteAndUpdateVisuals();
     }
 
     protected virtual void Start()
@@ -50,13 +50,18 @@ where T : AObjective<T, TData>
         _cameraManager.CameraStateChangedEvent -= OnCameraStateChanged;
     }
 
-    protected virtual void OnTriggerEnter(Collider other)
+    protected void OnTriggerEnter(Collider other)
     {
         if (_isReached) return;
         if (((1 << other.gameObject.layer) & _detectionMask) == 0) return;
 
-        Complete();
+        OnTriggerEnterAction();
         OnReachedEvent?.Invoke((T)this);
+    }
+
+    protected virtual void OnTriggerEnterAction()
+    {
+        CompleteAndUpdateVisuals();
     }
     #endregion
 
@@ -68,11 +73,16 @@ where T : AObjective<T, TData>
         UpdateVisuals();
     }
 
-    public virtual void Complete()
+    public virtual void CompleteAndUpdateVisuals()
+    {
+        Complete();
+        UpdateVisuals();
+    }
+
+    protected virtual void Complete()
     {
         _isReached = true;
         _sphereCollider.enabled = false;
-        UpdateVisuals();
     }
 
     protected virtual void UpdateVisuals()

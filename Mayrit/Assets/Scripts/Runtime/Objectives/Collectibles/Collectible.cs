@@ -1,8 +1,47 @@
+using System;
 using UnityEngine;
 
 public class Collectible : AObjective<Collectible, CollectibleSO>
 {
-    #region DEBUG GIZMOS
+    public OrbitalStateSetting OrbitalStateSetting => _orbitalStateSetting;
+
+    [SerializeField] OrbitalStateSetting _orbitalStateSetting;
+
+    UIManager _uiManager;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        _orbitalStateSetting.DataToShow = _data.Data;
+        _orbitalStateSetting.TransitionToApply = CameraTransition.ThirdPersonCamera;
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+
+        _uiManager = ServiceLocator.Instance.Get<UIManager>();
+        _uiManager.ContextualPanelHiddenEvent += OnContextualPanelHidden;
+    }
+
+    protected override void OnTriggerEnterAction()
+    {
+        Complete();
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        _uiManager.ContextualPanelHiddenEvent -= OnContextualPanelHidden;
+    }
+
+    void OnContextualPanelHidden()
+    {
+        if (_isReached)
+            UpdateVisuals();
+    }
+
     void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
@@ -14,5 +53,4 @@ public class Collectible : AObjective<Collectible, CollectibleSO>
             string.IsNullOrEmpty(_data.Data.Header) ? name : _data.Data.Header);
 #endif
     }
-    #endregion
 }

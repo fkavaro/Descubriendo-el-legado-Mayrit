@@ -72,6 +72,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     // Dependency Injection
     ScenesController _scenesController;
     TourManager _tourManager;
+    CollectiblesManager _collectiblesManager;
     CameraManager _cameraManager;
     #endregion
 
@@ -219,6 +220,12 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
                 _cameraManager.CameraStateChangedEvent -= OnCameraStateChanged;
                 _cameraManager = null;
             }
+
+            if (_collectiblesManager != null)
+            {
+                _collectiblesManager.OnCollectibleFoundEvent -= OnCollectibleFound;
+                _collectiblesManager = null;
+            }
         }
         // In gameplay scene
         else if (loadedScenes.ContainsValue(SceneDatabase.SceneName.GameplayScene))
@@ -226,6 +233,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
             // Get dependencies from ServiceLocator
             _tourManager = ServiceLocator.Instance.Get<TourManager>();
             _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
+            _collectiblesManager = ServiceLocator.Instance.Get<CollectiblesManager>();
 
             // Subscribe to events
             _playerHUDState.ContextualPanelHiddenEvent += OnContextualPanelHidden;
@@ -235,6 +243,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
             _aerialHUDState._modernVisualizactionSwitch.Toggled += OnModernVisualizationToggled;
             _tourManager.TourStopVisitedEvent += OnTourStopVisited;
             _cameraManager.CameraStateChangedEvent += OnCameraStateChanged;
+            _collectiblesManager.OnCollectibleFoundEvent += OnCollectibleFound;
         }
 
         // A milestone scene loaded
@@ -279,6 +288,12 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     {
         if (tourStop.Data != null)
             ShowContextualPanel(tourStop.Data);
+    }
+
+    void OnCollectibleFound(Collectible collectible)
+    {
+        if (collectible.Data != null)
+            ShowContextualPanel(collectible.Data.Data);
     }
 
     void OnContextualPanelHidden()

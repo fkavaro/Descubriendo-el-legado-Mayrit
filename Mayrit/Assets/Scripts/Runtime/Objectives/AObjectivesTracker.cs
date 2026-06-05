@@ -87,7 +87,7 @@ public abstract class AObjectivesTracker<TTracker, TObject, TData> : MonoBehavio
     {
         _isCompleted = true;
         _reachedCount = _totalCount;
-        foreach (var obj in _objectives) obj.Complete();
+        foreach (var obj in _objectives) obj.CompleteAndUpdateVisuals();
     }
     #endregion
 
@@ -102,7 +102,7 @@ public abstract class AObjectivesTracker<TTracker, TObject, TData> : MonoBehavio
 
         if (_reachedCount >= _totalCount)
         {
-            Complete();
+            _isCompleted = true;
             OnCompletedEvent?.Invoke();
         }
         else
