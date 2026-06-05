@@ -71,8 +71,6 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
 
     // Dependency Injection
     ScenesController _scenesController;
-    TourManager _tourManager;
-    CollectiblesManager _collectiblesManager;
     CameraManager _cameraManager;
     #endregion
 
@@ -209,31 +207,17 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
             _aerialHUDState.ResetTourEvent -= OnResetTourClicked;
             _aerialHUDState._modernVisualizactionSwitch.Toggled -= OnModernVisualizationToggled;
 
-            if (_tourManager != null)
-            {
-                _tourManager.TourStopVisitedEvent -= OnTourStopVisited;
-                _tourManager = null;
-            }
-
             if (_cameraManager != null)
             {
                 _cameraManager.CameraStateChangedEvent -= OnCameraStateChanged;
                 _cameraManager = null;
-            }
-
-            if (_collectiblesManager != null)
-            {
-                _collectiblesManager.OnCollectibleFoundEvent -= OnCollectibleFound;
-                _collectiblesManager = null;
             }
         }
         // In gameplay scene
         else if (loadedScenes.ContainsValue(SceneDatabase.SceneName.GameplayScene))
         {
             // Get dependencies from ServiceLocator
-            _tourManager = ServiceLocator.Instance.Get<TourManager>();
             _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
-            _collectiblesManager = ServiceLocator.Instance.Get<CollectiblesManager>();
 
             // Subscribe to events
             _playerHUDState.ContextualPanelHiddenEvent += OnContextualPanelHidden;
@@ -241,9 +225,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
             _aerialHUDState.PlayTourEvent += OnPlayTourClicked;
             _aerialHUDState.ResetTourEvent += OnResetTourClicked;
             _aerialHUDState._modernVisualizactionSwitch.Toggled += OnModernVisualizationToggled;
-            _tourManager.TourStopVisitedEvent += OnTourStopVisited;
             _cameraManager.CameraStateChangedEvent += OnCameraStateChanged;
-            _collectiblesManager.OnCollectibleFoundEvent += OnCollectibleFound;
         }
 
         // A milestone scene loaded
@@ -253,9 +235,13 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
 
     private void OnCameraStateChanged()
     {
-        if (_cameraManager.IsInAerialState || _cameraManager.IsInOrbitalState)
+        if (_cameraManager.IsInAerialState)
             SwitchToAerialHUDState();
-        else
+        else if (_cameraManager.IsInOrbitalState)
+            ShowContextualPanel(_cameraManager.OrbitalState.Setting.DataToShow);
+        else if (_cameraManager.IsInTourStopState)
+            ShowContextualPanel(_cameraManager.TourStopState.DataToShow);
+        else if (_cameraManager.IsInThirdPersonState)
             SwitchToPlayerHUDState();
     }
 
@@ -282,18 +268,6 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     void OnModernVisualizationToggled(bool value)
     {
         ModernVisualizationToggled?.Invoke(value);
-    }
-
-    void OnTourStopVisited(TourStop tourStop)
-    {
-        if (tourStop.Data != null)
-            ShowContextualPanel(tourStop.Data);
-    }
-
-    void OnCollectibleFound(Collectible collectible)
-    {
-        if (collectible.Data != null)
-            ShowContextualPanel(collectible.Data.Data);
     }
 
     void OnContextualPanelHidden()

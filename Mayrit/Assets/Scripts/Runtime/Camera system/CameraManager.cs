@@ -8,12 +8,13 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
 {
     #region GETTERS
     public bool IsInAerialState => _fsm.IsCurrentState(_aerialState);
-
+    public Aerial_CameraState AerialState => _aerialState;
     public bool IsInOrbitalState => _fsm.IsCurrentState(_orbitalState);
-
+    public Orbital_CameraState OrbitalState => _orbitalState;
     public bool IsInThirdPersonState => _fsm.IsCurrentState(_thirdPersonState);
-
+    public ThirdPerson_CameraState ThirdPersonState => _thirdPersonState;
     public bool IsInTourStopState => _fsm.IsCurrentState(_tourStopState);
+    public TourStop_CameraState TourStopState => _tourStopState;
 
     public PlayableCharacter PlayableCharacter => _playableCharacter;
 
@@ -194,10 +195,11 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     /// Switches to TourStop camera mode.
     /// </summary>
     /// <param name="camera">The TourStop camera to switch to.</param>
-    public void SwitchToTourStopCamera(CinemachineCamera camera)
+    public void SwitchToTourStopCamera(CinemachineCamera camera, DataSO dataToShow)
     {
         _soundManager.PlayCameraTransitionSFX();
         _tourStopState.Camera = camera;
+        _tourStopState.DataToShow = dataToShow;
         _fsm.SwitchState(_tourStopState);
         CameraStateChangedEvent?.Invoke();
     }
@@ -381,7 +383,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         }
 
         if (IsInThirdPersonState)
-            SwitchToTourStopCamera(tourStop.Camera);
+            SwitchToTourStopCamera(tourStop.Camera, tourStop.Data);
     }
 
     void OnCollectibleFound(Collectible collectible)

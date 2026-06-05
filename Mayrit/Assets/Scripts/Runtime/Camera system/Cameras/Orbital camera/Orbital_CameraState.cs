@@ -5,17 +5,9 @@ using UnityEngine.InputSystem;
 
 public class Orbital_CameraState : ACameraState
 {
-    #region PROPERTIES HELPERS
-    public OrbitalStateSetting Setting
-    {
-        get => _setting;
-        set => _setting = value;
-    }
-    #endregion
-
     #region PROPERTIES
     readonly OrbitalCameraController _controller;
-    OrbitalStateSetting _setting;
+    public OrbitalStateSetting Setting;
     #endregion
 
     #region CONSTRUCTOR
@@ -33,8 +25,8 @@ public class Orbital_CameraState : ACameraState
 
         _gameManager.InputActions.Camera.Enable();
 
-        _controller.Start(_setting);
-        _uiManager.ShowContextualPanel(_setting.DataToShow);
+        _controller.Start(Setting);
+        _uiManager.ShowContextualPanel(Setting.DataToShow);
     }
 
     public override void LateUpdateState()
