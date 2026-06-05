@@ -101,15 +101,17 @@ public class AerialHUD_UIState : AHUDState
     void CheckMilestoneButtonsAvailability()
     {
         bool isTherePreviousMilestone = !_progressManager.AtFirstMilestone();
-        bool isCurrentMilestoneCompleted = _progressManager.IsCurrentMilestoneCompleted();
-        bool atLastMilestone = _progressManager.AtLastMilestone();
 
         _previousMilestoneButton.SetEnabled(isTherePreviousMilestone);
         _previousMilestoneButton.pickingMode = isTherePreviousMilestone ? PickingMode.Position : PickingMode.Ignore;
 
-        _nextMilestoneButton.SetEnabled(isCurrentMilestoneCompleted);
-        _nextMilestoneButton.pickingMode = isCurrentMilestoneCompleted ? PickingMode.Position : PickingMode.Ignore;
-        _nextMilestoneButtonImage.pickingMode = isCurrentMilestoneCompleted ? PickingMode.Position : PickingMode.Ignore;
+        bool isCurrentMilestoneCompleted = _progressManager.IsCurrentMilestoneCompleted();
+        bool atLastMilestone = _progressManager.AtLastMilestone();
+        bool isNextMilestoneAvailable = !atLastMilestone && isCurrentMilestoneCompleted;
+
+        _nextMilestoneButton.SetEnabled(isNextMilestoneAvailable);
+        _nextMilestoneButton.pickingMode = isNextMilestoneAvailable ? PickingMode.Position : PickingMode.Ignore;
+        _nextMilestoneButtonImage.pickingMode = isNextMilestoneAvailable ? PickingMode.Position : PickingMode.Ignore;
     }
     #endregion
 
@@ -129,12 +131,6 @@ public class AerialHUD_UIState : AHUDState
     void OnNextMilestoneClicked(ClickEvent evt)
     {
         _progressManager.SwitchToNextMilestone();
-        _soundManager.PlayButtonClickSFX();
-    }
-
-    void OnMainMenuClicked(ClickEvent evt)
-    {
-        _gameManager.SwitchToMainMenuState();
         _soundManager.PlayButtonClickSFX();
     }
 
