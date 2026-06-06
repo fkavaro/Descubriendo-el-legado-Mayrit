@@ -54,6 +54,8 @@ public class ContextualPanel_UIState : AUIState
     {
         base.StartState();
 
+        _gameManager.InputActions.UI.Enable();
+        _gameManager.InputActions.UI.Pause.performed += OnPauseKeyPressed;
         _gameManager.InputActions.UI.CloseContextualPanel.performed += OnCloseAction;
 
         if (DataToShow == null)
@@ -112,6 +114,8 @@ public class ContextualPanel_UIState : AUIState
     {
         base.ExitState();
 
+        _gameManager.InputActions.UI.Disable();
+        _gameManager.InputActions.UI.Pause.performed -= OnPauseKeyPressed;
         _gameManager.InputActions.UI.CloseContextualPanel.performed -= OnCloseAction;
     }
     #endregion
@@ -140,6 +144,16 @@ public class ContextualPanel_UIState : AUIState
     #endregion
 
     #region CALLBACK METHODS
+    void OnCloseAction(InputAction.CallbackContext context)
+    {
+        OnCloseButton(null);
+    }
+
+    void OnPauseKeyPressed(InputAction.CallbackContext context)
+    {
+        OnPauseClicked(null);
+    }
+
     void OnCloseButton(ClickEvent evt)
     {
         ClosedEvent?.Invoke();
@@ -147,11 +161,10 @@ public class ContextualPanel_UIState : AUIState
         ClearContextualPanel();
     }
 
-    void OnCloseAction(InputAction.CallbackContext context)
+    void OnPauseClicked(ClickEvent evt)
     {
-        ClosedEvent?.Invoke();
+        _uiManager.SwitchToPauseState();
         _soundManager.PlayButtonClickSFX();
-        ClearContextualPanel();
     }
 
     void OnStartTour(ClickEvent evt)
@@ -164,12 +177,6 @@ public class ContextualPanel_UIState : AUIState
     {
         ResetTourClickedEvent?.Invoke();
         ClearContextualPanel();
-    }
-
-    void OnPauseClicked(ClickEvent evt)
-    {
-        _uiManager.SwitchToPauseState();
-        _soundManager.PlayButtonClickSFX();
     }
     #endregion
 }

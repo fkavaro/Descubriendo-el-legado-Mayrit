@@ -340,6 +340,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5795229730612990247, guid: f159fddb4a5e56746916cbd293b0859e, type: 3}
       propertyPath: _edgeScrollingValueSet
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5795229730612990247, guid: f159fddb4a5e56746916cbd293b0859e, type: 3}
+      propertyPath: _controlsVisibilityValueSet
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8119952740670593480, guid: f159fddb4a5e56746916cbd293b0859e, type: 3}
