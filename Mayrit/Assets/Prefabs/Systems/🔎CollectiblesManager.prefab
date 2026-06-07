@@ -45,8 +45,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   _currentTracker: {fileID: 0}
-  _nextCollectible: {fileID: 0}
   _allCollectiblesSOs:
   - {fileID: 11400000, guid: 911d98e9eac19654b8de3a26d46b0b28, type: 2}
-  _totalCollectiblesCount: 0
-  _foundCollectiblesCount: 0
+  - {fileID: 11400000, guid: db89dd3a7fe453e459a7cc3cf0e169be, type: 2}
+  - {fileID: 11400000, guid: 785779222ffcc754aba5b5686d8d0ac6, type: 2}
+  - {fileID: 11400000, guid: 4c692d52a6c08a842a35fd538ad60794, type: 2}
+  - {fileID: 11400000, guid: d1637395eb0679f40abd42d3ddb952c5, type: 2}
+  - {fileID: 11400000, guid: bc6049e16fa372747a45e1459c94e15f, type: 2}
+  - {fileID: 11400000, guid: 957e99a52f68b084da7f5d7c0beefdaa, type: 2}
+  - {fileID: 11400000, guid: 5afea1fcb9feb97418a12ba9fa377321, type: 2}
+  _allFoundCollectiblesSOs: []

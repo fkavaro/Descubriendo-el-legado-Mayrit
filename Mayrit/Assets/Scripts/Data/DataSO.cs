@@ -9,7 +9,8 @@ public class DataSO : ScriptableObject
         Player,
         POI,
         ModernBuilding,
-        Other
+        Other,
+        Collectible
     }
 
 
@@ -33,6 +34,7 @@ public class DataSO : ScriptableObject
     public bool IsPlayer => _dataType == DataType.Player;
     public bool IsPOI => _dataType == DataType.POI;
     public bool IsModernBuilding => _dataType == DataType.ModernBuilding;
+    public bool IsCollectible => _dataType == DataType.Collectible;
     public bool IsOther => _dataType == DataType.Other;
     public string Header => _header;
     public string SubHeader => _subHeader;
