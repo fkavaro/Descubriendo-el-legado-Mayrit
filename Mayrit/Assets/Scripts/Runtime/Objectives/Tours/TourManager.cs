@@ -94,7 +94,7 @@ public class TourManager : MonoBehaviour
         if (type == SceneDatabase.SceneType.Milestone)
         {
             AttachToTour(ServiceLocator.Instance.Get<Tour>());
-            _uiManager.StateChangedEvent += OnUIStateChanged;
+
             _playableCharacter = ServiceLocator.Instance.Get<PlayableCharacter>();
 
             if (_playableCharacter == null)
@@ -117,8 +117,7 @@ public class TourManager : MonoBehaviour
     {
         if (_uiManager.IsInContextualPanelState) return;
 
-        // Invoke completed event if tour is completed
-        if (_currentTour != null && _currentTour.IsCompleted)
+        if (_currentTour.IsCompleted)
         {
             _soundManager.PlayTourEndSFX();
             _uiManager.StateChangedEvent -= OnUIStateChanged;
@@ -128,6 +127,8 @@ public class TourManager : MonoBehaviour
     void OnTourCompleted()
     {
         TourCompletedEvent?.Invoke(_currentTour);
+
+        _uiManager.StateChangedEvent += OnUIStateChanged;
     }
 
     void OnPlayTourClicked()

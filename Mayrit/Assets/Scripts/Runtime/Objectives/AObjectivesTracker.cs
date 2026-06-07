@@ -103,11 +103,15 @@ public abstract class AObjectivesTracker<TTracker, TObject, TData> : MonoBehavio
         if (_reachedCount >= _totalCount)
         {
             _isCompleted = true;
+            OnCompleteAction();
             OnCompletedEvent?.Invoke();
         }
         else
             _objectives[_currentIdx].Reset();
     }
+    #endregion
 
+    #region OVERRIDEABLE ACTIONS
+    protected virtual void OnCompleteAction() { }
     #endregion
 }
