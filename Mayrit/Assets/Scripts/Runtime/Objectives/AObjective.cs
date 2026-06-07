@@ -40,8 +40,6 @@ where T : AObjective<T, TData>
             _vfx = transform.Find("VFX").gameObject;
         if (_vfx == null && transform.childCount > 1)
             _vfx = transform.GetChild(1).gameObject;
-
-        CompleteAndUpdateVisuals();
     }
 
     protected virtual void Start()
@@ -60,13 +58,7 @@ where T : AObjective<T, TData>
         if (_isReached) return;
         if (((1 << other.gameObject.layer) & _detectionMask) == 0) return;
 
-        OnTriggerEnterAction();
         OnReachedEvent?.Invoke((T)this);
-    }
-
-    protected virtual void OnTriggerEnterAction()
-    {
-        CompleteAndUpdateVisuals();
     }
     #endregion
 
@@ -75,33 +67,36 @@ where T : AObjective<T, TData>
     {
         _isReached = false;
         _sphereCollider.enabled = true;
-        UpdateVisuals();
+        UpdateModel();
     }
 
     public virtual void CompleteAndUpdateVisuals()
     {
         Complete();
-        UpdateVisuals();
+        UpdateModel();
+        UpdateVFX();
     }
 
-    protected virtual void Complete()
+    public virtual void Complete()
     {
         _isReached = true;
         _sphereCollider.enabled = false;
     }
 
-    protected virtual void UpdateVisuals()
+    public virtual void UpdateModel()
     {
         if (_data != null)
-        {
             _model.SetActive(!_isReached);
-            _vfx.SetActive(!_isReached);
-        }
         else
-        {
             _model.SetActive(false);
+    }
+
+    public virtual void UpdateVFX()
+    {
+        if (_data != null)
+            _vfx.SetActive(!_isReached);
+        else
             _vfx.SetActive(false);
-        }
     }
 
     void InitializeCollider()
@@ -116,7 +111,10 @@ where T : AObjective<T, TData>
     void OnCameraStateChanged()
     {
         if (_cameraManager.IsInThirdPersonState)
-            UpdateVisuals();
+        {
+            UpdateModel();
+            UpdateVFX();
+        }
     }
 
     void SetupDefaultLayerMask()

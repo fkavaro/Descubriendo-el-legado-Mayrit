@@ -12,7 +12,6 @@ public class CollectiblesManager : MonoBehaviour
     public int TotalCollectiblesCount => _currentTracker != null ? _currentTracker.TotalCount : 0;
     public int AllTotalCollectiblesCount => _allCollectiblesSOs.Count;
     public int AllFoundCollectiblesCount => _allFoundCollectiblesSOs.Count;
-
     #endregion
 
     #region EDITOR PROPERTIES
@@ -26,16 +25,23 @@ public class CollectiblesManager : MonoBehaviour
 
     private HashSet<CollectibleSO> _allTotalCollectiblesHash;
     private readonly HashSet<CollectibleSO> _allFoundCollectiblesHash = new();
+    private readonly Dictionary<int, CollectibleSO> _idToCollectibleMap = new();
 
     ScenesController _scenesController;
     SoundManager _soundManager;
-    ProgressManager _progressManager;
     #endregion
 
     #region LIFE CYCLE
     void Awake()
     {
         _allTotalCollectiblesHash = new HashSet<CollectibleSO>(_allCollectiblesSOs);
+
+        _idToCollectibleMap.Clear();
+        foreach (var so in _allCollectiblesSOs)
+        {
+            if (so != null && !_idToCollectibleMap.ContainsKey(so.ID))
+                _idToCollectibleMap.Add(so.ID, so);
+        }
 
         ServiceLocator.Instance.Register(this);
     }
@@ -44,7 +50,6 @@ public class CollectiblesManager : MonoBehaviour
     {
         _scenesController = ServiceLocator.Instance.Get<ScenesController>();
         _soundManager = ServiceLocator.Instance.Get<SoundManager>();
-        _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
 
         _scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
     }
@@ -52,16 +57,60 @@ public class CollectiblesManager : MonoBehaviour
     void OnDisable()
     {
         ServiceLocator.Instance.Unregister(this);
-        DetachFromTracker();
+        DetachFromCurrentTracker();
+
+        if (_scenesController != null)
+            _scenesController.SceneLoadedPartiallyEvent -= OnSceneLoadedPartially;
     }
     #endregion
 
-    #region PUBLIC METHODS
+    #region CALLBACK METHODS
+    void OnSceneLoadedPartially(SceneDatabase.SceneType type, SceneDatabase.SceneName name)
+    {
+        if (type == SceneDatabase.SceneType.Milestone)
+        {
+            LoadSavedCollectiblesData();
+            AttachToNewTracker(ServiceLocator.Instance.Get<CollectiblesTracker>());
+        }
+    }
 
+    void OnCollectibleFound(Collectible collectible)
+    {
+        var info = collectible.Data;
+        if (info == null) return;
+
+        if (_allFoundCollectiblesHash.Add(info))
+        {
+            _allFoundCollectiblesSOs.Add(info);
+            GameSaveSystem.SaveFoundCollectible(info.ID);
+            _soundManager.PlayTourEndSFX();
+        }
+        else
+            Debug.LogWarning($"[CollectiblesManager] {info.Data.Header} had been already found.");
+
+        OnCollectibleFoundEvent?.Invoke(collectible);
+    }
     #endregion
 
     #region PRIVATE METHODS
-    void AttachToTracker(CollectiblesTracker tracker)
+    void LoadSavedCollectiblesData()
+    {
+        _allFoundCollectiblesHash.Clear();
+        _allFoundCollectiblesSOs.Clear();
+
+        List<int> savedIds = GameSaveSystem.LoadFoundCollectibles();
+
+        foreach (int id in savedIds)
+        {
+            if (_idToCollectibleMap.TryGetValue(id, out CollectibleSO foundSO))
+            {
+                if (_allFoundCollectiblesHash.Add(foundSO))
+                    _allFoundCollectiblesSOs.Add(foundSO);
+            }
+        }
+    }
+
+    void AttachToNewTracker(CollectiblesTracker tracker)
     {
         if (tracker == null)
         {
@@ -74,56 +123,19 @@ public class CollectiblesManager : MonoBehaviour
             return;
         }
 
-        // Detach previous
-        DetachFromTracker();
+        DetachFromCurrentTracker();
 
-        // Update current
         _currentTracker = tracker;
-        _currentTracker.Reset();
+
+        _currentTracker.SyncWithReachedObjectives(_allFoundCollectiblesHash);
         _currentTracker.OnObjectiveReachedEvent += OnCollectibleFound;
     }
 
-    void DetachFromTracker()
+    void DetachFromCurrentTracker()
     {
         if (_currentTracker == null) return;
 
         _currentTracker.OnObjectiveReachedEvent -= OnCollectibleFound;
-    }
-    #endregion
-
-    #region CALLBACK METHODS
-    void OnSceneLoadedPartially(SceneDatabase.SceneType type, SceneDatabase.SceneName name)
-    {
-        // Milestone loaded: attach to its tour
-        if (type == SceneDatabase.SceneType.Milestone)
-        {
-            AttachToTracker(ServiceLocator.Instance.Get<CollectiblesTracker>());
-
-            //TODO: Set found collectibles count based on progress on scene load
-            //tracker.SetFoundCollectibles = _progressManager.FoundCollectibles;
-        }
-    }
-
-    private void OnCollectibleFound(Collectible collectible)
-    {
-        var info = collectible.Data;
-        if (info == null) return;
-
-        if (!_allTotalCollectiblesHash.Contains(info))
-        {
-            Debug.LogWarning($"[CollectiblesManager] {info.Data.Header} is not in the list of all collectibles. Please add it to the list if you want it to be tracked.", collectible);
-            return;
-        }
-
-        if (_allFoundCollectiblesHash.Add(info))
-        {
-            // TODO: change to custom SFX
-            _soundManager.PlayTourEndSFX();
-        }
-        else
-            Debug.LogWarning($"[CollectiblesManager] {info.Data.Header} had been already found.");
-
-        OnCollectibleFoundEvent?.Invoke(collectible);
     }
     #endregion
 }

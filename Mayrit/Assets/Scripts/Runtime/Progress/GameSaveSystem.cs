@@ -1,11 +1,14 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 [Serializable]
 public class PlayerProgressData
 {
-    public int StoredMilestoneIndex = -1; // Highest milestone index reached. -1 means no progress.
+    public int StoredMilestoneIndex = -1; // -1 means no progress.
     public bool HasCompletedTutorial = false;
+
+    public List<int> FoundCollectiblesIDs = new();
 }
 
 public static class GameSaveSystem
@@ -47,9 +50,15 @@ public static class GameSaveSystem
         return data.HasCompletedTutorial;
     }
 
+    public static List<int> LoadFoundCollectibles()
+    {
+        PlayerProgressData data = LoadAllData();
+        return data.FoundCollectiblesIDs;
+    }
+
     public static void SaveMilestoneIdx(int milestoneIndex)
     {
-        PlayerProgressData data = LoadAllData(); // Load existing progress to preserve tutorial completion status.
+        PlayerProgressData data = LoadAllData();
         data.StoredMilestoneIndex = milestoneIndex;
 
         string json = JsonUtility.ToJson(data);
@@ -59,8 +68,23 @@ public static class GameSaveSystem
 
     public static void SaveTutorial(bool hasCompletedTutorial)
     {
-        PlayerProgressData data = LoadAllData(); // Load existing progress to preserve milestone index.
+        PlayerProgressData data = LoadAllData();
         data.HasCompletedTutorial = hasCompletedTutorial;
+
+        string json = JsonUtility.ToJson(data);
+        PlayerPrefs.SetString(SaveKey, json);
+        PlayerPrefs.Save();
+    }
+
+    public static void SaveFoundCollectible(int id)
+    {
+        if (id < 0) return;
+
+        PlayerProgressData data = LoadAllData();
+
+        if (data.FoundCollectiblesIDs.Contains(id)) return;
+
+        data.FoundCollectiblesIDs.Add(id);
 
         string json = JsonUtility.ToJson(data);
         PlayerPrefs.SetString(SaveKey, json);
@@ -77,6 +101,16 @@ public static class GameSaveSystem
     {
         PlayerProgressData data = LoadAllData();
         data.HasCompletedTutorial = false;
+
+        string json = JsonUtility.ToJson(data);
+        PlayerPrefs.SetString(SaveKey, json);
+        PlayerPrefs.Save();
+    }
+
+    public static void ResetFoundCollectibles()
+    {
+        PlayerProgressData data = LoadAllData();
+        data.FoundCollectiblesIDs.Clear();
 
         string json = JsonUtility.ToJson(data);
         PlayerPrefs.SetString(SaveKey, json);

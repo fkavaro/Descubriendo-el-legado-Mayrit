@@ -7,42 +7,12 @@ public class Collectible : AObjective<Collectible, CollectibleSO>
 
     [SerializeField] OrbitalStateSetting _orbitalStateSetting;
 
-    UIManager _uiManager;
-
     protected override void Awake()
     {
         base.Awake();
 
         _orbitalStateSetting.DataToShow = _data.Data;
         _orbitalStateSetting.TransitionToApply = CameraTransition.ThirdPersonCamera;
-    }
-
-    protected override void Start()
-    {
-        base.Start();
-
-        _uiManager = ServiceLocator.Instance.Get<UIManager>();
-        _uiManager.StateChangedEvent += OnUIStateChanged;
-    }
-
-    protected override void OnTriggerEnterAction()
-    {
-        Complete();
-        _vfx.SetActive(false);
-    }
-
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-        _uiManager.StateChangedEvent -= OnUIStateChanged;
-    }
-
-    void OnUIStateChanged()
-    {
-        if (_uiManager.IsInContextualPanelState) return;
-
-        if (_isReached)
-            UpdateVisuals();
     }
 
     void OnDrawGizmos()

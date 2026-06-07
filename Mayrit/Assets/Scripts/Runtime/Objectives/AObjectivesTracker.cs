@@ -12,7 +12,10 @@ public abstract class AObjectivesTracker<TTracker, TObject, TData> : MonoBehavio
     [SerializeField] protected List<TObject> _objectives = new();
 
     [Header("Progress")]
-    [SerializeField] protected int _currentIdx = 0;
+    [SerializeField] protected TObject _currentObjective;
+    [SerializeField] protected TObject _currentValidObjective;
+    [SerializeField] protected int _currentIdx = -1;
+    [SerializeField] protected int _currentValidIdx = -1;
     [SerializeField] protected int _totalCount = 0;
     [SerializeField] protected int _reachedCount = 0;
     #endregion
@@ -20,25 +23,13 @@ public abstract class AObjectivesTracker<TTracker, TObject, TData> : MonoBehavio
     #region INTERNAL PROPERTIES
     public event Action<TObject> OnObjectiveReachedEvent;
     public event Action OnCompletedEvent;
+
+    UIManager _uiManager;
     #endregion
 
     #region ACCESSORS
-    public TObject CurrentObjective => (_currentIdx >= 0 && _currentIdx < _objectives.Count) ? _objectives[_currentIdx] : null;
-    public TObject CurrentValidObjective
-    {
-        get
-        {
-            int tempIdx = _currentIdx;
-            while (tempIdx < _objectives.Count)
-            {
-                if (_objectives[tempIdx].Data != null)
-                    return _objectives[tempIdx];
-                else
-                    tempIdx++;
-            }
-            return null;
-        }
-    }
+    public TObject CurrentObjective => _currentObjective;
+    public TObject CurrentValidObjective => _currentValidObjective;
     public bool IsCompleted => _isCompleted;
     public int ReachedCount => _reachedCount;
     public int TotalCount => _totalCount;
@@ -58,17 +49,15 @@ public abstract class AObjectivesTracker<TTracker, TObject, TData> : MonoBehavio
         ServiceLocator.Instance.Register((TTracker)this);
     }
 
-    protected virtual void OnEnable()
+    protected virtual void Start()
     {
-        foreach (var obj in _objectives)
-            obj.OnReachedEvent += HandleObjectReached;
+        _uiManager = ServiceLocator.Instance.Get<UIManager>();
+        _uiManager.StateChangedEvent += OnUIStateChanged;
     }
 
     protected virtual void OnDisable()
     {
-        foreach (var obj in _objectives)
-            if (obj != null) obj.OnReachedEvent -= HandleObjectReached;
-
+        _uiManager.StateChangedEvent -= OnUIStateChanged;
         ServiceLocator.Instance.Unregister((TTracker)this);
     }
     #endregion
@@ -77,41 +66,113 @@ public abstract class AObjectivesTracker<TTracker, TObject, TData> : MonoBehavio
     public virtual void Reset()
     {
         _isCompleted = false;
-        _currentIdx = 0;
-        _reachedCount = 0;
-        _objectives[_currentIdx].Reset();
+
+        foreach (var obj in _objectives)
+            obj.Reset();
+
+        UpdateStateAndProgress();
     }
 
+    public virtual void SyncWithReachedObjectives(HashSet<TData> allReachedCollectiblesHash)
+    {
+        foreach (var obj in _objectives)
+            if (obj.Data != null && allReachedCollectiblesHash.Contains(obj.Data))
+                obj.CompleteAndUpdateVisuals();
+
+        UpdateStateAndProgress();
+    }
 
     public virtual void Complete()
     {
         _isCompleted = true;
         _reachedCount = _totalCount;
-        foreach (var obj in _objectives) obj.CompleteAndUpdateVisuals();
+        foreach (var obj in _objectives)
+            obj.CompleteAndUpdateVisuals();
     }
     #endregion
 
-    #region LOGIC
-    protected virtual void HandleObjectReached(TObject obj)
+    void OnUIStateChanged()
     {
-        if (obj.Data != null)
-            _reachedCount++;
-        _currentIdx++;
+        if (_uiManager.IsInContextualPanelState) return;
 
-        OnObjectiveReachedEvent?.Invoke(obj);
+        _currentObjective?.UpdateModel();
+    }
 
-        if (_reachedCount >= _totalCount)
-        {
-            _isCompleted = true;
-            OnCompleteAction();
+    #region PRIVATE METHODS
+    protected void HandleObjectReached(TObject reachedObj)
+    {
+        UpdateStateAndProgress();
+
+        OnObjectiveReachedAction(reachedObj);
+
+        OnObjectiveReachedEvent?.Invoke(reachedObj);
+
+        if (_isCompleted)
             OnCompletedEvent?.Invoke();
+    }
+
+    void UpdateStateAndProgress()
+    {
+        _currentIdx = -1;
+        _currentValidIdx = -1;
+        _reachedCount = 0;
+
+        if (_currentObjective != null)
+            _currentObjective.OnReachedEvent -= HandleObjectReached;
+        if (_currentValidObjective != null)
+            _currentValidObjective.OnReachedEvent -= HandleObjectReached;
+
+        bool foundNextIdx = false;
+        bool foundNextValidIdx = false;
+
+        for (int i = 0; i < _objectives.Count; i++)
+        {
+            var obj = _objectives[i];
+
+            if (obj.IsReached)
+            {
+                if (obj.Data != null)
+                    _reachedCount++;
+            }
+            else
+            {
+                if (!foundNextIdx)
+                {
+                    _currentIdx = i;
+                    _currentObjective = _objectives[_currentIdx];
+                    foundNextIdx = true;
+                }
+
+                if (!foundNextValidIdx && obj.Data != null)
+                {
+                    _currentValidIdx = i;
+                    _currentValidObjective = _objectives[_currentValidIdx];
+                    foundNextValidIdx = true;
+                }
+            }
+        }
+
+        _isCompleted = _reachedCount >= _totalCount;
+
+        if (_isCompleted)
+        {
+            _currentObjective = null;
+            _currentValidObjective = null;
         }
         else
-            _objectives[_currentIdx].Reset();
+        {
+            _currentObjective.Reset();
+            _currentObjective.OnReachedEvent += HandleObjectReached;
+            _currentValidObjective.Reset();
+            _currentValidObjective.OnReachedEvent += HandleObjectReached;
+        }
     }
     #endregion
 
-    #region OVERRIDEABLE ACTIONS
-    protected virtual void OnCompleteAction() { }
+    #region PROTECTED VIRTUAL METHODS
+    protected virtual void OnObjectiveReachedAction(TObject reachedObj)
+    {
+        reachedObj.CompleteAndUpdateVisuals();
+    }
     #endregion
 }
