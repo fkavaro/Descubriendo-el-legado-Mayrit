@@ -116,6 +116,7 @@ where BehaviourSystemType : ABehaviourSystem
     protected NPCInteractionController _interactionController;
     protected NavMeshAgent _agent;
     protected CooldownDecorator _conversationCooldownNode;
+    protected NPCPoolManager _poolManager;
     #endregion
 
     #region LIFE CYCLE
@@ -126,6 +127,13 @@ where BehaviourSystemType : ABehaviourSystem
         _movementController = new(this);
         _interactionController = new(this, _agent, _interactionRange, _conversationCooldownNode);
         base.Awake();
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+
+        _poolManager = ServiceLocator.Instance.Get<NPCPoolManager>();
     }
 
     protected override void Update()
@@ -145,21 +153,47 @@ where BehaviourSystemType : ABehaviourSystem
     {
         if (_characterModel == null)
         {
-            Debug.LogWarning($"[{gameObject.name}.ACharacter.SetCharacterActive()] Character Model reference is missing", gameObject);
+            Debug.LogWarning($"[{gameObject.name}.SetCharacterActive()] Character Model reference is missing", gameObject);
             return;
         }
 
         if (_agent == null)
         {
-            Debug.LogWarning($"[{gameObject.name}.ANPC.SetCharacterActive()] NavMeshAgent component is missing", gameObject);
+            Debug.LogWarning($"[{gameObject.name}.SetCharacterActive()] NavMeshAgent component is missing", gameObject);
             return;
         }
 
+        if (isActive)
+        {
+            Vector3 currentPosition = transform.position;
 
+            if (!NavMesh.SamplePosition(currentPosition, out NavMeshHit hit, 0.15f, NavMesh.AllAreas))
+            {
+                if (NavMesh.SamplePosition(currentPosition, out hit, 2.0f, NavMesh.AllAreas))
+                {
+                    transform.position = hit.position;
+                }
+                else
+                {
+                    OnFailedToActivate();
+                    return;
+                }
+            }
+
+            _agent.enabled = true;
+        }
+        else
+        {
+            _agent.enabled = false;
+        }
 
         _characterModel.SetActive(isActive && _shouldRenderCharacterModel);
-        // TODO if failed, return to pool
-        _agent.enabled = isActive;
         _isOutdoors = isActive;
+    }
+
+    protected virtual void OnFailedToActivate()
+    {
+        _characterModel.SetActive(false);
+        _isOutdoors = false;
     }
 }

@@ -208,8 +208,7 @@ public class Villager : ANPC<BehaviourTree>
     {
         Reset();
 
-        NPCPoolManager poolManager = ServiceLocator.Instance.Get<NPCPoolManager>();
-        poolManager.ReturnVillagerToPool(this);
+        _poolManager.ReturnVillagerToPool(this);
     }
 
     public void Reset()
@@ -235,4 +234,9 @@ public class Villager : ANPC<BehaviourTree>
         _behaviourSystem = null;
     }
     #endregion
+
+    protected override void OnFailedToActivate()
+    {
+        ReturnToPool();
+    }
 }
