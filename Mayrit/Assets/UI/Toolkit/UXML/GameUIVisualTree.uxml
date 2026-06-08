@@ -99,7 +99,7 @@
                         <ui:VisualElement name="Switches" style="flex-grow: 1; align-self: flex-start; justify-content: center; align-items: flex-start; display: flex; flex-direction: row;">
                             <ui:VisualElement name="BlurBg" class="smallButtonBlurBg"/>
                             <ui:Button text="| |" name="PauseButton" class="button smallButton" style="align-self: flex-start; position: relative; flex-direction: row; font-size: 20px;"/>
-                            <Switch text="Edificios modernos" value="false" name="ModernVisualizationSwitch" style="align-self: center; margin-left: 10px; margin-right: 15px;"/>
+                            <Switch text="Edificios modernos" value="false" name="ModernVisualizationSwitch" style="align-self: center; margin-left: 10px; margin-right: 20px;"/>
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
@@ -358,41 +358,71 @@
         </ui:VisualElement>
         <ui:VisualElement name="BlankTutorialStep" picking-mode="Ignore" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: none;"/>
     </ui:VisualElement>
-    <ui:VisualElement name="ContextualPanel" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; flex-direction: row; display: none;">
-        <ui:VisualElement style="flex-grow: 1; position: absolute; left: 0; bottom: 0; margin-top: 30px; margin-right: 30px; margin-bottom: 30px; margin-left: 30px;">
+    <ui:VisualElement name="InformationDisplay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; flex-direction: row; display: none;">
+        <ui:VisualElement name="Pause" style="flex-grow: 1; position: absolute; left: 0; bottom: 0; margin-top: 30px; margin-right: 30px; margin-bottom: 30px; margin-left: 30px;">
             <ui:VisualElement name="BlurBg" class="smallButtonBlurBg"/>
             <ui:Button text="| |" name="PauseButton" class="button smallButton" style="align-self: flex-start; position: relative; flex-direction: row; font-size: 20px;"/>
+            <ui:Label text="[Esc]" class="HUDtext" style="top: -30px; position: absolute; align-self: center;"/>
         </ui:VisualElement>
-        <ui:VisualElement name="Panel" class="contextualPanel" style="display: flex; align-self: flex-end; position: absolute; right: 0; top: 0; bottom: 0;">
-            <ui:VisualElement name="Bg" class="contextualPanelBlurBg"/>
-            <ui:VisualElement name="InformationArea" style="flex-grow: 1;">
-                <ui:VisualElement name="UpperArea" style="flex-direction: row-reverse; flex-grow: 0; flex-shrink: 0; margin-bottom: 10px;">
-                    <ui:VisualElement name="Headers" style="flex-grow: 1;">
-                        <ui:Label name="Header" text="*Mezquita aljama" class="header"/>
-                        <ui:Label name="SubHeader" text="*Segunda mitad s.IX" class="subHeader" style="flex-grow: 1; display: flex;"/>
+    </ui:VisualElement>
+    <ui:VisualElement name="LoadingScreen" picking-mode="Ignore" style="flex-grow: 1; flex-direction: row; justify-content: space-between; position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: none;">
+        <ui:VisualElement name="BlackLoadingScreen" style="flex-grow: 1; background-color: rgb(0, 0, 0); display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0;"/>
+        <ui:VisualElement name="InfoLoadingScreen" style="flex-grow: 1; display: flex; background-color: rgb(0, 0, 0); flex-direction: row-reverse;">
+            <ui:VisualElement name="BgImage" style="background-image: url(&quot;project://database/Assets/Imports/Mayrit%20BG.png?fileID=2800000&amp;guid=dc96fb47ec256064d9e5056199f72ec6&amp;type=3#Mayrit BG&quot;); position: absolute; background-size: 100% 100%; width: 100%; height: 100%; display: flex;"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="ContextualPanel" class="contextualPanel" style="display: none; align-self: flex-end; position: absolute; right: 0; top: 0; bottom: 0; padding-right: 50px;">
+        <ui:VisualElement name="Bg" class="contextualPanelBlurBg"/>
+        <ui:VisualElement name="CloseArea" style="position: absolute; top: 50px; right: 50px; flex-shrink: 0;">
+            <ui:Button text="X" name="CloseContextualPanelButton" class="button closeButton smallButton" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; position: relative;"/>
+            <ui:Label text="[Back]" class="HUDtext disabled" style="align-self: center; margin-top: 10px;"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="InformationArea" style="display: flex;">
+            <ui:VisualElement name="UpperArea" style="flex-direction: row-reverse; flex-grow: 0; flex-shrink: 0; margin-bottom: 15px; margin-right: 30px;">
+                <ui:VisualElement name="Headers" style="flex-grow: 1;">
+                    <ui:Label name="Header" text="*Mezquita aljama" class="header"/>
+                    <ui:Label name="SubHeader" text="*Segunda mitad s.IX" class="subHeader" style="flex-grow: 1; display: flex;"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:ScrollView focusable="false" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Auto" enabled="true" mode="Vertical" name="ScrollView" class="scrollable-section scrollable" style="display: flex;">
+                <ui:VisualElement name="DisclaimerArea" class="section" style="border-left-color: rgba(255, 215, 0, 0.59); border-right-color: rgba(255, 215, 0, 0.59); border-top-color: rgba(255, 215, 0, 0.59); border-bottom-color: rgba(255, 215, 0, 0.59); margin-bottom: 20px;">
+                    <ui:Label text="Disclaimer" class="subHeader" style="color: rgb(255, 215, 0);"/>
+                    <ui:Label text="Este modelo 3D no es representativo." name="Disclaimer" class="text"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="GlosaryArea" class="section" style="margin-bottom: 20px;">
+                    <ui:Label text="Glosario" class="subHeader"/>
+                    <ui:Label text="Definición de palabra" name="Definition" class="text"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="DescriptionArea" class="section" style="display: flex; margin-bottom: 20px;">
+                    <ui:Label text="Descripción" class="subHeader"/>
+                    <ui:Label text="*Era la principal, la de la oración del viernes, y por la que la población tenía carácter de medina/ciudad. Sobre esta se levantó la Iglesia de Santa María de la Almudena, derribada para ensanchar la calle Mayor, en el entorno de las actuales calles Mayor y Bailén, en la zona que hoy conocemos como Las Vistillas.  Tenía cinco naves perpendiculares al muro de la alquibla (el que da a la Meca), con su característico mihrab u hornacina decorada, donde después se abrió la entrada principal de la iglesia. &#10;En su parte opuesta, es decir, noroeste, había un patio con su alminar, que dio lugar después al campanario cristiano. Sería una torre cuadrada con el cuerpo superior retranqueado que suelen tener las mezquitas del occidente islámico. Estaría rematada por un ŷamur.  En sus conquistas, los cristianos acostumbraban a consagrar sus parroquias principales bajo la titulación de Santa María como signo de protección cuando antes había sido mezquita." name="Description" class="text"/>
+                    <ui:VisualElement name="ImageArea" style="flex-grow: 1; display: flex;">
+                        <ui:VisualElement name="Image" style="flex-grow: 0; background-image: url(&quot;project://database/Assets/Imports/Data%20images/Iglesia%20de%20Santa%20Maria.jpg?fileID=2800000&amp;guid=30e84b69ac325604a9737e73910905af&amp;type=3#Iglesia de Santa Maria&quot;); height: 300px; width: 100%; flex-shrink: 0; border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; margin-top: 20px; margin-bottom: 20px; display: flex;"/>
+                        <ui:Label text="Pie de foto" name="Caption" class="text"/>
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:ScrollView focusable="false" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Auto" enabled="true" mode="Vertical" name="ScrollView" class="scrollable-section scrollable section" style="display: flex; flex-grow: 1;">
-                    <ui:VisualElement name="DescriptionArea" style="flex-grow: 1; margin-top: 0; margin-right: 20px; margin-bottom: 0; margin-left: 20px;">
-                        <ui:Label text="*Era la principal, la de la oración del viernes, y por la que la población tenía carácter de medina/ciudad. Sobre esta se levantó la Iglesia de Santa María de la Almudena, derribada para ensanchar la calle Mayor, en el entorno de las actuales calles Mayor y Bailén, en la zona que hoy conocemos como Las Vistillas.  Tenía cinco naves perpendiculares al muro de la alquibla (el que da a la Meca), con su característico mihrab u hornacina decorada, donde después se abrió la entrada principal de la iglesia. &#10;En su parte opuesta, es decir, noroeste, había un patio con su alminar, que dio lugar después al campanario cristiano. Sería una torre cuadrada con el cuerpo superior retranqueado que suelen tener las mezquitas del occidente islámico. Estaría rematada por un ŷamur.  En sus conquistas, los cristianos acostumbraban a consagrar sus parroquias principales bajo la titulación de Santa María como signo de protección cuando antes había sido mezquita." name="Description" class="text" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;"/>
-                        <ui:VisualElement name="ImageArea" style="flex-grow: 1; display: flex;">
-                            <ui:VisualElement name="Image" style="flex-grow: 0; background-image: url(&quot;project://database/Assets/Imports/External/Rocks%20and%20Boulders%202/Source/Textures/Rockdetail1.tif?fileID=2800000&amp;guid=19b818e26c2922a488c06b1fbdae5df3&amp;type=3#Rockdetail1&quot;); height: 300px; width: 100%; flex-shrink: 0; border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; margin-top: 20px; margin-bottom: 20px; display: flex;"/>
-                            <ui:Label text="Pie de foto" name="Caption" class="text" style="display: flex; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: upper-center;"/>
-                        </ui:VisualElement>
-                    </ui:VisualElement>
-                </ui:ScrollView>
+                <ui:VisualElement name="ConservationArea" class="section" style="margin-bottom: 20px;">
+                    <ui:Label text="Conservación" class="subHeader" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;"/>
+                    <ui:Label text="Conservacoión en la actualidad" name="Conservation" class="text"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="SourcesArea" class="section">
+                    <ui:Label text="Fuentes historiográficas" class="subHeader" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;"/>
+                    <ui:Label text="Fuente historiográfica" name="Source" class="text"/>
+                </ui:VisualElement>
+            </ui:ScrollView>
+        </ui:VisualElement>
+        <ui:VisualElement name="Down" style="display: flex; flex-direction: row; margin-top: 10px; margin-left: 10px; margin-right: 10px; flex-shrink: 0;">
+            <ui:VisualElement name="LoadingAnimation" style="position: absolute; justify-content: center; align-self: center; bottom: 0; left: 0; right: 0; display: none;">
+                <ui:Label text="Cargando..." class="text" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; display: flex;"/>
             </ui:VisualElement>
-            <ui:VisualElement name="Down" style="flex-grow: 1; flex-direction: row; justify-content: space-between; align-self: stretch; display: flex; margin-top: 30px;">
-                <ui:Button text="Reiniciar" name="ResetTourButton" class="mediumButton button" style="display: flex; position: relative; align-self: flex-end; flex-shrink: 1; flex-grow: 1; margin-top: 0; margin-right: 25px; margin-bottom: 0; margin-left: 0; width: 65px;"/>
-                <ui:Button text="Jugar" name="StartTourButton" class="mediumButton button highlighted" style="display: flex; position: relative; align-self: flex-end; flex-grow: 1; margin-left: 0; margin-right: 0; margin-bottom: 0; margin-top: 0; width: auto; flex-shrink: 1;"/>
-            </ui:VisualElement>
-            <ui:Button text="X" name="CloseContextualPanelButton" class="button closeButton smallButton" style="top: 30px; left: auto; right: 30px;"/>
-            <ui:VisualElement name="CloseContextualPanelTutorialStep" style="position: absolute; top: 30px; left: auto; right: 760px; bottom: auto; align-self: center; flex-direction: column; justify-content: center; display: none; width: 500px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
-                <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
-                <ui:Label text="Cerrar el panel contextual" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
-                <ui:Label text="Pulsa el botón rojo o la tecla X." name="Text" class="text" style="-unity-text-align: middle-center;"/>
-                <ui:Image source="project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1087164816274819069&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-right@2x" name="Image" tint-color="rgb(220, 220, 220)" scale-mode="StretchToFill" style="display: flex; width: 80px; align-self: center; position: absolute; height: 110px; right: -70px;"/>
-            </ui:VisualElement>
+            <ui:Button text="Reiniciar" name="ResetTourButton" class="mediumButton button" style="display: flex; position: relative; align-self: flex-end; flex-shrink: 1; flex-grow: 1; margin-top: 0; margin-right: 25px; margin-bottom: 0; margin-left: 0; width: 65px;"/>
+            <ui:Button text="Continuar" name="ContinueButton" class="mediumButton button highlighted" style="display: flex; position: relative; align-self: flex-end; flex-grow: 1; margin-left: 0; margin-right: 0; margin-bottom: 0; margin-top: 0; width: auto; flex-shrink: 1;"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="CloseContextualPanelTutorialStep" style="position: absolute; top: 30px; left: auto; right: 760px; bottom: auto; align-self: center; flex-direction: column; justify-content: center; display: none; width: 500px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
+            <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
+            <ui:Label text="Cerrar el panel contextual" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
+            <ui:Label text="Pulsa el botón rojo o la tecla X." name="Text" class="text" style="-unity-text-align: middle-center;"/>
+            <ui:Image source="project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1087164816274819069&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-right@2x" name="Image" tint-color="rgb(220, 220, 220)" scale-mode="StretchToFill" style="display: flex; width: 80px; align-self: center; position: absolute; height: 110px; right: -70px;"/>
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="PauseMenu" enabled="true" style="display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; flex-direction: row; justify-content: flex-end;">
@@ -444,6 +474,7 @@
             </ui:VisualElement>
             <ui:VisualElement name="Buttons" style="justify-content: center; align-self: stretch; margin-top: 50px;">
                 <ui:Button name="PlayButton" text="Reanudar" class="button highlighted" style="align-self: center; position: relative;"/>
+                <ui:Label text="[Esc]" class="HUDtext disabled" style="align-self: center;"/>
                 <ui:Button text="Ajustes" name="SettingsButton" class="button" style="position: relative;"/>
                 <ui:Button text="Inicio" name="MainMenuButton" class="button" style="position: relative; margin-top: 15px;"/>
                 <ui:Button text="Créditos" name="CreditsButton" class="button" style="position: relative; margin-top: 100px;"/>
@@ -452,22 +483,22 @@
             <ui:Button text="X" name="CloseButton" class="button closeButton" style="top: 30px; left: auto; right: 30px; bottom: auto; display: none;"/>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="SettingsMenu" style="display: none; position: absolute; top: 0; left: -1px; right: 2px; bottom: 0; flex-direction: row; justify-content: flex-end;">
-        <ui:VisualElement name="ControlsPanel" style="display: flex; margin-top: 30px; margin-right: 100px; margin-bottom: 30px; margin-left: 30px; padding-top: 30px; padding-right: 30px; padding-bottom: 30px; padding-left: 30px; flex-grow: 1; justify-content: flex-start;">
+    <ui:VisualElement name="SettingsMenu" style="display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; flex-direction: row; justify-content: flex-end;">
+        <ui:VisualElement name="ControlsPanel" style="display: flex; margin-top: 30px; margin-right: 100px; margin-bottom: 30px; margin-left: 30px; padding-top: 30px; padding-right: 30px; padding-bottom: 30px; padding-left: 30px; flex-grow: 1; justify-content: flex-start; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/ElMessiri-Regular.ttf?fileID=12800000&amp;guid=c566193adbf5c6d44a80f316aea394d1&amp;type=3#ElMessiri-Regular&quot;);">
             <ui:VisualElement name="Bg" class="tutorialBlurBg"/>
             <ui:VisualElement name="Title" style="flex-grow: 0; align-items: center; justify-content: space-between; align-self: stretch; margin-top: 30px;">
                 <ui:Label text="Controles" class="header"/>
             </ui:VisualElement>
             <ui:VisualElement style="align-self: center; padding-top: 25px;">
                 <ui:VisualElement name="Key" style="align-self: center; justify-content: center; align-items: center; width: 40px; height: 40px; background-color: rgba(229, 229, 229, 0.29); border-left-color: rgba(229, 229, 229, 0.59); border-right-color: rgba(229, 229, 229, 0.59); border-top-color: rgba(229, 229, 229, 0.59); border-bottom-color: rgba(229, 229, 229, 0.59); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px;">
-                    <ui:Label text="Esc" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; color: rgba(255, 255, 255, 0.61); -unity-text-align: middle-center; white-space: normal; -unity-font-style: bold; font-size: 15px; left: 0; right: 0; top: 0; bottom: 0; position: absolute; align-self: stretch; justify-content: center;"/>
+                    <ui:Label text="Esc" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; left: 0; right: 0; top: 0; bottom: 0; position: absolute; align-self: stretch; justify-content: center; -unity-text-align: middle-center; color: rgb(255, 255, 255);"/>
                 </ui:VisualElement>
                 <ui:Label text="Pausar juego" class="text" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;"/>
             </ui:VisualElement>
             <ui:VisualElement name="Controls" style="flex-direction: column; align-self: center; justify-content: center; align-items: center; padding-top: 50px;">
                 <ui:VisualElement style="flex-grow: 1; margin-top: 30px; margin-right: 30px; margin-bottom: 30px; margin-left: 30px;">
                     <ui:Label text="De vista aérea" class="subHeader" style="-unity-text-align: upper-center; font-size: 25px; translate: 0 -50px;"/>
-                    <ui:VisualElement name="AerialControls" style="position: relative; top: auto; left: 0; bottom: 0; flex-direction: row; margin-bottom: 30px; margin-top: 30px; margin-right: 30px; margin-left: 30px; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/ElMessiri-Regular.ttf?fileID=12800000&amp;guid=c566193adbf5c6d44a80f316aea394d1&amp;type=3#ElMessiri-Regular&quot;); scale: 1.5 1.5;">
+                    <ui:VisualElement name="AerialControls" style="position: relative; top: auto; left: 0; bottom: 0; flex-direction: row; margin-bottom: 30px; margin-top: 30px; margin-right: 30px; margin-left: 30px; scale: 1.5 1.5;">
                         <ui:VisualElement name="Keyboard" style="justify-content: space-between; align-items: flex-start; align-self: flex-start; flex-direction: column; flex-grow: 0; flex-shrink: 1;">
                             <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-between; align-self: flex-start; align-items: stretch;">
                                 <ui:VisualElement name="Key" style="align-self: flex-start; justify-content: center; align-items: center; width: 60px; height: 40px; background-color: rgba(204, 204, 204, 0.29); border-left-color: rgba(229, 229, 229, 0.59); border-right-color: rgba(229, 229, 229, 0.59); border-top-color: rgba(229, 229, 229, 0.59); border-bottom-color: rgba(229, 229, 229, 0.59); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px;">
@@ -521,7 +552,7 @@
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement style="flex-grow: 1; margin-top: 70px; margin-right: 30px; margin-bottom: 30px; margin-left: 30px; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/ElMessiri-Regular.ttf?fileID=12800000&amp;guid=c566193adbf5c6d44a80f316aea394d1&amp;type=3#ElMessiri-Regular&quot;);">
+                <ui:VisualElement style="flex-grow: 1; margin-top: 70px; margin-right: 30px; margin-bottom: 30px; margin-left: 30px;">
                     <ui:Label text="De personaje" class="subHeader" style="-unity-text-align: upper-center; font-size: 25px; translate: 0 -50px;"/>
                     <ui:VisualElement name="PlayerControls" style="position: relative; top: auto; left: 0; bottom: 0; flex-direction: row; margin-bottom: 30px; margin-top: 30px; margin-right: 30px; margin-left: 30px; scale: 1.5 1.5;">
                         <ui:VisualElement name="Keyboard" style="justify-content: space-between; align-items: flex-start; align-self: flex-start; flex-direction: column; flex-grow: 0; flex-shrink: 1;">
@@ -577,14 +608,17 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="Right" class="contextualPanel" style="right: 0; justify-content: space-between;">
+        <ui:VisualElement name="Right" class="contextualPanel" style="right: 0; justify-content: space-between; bottom: 0; top: 0;">
             <ui:VisualElement name="Bg" class="contextualPanelBlurBg"/>
-            <ui:Button text="X" name="CloseButton" class="button closeButton smallButton" style="top: 30px; left: auto; right: 30px; bottom: auto;"/>
-            <ui:VisualElement picking-mode="Ignore" style="justify-content: center; align-self: stretch; height: 300px;">
+            <ui:VisualElement name="Close" style="position: absolute; top: 50px; right: 50px; flex-shrink: 0;">
+                <ui:Button text="X" name="CloseButton" class="button closeButton smallButton" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; position: relative;"/>
+                <ui:Label text="[Back]" class="HUDtext disabled" style="align-self: center; margin-top: 10px;"/>
+            </ui:VisualElement>
+            <ui:VisualElement picking-mode="Ignore" name="Title" style="justify-content: center; align-self: stretch; height: 300px;">
                 <ui:Label text="Ajustes" class="subtitle" style="top: auto;"/>
             </ui:VisualElement>
             <ui:VisualElement name="ControlsSettings" class="section" style="align-self: stretch;">
-                <ui:VisualElement name="Title">
+                <ui:VisualElement>
                     <ui:Label text="Juego" class="header" style="-unity-text-align: upper-center; margin-bottom: 10px;"/>
                 </ui:VisualElement>
                 <ui:VisualElement style="align-self: stretch; justify-content: space-between; align-items: stretch; flex-shrink: 1; flex-grow: 1; align-content: center;">
@@ -594,7 +628,7 @@
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="AudioSettings" class="section" style="align-self: stretch;">
-                <ui:VisualElement name="Title">
+                <ui:VisualElement>
                     <ui:Label text="Audio" class="header" style="-unity-text-align: upper-center; margin-bottom: 10px;"/>
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-grow: 1; justify-content: center; flex-shrink: 1; align-self: stretch;">
@@ -608,42 +642,13 @@
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="LoadingScreen" picking-mode="Ignore" style="flex-grow: 1; flex-direction: row; justify-content: space-between; position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: none;">
-        <ui:VisualElement name="BlackLoadingScreen" style="flex-grow: 1; background-color: rgb(0, 0, 0); display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0;"/>
-        <ui:VisualElement name="InfoLoadingScreen" style="flex-grow: 1; display: flex; background-color: rgb(0, 0, 0); flex-direction: row-reverse;">
-            <ui:VisualElement name="BgImage" style="background-image: url(&quot;project://database/Assets/Imports/Mayrit%20BG.png?fileID=2800000&amp;guid=dc96fb47ec256064d9e5056199f72ec6&amp;type=3#Mayrit BG&quot;); position: absolute; background-size: 100% 100%; width: 100%; height: 100%; display: flex;"/>
-            <ui:VisualElement name="RightPanel" class="contextualPanel" style="display: flex; justify-content: space-between;">
-                <ui:VisualElement name="Bg" class="contextualPanelBlurBg"/>
-                <ui:VisualElement name="InformationArea">
-                    <ui:VisualElement name="UpperArea" style="flex-direction: row-reverse; flex-grow: 0; flex-shrink: 0; margin-bottom: 20px;">
-                        <ui:VisualElement name="Headers" style="flex-grow: 1;">
-                            <ui:Label name="Header" text="*Mezquita aljama" class="header" style="flex-grow: 1; margin-bottom: 10px;"/>
-                            <ui:Label name="SubHeader" text="*Segunda mitad s.IX" class="subHeader" style="flex-grow: 1; display: flex; margin-left: 15px; margin-top: 0;"/>
-                        </ui:VisualElement>
-                    </ui:VisualElement>
-                    <ui:ScrollView focusable="false" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Auto" enabled="true" mode="Vertical" name="ScrollView" class="section scrollable" style="display: flex;">
-                        <ui:VisualElement name="DescriptionArea" style="flex-grow: 1; margin-top: 0; margin-right: 20px; margin-bottom: 0; margin-left: 20px;">
-                            <ui:Label text="*Era la principal, la de la oración del viernes, y por la que la población tenía carácter de medina/ciudad. Sobre esta se levantó la Iglesia de Santa María de la Almudena, derribada para ensanchar la calle Mayor, en el entorno de las actuales calles Mayor y Bailén, en la zona que hoy conocemos como Las Vistillas.  Tenía cinco naves perpendiculares al muro de la alquibla (el que da a la Meca), con su característico mihrab u hornacina decorada, donde después se abrió la entrada principal de la iglesia. &#10;En su parte opuesta, es decir, noroeste, había un patio con su alminar, que dio lugar después al campanario cristiano. Sería una torre cuadrada con el cuerpo superior retranqueado que suelen tener las mezquitas del occidente islámico. Estaría rematada por un ŷamur.  En sus conquistas, los cristianos acostumbraban a consagrar sus parroquias principales bajo la titulación de Santa María como signo de protección cuando antes había sido mezquita." name="Description" class="text" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;"/>
-                            <ui:VisualElement name="ImageArea" style="flex-grow: 1; display: flex;">
-                                <ui:VisualElement name="Image" style="flex-grow: 0; background-image: url(&quot;project://database/Assets/Imports/External/Rocks%20and%20Boulders%202/Source/Textures/Rockdetail1.tif?fileID=2800000&amp;guid=19b818e26c2922a488c06b1fbdae5df3&amp;type=3#Rockdetail1&quot;); height: 300px; width: 100%; flex-shrink: 0; border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; margin-top: 20px; margin-bottom: 20px; display: flex;"/>
-                                <ui:Label text="Pie de foto" name="Caption" class="text" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; display: flex; -unity-text-align: middle-center;"/>
-                            </ui:VisualElement>
-                        </ui:VisualElement>
-                    </ui:ScrollView>
-                </ui:VisualElement>
-                <ui:VisualElement name="Down" style="justify-content: flex-end; align-self: stretch; height: 120px;">
-                    <ui:VisualElement name="LoadingAnimation" style="position: absolute; justify-content: center; align-self: center; bottom: 15px;">
-                        <ui:Label text="Cargando..." name="LoadingLabel" class="text" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; display: flex;"/>
-                    </ui:VisualElement>
-                    <ui:Button text="Continuar" name="ContinueButton" class="button mediumButton highlighted" style="display: flex; width: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; position: relative;"/>
-                </ui:VisualElement>
-            </ui:VisualElement>
-        </ui:VisualElement>
-    </ui:VisualElement>
     <ui:VisualElement name="CreditsScreen" style="display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; flex-direction: row; justify-content: flex-end;">
         <ui:VisualElement name="Right" class="contextualPanel" style="right: 0; padding-top: 45px;">
             <ui:VisualElement name="Bg" class="contextualPanelBlurBg"/>
-            <ui:Button text="X" name="CloseButton" class="button closeButton smallButton" style="top: 30px; left: auto; right: 30px; bottom: auto;"/>
+            <ui:VisualElement name="CloseArea" style="position: absolute; top: 50px; right: 50px; flex-shrink: 0;">
+                <ui:Button text="X" name="CloseButton" class="button closeButton smallButton" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; position: relative;"/>
+                <ui:Label text="[Back]" class="HUDtext disabled" style="align-self: center; margin-top: 10px;"/>
+            </ui:VisualElement>
             <ui:VisualElement picking-mode="Ignore" name="Title" style="justify-content: flex-start; align-self: stretch; height: 170px; margin-bottom: 15px;">
                 <ui:Label text="Créditos" class="subtitle"/>
             </ui:VisualElement>

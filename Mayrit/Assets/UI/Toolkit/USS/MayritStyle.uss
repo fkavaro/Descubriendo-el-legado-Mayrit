@@ -74,10 +74,10 @@
 .text {
     -unity-paragraph-spacing: 80px;
     color: rgb(255, 255, 255);
-    margin-top: 5px;
-    margin-right: 5px;
-    margin-bottom: 5px;
-    margin-left: 5px;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
     padding-top: 0;
     padding-right: 0;
     padding-bottom: 0;
@@ -309,7 +309,7 @@
     position: absolute;
     width: 120%;
     height: 120%;
-    background-color: rgba(0, 0, 0, 0.96);
+    background-color: rgba(0, 0, 0, 0.92);
     filter: blur(20);
     align-self: center;
     right: -90px;
@@ -317,7 +317,7 @@
 }
 
 .smallButtonBlurBg {
-    background-color: rgba(0, 0, 0, 0.96);
+    background-color: rgba(0, 0, 0, 0.92);
     position: absolute;
     top: 0;
     left: 0;
@@ -405,7 +405,7 @@ Switch Label {
     justify-content: center;
     align-self: center;
     -unity-text-align: upper-center;
-    background-color: rgb(24, 24, 24);
+    background-color: rgba(24, 24, 24, 0);
     border-top-width: 3px;
     border-right-width: 3px;
     border-bottom-width: 3px;
@@ -424,24 +424,25 @@ Switch Label {
     border-right-color: rgb(60, 60, 60);
     border-top-color: rgb(60, 60, 60);
     border-bottom-color: rgb(60, 60, 60);
-    background-color: rgb(34, 34, 34);
+    background-color: rgba(24, 24, 24, 0.59);
+    scale: 1.05 1.05;
 }
 
 .switch-border_on {
-    background-color: rgb(37, 41, 58);
-    border-left-color: rgb(64, 73, 118);
-    border-right-color: rgb(64, 73, 118);
-    border-top-color: rgb(64, 73, 118);
-    border-bottom-color: rgb(64, 73, 118);
+    background-color: rgba(39, 48, 94, 0);
+    border-left-color: rgb(86, 98, 159);
+    border-right-color: rgb(86, 98, 159);
+    border-top-color: rgb(86, 98, 159);
+    border-bottom-color: rgb(86, 98, 159);
 }
 
 .switch-border_on:hover {
     transition-duration: 0.2s;
-    border-left-color: rgb(76, 87, 142);
-    border-right-color: rgb(76, 87, 142);
-    border-top-color: rgb(76, 87, 142);
-    border-bottom-color: rgb(76, 87, 142);
-    background-color: rgb(49, 56, 87);
+    border-left-color: rgb(100, 114, 185);
+    border-right-color: rgb(100, 114, 185);
+    border-top-color: rgb(100, 114, 185);
+    border-bottom-color: rgb(100, 114, 185);
+    background-color: rgba(39, 48, 94, 0.59);
 }
 
 .switch-knob {
@@ -509,13 +510,13 @@ Switch Label {
 }
 
 .section {
-    margin-top: 15px;
-    margin-right: 15px;
-    margin-bottom: 15px;
-    margin-left: 15px;
+    margin-top: 0;
+    margin-right: 10px;
+    margin-bottom: 0;
+    margin-left: 10px;
     padding-top: 10px;
     padding-right: 30px;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
     padding-left: 30px;
     border-top-width: 0;
     border-right-width: 3px;
@@ -618,7 +619,7 @@ Switch Label {
 }
 
 .unity-base-slider__fill {
-    background-color: rgb(64, 73, 118);
+    background-color: rgb(86, 98, 159);
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
@@ -629,7 +630,7 @@ Switch Label {
 }
 
 #unity-drag-container {
-    background-color: rgb(24, 24, 24);
+    background-color: rgba(24, 24, 24, 0.59);
     align-self: center;
     justify-content: center;
     flex-direction: column;
@@ -651,7 +652,7 @@ Switch Label {
 }
 
 #unity-drag-container:hover {
-    background-color: rgb(37, 41, 58);
+    background-color: rgba(39, 48, 94, 0.59);
 }
 
 #unity-tracker {
