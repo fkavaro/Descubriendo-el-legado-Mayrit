@@ -34,10 +34,6 @@ public class ContextualPanelComponent : AUIState
         _loadingAnimation;
 
     Tour CurrentTour => ServiceLocator.Instance.Get<Tour>();
-
-    // Tracking flags
-    //bool _hadImage;
-    //bool _hadPlayButton;
     #endregion
 
     #region CONSTRUCTOR
@@ -125,12 +121,8 @@ public class ContextualPanelComponent : AUIState
         {
             _image.style.backgroundImage = new StyleBackground(data.Image.texture);
             _imageCaption.text = data.ImageCaption;
-            // if (!_hadImage)
-            // {
             _image.style.display = DisplayStyle.Flex;
             _imageCaption.style.display = DisplayStyle.Flex;
-            //_hadImage = true;
-            //}
         }
         else
         {
@@ -138,7 +130,6 @@ public class ContextualPanelComponent : AUIState
             _image.style.display = DisplayStyle.None;
             _imageCaption.style.display = DisplayStyle.None;
             _imageCaption.text = string.Empty;
-            //_hadImage = false;
         }
 
         if (data.Conservation != null && data.Conservation != string.Empty)
@@ -170,25 +161,18 @@ public class ContextualPanelComponent : AUIState
 
         if (data.IsPlayer)
         {
-            // if (!_hadPlayButton)
-            // {
             _lowerArea.style.display = DisplayStyle.Flex;
             _continueButton.style.display = DisplayStyle.Flex;
-            //_hadPlayButton = true;
-
-            // Only show reset button if tour is already completed
             if (CurrentTour.IsCompleted)
                 _resetTourButton.style.display = DisplayStyle.Flex;
             else
                 _resetTourButton.style.display = DisplayStyle.None;
-            //}
         }
         else
         {
             _lowerArea.style.display = DisplayStyle.None;
             _continueButton.style.display = DisplayStyle.None;
             _resetTourButton.style.display = DisplayStyle.None;
-            //_hadPlayButton = false;
         }
 
         _closeArea.style.display = DisplayStyle.Flex;
@@ -223,20 +207,6 @@ public class ContextualPanelComponent : AUIState
     #region PUBLIC METHODS
     public void Reset()
     {
-        // if (_hadImage)
-        // {
-        //     _image.style.backgroundImage = new StyleBackground();
-        //     _image.style.display = DisplayStyle.None;
-        //     _imageCaption.style.display = DisplayStyle.None;
-        //     _hadImage = false;
-        // }
-
-        // if (_hadPlayButton)
-        // {
-        //     _continueButton.style.display = DisplayStyle.None;
-        //     _hadPlayButton = false;
-        // }
-
         _header.text = string.Empty;
         _subHeader.text = string.Empty;
         _disclaimer.text = string.Empty;
