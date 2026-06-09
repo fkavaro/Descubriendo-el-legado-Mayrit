@@ -358,7 +358,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     #region EVENT CALLBACKS
     void OnUIStateChanged()
     {
-        if (_uiManager.IsInContextualPanelState || _uiManager.IsInLoadingScreenState || _uiManager.IsInPauseState) return;
+        if (_uiManager.IsInInformationDisplayState || _uiManager.IsInLoadingScreenState || _uiManager.IsInPauseState) return;
 
         if (_uiManager.IsInPlayerHUDState)
         {

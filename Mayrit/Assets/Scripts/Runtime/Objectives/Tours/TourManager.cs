@@ -115,7 +115,7 @@ public class TourManager : MonoBehaviour
 
     void OnUIStateChanged()
     {
-        if (_uiManager.IsInContextualPanelState) return;
+        if (_uiManager.IsInInformationDisplayState) return;
 
         if (_currentTour.IsCompleted)
         {

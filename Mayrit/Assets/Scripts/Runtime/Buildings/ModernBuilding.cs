@@ -60,7 +60,7 @@ public class ModernBuilding : MonoBehaviour
     #region CALLBACK METHODS
     void OnUIStateChanged()
     {
-        if (_uiManager.IsInContextualPanelState)
+        if (_uiManager.IsInInformationDisplayState)
             OnContextualPanelShown(_uiManager.ContextualPanelState.DataToShow);
         else
             FixActivation();

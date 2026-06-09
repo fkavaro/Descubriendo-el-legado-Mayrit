@@ -73,7 +73,7 @@ public class PauseMenu_UIState : AUIState
         else if (_cameraManager.IsInThirdPersonState)
             _uiManager.SwitchToPlayerHUDState();
         else
-            _uiManager.SwitchToContextualPanelState();
+            _uiManager.SwitchToInformationDisplayState();
     }
 
     void OnPauseKeyPressed(InputAction.CallbackContext context)

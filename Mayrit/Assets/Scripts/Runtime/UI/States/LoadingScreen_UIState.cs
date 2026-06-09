@@ -1,32 +1,27 @@
 using UnityEngine;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.UIElements;
 
 public class LoadingScreen_UIState : AUIState
 {
     #region PROPERTIES
-    public bool ContinueIsClicked { get; private set; }
+    readonly ContextualPanelComponent _contextualPanelComponent;
 
-    Label _header,
-        _subHeader,
-        _description,
-        _imageCaption;
-
-    Button _continueButton;
+    public bool IsContinueClicked { get; private set; }
 
     VisualElement _infoLoadingScreen,
-        _blackLoadingScreen,
-        _image,
-        _loadingAnimation;
+        _blackLoadingScreen;
 
-    DataSO _milestoneData;
+    public DataSO DataToShow;
     #endregion
 
     #region CONSTRUCTOR
-    public LoadingScreen_UIState(UIDocument uiDocument, float fadeInDuration, float fadeOutDuration)
-    : base("LoadingScreen", uiDocument, fadeInDuration, fadeOutDuration) { }
+    public LoadingScreen_UIState(UIDocument uiDocument, float fadeInDuration, float fadeOutDuration, ContextualPanelComponent contextualPanelComponent)
+    : base("LoadingScreen", uiDocument, fadeInDuration, fadeOutDuration)
+    {
+        _contextualPanelComponent = contextualPanelComponent;
+    }
     #endregion
 
     #region INHERITED METHODS
@@ -34,13 +29,8 @@ public class LoadingScreen_UIState : AUIState
     {
         _blackLoadingScreen = GetByName<VisualElement>("BlackLoadingScreen");
         _infoLoadingScreen = GetByName<VisualElement>("InfoLoadingScreen");
-        _header = GetByName<Label>("Header", _infoLoadingScreen);
-        _subHeader = GetByName<Label>("SubHeader", _infoLoadingScreen);
-        _description = GetByName<Label>("Description", _infoLoadingScreen);
-        _continueButton = GetButtonAndRegisterCallback("ContinueButton", OnContinueButtonClicked, _infoLoadingScreen);
-        _image = GetByName<VisualElement>("Image", _infoLoadingScreen);
-        _imageCaption = GetByName<Label>("Caption", _infoLoadingScreen);
-        _loadingAnimation = GetByName<VisualElement>("LoadingAnimation", _infoLoadingScreen);
+
+        _contextualPanelComponent.ContinueClickedEvent += OnContinueButtonClicked;
     }
 
     public override void StartState()
@@ -52,47 +42,15 @@ public class LoadingScreen_UIState : AUIState
         _blackLoadingScreen.style.opacity = 0f;
         _blackLoadingScreen.style.display = DisplayStyle.None;
 
-        ContinueIsClicked = false;
-
-        _loadingAnimation.style.display = DisplayStyle.Flex;
-        _continueButton.style.display = DisplayStyle.None;
+        IsContinueClicked = false;
 
         _scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
-
-        // Get current milestone data
-        _milestoneData = _progressManager.CurrentMilestoneData;
-
-        if (_milestoneData != null)
-        {
-            // Update UI with milestone data
-            _header.text = _milestoneData.Header;
-            _subHeader.text = _milestoneData.SubHeader;
-            _description.text = _milestoneData.Description;
-
-            if (_milestoneData.Image != null)
-            {
-                _image.style.backgroundImage = new StyleBackground(_milestoneData.Image);
-                _imageCaption.text = _milestoneData.ImageCaption;
-                _image.style.display = DisplayStyle.Flex;
-                _imageCaption.style.display = DisplayStyle.Flex;
-            }
-            else
-            {
-                _image.style.backgroundImage = new StyleBackground();
-                _image.style.display = DisplayStyle.None;
-                _imageCaption.style.display = DisplayStyle.None;
-                _imageCaption.text = string.Empty;
-            }
-        }
-        else
-        {
-            Debug.LogWarning("LoadingScreenController: No current milestone data found.");
-        }
     }
 
     public override void ExitState()
     {
         //base.ExitState(); Dont hide on exit, hide after FadeOutCoroutine
+        _contextualPanelComponent.ExitState();
         _scenesController.SceneLoadedPartiallyEvent -= OnSceneLoadedPartially;
     }
     #endregion
@@ -114,6 +72,7 @@ public class LoadingScreen_UIState : AUIState
     public new IEnumerator FadeInCoroutine()
     {
         yield return BlackFadeInCoroutine();
+        _contextualPanelComponent.ShowDataWhileLoading(DataToShow);
         _infoLoadingScreen.style.display = DisplayStyle.Flex;
         yield return FadeToAlpha(_infoLoadingScreen, 1f, _fadeInDuration);
     }
@@ -126,18 +85,17 @@ public class LoadingScreen_UIState : AUIState
     }
     #endregion
 
-    void OnContinueButtonClicked(ClickEvent evt)
+    void OnContinueButtonClicked()
     {
-        ContinueIsClicked = true;
+        IsContinueClicked = true;
         _soundManager.PlayButtonClickSFX();
+        _contextualPanelComponent.ExitState();
+        _contextualPanelComponent.ContinueClickedEvent -= OnContinueButtonClicked;
     }
 
     void OnSceneLoadedPartially(SceneDatabase.SceneType type, SceneDatabase.SceneName name)
     {
         if (type == SceneDatabase.SceneType.Milestone)
-        {
-            _loadingAnimation.style.display = DisplayStyle.None;
-            _continueButton.style.display = DisplayStyle.Flex;
-        }
+            _contextualPanelComponent.AfterLoading();
     }
 }

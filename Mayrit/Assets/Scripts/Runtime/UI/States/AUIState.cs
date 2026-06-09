@@ -47,6 +47,13 @@ public abstract class AUIState : AState
         }
 
         _screen = GetByName<VisualElement>(_stateName, _UIDocument.rootVisualElement);
+
+        if (_screen == null)
+        {
+            Debug.LogError($"{_stateName} UI State: No VisualElement with name '{_stateName}' found in UIDocument.");
+            return;
+        }
+
         _screen.style.display = DisplayStyle.None;
 
         ConfigureUIElementsOnAwake();
@@ -112,7 +119,7 @@ public abstract class AUIState : AState
 
         T element = parent.Q<T>(elementName);
         if (element is null)
-            Debug.LogWarning($"{_stateName}: No VisualElement with name '{elementName}' found.");
+            Debug.LogWarning($"{_stateName}: No VisualElement with name '{elementName}' found in parent '{parent.name}'.");
 
         return element;
     }

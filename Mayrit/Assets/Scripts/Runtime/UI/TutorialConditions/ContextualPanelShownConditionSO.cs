@@ -24,7 +24,7 @@ public class ContextualPanelShownConditionSO : ATutorialStepConditionSO
 
     void OnUIStateChanged()
     {
-        if (!_uiManager.IsInContextualPanelState) return;
+        if (!_uiManager.IsInInformationDisplayState) return;
 
         DataSO data = _uiManager.ContextualPanelState.DataToShow;
 

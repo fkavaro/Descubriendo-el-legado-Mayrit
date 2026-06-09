@@ -93,7 +93,7 @@ public abstract class AObjectivesTracker<TTracker, TObject, TData> : MonoBehavio
 
     void OnUIStateChanged()
     {
-        if (_uiManager.IsInContextualPanelState) return;
+        if (_uiManager.IsInInformationDisplayState) return;
 
         _currentObjective?.UpdateModel();
     }

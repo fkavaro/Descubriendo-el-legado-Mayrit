@@ -108,7 +108,7 @@
                 <ui:VisualElement name="Up" style="top: 0; right: 0; position: absolute; display: flex; flex-direction: row-reverse;"/>
                 <ui:VisualElement name="Down" style="position: absolute; left: auto; bottom: 0; right: 0;"/>
             </ui:VisualElement>
-            <ui:VisualElement name="CenterBelow" picking-mode="Ignore" style="position: absolute; bottom: 0; left: 0; right: 0; justify-content: flex-end;">
+            <ui:VisualElement name="TutorialMilestoneArea" picking-mode="Ignore" style="position: absolute; bottom: 0; left: 0; right: 0; justify-content: flex-end;">
                 <ui:VisualElement name="MilestoneArea" style="flex-direction: row; align-self: center;">
                     <ui:VisualElement name="BlurBg" class="smallButtonBlurBg" style="display: flex;"/>
                     <ui:VisualElement name="TutorialMilestoneButtons" style="flex-grow: 1; flex-direction: row; display: flex;">
@@ -373,12 +373,8 @@
     </ui:VisualElement>
     <ui:VisualElement name="ContextualPanel" class="contextualPanel" style="display: none; align-self: flex-end; position: absolute; right: 0; top: 0; bottom: 0; padding-right: 50px;">
         <ui:VisualElement name="Bg" class="contextualPanelBlurBg"/>
-        <ui:VisualElement name="CloseArea" style="position: absolute; top: 50px; right: 50px; flex-shrink: 0;">
-            <ui:Button text="X" name="CloseContextualPanelButton" class="button closeButton smallButton" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; position: relative;"/>
-            <ui:Label text="[Back]" class="HUDtext disabled" style="align-self: center; margin-top: 10px;"/>
-        </ui:VisualElement>
         <ui:VisualElement name="InformationArea" style="display: flex;">
-            <ui:VisualElement name="UpperArea" style="flex-direction: row-reverse; flex-grow: 0; flex-shrink: 0; margin-bottom: 15px; margin-right: 30px;">
+            <ui:VisualElement name="UpperArea" picking-mode="Ignore" style="flex-direction: row-reverse; flex-grow: 0; flex-shrink: 0; margin-bottom: 15px; margin-right: 30px;">
                 <ui:VisualElement name="Headers" style="flex-grow: 1;">
                     <ui:Label name="Header" text="*Mezquita aljama" class="header"/>
                     <ui:Label name="SubHeader" text="*Segunda mitad s.IX" class="subHeader" style="flex-grow: 1; display: flex;"/>
@@ -391,7 +387,9 @@
                 </ui:VisualElement>
                 <ui:VisualElement name="GlosaryArea" class="section" style="margin-bottom: 20px;">
                     <ui:Label text="Glosario" class="subHeader"/>
-                    <ui:Label text="Definición de palabra" name="Definition" class="text"/>
+                    <ui:VisualElement name="GlosaryList" style="flex-grow: 1;">
+                        <ui:Label text="Definición de palabra" class="text"/>
+                    </ui:VisualElement>
                 </ui:VisualElement>
                 <ui:VisualElement name="DescriptionArea" class="section" style="display: flex; margin-bottom: 20px;">
                     <ui:Label text="Descripción" class="subHeader"/>
@@ -407,13 +405,19 @@
                 </ui:VisualElement>
                 <ui:VisualElement name="SourcesArea" class="section">
                     <ui:Label text="Fuentes historiográficas" class="subHeader" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;"/>
-                    <ui:Label text="Fuente historiográfica" name="Source" class="text"/>
+                    <ui:VisualElement name="SourcesList" style="flex-grow: 1;">
+                        <ui:Label text="Fuente historiográfica" class="text"/>
+                    </ui:VisualElement>
                 </ui:VisualElement>
             </ui:ScrollView>
         </ui:VisualElement>
-        <ui:VisualElement name="Down" style="display: flex; flex-direction: row; margin-top: 10px; margin-left: 10px; margin-right: 10px; flex-shrink: 0;">
-            <ui:VisualElement name="LoadingAnimation" style="position: absolute; justify-content: center; align-self: center; bottom: 0; left: 0; right: 0; display: none;">
-                <ui:Label text="Cargando..." class="text" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; display: flex;"/>
+        <ui:VisualElement name="CloseArea" style="position: absolute; top: 50px; right: 50px; flex-shrink: 0;">
+            <ui:Button text="X" name="CloseContextualPanelButton" class="button closeButton smallButton" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; position: relative;"/>
+            <ui:Label text="[Back]" class="HUDtext disabled" style="align-self: center; margin-top: 10px;"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="LowerArea" style="display: flex; flex-direction: row; margin-top: 15px; margin-left: 10px; margin-right: 10px; flex-shrink: 0; justify-content: center;">
+            <ui:VisualElement name="LoadingAnimation" style="display: flex; justify-content: center; height: 60px; align-self: center; margin-right: 10px; margin-left: 10px;">
+                <ui:Label text="Cargando..." class="subHeader" style="display: flex;"/>
             </ui:VisualElement>
             <ui:Button text="Reiniciar" name="ResetTourButton" class="mediumButton button" style="display: flex; position: relative; align-self: flex-end; flex-shrink: 1; flex-grow: 1; margin-top: 0; margin-right: 25px; margin-bottom: 0; margin-left: 0; width: 65px;"/>
             <ui:Button text="Continuar" name="ContinueButton" class="mediumButton button highlighted" style="display: flex; position: relative; align-self: flex-end; flex-grow: 1; margin-left: 0; margin-right: 0; margin-bottom: 0; margin-top: 0; width: auto; flex-shrink: 1;"/>

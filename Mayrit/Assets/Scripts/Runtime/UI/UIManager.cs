@@ -13,8 +13,8 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     public bool IsInAerialHUDState => _sfsm.IsCurrentState(_aerialHUDState);
     public bool IsInPlayerHUDState => _sfsm.IsCurrentState(_playerHUDState);
     public bool IsInPauseState => _sfsm.IsCurrentState(_pauseState);
-    public bool IsInContextualPanelState => _sfsm.IsCurrentState(_contextualPanelState);
-    public ContextualPanel_UIState ContextualPanelState => _contextualPanelState;
+    public bool IsInInformationDisplayState => _sfsm.IsCurrentState(_informationDisplayState);
+    public InformationDisplay_UIState ContextualPanelState => _informationDisplayState;
     public bool IsInSettingsMenuState => _sfsm.IsCurrentState(_settingsMenuState);
     public bool IsInLoadingScreenState => _sfsm.IsCurrentState(_loadingScreenState);
     public bool EdgeScrollingValueSet => _edgeScrollingValueSet;
@@ -48,6 +48,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
 
     #region INTERNAL PROPERTIES
     UIDocument _uiDocument;
+    ContextualPanelComponent _contextualPanelComponent;
 
     // Events
     public event Action StateChangedEvent;
@@ -65,7 +66,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     AerialHUD_UIState _aerialHUDState;
     PlayerHUD_UIState _playerHUDState;
     PauseMenu_UIState _pauseState;
-    ContextualPanel_UIState _contextualPanelState;
+    InformationDisplay_UIState _informationDisplayState;
     SettingsMenu_UIState _settingsMenuState;
     LoadingScreen_UIState _loadingScreenState;
     CreditsScreen_UIState _creditsScreenState;
@@ -83,14 +84,17 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
 
         _uiDocument = GetComponent<UIDocument>();
 
+        _contextualPanelComponent = new(_uiDocument, _fadeInDuration, _fadeOutDuration);
+        _contextualPanelComponent.AwakeState();
+
         // States initialization
         _mainMenuState = new(_uiDocument, _fadeInDuration, _fadeOutDuration);
         _aerialHUDState = new(_uiDocument, _fadeInDuration * 5f, _fadeOutDuration);
         _playerHUDState = new(_uiDocument, _fadeInDuration, _fadeOutDuration);
         _pauseState = new(_uiDocument, _fadeInDuration, _fadeOutDuration);
-        _contextualPanelState = new(_uiDocument, _fadeInDuration, _fadeOutDuration);
+        _informationDisplayState = new(_uiDocument, _fadeInDuration, _fadeOutDuration, _contextualPanelComponent);
         _settingsMenuState = new(_uiDocument, 0f, 0f);
-        _loadingScreenState = new(_uiDocument, _fadeInDuration, _fadeOutDuration);
+        _loadingScreenState = new(_uiDocument, _fadeInDuration, _fadeOutDuration, _contextualPanelComponent);
         _creditsScreenState = new(_uiDocument, 0f, 0f);
 
         // State AwakeState calls
@@ -98,7 +102,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
         _aerialHUDState.AwakeState();
         _playerHUDState.AwakeState();
         _pauseState.AwakeState();
-        _contextualPanelState.AwakeState();
+        _informationDisplayState.AwakeState();
         _settingsMenuState.AwakeState();
         _loadingScreenState.AwakeState();
         _creditsScreenState.AwakeState();
@@ -143,14 +147,18 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     public void SwitchToAerialHUDState() => _sfsm?.SwitchState(_aerialHUDState);
     public void SwitchToPlayerHUDState() => _sfsm?.SwitchState(_playerHUDState);
     public void SwitchToPauseState() => _sfsm?.SwitchState(_pauseState);
-    public void SwitchToContextualPanelState() => _sfsm?.SwitchState(_contextualPanelState);
-    public void SwitchToContextualPanelState(DataSO data)
+    public void SwitchToInformationDisplayState() => _sfsm?.SwitchState(_informationDisplayState);
+    public void SwitchToInformationDisplayState(DataSO data)
     {
-        _contextualPanelState.DataToShow = data;
-        _sfsm?.SwitchState(_contextualPanelState);
+        _informationDisplayState.DataToShow = data;
+        _sfsm?.SwitchState(_informationDisplayState);
     }
     public void SwitchToSettingsMenuState() => _sfsm?.SwitchState(_settingsMenuState);
-    public void SwitchToLoadingScreenState() => _sfsm?.SwitchState(_loadingScreenState);
+    public void SwitchToLoadingScreenState()
+    {
+        _loadingScreenState.DataToShow = _progressManager.CurrentMilestoneData;
+        _sfsm?.SwitchState(_loadingScreenState);
+    }
     public void SwitchToCreditsScreenState() => _sfsm?.SwitchState(_creditsScreenState);
     #endregion
 
@@ -207,9 +215,9 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     {
         if (loadedScenes.ContainsValue(SceneDatabase.SceneName.MainMenuScene))
         {
-            _contextualPanelState.ClosedEvent -= OnContextualPanelHidden;
-            _contextualPanelState.PlayTourClickedEvent -= OnPlayTourClicked;
-            _contextualPanelState.ResetTourClickedEvent -= OnResetTourClicked;
+            _informationDisplayState.ClosedEvent -= OnContextualPanelHidden;
+            _informationDisplayState.PlayTourClickedEvent -= OnPlayTourClicked;
+            _informationDisplayState.ResetTourClickedEvent -= OnResetTourClicked;
             _aerialHUDState._modernVisualizactionSwitch.Toggled -= OnModernVisualizationToggled;
             _aerialHUDState.MilestoneInfoClickedEvent -= OnMilestoneInfoClicked;
 
@@ -232,9 +240,9 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
             _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
 
             // Subscribe to events
-            _contextualPanelState.ClosedEvent += OnContextualPanelHidden;
-            _contextualPanelState.PlayTourClickedEvent += OnPlayTourClicked;
-            _contextualPanelState.ResetTourClickedEvent += OnResetTourClicked;
+            _informationDisplayState.ClosedEvent += OnContextualPanelHidden;
+            _informationDisplayState.PlayTourClickedEvent += OnPlayTourClicked;
+            _informationDisplayState.ResetTourClickedEvent += OnResetTourClicked;
             _aerialHUDState._modernVisualizactionSwitch.Toggled += OnModernVisualizationToggled;
             _aerialHUDState.MilestoneInfoClickedEvent += OnMilestoneInfoClicked;
             _cameraManager.CameraStateChangedEvent += OnCameraStateChanged;
@@ -250,9 +258,9 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
         if (_cameraManager.IsInAerialState)
             SwitchToAerialHUDState();
         else if (_cameraManager.IsInOrbitalState)
-            SwitchToContextualPanelState(_cameraManager.OrbitalState.Setting.DataToShow);
+            SwitchToInformationDisplayState(_cameraManager.OrbitalState.Setting.DataToShow);
         else if (_cameraManager.IsInTourStopState)
-            SwitchToContextualPanelState(_cameraManager.TourStopState.DataToShow);
+            SwitchToInformationDisplayState(_cameraManager.TourStopState.DataToShow);
         else if (_cameraManager.IsInThirdPersonState)
             SwitchToPlayerHUDState();
     }
@@ -285,7 +293,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
 
     void OnMilestoneInfoClicked()
     {
-        SwitchToContextualPanelState(_progressManager.CurrentMilestoneData);
+        SwitchToInformationDisplayState(_progressManager.CurrentMilestoneData);
     }
 
     void OnContextualPanelHidden()
@@ -315,7 +323,7 @@ public class UIManager : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     public IEnumerator FadeOutLoadingScreenCoroutine()
     {
         // Fade out after continue button is clicked in loading screen
-        while (!_loadingScreenState.ContinueIsClicked)
+        while (!_loadingScreenState.IsContinueClicked)
             yield return null;
         yield return _loadingScreenState.FadeOutCoroutine();
     }

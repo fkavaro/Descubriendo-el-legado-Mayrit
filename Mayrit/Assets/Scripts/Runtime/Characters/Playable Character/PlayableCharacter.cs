@@ -149,7 +149,7 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
 
     void OnUIStateChanged()
     {
-        if (_uiManager.IsInContextualPanelState) return;
+        if (_uiManager.IsInInformationDisplayState) return;
 
         if (!_cameraManager.IsInAerialState)
             SwitchToControlledState();
