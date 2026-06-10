@@ -4,6 +4,7 @@ using UnityEngine;
 public class GlosaryDefinitionSO : ScriptableObject
 {
     [SerializeField] string _word;
+    [TextArea(5, 5)]
     [SerializeField] string _definition;
 
     public string Word => _word;
