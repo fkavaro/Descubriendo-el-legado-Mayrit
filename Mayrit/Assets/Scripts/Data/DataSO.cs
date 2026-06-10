@@ -10,13 +10,13 @@ public class DataSO : ScriptableObject
         Player,
         POI,
         ModernBuilding,
-        Other,
+        Inmaterial,
         Collectible
     }
 
 
     [Header("General information")]
-    [SerializeField] DataType _dataType = DataType.Other;
+    [SerializeField] DataType _dataType = DataType.Inmaterial;
     [SerializeField] string _header;
     [SerializeField] string _subHeader;
     [SerializeField] bool _showDisclaimer;
@@ -43,7 +43,7 @@ public class DataSO : ScriptableObject
     public bool IsPOI => _dataType == DataType.POI;
     public bool IsModernBuilding => _dataType == DataType.ModernBuilding;
     public bool IsCollectible => _dataType == DataType.Collectible;
-    public bool IsOther => _dataType == DataType.Other;
+    public bool IsInmaterial => _dataType == DataType.Inmaterial;
     public string Header => _header;
     public string SubHeader => _subHeader;
     public bool ShowDisclaimer => _showDisclaimer;
