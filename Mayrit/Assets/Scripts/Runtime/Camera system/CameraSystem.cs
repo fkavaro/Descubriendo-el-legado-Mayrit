@@ -1,10 +1,9 @@
 using UnityEngine;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using Unity.Cinemachine;
 
-public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
+public class CameraSystem : ABehaviourEntity<FiniteStateMachine<ACameraState>>
 {
     #region GETTERS
     public bool IsInAerialState => _fsm.IsCurrentState(_aerialState);
@@ -51,10 +50,8 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     TourStop_CameraState _tourStopState;
 
     // Dependency Injection
-    UIManager _uiManager;
-    TourManager _tourManager;
-    CollectiblesManager _collectiblesManager;
-    SoundManager _soundManager;
+    GameManager _gameManager;
+    SoundSystem _soundManager;
     PlayableCharacter _playableCharacter;
     #endregion
 
@@ -64,10 +61,10 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         _fsm = new(this);
 
         // States initialization
-        _aerialState = new(_aerialCameraData, _aerialCamera);
-        _orbitalState = new(_orbitalCameraData, _orbitalCamera);
-        _thirdPersonState = new(_thirdPersonCameraData, _thirdPersonCamera);
-        _tourStopState = new(_thirdPersonCameraData.SimulationSpeed);
+        _aerialState = new(this, _aerialCameraData, _aerialCamera);
+        _orbitalState = new(this, _orbitalCameraData, _orbitalCamera);
+        _thirdPersonState = new(this, _thirdPersonCameraData, _thirdPersonCamera);
+        _tourStopState = new(this, _thirdPersonCameraData.SimulationSpeed);
 
         _fsm.SetInitialState(_aerialState);
 
@@ -86,16 +83,15 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     protected override void Start()
     {
         // Get dependencies from ServiceLocator
-        _uiManager = ServiceLocator.Instance.Get<UIManager>();
-        _tourManager = ServiceLocator.Instance.Get<TourManager>();
-        _collectiblesManager = ServiceLocator.Instance.Get<CollectiblesManager>();
-        _soundManager = ServiceLocator.Instance.Get<SoundManager>();
+        _gameManager = ServiceLocator.Instance.Get<GameManager>();
+
+        _soundManager = ServiceLocator.Instance.Get<SoundSystem>();
 
         // Subscribe to events
-        _uiManager.EdgeScrollingToggledEvent += _aerialCameraData.OnIsEdgeScrollingToggled;
-        _uiManager.StateChangedEvent += OnUIStateChanged;
-        _tourManager.TourStopVisitedEvent += OnTourStopVisited;
-        _collectiblesManager.OnCollectibleFoundEvent += OnCollectibleFound;
+        _gameManager.EdgeScrollingToggledEvent += _aerialCameraData.OnIsEdgeScrollingToggled;
+        _gameManager.StateChangedEvent += OnGameStateChanged;
+
+
 
         // Set camera target at min height
         CinemachineOrbitalFollow _orbitalFollow = _aerialCamera.GetComponent<CinemachineOrbitalFollow>();
@@ -111,7 +107,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         }
 
         // Check edge scrolling initial state
-        _aerialCameraData.isEdgeScrolling = _uiManager.EdgeScrollingValueSet;
+        _aerialCameraData.isEdgeScrolling = _gameManager.EdgeScrollingValueSet;
 
         base.Start();
     }
@@ -119,9 +115,7 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     void OnDisable()
     {
         // Unsubscribe from events
-        _uiManager.StateChangedEvent -= OnUIStateChanged;
-        _tourManager.TourStopVisitedEvent -= OnTourStopVisited;
-        _collectiblesManager.OnCollectibleFoundEvent -= OnCollectibleFound;
+        _gameManager.StateChangedEvent -= OnGameStateChanged;
 
         ServiceLocator.Instance.Unregister(this);
     }
@@ -156,12 +150,6 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
             Debug.Log($"Switched to orbital camera around '{orbitalStateSetting.Target.name}'.");
 
         CameraStateChangedEvent?.Invoke();
-
-        if (orbitalStateSetting.IsForCharacter)
-        {
-            _playableCharacter = ServiceLocator.Instance.Get<PlayableCharacter>();
-            _playableCharacter.PositionResetEvent += SwitchToThirdPersonCamera;
-        }
     }
 
     /// <summary>
@@ -356,51 +344,33 @@ public class CameraManager : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     #endregion
 
     #region EVENT CALLBACKS
-    void OnUIStateChanged()
+    void OnGameStateChanged()
     {
-        if (_uiManager.IsInInformationDisplayState || _uiManager.IsInLoadingScreenState || _uiManager.IsInPauseState) return;
-
-        if (_uiManager.IsInPlayerHUDState)
+        if (_gameManager.IsInAerialState)
+        {
+            SwitchToAerialCamera();
+        }
+        else if (_gameManager.IsInThirdPersonState)
         {
             SwitchToThirdPersonCamera();
-            return;
         }
-
-        if (IsInOrbitalState)
+        else if (_gameManager.IsAtPOIState)
         {
-            if (_orbitalState.Setting.TransitionToApply == CameraTransition.ThirdPersonCamera)
-                SwitchToThirdPersonCamera();
-            else
-                SwitchToAerialCamera();
+            if (_gameManager.AtPOIState.PointOfInterest.Data.IsPlayer)
+            {
+                _playableCharacter = ServiceLocator.Instance.Get<PlayableCharacter>();
+                _playableCharacter.PositionResetEvent += SwitchToThirdPersonCamera;
+            }
+            SwitchToOrbitalCamera(_gameManager.AtPOIState.PointOfInterest.OrbitalStateSetting);
         }
-        else if (IsInTourStopState)
-            SwitchToThirdPersonCamera();
-    }
-
-    void OnTourStopVisited(TourStop tourStop)
-    {
-        if (tourStop.Data == null) return;
-        if (!tourStop.gameObject.activeInHierarchy)
+        else if (_gameManager.IsAtCollectibleState)
         {
-            Debug.LogWarning($"TourStop '{tourStop.name}' is not active in hierarchy.");
-            return;
+            SwitchToOrbitalCamera(_gameManager.AtCollectibleState.Collectible.OrbitalStateSetting);
         }
-
-        if (IsInThirdPersonState)
-            SwitchToTourStopCamera(tourStop.Camera, tourStop.Data);
-    }
-
-    void OnCollectibleFound(Collectible collectible)
-    {
-        if (collectible.Data == null) return;
-        if (!collectible.gameObject.activeInHierarchy)
+        else if (_gameManager.IsAtTourStopState)
         {
-            Debug.LogWarning($"Collectible '{collectible.name}' is not active in hierarchy.");
-            return;
+            SwitchToTourStopCamera(_gameManager.TourStopState.TourStop.Camera, _gameManager.TourStopState.TourStop.Data);
         }
-
-        if (IsInThirdPersonState)
-            SwitchToOrbitalCamera(collectible.OrbitalStateSetting);
     }
     #endregion
 }

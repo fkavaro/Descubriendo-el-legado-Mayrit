@@ -61,7 +61,7 @@ public class AerialCameraController
     // Dependencies
     readonly AerialCameraDataSO _aerialCameraData;
     readonly GameManager _gameManager;
-    readonly UIManager _uiManager;
+    readonly UISystem _uiSystem;
     #endregion
 
     #region CONSTRUCTOR
@@ -91,7 +91,7 @@ public class AerialCameraController
 
         // Get dependencies from ServiceLocator
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
-        _uiManager = ServiceLocator.Instance.Get<UIManager>();
+        _uiSystem = ServiceLocator.Instance.Get<UISystem>();
 
         // Set initial orbital limits
         _orbitalFollow.VerticalAxis.Range = _verticalAngleLimits;
@@ -108,7 +108,7 @@ public class AerialCameraController
         _middleClickPressed = _gameManager.InputActions.Camera.Rotate.IsPressed();
 
         // Only read zoom input when cursor is not over UI
-        if (!_uiManager.IsCursorOverUI)
+        if (!_uiSystem.IsCursorOverUI)
             _scrollInput = _gameManager.InputActions.Camera.Zoom.ReadValue<Vector2>();
 
         // Update camera state
@@ -131,7 +131,7 @@ public class AerialCameraController
         _edgeScrollInput = Vector2.zero;
 
         // Early exit if mouse is unavailable or over UI
-        if (Mouse.current == null || _uiManager.IsCursorOverUI)
+        if (Mouse.current == null || _uiSystem.IsCursorOverUI)
             return;
 
         Vector2 mousePosition = Mouse.current.position.ReadValue();

@@ -169,7 +169,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8958913347159186863, guid: 572e4cae4c2b54948bc57a99b41597b4, type: 3}
       propertyPath: m_Name
-      value: "\U0001F50ASoundManager"
+      value: "\U0001F50ASoundSystem"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -340,7 +340,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8119952740670593480, guid: f159fddb4a5e56746916cbd293b0859e, type: 3}
       propertyPath: m_Name
-      value: "\U0001F39E\uFE0FUIManager"
+      value: "\U0001F39E\uFE0FUISystem"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -463,6 +463,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3618290972786116656, guid: 668020751133b714495ee039980b3080, type: 3}
+      propertyPath: _uiSystem
+      value: 
+      objectReference: {fileID: 1568518587}
     - target: {fileID: 3618290972786116656, guid: 668020751133b714495ee039980b3080, type: 3}
       propertyPath: _uiManager
       value: 

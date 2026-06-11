@@ -19,7 +19,7 @@ public class ScenesController : MonoBehaviour
     readonly Dictionary<SceneDatabase.SceneType, SceneDatabase.SceneName> _loadedByType = new();
     static readonly WaitForSeconds _waitForSeconds0_5 = new(0.5f);
 
-    UIManager _uiManager;
+    UISystem _uiSystem;
     #endregion
 
     #region LYFE CYCLE
@@ -31,7 +31,7 @@ public class ScenesController : MonoBehaviour
 
     void Start()
     {
-        _uiManager = ServiceLocator.Instance.Get<UIManager>();
+        _uiSystem = ServiceLocator.Instance.Get<UISystem>();
     }
     #endregion
 
@@ -60,11 +60,12 @@ public class ScenesController : MonoBehaviour
         _isLoading = true;
         if (plan.Overlay)
         {
+            Debug.Log($"[ScenesController] Starting scene transition with overlay.");
             // Black if loading main menu
             if (plan.ScenesToLoad.ContainsValue(SceneDatabase.SceneName.MainMenuScene))
-                yield return _uiManager.FadeInBlackLoadingScreenCoroutine();
+                yield return _uiSystem.FadeInBlackLoadingScreenCoroutine();
             else
-                yield return _uiManager.FadeInLoadingScreenCoroutine();
+                yield return _uiSystem.FadeInLoadingScreenCoroutine();
 
             yield return _waitForSeconds0_5;
         }
@@ -100,9 +101,9 @@ public class ScenesController : MonoBehaviour
             yield return _waitForSeconds0_5;
 
             if (plan.ScenesToLoad.ContainsValue(SceneDatabase.SceneName.MainMenuScene))
-                yield return _uiManager.FadeOutBlackLoadingScreenCoroutine();
+                yield return _uiSystem.FadeOutBlackLoadingScreenCoroutine();
             else
-                yield return _uiManager.FadeOutLoadingScreenCoroutine();
+                yield return _uiSystem.FadeOutLoadingScreenCoroutine();
         }
 
         ScenesLoadedFullyEvent?.Invoke(plan.ScenesToLoad, plan.TypesToUnload);

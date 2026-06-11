@@ -7,8 +7,8 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu_GameState : AGameState
 {
-    public MainMenu_GameState()
-    : base("Main menu") { }
+    public MainMenu_GameState(GameManager gameManager)
+    : base(gameManager, "Main menu") { }
 
     public override void StartState()
     {

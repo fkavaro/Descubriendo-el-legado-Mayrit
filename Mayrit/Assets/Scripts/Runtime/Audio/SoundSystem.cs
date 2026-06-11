@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(AudioListener))]
-public class SoundManager : ABehaviourEntity<FiniteStateMachine<AMusicState>>
+public class SoundSystem : ABehaviourEntity<FiniteStateMachine<AMusicState>>
 {
     #region GETTERS
     public AudioSource EffectsSource => _effectsSource;
@@ -14,8 +14,8 @@ public class SoundManager : ABehaviourEntity<FiniteStateMachine<AMusicState>>
     public float ResumeGuardSeconds => _resumeGuardSeconds;
     public List<SoundDatabase.MusicList> MusicLists => _musicLists;
     public List<SoundDatabase.SFXlist> SFXLists => _SFXLists;
-    public float MusicVolumeSet => _uiManager.MusicVolumeValueSet;
-    public float SFXVolumeSet => _uiManager.SFXVolumeValueSet;
+    public float MusicVolumeSet => _gameManager.MusicVolumeValueSet;
+    public float SFXVolumeSet => _gameManager.SFXVolumeValueSet;
     #endregion
 
     #region EDITOR PROPERTIES
@@ -42,7 +42,7 @@ public class SoundManager : ABehaviourEntity<FiniteStateMachine<AMusicState>>
 
     // Dependency Injection
     ScenesController _scenesController;
-    UIManager _uiManager;
+    GameManager _gameManager;
     #endregion
 
     #region INHERITED
@@ -113,12 +113,12 @@ public class SoundManager : ABehaviourEntity<FiniteStateMachine<AMusicState>>
         _musicSource.loop = false;
 
         // Get dependencies from ServiceLocator
-        _uiManager = ServiceLocator.Instance.Get<UIManager>();
+        _gameManager = ServiceLocator.Instance.Get<GameManager>();
         _scenesController = ServiceLocator.Instance.Get<ScenesController>();
 
         // Subscribe to events
-        _uiManager.MusicVolumeChangedEvent += _soundController.UpdateMusicVolume;
-        _uiManager.SFXVolumeChangedEvent += _soundController.UpdateSFXVolume;
+        _gameManager.MusicVolumeChangedEvent += _soundController.UpdateMusicVolume;
+        _gameManager.SFXVolumeChangedEvent += _soundController.UpdateSFXVolume;
         _scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
         _scenesController.ScenesLoadedFullyEvent += OnScenesLoadedFully;
 

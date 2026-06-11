@@ -17,11 +17,17 @@ public class MainMenu_UIState : AUIState
         _buttons,
         _logoArea,
         _rightPanel;
+
+    public event Action NewGameClickedEvent;
+    public event Action LoadGameClickedEvent;
+    public event Action SettingsClickedEvent;
+    public event Action CreditsClickedEvent;
+    public event Action QuitClickedEvent;
     #endregion
 
     #region CONSTRUCTOR
-    public MainMenu_UIState(UIDocument uiDocument, float fadeInDuration, float fadeOutDuration)
-    : base("MainMenu", uiDocument, fadeInDuration, fadeOutDuration) { }
+    public MainMenu_UIState(UISystem uiSystem, UIDocument uiDocument, float fadeInDuration, float fadeOutDuration)
+    : base(uiSystem, "MainMenu", uiDocument, fadeInDuration, fadeOutDuration) { }
     #endregion
 
     #region INHERITED METHODS
@@ -82,16 +88,14 @@ public class MainMenu_UIState : AUIState
         }
         else
         {
-            GameSaveSystem.ClearAllData();
-            _gameManager.SwitchToGamePlayState();
+            NewGameClickedEvent?.Invoke();
         }
     }
 
     void OnConfirmNewGameClicked(ClickEvent evt)
     {
         _soundManager.PlayButtonClickSFX();
-        GameSaveSystem.ClearAllData();
-        _gameManager.SwitchToGamePlayState();
+        NewGameClickedEvent?.Invoke();
         _newGameWarningPopup.style.display = DisplayStyle.None;
     }
 
@@ -104,8 +108,9 @@ public class MainMenu_UIState : AUIState
 
     void OnLoadGameClicked(ClickEvent evt)
     {
-        _gameManager.SwitchToGamePlayState();
         _soundManager.PlayButtonClickSFX();
+        LoadGameClickedEvent?.Invoke();
+
     }
 
     void OnSettingsClicked(ClickEvent evt)
@@ -113,25 +118,22 @@ public class MainMenu_UIState : AUIState
         _logoArea.style.display = DisplayStyle.None;
         _rightPanel.style.display = DisplayStyle.None;
         _screen = null; // To avoid hiding the background image
-        _uiManager.SwitchToSettingsMenuState();
         _soundManager.PlayButtonClickSFX();
+        SettingsClickedEvent?.Invoke();
     }
 
     void OnCreditsClicked(ClickEvent evt)
     {
         _rightPanel.style.display = DisplayStyle.None;
         _screen = null; // To avoid hiding the background image
-        _uiManager.SwitchToCreditsScreenState();
         _soundManager.PlayButtonClickSFX();
+        CreditsClickedEvent?.Invoke();
     }
 
     void OnQuitClicked(ClickEvent evt)
     {
         _soundManager.PlayButtonClickSFX();
-        Application.Quit();
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false; // For convenience in the editor
-#endif
+        QuitClickedEvent?.Invoke();
     }
     #endregion
 }

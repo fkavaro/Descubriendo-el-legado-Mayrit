@@ -18,7 +18,7 @@ where T : AObjective<T, TData>
     #region INTERNAL PROPERTIES
     public event Action<T> OnReachedEvent;
     protected SphereCollider _sphereCollider;
-    protected CameraManager _cameraManager;
+    protected CameraSystem _cameraManager;
     #endregion
 
     #region PUBLIC ACCESSORS
@@ -44,7 +44,7 @@ where T : AObjective<T, TData>
 
     protected virtual void Start()
     {
-        _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
+        _cameraManager = ServiceLocator.Instance.Get<CameraSystem>();
         _cameraManager.CameraStateChangedEvent += OnCameraStateChanged;
     }
 

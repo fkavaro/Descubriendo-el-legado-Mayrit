@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 public abstract class AHUDState : AUIState
 {
     #region PROPERTIES
-    protected CompassUI _compass;
+    protected CompassComponent _compass;
 
     VisualElement _hudScreen,
         _controlsVisualRoot,
@@ -15,8 +15,8 @@ public abstract class AHUDState : AUIState
     #endregion
 
     #region CONSTRUCTOR
-    public AHUDState(string name, UIDocument uiDocument, float fadeInDuration, float fadeOutDuration)
-    : base(name, uiDocument, fadeInDuration, fadeOutDuration) { }
+    public AHUDState(UISystem uiSystem, string name, UIDocument uiDocument, float fadeInDuration, float fadeOutDuration)
+    : base(uiSystem, name, uiDocument, fadeInDuration, fadeOutDuration) { }
     #endregion
 
     #region INHERITED METHODS
@@ -26,7 +26,7 @@ public abstract class AHUDState : AUIState
         _hudScreen = GetByName<VisualElement>("HUD", _UIDocument.rootVisualElement);
         _compassVisualRoot = GetByName<VisualElement>("Compass", _hudScreen);
 
-        _compass = new(_UIDocument, _compassVisualRoot);
+        _compass = new(_uiSystem, _UIDocument, _compassVisualRoot);
         _compass.AwakeState();
         _hudScreen.style.display = DisplayStyle.None;
     }
@@ -38,8 +38,8 @@ public abstract class AHUDState : AUIState
         base.StartState();
         _compass.StartState();
 
-        // Show controls visual according to UIManager setting
-        _controlsVisualRoot.style.display = _uiManager.ControlsVisibilityValueSet ?
+        // Show controls visual according to UISystem setting
+        _controlsVisualRoot.style.display = _gameManager.ControlsVisibilityValueSet ?
             DisplayStyle.Flex :
             DisplayStyle.None;
 
@@ -70,7 +70,7 @@ public abstract class AHUDState : AUIState
     #region CALLBACK METHODS
     protected void OnPauseClicked(ClickEvent evt)
     {
-        _uiManager.SwitchToPauseState();
+        _uiSystem.SwitchToPauseState();
         _soundManager.PlayButtonClickSFX();
     }
 

@@ -17,7 +17,7 @@ public class SoundController
     #endregion
 
     #region PROPERTIES
-    readonly SoundManager _soundManager;
+    readonly SoundSystem _soundManager;
     SoundDatabase.MusicType _currentMusicType;
     Coroutine _playlistCoroutine;
     readonly Dictionary<SoundDatabase.MusicType, Queue<AudioClip>> _musicQueues = new();
@@ -27,7 +27,7 @@ public class SoundController
     #endregion
 
     #region CONSTRUCTOR
-    public SoundController(SoundManager soundManager)
+    public SoundController(SoundSystem soundManager)
     {
         _soundManager = soundManager;
         _currentMusicType = SoundDatabase.MusicType.None;

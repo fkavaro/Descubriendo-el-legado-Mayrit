@@ -3563,19 +3563,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3693835382355793045, guid: d1278883f5417154f9e8a819729e476b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 4757796953393092864, guid: d1278883f5417154f9e8a819729e476b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 5703040452249773777, guid: d1278883f5417154f9e8a819729e476b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 1185290114013411995, guid: d1278883f5417154f9e8a819729e476b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1278883f5417154f9e8a819729e476b, type: 3}
 --- !u!1001 &5162275732199687764
 PrefabInstance:
@@ -3838,7 +3826,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3850563862725291741, guid: 7e16b017c97a0f944a6f2d8f4d5324e8, type: 3}
       propertyPath: m_Name
-      value: "\U0001F4F9CameraManager"
+      value: "\U0001F4F9CameraSystem"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

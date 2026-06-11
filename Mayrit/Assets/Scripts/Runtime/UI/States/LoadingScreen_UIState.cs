@@ -14,12 +14,12 @@ public class LoadingScreen_UIState : AUIState
     VisualElement _infoLoadingScreen,
         _blackLoadingScreen;
 
-    public DataSO DataToShow;
+    public Milestone_DataSO MilestoneData;
     #endregion
 
     #region CONSTRUCTOR
-    public LoadingScreen_UIState(UIDocument uiDocument, float fadeInDuration, float fadeOutDuration, ContextualPanelComponent contextualPanelComponent)
-    : base("LoadingScreen", uiDocument, fadeInDuration, fadeOutDuration)
+    public LoadingScreen_UIState(UISystem uiSystem, UIDocument uiDocument, float fadeInDuration, float fadeOutDuration, ContextualPanelComponent contextualPanelComponent)
+    : base(uiSystem, "LoadingScreen", uiDocument, fadeInDuration, fadeOutDuration)
     {
         _contextualPanelComponent = contextualPanelComponent;
     }
@@ -47,8 +47,10 @@ public class LoadingScreen_UIState : AUIState
 
         _scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
 
+        ProgressManager progressManager = ServiceLocator.Instance.Get<ProgressManager>();
+
         // Get current milestone data
-        DataToShow = _progressManager.CurrentMilestoneData;
+        MilestoneData = progressManager.CurrentMilestoneData;
     }
 
     public override void ExitState()
@@ -76,7 +78,7 @@ public class LoadingScreen_UIState : AUIState
     public new IEnumerator FadeInCoroutine()
     {
         yield return BlackFadeInCoroutine();
-        _contextualPanelComponent.ShowDataWhileLoading(DataToShow);
+        _contextualPanelComponent.ShowDataWhileLoading(MilestoneData);
         _infoLoadingScreen.style.display = DisplayStyle.Flex;
         yield return FadeToAlpha(_infoLoadingScreen, 1f, _fadeInDuration);
     }

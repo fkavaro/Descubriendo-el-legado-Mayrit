@@ -42,7 +42,7 @@ public class NPCPoolManager : MonoBehaviour
 
     // Dependency Injection
     TownManager _townManager;
-    UIManager _uiManager;
+    UISystem _uiSystem;
     #endregion
 
     #region LIFE CYCLE
@@ -79,7 +79,7 @@ public class NPCPoolManager : MonoBehaviour
     {
         // Get dependencies from ServiceLocator
         _townManager = ServiceLocator.Instance.Get<TownManager>();
-        _uiManager = ServiceLocator.Instance.Get<UIManager>();
+        _uiSystem = ServiceLocator.Instance.Get<UISystem>();
 
         // Subscribe to town population changes
         _townManager.OnPopulationChanged += OnTownPopulationChanged;
@@ -87,7 +87,7 @@ public class NPCPoolManager : MonoBehaviour
 
     void Update()
     {
-        if (_uiManager.IsInLoadingScreenState)
+        if (_uiSystem.IsInLoadingScreenState)
             return;
 
         // Drain villagers that failed setup last frame (avoids reentrancy with ObjectPool.Get)

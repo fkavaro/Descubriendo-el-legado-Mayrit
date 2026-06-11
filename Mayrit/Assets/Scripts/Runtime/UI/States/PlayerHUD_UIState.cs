@@ -29,8 +29,8 @@ public class PlayerHUD_UIState : AHUDState
     #endregion
 
     #region CONSTRUCTOR
-    public PlayerHUD_UIState(UIDocument uiDocument, float fadeInDuration, float fadeOutDuration)
-    : base("PlayerHUD", uiDocument, fadeInDuration, fadeOutDuration) { }
+    public PlayerHUD_UIState(UISystem uiSystem, UIDocument uiDocument, float fadeInDuration, float fadeOutDuration)
+    : base(uiSystem, "PlayerHUD", uiDocument, fadeInDuration, fadeOutDuration) { }
     #endregion
 
     #region UI STATE INHERITED METHODS
@@ -70,7 +70,7 @@ public class PlayerHUD_UIState : AHUDState
         if (_collectiblesManager == null)
             Debug.LogWarning("PlayerHUD_UIState: No CollectiblesManager found in ServiceLocator on StartState");
 
-        _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
+        _gameManager.MilestoneChangedEvent += OnMilestoneChanged;
     }
 
     public override void StartState()

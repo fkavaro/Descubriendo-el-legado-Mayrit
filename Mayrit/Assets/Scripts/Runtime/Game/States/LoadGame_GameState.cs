@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GamePlay_GameState : AGameState
+public class LoadGame_GameState : AGameState
 {
-    public GamePlay_GameState()
-    : base("Gameplay") { }
+    public LoadGame_GameState(GameManager gameManager)
+    : base(gameManager, "LoadGame") { }
 
     public override void StartState()
     {
@@ -18,7 +18,7 @@ public class GamePlay_GameState : AGameState
         if (!SceneManager.GetSceneByName(SceneDatabase.SceneName.GameplayScene.ToString()).isLoaded)
             _scenesController.NewTransitionPlan()
                 .Load(SceneDatabase.SceneType.Session, SceneDatabase.SceneName.GameplayScene)
-                .Load(SceneDatabase.SceneType.Milestone, _progressManager.StoredMilestoneScene, setActive: true)
+                .Load(SceneDatabase.SceneType.Milestone, _gameManager.ProgressManager.StoredMilestoneScene, setActive: true)
                 .WithOverlay()
                 .ClearAssets()
                 .Perform();

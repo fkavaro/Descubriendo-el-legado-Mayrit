@@ -18,8 +18,8 @@ public class InformationDisplay_UIState : AUIState
     #endregion
 
 
-    public InformationDisplay_UIState(UIDocument uiDocument, float fadeInDuration, float fadeOutDuration, ContextualPanelComponent contextualPanelComponent)
-    : base("InformationDisplay", uiDocument, fadeInDuration, fadeOutDuration)
+    public InformationDisplay_UIState(UISystem uiSystem, UIDocument uiDocument, float fadeInDuration, float fadeOutDuration, ContextualPanelComponent contextualPanelComponent)
+    : base(uiSystem, "InformationDisplay", uiDocument, fadeInDuration, fadeOutDuration)
     {
         _contextualPanelComponent = contextualPanelComponent;
     }
@@ -67,7 +67,7 @@ public class InformationDisplay_UIState : AUIState
 
     void OnPauseClicked(ClickEvent evt)
     {
-        _uiManager.SwitchToPauseState();
+        _uiSystem.SwitchToPauseState();
         _soundManager.PlayButtonClickSFX();
     }
 
@@ -78,11 +78,13 @@ public class InformationDisplay_UIState : AUIState
 
     void OnStartTour()
     {
+        _soundManager.PlayTourStartSFX();
         PlayTourClickedEvent?.Invoke();
     }
 
     void OnResetTour()
     {
+        _soundManager.PlayTourStartSFX();
         ResetTourClickedEvent?.Invoke();
     }
 }

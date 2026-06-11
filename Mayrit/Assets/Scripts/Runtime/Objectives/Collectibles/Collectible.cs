@@ -7,14 +7,6 @@ public class Collectible : AObjective<Collectible, CollectibleSO>
 
     [SerializeField] OrbitalStateSetting _orbitalStateSetting;
 
-    protected override void Awake()
-    {
-        base.Awake();
-
-        _orbitalStateSetting.DataToShow = _data.Data;
-        _orbitalStateSetting.TransitionToApply = CameraTransition.ThirdPersonCamera;
-    }
-
     void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;

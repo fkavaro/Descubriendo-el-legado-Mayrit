@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 public class PlayerVisual : Billboard
 {
     #region EDITOR PROPERTIES
+    [SerializeField] DataSO _data;
     [Space]
     [SerializeField] OrbitalStateSetting _orbitalStateSetting;
     #endregion
@@ -19,8 +20,8 @@ public class PlayerVisual : Billboard
     // Dependency Injection
     ScenesController _scenesController;
     ProgressManager _progressManager;
-    CameraManager _cameraManager;
-    SoundManager _soundManager;
+    CameraSystem _cameraManager;
+    SoundSystem _soundManager;
     TutorialManager _tutorialManager;
     #endregion
 
@@ -40,8 +41,6 @@ public class PlayerVisual : Billboard
 
         _playerButton.visible = false;
         _playerButton.RegisterCallback<ClickEvent>(OnPlayerButtonClick);
-
-        _orbitalStateSetting.IsForCharacter = true;
     }
 
     protected override void Start()
@@ -51,8 +50,8 @@ public class PlayerVisual : Billboard
         // Get dependencies from Service Locator
         _scenesController = ServiceLocator.Instance.Get<ScenesController>();
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
-        _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
-        _soundManager = ServiceLocator.Instance.Get<SoundManager>();
+        _cameraManager = ServiceLocator.Instance.Get<CameraSystem>();
+        _soundManager = ServiceLocator.Instance.Get<SoundSystem>();
         _tutorialManager = ServiceLocator.Instance.Get<TutorialManager>();
 
         // Subscribe to events and callbacks
@@ -89,7 +88,7 @@ public class PlayerVisual : Billboard
         transform.position = playableCharacter.transform.position + 10 * Vector3.up;
 
         _orbitalStateSetting.Target = playableCharacter.transform;
-        _orbitalStateSetting.DataToShow = playableCharacter.CharacterData;
+        _data = playableCharacter.CharacterData;
     }
     #endregion
 
@@ -113,7 +112,7 @@ public class PlayerVisual : Billboard
 
     void OnPlayerButtonClick(ClickEvent evt)
     {
-        if (_orbitalStateSetting.DataToShow == null)
+        if (_data == null)
         {
             Debug.LogWarning($"[PlayerVisual] No information to show.", this);
             return;

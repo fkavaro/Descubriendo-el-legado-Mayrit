@@ -6,38 +6,33 @@ using UnityEngine.UIElements;
 public class PauseMenu_UIState : AUIState
 {
     #region  PROPERTIES
-    Button _playButton,
+    Button _resumeButton,
         _mainMenuButton,
         _settingsButton,
         _creditsButton,
         _quitButton;
 
-    CameraManager _cameraManager;
+    public event Action ResumeGameClickedEvent;
+    public event Action MainMenuClickedEvent;
+    public event Action SettingsClickedEvent;
+    public event Action CreditsClickedEvent;
+    public event Action QuitClickedEvent;
     #endregion
 
     #region CONSTRUCTOR
-    public PauseMenu_UIState(UIDocument uiDocument, float fadeInDuration, float fadeOutDuration)
-    : base("PauseMenu", uiDocument, fadeInDuration, fadeOutDuration) { }
+    public PauseMenu_UIState(UISystem uiSystem, UIDocument uiDocument, float fadeInDuration, float fadeOutDuration)
+    : base(uiSystem, "PauseMenu", uiDocument, fadeInDuration, fadeOutDuration) { }
     #endregion
 
     #region INHERITED METHODS
     protected override void ConfigureUIElementsOnAwake()
     {
-        _playButton = GetButtonAndRegisterCallback("PlayButton", OnPlayClicked);
+        _resumeButton = GetButtonAndRegisterCallback("ResumeGameButton", OnResumeGameClicked);
         _mainMenuButton = GetButtonAndRegisterCallback("MainMenuButton", OnMainMenuClicked);
         _settingsButton = GetButtonAndRegisterCallback("SettingsButton", OnSettingsClicked);
         _creditsButton = GetButtonAndRegisterCallback("CreditsButton", OnCreditsClicked);
         _quitButton = GetButtonAndRegisterCallback("QuitButton", OnQuitClicked);
     }
-
-    protected override void GetServicesDependenciesOnStart()
-    {
-        base.GetServicesDependenciesOnStart();
-
-        if (_cameraManager == null)
-            _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
-    }
-
     protected override void SubscribeToServicesEventsOnStart()
     {
         base.SubscribeToServicesEventsOnStart();
@@ -48,66 +43,55 @@ public class PauseMenu_UIState : AUIState
     public override void StartState()
     {
         base.StartState();
-        _gameManager.SwitchToPauseState();
         _gameManager.InputActions.UI.Enable();
         _gameManager.InputActions.UI.Pause.performed += OnPauseKeyPressed;
     }
 
     public override void ExitState()
     {
-        //base.ExitState(); Obly after main menu loaded
+        //base.ExitState(); Only after main menu loaded
         _gameManager.InputActions.UI.Disable();
         _gameManager.InputActions.UI.Pause.performed -= OnPauseKeyPressed;
     }
     #endregion
 
     #region CALLBACK METHODS
-    void OnPlayClicked(ClickEvent evt)
+    void OnResumeGameClicked(ClickEvent evt)
     {
         base.ExitState();
-        _gameManager.SwitchToGamePlayState();
         _soundManager.PlayButtonClickSFX();
-
-        if (_cameraManager.IsInAerialState)
-            _uiManager.SwitchToAerialHUDState();
-        else if (_cameraManager.IsInThirdPersonState)
-            _uiManager.SwitchToPlayerHUDState();
-        else
-            _uiManager.SwitchToInformationDisplayState();
+        ResumeGameClickedEvent?.Invoke();
     }
 
     void OnPauseKeyPressed(InputAction.CallbackContext context)
     {
-        OnPlayClicked(null);
+        OnResumeGameClicked(null);
     }
 
     void OnMainMenuClicked(ClickEvent evt)
     {
-        _gameManager.SwitchToMainMenuState();
         _soundManager.PlayButtonClickSFX();
+        MainMenuClickedEvent?.Invoke();
     }
 
     void OnSettingsClicked(ClickEvent evt)
     {
         base.ExitState();
-        _uiManager.SwitchToSettingsMenuState();
         _soundManager.PlayButtonClickSFX();
+        SettingsClickedEvent?.Invoke();
     }
 
     void OnCreditsClicked(ClickEvent evt)
     {
         base.ExitState();
-        _uiManager.SwitchToCreditsScreenState();
         _soundManager.PlayButtonClickSFX();
+        CreditsClickedEvent?.Invoke();
     }
 
     void OnQuitClicked(ClickEvent evt)
     {
         _soundManager.PlayButtonClickSFX();
-        Application.Quit();
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false; // For convenience in the editor
-#endif
+        QuitClickedEvent?.Invoke();
     }
 
     void OnSceneLoadedPartially(SceneDatabase.SceneType type, SceneDatabase.SceneName name)

@@ -24,7 +24,7 @@ public abstract class AObjectivesTracker<TTracker, TObject, TData> : MonoBehavio
     public event Action<TObject> OnObjectiveReachedEvent;
     public event Action OnCompletedEvent;
 
-    UIManager _uiManager;
+    UISystem _uiSystem;
     #endregion
 
     #region ACCESSORS
@@ -51,13 +51,13 @@ public abstract class AObjectivesTracker<TTracker, TObject, TData> : MonoBehavio
 
     protected virtual void Start()
     {
-        _uiManager = ServiceLocator.Instance.Get<UIManager>();
-        _uiManager.StateChangedEvent += OnUIStateChanged;
+        _uiSystem = ServiceLocator.Instance.Get<UISystem>();
+        _uiSystem.StateChangedEvent += OnUIStateChanged;
     }
 
     protected virtual void OnDisable()
     {
-        _uiManager.StateChangedEvent -= OnUIStateChanged;
+        _uiSystem.StateChangedEvent -= OnUIStateChanged;
         ServiceLocator.Instance.Unregister((TTracker)this);
     }
     #endregion
@@ -93,7 +93,7 @@ public abstract class AObjectivesTracker<TTracker, TObject, TData> : MonoBehavio
 
     void OnUIStateChanged()
     {
-        if (_uiManager.IsInInformationDisplayState) return;
+        if (_uiSystem.IsInInformationDisplayState) return;
 
         _currentObjective?.UpdateModel();
     }

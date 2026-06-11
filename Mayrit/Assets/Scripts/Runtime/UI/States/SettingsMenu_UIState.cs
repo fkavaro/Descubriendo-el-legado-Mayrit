@@ -14,11 +14,18 @@ public class SettingsMenu_UIState : AUIState
         _sfxVolumeSlider;
 
     VisualElement _tutorialSettings;
+
+    public event Action CloseClickedEvent;
+    public event Action<bool> EdgeScrollingToggledEvent;
+    public event Action<bool> ShowPOIsToggledEvent;
+    public event Action<bool> ShowControlsToggledEvent;
+    public event Action<float> MusicVolumeChangedEvent;
+    public event Action<float> SFXVolumeChangedEvent;
     #endregion
 
     #region CONSTRUCTOR
-    public SettingsMenu_UIState(UIDocument uiDocument, float fadeInDuration, float fadeOutDuration)
-    : base("SettingsMenu", uiDocument, fadeInDuration, fadeOutDuration) { }
+    public SettingsMenu_UIState(UISystem uiSystem, UIDocument uiDocument, float fadeInDuration, float fadeOutDuration)
+    : base(uiSystem, "SettingsMenu", uiDocument, fadeInDuration, fadeOutDuration) { }
     #endregion
 
     #region OVERRIDDEN METHODS
@@ -40,8 +47,8 @@ public class SettingsMenu_UIState : AUIState
 
         _musicVolumeSlider.value = _soundManager.MusicVolume;
         _sfxVolumeSlider.value = _soundManager.EffectsVolume;
-        _showControlsSwitch.Value = _uiManager.ControlsVisibilityValueSet;
-        _edgeScrollingSwitch.Value = _uiManager.EdgeScrollingValueSet;
+        _showControlsSwitch.Value = _gameManager.ControlsVisibilityValueSet;
+        _edgeScrollingSwitch.Value = _gameManager.EdgeScrollingValueSet;
         _tutorialSettings.style.display = GameSaveSystem.LoadTutorialCompletion() ? DisplayStyle.Flex : DisplayStyle.None;
     }
     #endregion
@@ -51,39 +58,35 @@ public class SettingsMenu_UIState : AUIState
     {
         base.ExitState();
         _soundManager.PlayButtonClickSFX();
-
-        if (_gameManager.IsInMainMenuState)
-            _uiManager.SwitchToMainMenuState();
-        else if (_gameManager.IsInPauseState)
-            _uiManager.SwitchToPauseState();
+        CloseClickedEvent?.Invoke();
     }
 
     void OnEdgeScrollingToggled(bool newValue)
     {
-        _uiManager.SetEdgeScrollingValue(newValue);
         _soundManager.PlayButtonClickSFX();
+        EdgeScrollingToggledEvent?.Invoke(newValue);
     }
 
     void OnShowPOIsToggled(bool newValue)
     {
-        _uiManager.SetPOIsVisibility(newValue);
         _soundManager.PlayButtonClickSFX();
+        ShowPOIsToggledEvent?.Invoke(newValue);
     }
 
     void OnShowControlsToggled(bool newValue)
     {
-        _uiManager.SetControlsVisibility(newValue);
         _soundManager.PlayButtonClickSFX();
+        ShowControlsToggledEvent?.Invoke(newValue);
     }
 
     void OnMusicVolumeChanged(ChangeEvent<float> evt)
     {
-        _uiManager.InvokeMusicVolumeChangedEvent(evt.newValue);
+        MusicVolumeChangedEvent?.Invoke(evt.newValue);
     }
 
     void OnSFXVolumeChanged(ChangeEvent<float> evt)
     {
-        _uiManager.InvokeSFXVolumeChangedEvent(evt.newValue);
+        SFXVolumeChangedEvent?.Invoke(evt.newValue);
     }
 
     void OnResetTutorialClicked(ClickEvent evt)

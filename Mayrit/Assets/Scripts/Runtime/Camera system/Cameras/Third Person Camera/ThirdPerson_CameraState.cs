@@ -10,8 +10,8 @@ public class ThirdPerson_CameraState : ACameraState
     #endregion
 
     #region CONSTRUCTOR
-    public ThirdPerson_CameraState(ThirdPersonCameraDataSO thirdPersonCameraData, CinemachineCamera camera)
-    : base("Third person camera", camera, thirdPersonCameraData.SimulationSpeed)
+    public ThirdPerson_CameraState(CameraSystem cameraManager, ThirdPersonCameraDataSO thirdPersonCameraData, CinemachineCamera camera)
+    : base(cameraManager, "Third person camera", camera, thirdPersonCameraData.SimulationSpeed)
     {
         _cameraController = new(thirdPersonCameraData, camera);
     }
@@ -39,7 +39,7 @@ public class ThirdPerson_CameraState : ACameraState
 
     public override void LateUpdateState()
     {
-        if (_gameManager.IsInPauseState || _uiManager.IsInLoadingScreenState)
+        if (_gameManager.IsInPauseState)
             return;
 
         if (_cameraManager.PlayableCharacter == null)
@@ -55,8 +55,7 @@ public class ThirdPerson_CameraState : ACameraState
             _cameraController.MouseTracking();
 
         // Ensure cursor remains locked during gameplay
-        if (_uiManager.IsInPlayerHUDState
-            && _gameManager.IsInGamePlayState
+        if (_gameManager.IsInThirdPersonState
             && Cursor.lockState != CursorLockMode.Locked)
             Cursor.lockState = CursorLockMode.Locked;
     }

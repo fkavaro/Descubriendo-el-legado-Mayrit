@@ -20,8 +20,8 @@ public class TourManager : MonoBehaviour
 
     // Dependency Injection
     ScenesController _scenesController;
-    UIManager _uiManager;
-    SoundManager _soundManager;
+    GameManager _gameManager;
+    SoundSystem _soundManager;
     PlayableCharacter _playableCharacter;
     ProgressManager _progressManager;
     #endregion
@@ -36,14 +36,13 @@ public class TourManager : MonoBehaviour
     {
         // Get dependencies from Service Locator
         _scenesController = ServiceLocator.Instance.Get<ScenesController>();
-        _uiManager = ServiceLocator.Instance.Get<UIManager>();
-        _soundManager = ServiceLocator.Instance.Get<SoundManager>();
+        _gameManager = ServiceLocator.Instance.Get<GameManager>();
+        _soundManager = ServiceLocator.Instance.Get<SoundSystem>();
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
 
         // Subscribe to events
         _scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
-        _uiManager.PlayTourClickedEvent += OnPlayTourClicked;
-        _uiManager.ResetTourClickedEvent += OnResetTourClicked;
+        _gameManager.ResetTourClickedEvent += OnResetTourClicked;
 
         AttachToTour(ServiceLocator.Instance.Get<Tour>());
     }
@@ -54,8 +53,7 @@ public class TourManager : MonoBehaviour
         // Unsubscribe from events
         _scenesController.SceneLoadedPartiallyEvent -= OnSceneLoadedPartially;
 
-        _uiManager.PlayTourClickedEvent -= OnPlayTourClicked;
-        _uiManager.ResetTourClickedEvent -= OnResetTourClicked;
+        _gameManager.ResetTourClickedEvent -= OnResetTourClicked;
 
         DetachFromCurrentTour();
 
@@ -113,14 +111,12 @@ public class TourManager : MonoBehaviour
 
     void OnTourStopVisited(TourStop tourStop) => TourStopVisitedEvent?.Invoke(tourStop);
 
-    void OnUIStateChanged()
+    void OnGameStateChanged()
     {
-        if (_uiManager.IsInInformationDisplayState) return;
-
-        if (_currentTour.IsCompleted)
+        if (_currentTour.IsCompleted && _gameManager.IsInThirdPersonState)
         {
             _soundManager.PlayTourEndSFX();
-            _uiManager.StateChangedEvent -= OnUIStateChanged;
+            _gameManager.StateChangedEvent -= OnGameStateChanged;
         }
     }
 
@@ -128,18 +124,12 @@ public class TourManager : MonoBehaviour
     {
         TourCompletedEvent?.Invoke(_currentTour);
 
-        _uiManager.StateChangedEvent += OnUIStateChanged;
-    }
-
-    void OnPlayTourClicked()
-    {
-        _soundManager.PlayTourStartSFX();
+        _gameManager.StateChangedEvent += OnGameStateChanged;
     }
 
     void OnResetTourClicked()
     {
         _currentTour.Reset();
-        OnPlayTourClicked();
     }
     #endregion
 }

@@ -477,7 +477,7 @@
                 <ui:Label text="Pausa" class="subtitle" style="top: auto;"/>
             </ui:VisualElement>
             <ui:VisualElement name="Buttons" style="justify-content: center; align-self: stretch; margin-top: 50px;">
-                <ui:Button name="PlayButton" text="Reanudar" class="button highlighted" style="align-self: center; position: relative;"/>
+                <ui:Button name="ResumeGameButton" text="Reanudar" class="button highlighted" style="align-self: center; position: relative;"/>
                 <ui:Label text="[Esc]" class="HUDtext disabled" style="align-self: center;"/>
                 <ui:Button text="Ajustes" name="SettingsButton" class="button" style="position: relative;"/>
                 <ui:Button text="Inicio" name="MainMenuButton" class="button" style="position: relative; margin-top: 15px;"/>

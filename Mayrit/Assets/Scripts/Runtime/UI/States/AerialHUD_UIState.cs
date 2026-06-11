@@ -18,14 +18,19 @@ public class AerialHUD_UIState : AHUDState
         _switches,
         _nextMilestoneButtonImage;
 
-    public Switch _modernVisualizactionSwitch;
+    Switch _modernVisualizactionSwitch;
 
     public Action MilestoneInfoClickedEvent;
+    public Action PreviousMilestoneClickedEvent;
+    public Action NextMilestoneClickedEvent;
+    public Action<bool> ModernVisualizationToggled;
+
+    ProgressManager _progressManager;
     #endregion
 
     #region CONSTRUCTOR
-    public AerialHUD_UIState(UIDocument uiDocument, float fadeInDuration, float fadeOutDuration)
-    : base("AerialHUD", uiDocument, fadeInDuration, fadeOutDuration) { }
+    public AerialHUD_UIState(UISystem uiSystem, UIDocument uiDocument, float fadeInDuration, float fadeOutDuration)
+    : base(uiSystem, "AerialHUD", uiDocument, fadeInDuration, fadeOutDuration) { }
     #endregion
 
     #region UI STATE INHERITED METHODS
@@ -58,7 +63,7 @@ public class AerialHUD_UIState : AHUDState
     protected override void SubscribeToServicesEventsOnStart()
     {
         base.SubscribeToServicesEventsOnStart();
-        _progressManager.MilestoneChangedEvent += OnMilestoneChanged;
+        _gameManager.MilestoneChangedEvent += OnMilestoneChanged;
     }
 
     public override void StartState()
@@ -79,7 +84,7 @@ public class AerialHUD_UIState : AHUDState
     protected override void UnsubscribeToServicesEventsOnExit()
     {
         base.UnsubscribeToServicesEventsOnExit();
-        _progressManager.MilestoneChangedEvent -= OnMilestoneChanged;
+        _gameManager.MilestoneChangedEvent -= OnMilestoneChanged;
     }
     #endregion
 
@@ -110,20 +115,20 @@ public class AerialHUD_UIState : AHUDState
 
     void OnPreviousMilestoneClicked(ClickEvent evt)
     {
-        _progressManager.SwitchToPreviousMilestone();
         _soundManager.PlayButtonClickSFX();
+        PreviousMilestoneClickedEvent?.Invoke();
     }
 
     void OnNextMilestoneClicked(ClickEvent evt)
     {
-        _progressManager.SwitchToNextMilestone();
         _soundManager.PlayButtonClickSFX();
+        NextMilestoneClickedEvent?.Invoke();
     }
 
     void OnModernSuperpositionToggled(bool newValue)
     {
-        _uiManager.SetModernVisualizationValue(newValue);
         _soundManager.PlayButtonClickSFX();
+        ModernVisualizationToggled?.Invoke(newValue);
     }
 
     void OnMilestoneChanged(Milestone_DataSO mapping)

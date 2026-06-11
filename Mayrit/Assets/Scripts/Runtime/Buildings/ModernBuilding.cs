@@ -25,69 +25,48 @@ public class ModernBuilding : MonoBehaviour
 
 
     // Dependency Injection
-    CameraManager _cameraManager;
-    UIManager _uiManager;
+    GameManager _gameManager;
     #endregion
 
     #region LIFE CYCLE
     void Awake()
     {
         // Get dependencies from ServiceLocator
-        _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
-        _uiManager = ServiceLocator.Instance.Get<UIManager>();
+        _gameManager = ServiceLocator.Instance.Get<GameManager>();
 
         _pointOfInterest.IsBlocked = true;
-        IsActive = _uiManager.ModernVisualizationValueSet;
+        IsActive = _gameManager.ModernVisualizationValueSet;
     }
 
     void Start()
     {
         // Subscribe to events
-        _cameraManager.CameraStateChangedEvent += FixActivation;
-        _uiManager.StateChangedEvent += OnUIStateChanged;
-        _uiManager.ModernVisualizationToggled += OnVisualizationToggled;
+        _gameManager.StateChangedEvent += OnGameStateChange;
+        _gameManager.ModernVisualizationToggled += OnVisualizationToggled;
     }
 
     void OnDisable()
     {
         // Unsubscribe from events
-        _cameraManager.CameraStateChangedEvent -= FixActivation;
-        _uiManager.StateChangedEvent -= OnUIStateChanged;
-        _uiManager.ModernVisualizationToggled -= OnVisualizationToggled;
+        _gameManager.StateChangedEvent -= OnGameStateChange;
+        _gameManager.ModernVisualizationToggled -= OnVisualizationToggled;
     }
     #endregion
 
     #region CALLBACK METHODS
-    void OnUIStateChanged()
+    void OnGameStateChange()
     {
-        if (_uiManager.IsInInformationDisplayState)
-            OnContextualPanelShown(_uiManager.ContextualPanelState.DataToShow);
-        else
-            FixActivation();
-    }
-
-    void FixActivation()
-    {
-        if (_cameraManager.IsInThirdPersonState || _cameraManager.IsInTourStopState)
+        if (_gameManager.IsInThirdPersonState || _gameManager.IsAtTourStopState)
             IsActive = false;
-        else if (_cameraManager.IsInAerialState)
-            IsActive = _uiManager.ModernVisualizationValueSet;
+        else if (_gameManager.IsInAerialState)
+            IsActive = _gameManager.ModernVisualizationValueSet;
+        else if (_gameManager.IsAtPOIState)
+            IsActive = _gameManager.ModernVisualizationValueSet && _gameManager.AtPOIState.PointOfInterest.Data.IsModernBuilding && _pointOfInterest.Data == _gameManager.AtPOIState.PointOfInterest.Data;
     }
 
     void OnVisualizationToggled(bool value)
     {
-        IsActive = value && _cameraManager.IsInAerialState;
-    }
-
-    void OnContextualPanelShown(DataSO data)
-    {
-        if (!data.IsModernBuilding)
-        {
-            IsActive = false;
-            return;
-        }
-
-        IsActive = (data == _pointOfInterest.Data) && _uiManager.ModernVisualizationValueSet;
+        IsActive = value && _gameManager.IsInAerialState;
     }
     #endregion
 }

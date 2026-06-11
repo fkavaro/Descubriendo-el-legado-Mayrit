@@ -12,8 +12,8 @@ public class TutorialState : AUIState
     readonly List<VisualElement> _hiddenElements = new();
     bool _animationStarted;
 
-    public TutorialState(TutorialStepSO tutorialStepData, UIManager uiManager, AStateMachine<TutorialState> fsm)
-    : base(tutorialStepData.VisualElementName, uiManager.UIDocument)
+    public TutorialState(UISystem uiSystem, TutorialStepSO tutorialStepData, AStateMachine<TutorialState> fsm)
+    : base(uiSystem, tutorialStepData.VisualElementName, uiSystem.UIDocument)
     {
         _data = tutorialStepData;
         _completionCondition = _data.CompletionCondition;
@@ -21,7 +21,7 @@ public class TutorialState : AUIState
         _completionCondition.SetUIDocument(_UIDocument);
 
         if (_completionCondition is ContextualPanelShownConditionSO selectionCondition)
-            selectionCondition.SetUIManager(uiManager);
+            selectionCondition.SetUISystem(uiSystem);
 
         _fsm = fsm;
     }
@@ -63,7 +63,7 @@ public class TutorialState : AUIState
         _animationStarted = true;
 
         if (_data.AnimationDuration > 0f)
-            _uiManager.StartCoroutine(ScalePunchAnimation(_screen, _data.AnimationPeakScale, _data.AnimationDuration));
+            _uiSystem.StartCoroutine(ScalePunchAnimation(_screen, _data.AnimationPeakScale, _data.AnimationDuration));
     }
 
     void OnCompletionConditionCompleted()
@@ -73,7 +73,7 @@ public class TutorialState : AUIState
         _completionCondition.EndListening();
 
         if (!_animationStarted && _data.AnimationDuration > 0f)
-            _uiManager.StartCoroutine(ScalePunchAnimation(_screen, _data.AnimationPeakScale, _data.AnimationDuration, OnAnimationComplete));
+            _uiSystem.StartCoroutine(ScalePunchAnimation(_screen, _data.AnimationPeakScale, _data.AnimationDuration, OnAnimationComplete));
         else
             OnAnimationComplete();
     }

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class CompassUI : AUIState
+public class CompassComponent : AUIState
 {
     #region PROPERTIES
     readonly VisualElement _rootParent;
@@ -20,7 +20,8 @@ public class CompassUI : AUIState
     #endregion
 
     #region CONSTRUCTOR
-    public CompassUI(UIDocument uIDocument, VisualElement root) : base("Compass", uIDocument)
+    public CompassComponent(UISystem uiSystem, UIDocument uIDocument, VisualElement root)
+    : base(uiSystem, "Compass", uIDocument)
     {
         if (root == null)
         {

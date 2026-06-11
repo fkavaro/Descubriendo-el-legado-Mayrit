@@ -33,9 +33,7 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     AtTourStop_PlayableCharacterState _atTourStopState;
 
     // Dependency Injection
-    TourManager _tourManager;
-    UIManager _uiManager;
-    CameraManager _cameraManager;
+    GameManager _gameManager;
     #endregion
 
     #region INHERITED
@@ -65,9 +63,7 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
         _movementController = new(this, GetComponent<CharacterController>());
 
         // Get dependencies from ServiceLocator
-        _uiManager = ServiceLocator.Instance.Get<UIManager>();
-        _tourManager = ServiceLocator.Instance.Get<TourManager>();
-        _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
+        _gameManager = ServiceLocator.Instance.Get<GameManager>();
 
         _originalPosition = transform.position;
         _originalRotation = transform.rotation;
@@ -102,20 +98,12 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     #region EVENTS SUBSCRIPTION
     void SubscribeToServicesEvents()
     {
-        _uiManager.PlayTourClickedEvent += OnPlayTourClicked;
-        _uiManager.ResetTourClickedEvent += OnResetTourClicked;
-        _uiManager.StateChangedEvent += OnUIStateChanged;
-        _tourManager.TourStopVisitedEvent += OnTourStopVisited;
-        _cameraManager.CameraStateChangedEvent += OnCameraStateChanged;
+        _gameManager.ResetTourClickedEvent += OnResetTourClicked;
     }
 
     void UnsubscribeFromServicesEvents()
     {
-        _uiManager.PlayTourClickedEvent -= OnPlayTourClicked;
-        _uiManager.ResetTourClickedEvent -= OnResetTourClicked;
-        _uiManager.StateChangedEvent -= OnUIStateChanged;
-        _tourManager.TourStopVisitedEvent -= OnTourStopVisited;
-        _cameraManager.CameraStateChangedEvent -= OnCameraStateChanged;
+        _gameManager.ResetTourClickedEvent -= OnResetTourClicked;
     }
     #endregion
 
@@ -135,38 +123,11 @@ public class PlayableCharacter : ACharacter<FiniteStateMachine<APlayableCharacte
     #endregion
 
     #region CALLBACK METHODS
-    void OnPlayTourClicked()
-    {
-        SwitchToControlledState();
-    }
 
     void OnResetTourClicked()
     {
-        SwitchToControlledState();
         ResetPositionAndRotation();
         PositionResetEvent?.Invoke();
-    }
-
-    void OnUIStateChanged()
-    {
-        if (_uiManager.IsInInformationDisplayState) return;
-
-        if (!_cameraManager.IsInAerialState)
-            SwitchToControlledState();
-    }
-
-    void OnTourStopVisited(TourStop tourStop)
-    {
-        if (tourStop.Data == null) return;
-        SwitchToAtTourStopState(tourStop);
-    }
-
-    void OnCameraStateChanged()
-    {
-        if (_cameraManager.IsInThirdPersonState)
-            SwitchToControlledState();
-        else
-            SwitchToNotControlledState();
     }
     #endregion
 }

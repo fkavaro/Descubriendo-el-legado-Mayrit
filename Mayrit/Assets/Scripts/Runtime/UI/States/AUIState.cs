@@ -15,16 +15,16 @@ public abstract class AUIState : AState
 
     // Dependency Injection
     protected ScenesController _scenesController;
-    protected UIManager _uiManager;
+    protected UISystem _uiSystem;
     protected GameManager _gameManager;
-    protected SoundManager _soundManager;
-    protected ProgressManager _progressManager;
+    protected SoundSystem _soundManager;
     #endregion
 
     #region CONSTRUCTOR
-    protected AUIState(string name, UIDocument uiDocument, float fadeInDuration = 0f, float fadeOutDuration = 0f)
+    protected AUIState(UISystem uiSystem, string name, UIDocument uiDocument, float fadeInDuration = 0f, float fadeOutDuration = 0f)
     : base(name)
     {
+        _uiSystem = uiSystem;
         _UIDocument = uiDocument;
         _fadeInDuration = fadeInDuration;
         _fadeOutDuration = fadeOutDuration;
@@ -63,14 +63,10 @@ public abstract class AUIState : AState
     {
         if (_scenesController == null)
             _scenesController = ServiceLocator.Instance.Get<ScenesController>();
-        if (_uiManager == null)
-            _uiManager = ServiceLocator.Instance.Get<UIManager>();
         if (_gameManager == null)
             _gameManager = ServiceLocator.Instance.Get<GameManager>();
         if (_soundManager == null)
-            _soundManager = ServiceLocator.Instance.Get<SoundManager>();
-        if (_progressManager == null)
-            _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
+            _soundManager = ServiceLocator.Instance.Get<SoundSystem>();
     }
 
     public override void StartState()

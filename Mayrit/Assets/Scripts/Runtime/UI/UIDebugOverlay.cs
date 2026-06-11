@@ -7,10 +7,10 @@ public class UIDebugOverlay : MonoBehaviour
     public bool _isCollapsed = true;
 
     // Dependencies
-    UIManager _uiManager;
+    UISystem _uiSystem;
     GameManager _gameManager;
     ProgressManager _progressManager;
-    CameraManager _cameraManager;
+    CameraSystem _cameraManager;
     EnvironmentManager _environmentManager;
     TownManager _townManager;
     NPCPoolManager _npcPoolManager;
@@ -50,20 +50,20 @@ public class UIDebugOverlay : MonoBehaviour
         GUILayout.Space(4);
 
         // Get dependencies from Service Locator
-        _uiManager = ServiceLocator.Instance.Get<UIManager>();
+        _uiSystem = ServiceLocator.Instance.Get<UISystem>();
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
         _progressManager = ServiceLocator.Instance.Get<ProgressManager>();
-        _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
+        _cameraManager = ServiceLocator.Instance.Get<CameraSystem>();
         _environmentManager = ServiceLocator.Instance.Get<EnvironmentManager>();
         _townManager = ServiceLocator.Instance.Get<TownManager>();
         _npcPoolManager = ServiceLocator.Instance.Get<NPCPoolManager>();
         _playableCharacter = ServiceLocator.Instance.Get<PlayableCharacter>();
 
         // Display states of various managers
-        if (_uiManager != null && _uiManager.BehaviourSystem != null)
-            GUILayout.Label($"UIManager state: {_uiManager.BehaviourSystem.CurrentState.StateName}");
+        if (_uiSystem != null && _uiSystem.BehaviourSystem != null)
+            GUILayout.Label($"UISystem state: {_uiSystem.BehaviourSystem.CurrentState.StateName}");
         else
-            GUILayout.Label("UIManager: <null>");
+            GUILayout.Label("UISystem: <null>");
 
         if (_gameManager != null && _gameManager.BehaviourSystem != null)
             GUILayout.Label($"GameManager state: {_gameManager.BehaviourSystem.CurrentState.StateName}");

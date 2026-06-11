@@ -8,7 +8,7 @@ public class PlaySFX : StateMachineBehaviour
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        SoundManager soundManager = ServiceLocator.Instance.Get<SoundManager>();
+        SoundSystem soundManager = ServiceLocator.Instance.Get<SoundSystem>();
 
         if (soundManager != null)
             soundManager.PlaySFX(_enterSFXType);
@@ -19,7 +19,7 @@ public class PlaySFX : StateMachineBehaviour
     //OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        SoundManager soundManager = ServiceLocator.Instance.Get<SoundManager>();
+        SoundSystem soundManager = ServiceLocator.Instance.Get<SoundSystem>();
 
         if (soundManager != null)
             soundManager.PlaySFX(_exitSFXType);

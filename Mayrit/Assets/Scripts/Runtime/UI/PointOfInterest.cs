@@ -9,6 +9,7 @@ public class PointOfInterest : Billboard
 {
     #region EDITOR PROPERTIES
     [Header("Point of interest information")]
+    [SerializeField] DataSO _data;
     [SerializeField] OrbitalStateSetting _orbitalStateSetting;
     [Header("Height Adjustment")]
     [SerializeField] bool _hideIfTooFar = true;
@@ -19,7 +20,8 @@ public class PointOfInterest : Billboard
     #endregion
 
     #region INTERNAL PROPERTIES
-    public DataSO Data => _orbitalStateSetting.DataToShow;
+    public DataSO Data => _data;
+    public OrbitalStateSetting OrbitalStateSetting => _orbitalStateSetting;
 
     float OriginalHeight => _originalPosition.y;
     float CameraDistance => Vector3.Distance(_originalPosition, _mainCamera.transform.position);
@@ -33,16 +35,16 @@ public class PointOfInterest : Billboard
     bool _shownDueToTutorial = true;
 
     // Dependency Injection
-    UIManager _uiManager;
-    SoundManager _soundManager;
-    CameraManager _cameraManager;
+    GameManager _gameManager;
+    SoundSystem _soundManager;
+    CameraSystem _cameraManager;
     TutorialManager _tutorialManager;
     #endregion
 
     #region LIFE CYCLE
     void OnEnable()
     {
-        if (_orbitalStateSetting.DataToShow == null)
+        if (_data == null)
         {
             Debug.LogWarning($"[PointOfInterest] No information assigned to {gameObject.name}. Please assign a DataSO.", this);
             return;
@@ -64,13 +66,13 @@ public class PointOfInterest : Billboard
     {
         base.Start();
 
-        _uiManager = ServiceLocator.Instance.Get<UIManager>();
-        _soundManager = ServiceLocator.Instance.Get<SoundManager>();
-        _cameraManager = ServiceLocator.Instance.Get<CameraManager>();
+        _gameManager = ServiceLocator.Instance.Get<GameManager>();
+        _soundManager = ServiceLocator.Instance.Get<SoundSystem>();
+        _cameraManager = ServiceLocator.Instance.Get<CameraSystem>();
         _tutorialManager = ServiceLocator.Instance.Get<TutorialManager>();
 
         _cameraManager.CameraStateChangedEvent += OnCameraStateChanged;
-        _uiManager.POIsVisualizationToggledEvent += OnVisualizationToggled;
+        _gameManager.POIsVisualizationToggledEvent += OnVisualizationToggled;
         _tutorialManager.ShowPointsOfInterestEvent += OnShowInTutorialEvent;
         _tutorialManager.TutorialCompletedEvent += OnTutorialCompleted;
 
@@ -97,7 +99,7 @@ public class PointOfInterest : Billboard
     {
         _nameButton?.UnregisterCallback<ClickEvent>(OnClicked);
         if (_cameraManager != null) _cameraManager.CameraStateChangedEvent -= OnCameraStateChanged;
-        if (_uiManager != null) _uiManager.POIsVisualizationToggledEvent -= OnVisualizationToggled;
+        if (_gameManager != null) _gameManager.POIsVisualizationToggledEvent -= OnVisualizationToggled;
         if (_tutorialManager != null)
         {
             _tutorialManager.ShowPointsOfInterestEvent -= OnShowInTutorialEvent;
@@ -126,7 +128,7 @@ public class PointOfInterest : Billboard
             return false;
         }
 
-        _nameLabel.text = _orbitalStateSetting.DataToShow.Header;
+        _nameLabel.text = _data.Header;
         _nameButton.RegisterCallback<ClickEvent>(OnClicked);
         return true;
     }
@@ -138,11 +140,11 @@ public class PointOfInterest : Billboard
         get => _uiDocument.enabled;
         set
         {
-            if (_uiManager == null || _cameraManager == null) return;
+            if (_gameManager == null || _cameraManager == null) return;
 
             bool resolvedValue = value
                 && (!IsBlocked || IsSetAsShown)
-                && _uiManager.POIsVisibilityValueSet
+                && _gameManager.POIsVisibilityValueSet
                 && _cameraManager.IsInAerialState
                 && _shownDueToTutorial;
 

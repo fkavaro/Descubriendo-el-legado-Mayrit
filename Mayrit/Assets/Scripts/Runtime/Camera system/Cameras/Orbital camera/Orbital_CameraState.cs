@@ -11,8 +11,8 @@ public class Orbital_CameraState : ACameraState
     #endregion
 
     #region CONSTRUCTOR
-    public Orbital_CameraState(OrbitalCameraDataSO orbitalCameraData, CinemachineCamera camera)
-    : base("Orbital camera", camera, orbitalCameraData.SimulationSpeed)
+    public Orbital_CameraState(CameraSystem cameraManager, OrbitalCameraDataSO orbitalCameraData, CinemachineCamera camera)
+    : base(cameraManager, "Orbital camera", camera, orbitalCameraData.SimulationSpeed)
     {
         _controller = new(orbitalCameraData, camera);
     }
@@ -26,12 +26,11 @@ public class Orbital_CameraState : ACameraState
         _gameManager.InputActions.Camera.Enable();
 
         _controller.Start(Setting);
-        _uiManager.SwitchToInformationDisplayState(Setting.DataToShow);
     }
 
     public override void LateUpdateState()
     {
-        if (_gameManager.IsInPauseState || _uiManager.IsInLoadingScreenState)
+        if (_gameManager.IsInPauseState)
             return;
 
         _controller.LateUpdate();

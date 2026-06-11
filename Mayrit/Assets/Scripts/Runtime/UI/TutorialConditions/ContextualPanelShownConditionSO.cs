@@ -5,28 +5,28 @@ using System.Collections.Generic;
 public class ContextualPanelShownConditionSO : ATutorialStepConditionSO
 {
     [SerializeField] List<DataSO.DataType> _dataTypes = new();
-    UIManager _uiManager;
+    UISystem _uiSystem;
 
-    public void SetUIManager(UIManager uiManager)
+    public void SetUISystem(UISystem uiSystem)
     {
-        _uiManager = uiManager;
+        _uiSystem = uiSystem;
     }
 
     public override void BeginListening()
     {
-        _uiManager.StateChangedEvent += OnUIStateChanged;
+        _uiSystem.StateChangedEvent += OnUIStateChanged;
     }
 
     public override void EndListening()
     {
-        _uiManager.StateChangedEvent -= OnUIStateChanged;
+        _uiSystem.StateChangedEvent -= OnUIStateChanged;
     }
 
     void OnUIStateChanged()
     {
-        if (!_uiManager.IsInInformationDisplayState) return;
+        if (!_uiSystem.IsInInformationDisplayState) return;
 
-        DataSO data = _uiManager.ContextualPanelState.DataToShow;
+        DataSO data = _uiSystem.InformationDisplayState.DataToShow;
 
         if (_dataTypes.Contains(data.Type))
         {

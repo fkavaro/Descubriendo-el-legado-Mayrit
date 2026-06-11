@@ -28,7 +28,7 @@ public class CollectiblesManager : MonoBehaviour
     private readonly Dictionary<int, CollectibleSO> _idToCollectibleMap = new();
 
     ScenesController _scenesController;
-    SoundManager _soundManager;
+    SoundSystem _soundManager;
     #endregion
 
     #region LIFE CYCLE
@@ -49,7 +49,7 @@ public class CollectiblesManager : MonoBehaviour
     void Start()
     {
         _scenesController = ServiceLocator.Instance.Get<ScenesController>();
-        _soundManager = ServiceLocator.Instance.Get<SoundManager>();
+        _soundManager = ServiceLocator.Instance.Get<SoundSystem>();
 
         _scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
     }

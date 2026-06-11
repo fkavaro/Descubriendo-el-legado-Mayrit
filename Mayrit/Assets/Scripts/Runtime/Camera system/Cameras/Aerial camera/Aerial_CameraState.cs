@@ -9,8 +9,8 @@ public class Aerial_CameraState : ACameraState
     #endregion
 
     #region CONSTRUCTOR
-    public Aerial_CameraState(AerialCameraDataSO aerialCameraData, CinemachineCamera camera)
-    : base("Aerial camera", camera, aerialCameraData.SimulationSpeed)
+    public Aerial_CameraState(CameraSystem cameraManager, AerialCameraDataSO aerialCameraData, CinemachineCamera camera)
+    : base(cameraManager, "Aerial camera", camera, aerialCameraData.SimulationSpeed)
     {
         _cameraController = new(aerialCameraData, camera);
     }
@@ -24,15 +24,9 @@ public class Aerial_CameraState : ACameraState
         _gameManager.InputActions.Camera.Enable();
     }
 
-    public override void UpdateState()
-    {
-        if (_gameManager.IsInPauseState || _uiManager.IsInLoadingScreenState)
-            return;
-    }
-
     public override void LateUpdateState()
     {
-        if (_gameManager.IsInPauseState || _uiManager.IsInLoadingScreenState)
+        if (_gameManager.IsInPauseState)
             return;
 
         _cameraController.LateUpdate();

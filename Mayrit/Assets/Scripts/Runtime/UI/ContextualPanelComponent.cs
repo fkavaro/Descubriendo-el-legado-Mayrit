@@ -37,8 +37,8 @@ public class ContextualPanelComponent : AUIState
     #endregion
 
     #region CONSTRUCTOR
-    public ContextualPanelComponent(UIDocument uiDocument, float fadeInDuration, float fadeOutDuration)
-    : base("ContextualPanel", uiDocument, fadeInDuration, fadeOutDuration) { }
+    public ContextualPanelComponent(UISystem uiSystem, UIDocument uiDocument, float fadeInDuration, float fadeOutDuration)
+    : base(uiSystem, "ContextualPanel", uiDocument, fadeInDuration, fadeOutDuration) { }
     #endregion
 
     #region INHERITED METHODS
