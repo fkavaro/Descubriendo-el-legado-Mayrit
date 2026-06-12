@@ -534,7 +534,20 @@ public class NPCMovementController
     #region PLAYER PROXIMITY METHODS
     public bool CheckAndHandlePlayerProximity()
     {
-        if (_player == null || !IsAgentValid || _player.IsBeingControlled) return false;
+        if (_player == null)
+        {
+            Debug.LogWarning($"[{_npc.Name}.CheckAndHandlePlayerProximity] player reference is null.", _npc.GO);
+            return false;
+        }
+
+        if (!IsAgentValid)
+        {
+            Debug.LogWarning($"[{_npc.Name}.CheckAndHandlePlayerProximity] agent is not valid.", _npc.GO);
+            return false;
+        }
+
+        if (!_player.IsBeingControlled)
+            return false;
 
         float distanceToPlayer = Vector3.Distance(_npc.GO.transform.position, _player.GO.transform.position);
 
