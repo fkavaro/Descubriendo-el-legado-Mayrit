@@ -118,7 +118,7 @@ public abstract class AObjectivesTracker<TTracker, TObject, TData> : MonoBehavio
 
         if (_currentObjective != null)
             _currentObjective.OnReachedEvent -= HandleObjectReached;
-        if (_currentValidObjective != null)
+        if (_currentValidObjective != null && _currentValidObjective != _currentObjective)
             _currentValidObjective.OnReachedEvent -= HandleObjectReached;
 
         bool foundNextIdx = false;
@@ -161,9 +161,11 @@ public abstract class AObjectivesTracker<TTracker, TObject, TData> : MonoBehavio
         else
         {
             _currentObjective.Reset();
-            _currentObjective.OnReachedEvent += HandleObjectReached;
             _currentValidObjective.Reset();
-            _currentValidObjective.OnReachedEvent += HandleObjectReached;
+
+            _currentObjective.OnReachedEvent += HandleObjectReached;
+            if (_currentObjective != _currentValidObjective)
+                _currentValidObjective.OnReachedEvent += HandleObjectReached;
         }
     }
     #endregion
