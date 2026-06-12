@@ -460,6 +460,7 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
 
     void OnMilestoneInfoClicked()
     {
+        // TODO orbital state around whole city
         _uiSystem.SwitchToInformationDisplayState(_progressManager.CurrentMilestoneData);
     }
 
@@ -469,6 +470,8 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
             SwitchToAerialState();
         else if (IsAtTourStopState || IsAtCollectibleState)
             SwitchToThirdPersonState();
+        else if (IsInAerialState)
+            _uiSystem.SwitchToAerialHUDState();
     }
 
     void OnPlayTourClicked()

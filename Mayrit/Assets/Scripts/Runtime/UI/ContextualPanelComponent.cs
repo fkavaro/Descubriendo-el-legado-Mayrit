@@ -10,7 +10,6 @@ public class ContextualPanelComponent : AUIState
     public event Action ResetTourClickedEvent;
     public event Action ClosedEvent;
 
-
     Label _header,
         _subHeader,
         _disclaimer,
@@ -66,13 +65,14 @@ public class ContextualPanelComponent : AUIState
         _imageCaption = GetByName<Label>("Caption");
         _image = GetByName<VisualElement>("Image");
 
-
         _lowerArea = GetByName<VisualElement>("LowerArea");
         _continueButton = GetButtonAndRegisterCallback("ContinueButton", OnContinue, _lowerArea);
         _resetTourButton = GetButtonAndRegisterCallback("ResetTourButton", OnResetTour, _lowerArea);
         _loadingAnimation = GetByName<VisualElement>("LoadingAnimation");
     }
+    #endregion
 
+    #region PUBLIC METHODS
     public void ShowData(DataSO data)
     {
         base.StartState();
@@ -193,9 +193,7 @@ public class ContextualPanelComponent : AUIState
         _loadingAnimation.style.display = DisplayStyle.None;
         _continueButton.style.display = DisplayStyle.Flex;
     }
-    #endregion
 
-    #region PUBLIC METHODS
     public void Reset()
     {
         _header.text = string.Empty;
@@ -216,11 +214,6 @@ public class ContextualPanelComponent : AUIState
     #endregion
 
     #region CALLBACK METHODS
-    void OnCloseAction(InputAction.CallbackContext context)
-    {
-        OnCloseButton(null);
-    }
-
     void OnCloseButton(ClickEvent evt)
     {
         ClosedEvent?.Invoke();
