@@ -130,7 +130,6 @@ public class SoundSystem : ABehaviourEntity<FiniteStateMachine<AMusicState>>
 
     protected override void Update()
     {
-        // TODO remove or implement in game
         if (_skipToNextTrack)
         {
             _skipToNextTrack = false;

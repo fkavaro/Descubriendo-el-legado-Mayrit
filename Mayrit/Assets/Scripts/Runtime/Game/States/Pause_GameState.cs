@@ -13,8 +13,6 @@ public class Pause_GameState : AGameState
         Time.timeScale = 0f;
 
         UISystem.SwitchToPauseState();
-        // TODO: Disable player input and camera controls
-        //CameraSystem.DisableCameraControllers();
         PlayableCharacter.SwitchToNotControlledState();
 
         _gameManager.InputActions.UI.Enable();

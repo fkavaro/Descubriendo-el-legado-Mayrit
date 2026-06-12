@@ -36,11 +36,6 @@ public class AerialCameraDataSO : ScriptableObject
     public float zoomSpeed = 0.1f;
     public float zoomSmoothing = 5f;
 
-    // TODO remove later
-    // [Header("Selection")]
-    // [Tooltip("Layer mask to define which objects are selectable.")]
-    // public LayerMask selectableLayer;
-
     [Header("Third-Person Transition")]
     [Tooltip("Speed at which aerial camera target moves when switching from third-person camera.")]
     public float targetPositionFixSpeed = 50f;
