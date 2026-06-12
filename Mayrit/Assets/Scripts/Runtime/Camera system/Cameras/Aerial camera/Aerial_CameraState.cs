@@ -20,10 +20,8 @@ public class Aerial_CameraState : ACameraState
 
     public override void LateUpdateState()
     {
-        if (_gameManager.IsInPauseState)
-            return;
-
-        _cameraController.LateUpdate();
+        if (_gameManager.IsInAerialState)
+            _cameraController.LateUpdate();
     }
     #endregion
 }
