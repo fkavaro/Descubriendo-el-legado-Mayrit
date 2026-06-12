@@ -9,4 +9,11 @@ public class Gameplay_GameState : AGameState
 
     public Gameplay_GameState(GameManager gameManager)
     : base(gameManager, "Gameplay") { }
+
+    public override void StartState()
+    {
+        base.StartState();
+
+        Fsm.CurrentState?.StartState();
+    }
 }
