@@ -34,6 +34,8 @@ public class TutorialState : AUIState
 
             if (elementToHide != null)
                 _hiddenElements.Add(elementToHide);
+            else
+                Debug.LogWarning($"[{StateName}] VisualElement '{elementName}' not found in the UIDocument.");
         }
     }
 

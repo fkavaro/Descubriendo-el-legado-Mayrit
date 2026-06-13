@@ -12,6 +12,9 @@ public abstract class AHUDState : AUIState
     VisualElement _hudScreen,
         _controlsMappingRoot,
         _compassVisualRoot;
+
+
+    protected TutorialManager _tutorialManager;
     #endregion
 
     #region CONSTRUCTOR
@@ -31,6 +34,14 @@ public abstract class AHUDState : AUIState
         _hudScreen.style.display = DisplayStyle.None;
     }
 
+    protected override void GetServicesDependenciesOnStart()
+    {
+        base.GetServicesDependenciesOnStart();
+
+        if (_tutorialManager == null)
+            _tutorialManager = ServiceLocator.Instance.Get<TutorialManager>();
+    }
+
     public override void StartState()
     {
         _hudScreen.style.display = DisplayStyle.Flex;
@@ -39,7 +50,7 @@ public abstract class AHUDState : AUIState
         _compass.StartState();
 
         // Show controls visual according to UISystem setting
-        _controlsMappingRoot.style.display = _gameManager.ControlsVisibilityValueSet ?
+        _controlsMappingRoot.style.display = _gameManager.ControlsVisibilityValueSet && _tutorialManager.HasCompletedTutorial ?
             DisplayStyle.Flex :
             DisplayStyle.None;
 

@@ -22,6 +22,7 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
 
     StackFiniteStateMachine<TutorialState> _fsm;
     ScenesController _scenesController;
+    GameManager _gameManager;
     #endregion
 
     #region INHERITED
@@ -58,6 +59,8 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
         _scenesController = ServiceLocator.Instance.Get<ScenesController>();
         _scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
 
+        _gameManager = ServiceLocator.Instance.Get<GameManager>();
+
         // base.Start(); when gameplay scene loaded, to start behaviour system
     }
 
@@ -82,7 +85,7 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
         }
 
         ShowPlayerFollowerEvent?.Invoke(!_fsm.CurrentState.Data.VisualElementsToHide.Contains(UIElementsToHide.TutorialPlayerFollower));
-        ShowPointsOfInterestEvent?.Invoke(!_fsm.CurrentState.Data.VisualElementsToHide.Contains(UIElementsToHide.TutorialSwitches));
+        ShowPointsOfInterestEvent?.Invoke(!_fsm.CurrentState.Data.VisualElementsToHide.Contains(UIElementsToHide.TutorialModernVisualizationSwitch));
         ShowCompassTutorialEvent?.Invoke(!_fsm.CurrentState.Data.VisualElementsToHide.Contains(UIElementsToHide.TutorialCompass));
     }
 

@@ -15,7 +15,6 @@ public class AerialHUD_UIState : AHUDState
         _previousMilestoneButton;
     VisualElement _milestoneArea,
         _playerFollowerRoot,
-        _switches,
         _nextMilestoneButtonImage;
 
     Switch _modernVisualizactionSwitch;
@@ -41,15 +40,14 @@ public class AerialHUD_UIState : AHUDState
 
         _pauseButton = GetButtonAndRegisterCallback("PauseButton", OnPauseClicked);
         _milestoneArea = GetByName<VisualElement>("MilestoneArea");
-        _milestoneInfoButton = GetButtonAndRegisterCallback("Info", OnMilestoneClicked, _milestoneArea);
-        _previousMilestoneButton = GetButtonAndRegisterCallback("Previous", OnPreviousMilestoneClicked, _milestoneArea);
+        _milestoneInfoButton = GetButtonAndRegisterCallback("MilestoneInfoButton", OnMilestoneClicked, _milestoneArea);
+        _previousMilestoneButton = GetButtonAndRegisterCallback("PreviousMilestoneButton", OnPreviousMilestoneClicked, _milestoneArea);
         _nextMilestoneButtonImage = GetByName<VisualElement>("RightArrow", _nextMilestoneButton);
-        _nextMilestoneButton = GetButtonAndRegisterCallback("Next", OnNextMilestoneClicked, _milestoneArea);
+        _nextMilestoneButton = GetButtonAndRegisterCallback("NextMilestoneButton", OnNextMilestoneClicked, _milestoneArea);
         _milestoneName = GetByName<Label>("Name", _milestoneArea);
         _milestoneDate = GetByName<Label>("Date", _milestoneArea);
         _playerFollowerRoot = GetByName<VisualElement>("PlayerFollower");
-        _switches = GetByName<VisualElement>("Switches");
-        _modernVisualizactionSwitch = GetSwitchAndRegisterCallback("ModernVisualizationSwitch", OnModernSuperpositionToggled, _switches);
+        _modernVisualizactionSwitch = GetSwitchAndRegisterCallback("ModernVisualizationSwitch", OnModernSuperpositionToggled);
 
         _playerFollower = new PlayerFollower(_playerFollowerRoot);
     }
@@ -141,7 +139,6 @@ public class AerialHUD_UIState : AHUDState
     void OnMilestoneChanged(Milestone_DataSO mapping)
     {
         CheckMilestoneButtonsAvailability();
-        _switches.style.display = DisplayStyle.Flex;
 
         // Overwrite milestone area
         _milestoneName.text = mapping.Header;
