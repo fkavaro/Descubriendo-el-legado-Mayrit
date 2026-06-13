@@ -49,15 +49,13 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
     {
         ServiceLocator.Instance.Register(this);
 
-        _hasCompletedTutorial = GameSaveSystem.LoadTutorialCompletion();
-
         base.Awake();
     }
 
     protected override void Start()
     {
         _scenesController = ServiceLocator.Instance.Get<ScenesController>();
-        _scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
+        _scenesController.ScenesLoadedFullyEvent += OnSceneLoadedFully;
 
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
 
@@ -66,7 +64,7 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
 
     void OnDisable()
     {
-        _scenesController.SceneLoadedPartiallyEvent -= OnSceneLoadedPartially;
+        _scenesController.ScenesLoadedFullyEvent += OnSceneLoadedFully;
 
         ServiceLocator.Instance.Unregister(this);
     }
@@ -89,15 +87,19 @@ public class TutorialManager : ABehaviourEntity<StackFiniteStateMachine<Tutorial
         ShowCompassTutorialEvent?.Invoke(!_fsm.CurrentState.Data.VisualElementsToHide.Contains(UIElementsToHide.TutorialCompass));
     }
 
-    private void OnSceneLoadedPartially(SceneDatabase.SceneType type, SceneDatabase.SceneName name)
+    void OnSceneLoadedFully(Dictionary<SceneDatabase.SceneType, SceneDatabase.SceneName> loadedScenes, List<SceneDatabase.SceneType> unloadedScenes)
     {
-        if (name != SceneDatabase.SceneName.GameplayScene)
+        if (!loadedScenes.ContainsValue(SceneDatabase.SceneName.GameplayScene))
             return;
 
         _hasCompletedTutorial = GameSaveSystem.LoadTutorialCompletion();
 
         if (_hasCompletedTutorial)
             return;
+
+        ShowPlayerFollowerEvent?.Invoke(false);
+        ShowPointsOfInterestEvent?.Invoke(false);
+        ShowCompassTutorialEvent?.Invoke(false);
 
         base.Start();
     }
