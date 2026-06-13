@@ -61,6 +61,9 @@ public class UISystem : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     SettingsMenu_UIState _settingsMenuState;
     LoadingScreen_UIState _loadingScreenState;
     CreditsScreen_UIState _creditsScreenState;
+
+    // Dependency Injection
+    GameManager _gameManager;
     #endregion
 
     #region INHERITED
@@ -111,6 +114,19 @@ public class UISystem : ABehaviourEntity<StackFiniteStateMachine<AUIState>>
     protected override void Start()
     {
         //base.Start(); When main menu scene is loaded
+
+        _gameManager = ServiceLocator.Instance.Get<GameManager>();
+
+        if (_gameManager == null)
+            Debug.LogWarning("UISystem: No GameManager found in ServiceLocator on Start");
+
+        _gameManager.MilestoneChangedEvent += OnMilestoneChanged;
+    }
+
+    private void OnMilestoneChanged(Milestone_DataSO milestoneData)
+    {
+        _playerHUDState.Reset();
+        _aerialHUDState.UpdateMilestoneData(milestoneData);
     }
 
     void OnDisable()

@@ -59,12 +59,6 @@ public class AerialHUD_UIState : AHUDState
         _progressSystem = ServiceLocator.Instance.Get<ProgressSystem>();
     }
 
-    protected override void SubscribeToServicesEventsOnStart()
-    {
-        base.SubscribeToServicesEventsOnStart();
-        _gameManager.MilestoneChangedEvent += OnMilestoneChanged;
-    }
-
     public override void StartState()
     {
         base.StartState();
@@ -78,12 +72,6 @@ public class AerialHUD_UIState : AHUDState
         base.UpdateState();
 
         _playerFollower.Update();
-    }
-
-    protected override void UnsubscribeToServicesEventsOnExit()
-    {
-        base.UnsubscribeToServicesEventsOnExit();
-        _gameManager.MilestoneChangedEvent -= OnMilestoneChanged;
     }
     #endregion
 
@@ -102,6 +90,16 @@ public class AerialHUD_UIState : AHUDState
         _nextMilestoneButton.SetEnabled(isNextMilestoneAvailable);
         _nextMilestoneButton.pickingMode = isNextMilestoneAvailable ? PickingMode.Position : PickingMode.Ignore;
         _nextMilestoneButtonImage.pickingMode = isNextMilestoneAvailable ? PickingMode.Position : PickingMode.Ignore;
+    }
+    #endregion
+
+    #region PUBLIC METHODS
+    public void UpdateMilestoneData(Milestone_DataSO mapping)
+    {
+        _milestoneName.text = mapping.Header;
+        _milestoneDate.text = mapping.SubHeader;
+
+        _playerFollower.PlayerTransform = _gameManager.PlayableCharacter.transform;
     }
     #endregion
 
@@ -134,17 +132,6 @@ public class AerialHUD_UIState : AHUDState
     {
         _soundSystem.PlayButtonClickSFX();
         ModernVisualizationToggled?.Invoke(newValue);
-    }
-
-    void OnMilestoneChanged(Milestone_DataSO mapping)
-    {
-        CheckMilestoneButtonsAvailability();
-
-        // Overwrite milestone area
-        _milestoneName.text = mapping.Header;
-        _milestoneDate.text = mapping.SubHeader;
-
-        _playerFollower.PlayerTransform = _gameManager.PlayableCharacter.transform;
     }
     #endregion
 }

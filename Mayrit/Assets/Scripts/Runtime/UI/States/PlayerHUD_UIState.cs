@@ -69,8 +69,6 @@ public class PlayerHUD_UIState : AHUDState
             Debug.LogWarning("PlayerHUD_UIState: No TourManager found in ServiceLocator on StartState");
         if (_collectiblesManager == null)
             Debug.LogWarning("PlayerHUD_UIState: No CollectiblesManager found in ServiceLocator on StartState");
-
-        _gameManager.MilestoneChangedEvent += OnMilestoneChanged;
     }
 
     public override void StartState()
@@ -90,8 +88,14 @@ public class PlayerHUD_UIState : AHUDState
         UnityEngine.Cursor.lockState = CursorLockMode.None;
 
         _compass.IsNextTourStopShown = false;
+    }
+    #endregion
 
-        _gameManager.MilestoneChangedEvent -= OnMilestoneChanged;
+    #region PUBLIC METHODS
+    public void Reset()
+    {
+        ShownCompletedTourVisual = false;
+        ShownCompletedCollectionVisual = false;
     }
     #endregion
 
@@ -164,19 +168,6 @@ public class PlayerHUD_UIState : AHUDState
             hintLabel.name = $"Hint";
             _hintsList.Add(hintLabel);
         }
-    }
-
-    void Reset()
-    {
-        ShownCompletedTourVisual = false;
-        ShownCompletedCollectionVisual = false;
-    }
-    #endregion
-
-    #region CALLBACK METHODS
-    void OnMilestoneChanged(Milestone_DataSO sO)
-    {
-        Reset();
     }
     #endregion
 }
