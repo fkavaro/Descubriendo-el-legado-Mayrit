@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 
 public class Gameplay_GameState : AGameState
 {
-    public FiniteStateMachine<AGameState> Fsm;
+    public FiniteStateMachine<AGameState> Fsm => _fsm;
+
+    FiniteStateMachine<AGameState> _fsm;
 
     Aerial_GameState _aerialState;
     ThirdPerson_GameState _thirdPersonState;
@@ -20,13 +22,15 @@ public class Gameplay_GameState : AGameState
     {
         base.AwakeState();
 
+        _fsm = new(_gameManager);
+
         _aerialState = new(_gameManager);
         _thirdPersonState = new(_gameManager);
         _atPOIState = new(_gameManager);
         _atTourStopState = new(_gameManager);
         _atCollectibleState = new(_gameManager);
 
-        Fsm = new(_gameManager);
+        _fsm.SetInitialState(_aerialState);
     }
 
     public override void StartState()
