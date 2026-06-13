@@ -258,7 +258,7 @@
                     <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
                     <ui:VisualElement style="flex-grow: 1;">
                         <ui:Label text="Cambiar de Hito" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
-                        <ui:Label text="Pulsa el botón de la flecha hacia la derecha para avanzar al siguiente hito, una vez hayas completado el tour de este. Podrás retroceder a hitos anteriores con el botón de la flecha hacia la izquierda." name="Text" class="text" style="-unity-text-align: middle-center;"/>
+                        <ui:Label text="Pulsa el botón de la derecha para avanzar al siguiente hito, una vez hayas completado el tour de este. Podrás retroceder a hitos anteriores con el botón de la izquierda." name="Text" class="text" style="-unity-text-align: middle-center;"/>
                     </ui:VisualElement>
                     <ui:Image source="project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1304905567622442630&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-down@2x" name="Image" tint-color="rgb(220, 220, 220)" scale-mode="StretchToFill" style="display: flex; position: absolute; width: 117px; height: 63px; align-self: center; bottom: -55px; left: 65px;"/>
                     <ui:Image source="project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1304905567622442630&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-down@2x" name="Image" tint-color="rgb(220, 220, 220)" scale-mode="StretchToFill" style="display: flex; position: absolute; width: 117px; height: 63px; align-self: center; bottom: -55px; right: 65px;"/>
