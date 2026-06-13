@@ -120,6 +120,8 @@ public class CameraSystem : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     /// </summary>
     public void SwitchToAerialCamera()
     {
+        if (IsInAerialState) return;
+
         if (IsInThirdPersonState)
             TransitionFromThirdPersonToAerial();
         else if (IsInOrbitalState)
@@ -130,6 +132,8 @@ public class CameraSystem : ABehaviourEntity<FiniteStateMachine<ACameraState>>
 
     public void SwitchToOrbitalCamera(OrbitalCameraSettings orbitalStateSetting)
     {
+        if (IsInOrbitalState) return;
+
         _orbitalState.Setting = orbitalStateSetting;
         _soundSystem.PlayCameraTransitionSFX();
 
@@ -147,6 +151,8 @@ public class CameraSystem : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     /// </summary>
     public void SwitchToThirdPersonCamera()
     {
+        if (IsInThirdPersonState) return;
+
         _playableCharacter = ServiceLocator.Instance.Get<PlayableCharacter>();
 
         if (_playableCharacter == null)
@@ -175,6 +181,8 @@ public class CameraSystem : ABehaviourEntity<FiniteStateMachine<ACameraState>>
     /// <param name="camera">The TourStop camera to switch to.</param>
     public void SwitchToTourStopCamera(CinemachineCamera camera)
     {
+        if (IsInTourStopState) return;
+
         _soundSystem.PlayCameraTransitionSFX();
         _tourStopState.Camera = camera;
         _fsm.SwitchState(_tourStopState);
