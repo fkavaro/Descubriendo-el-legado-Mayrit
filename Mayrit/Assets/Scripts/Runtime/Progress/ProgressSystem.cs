@@ -12,9 +12,6 @@ public class ProgressSystem : ABehaviourEntity<FiniteStateMachine<MilestoneState
     #endregion
 
     #region EDITOR PROPERTIES
-    [Header("Debug tweaks")]
-    [SerializeField] bool _canSkipTours = false;
-
     [Header("Milestones")]
     [Range(-1, 7)]
     [SerializeField] int _storedMilestoneIndex;
@@ -29,6 +26,7 @@ public class ProgressSystem : ABehaviourEntity<FiniteStateMachine<MilestoneState
     FiniteStateMachine<MilestoneState> _fsm;
 
     ScenesController _scenesController;
+    GameManager _gameManager;
     TourManager _tourManager;
     #endregion
 
@@ -58,6 +56,8 @@ public class ProgressSystem : ABehaviourEntity<FiniteStateMachine<MilestoneState
         _scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
         _scenesController.ScenesLoadedFullyEvent += OnScenesLoadedFully;
 
+        _gameManager = ServiceLocator.Instance.Get<GameManager>();
+
         // base.Start(); when gameplay scene loaded, to start behaviour system
     }
 
@@ -86,14 +86,10 @@ public class ProgressSystem : ABehaviourEntity<FiniteStateMachine<MilestoneState
 
     public bool IsCurrentMilestoneCompleted()
     {
-        if (_tourManager == null || _tourManager.CurrentTour == null)
-        {
-            Debug.LogWarning("ProgressSystem: No current tour found. Next milestone availability will always return false.");
-            return false;
-        }
+        if (_gameManager.CanSkipMilestones)
+            return true;
 
-        // TODO: full line when gold release
-        return _canSkipTours || _tourManager.CurrentTour.IsCompleted; //Application.isPlaying && Application.isEditor || _tourManager.CurrentTour.HasBeenCompleted// TODO: full line when gold release
+        return _tourManager.CurrentTour.IsCompleted;
     }
     #endregion
 

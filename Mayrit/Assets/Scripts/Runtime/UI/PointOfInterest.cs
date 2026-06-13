@@ -70,7 +70,7 @@ public class PointOfInterest : Billboard
         _tutorialManager = ServiceLocator.Instance.Get<TutorialManager>();
 
         _gameManager.StateChangedEvent += OnGameStateChanged;
-        _gameManager.POIsVisualizationToggledEvent += OnVisualizationToggled;
+        _gameManager.POIsDisplayToggledEvent += OnVisualizationToggled;
         _tutorialManager.ShowPointsOfInterestEvent += OnShowInTutorialEvent;
         _tutorialManager.TutorialCompletedEvent += OnTutorialCompleted;
 
@@ -100,7 +100,7 @@ public class PointOfInterest : Billboard
         if (_gameManager != null)
         {
             _gameManager.StateChangedEvent -= OnGameStateChanged;
-            _gameManager.POIsVisualizationToggledEvent -= OnVisualizationToggled;
+            _gameManager.POIsDisplayToggledEvent -= OnVisualizationToggled;
         }
 
         if (_tutorialManager != null)
@@ -148,7 +148,7 @@ public class PointOfInterest : Billboard
 
             bool resolvedValue = value
                 && (!IsBlocked || IsSetAsShown)
-                && _gameManager.POIsVisibilityValueSet
+                && _gameManager.ArePOIsVisualized
                 && _gameManager.IsInAerialState
                 && _shownDueToTutorial;
 

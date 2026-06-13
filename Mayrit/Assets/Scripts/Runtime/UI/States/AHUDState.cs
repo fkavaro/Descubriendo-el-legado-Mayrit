@@ -50,7 +50,7 @@ public abstract class AHUDState : AUIState
         _compass.StartState();
 
         // Show controls visual according to UISystem setting
-        _controlsMappingRoot.style.display = _gameManager.ControlsVisibilityValueSet && _tutorialManager.HasCompletedTutorial ?
+        _controlsMappingRoot.style.display = _gameManager.AreControlsMappingsDisplayed && _tutorialManager.HasCompletedTutorial ?
             DisplayStyle.Flex :
             DisplayStyle.None;
 

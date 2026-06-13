@@ -7,18 +7,20 @@ public class SettingsMenu_UIState : AUIState
     #region PROPERTIES
     Button _closeButton,
         _resetTutorialButton;
+
     Switch _edgeScrollingSwitch,
-    _showPOIsSwitch,
-        _showControlsSwitch;
+        _POIsVisualizationSwitch,
+        _displayControlsMappingsSwitch,
+        _milestoneSkipSwitch;
+
     Slider _musicVolumeSlider,
         _sfxVolumeSlider;
-
-    VisualElement _tutorialSettings;
 
     public event Action CloseClickedEvent;
     public event Action<bool> EdgeScrollingToggledEvent;
     public event Action<bool> ShowPOIsToggledEvent;
     public event Action<bool> ShowControlsToggledEvent;
+    public event Action<bool> MilestoneSkipToggledEvent;
     public event Action<float> MusicVolumeChangedEvent;
     public event Action<float> SFXVolumeChangedEvent;
     #endregion
@@ -32,24 +34,31 @@ public class SettingsMenu_UIState : AUIState
     protected override void ConfigureUIElementsOnAwake()
     {
         _closeButton = GetButtonAndRegisterCallback("CloseButton", OnCloseClicked);
+
         _edgeScrollingSwitch = GetSwitchAndRegisterCallback("EdgeScrollingSwitch", OnEdgeScrollingToggled);
-        _showPOIsSwitch = GetSwitchAndRegisterCallback("ShowPOIsSwitch", OnShowPOIsToggled);
-        _showControlsSwitch = GetSwitchAndRegisterCallback("ShowControlsSwitch", OnShowControlsToggled);
+        _POIsVisualizationSwitch = GetSwitchAndRegisterCallback("ShowPOIsSwitch", OnShowPOIsToggled);
+        _displayControlsMappingsSwitch = GetSwitchAndRegisterCallback("ShowControlsSwitch", OnShowControlsToggled);
+        _milestoneSkipSwitch = GetSwitchAndRegisterCallback("MilestoneSkipSwitch", OnMilestoneSkipToggled);
+
         _musicVolumeSlider = GetSliderAndRegisterCallback("MusicVolumeSlider", OnMusicVolumeChanged);
         _sfxVolumeSlider = GetSliderAndRegisterCallback("SFXVolumeSlider", OnSFXVolumeChanged);
-        _tutorialSettings = GetByName<VisualElement>("TutorialSettings");
-        _resetTutorialButton = GetButtonAndRegisterCallback("ResetTutorialButton", OnResetTutorialClicked, _tutorialSettings);
+
+        _resetTutorialButton = GetButtonAndRegisterCallback("ResetTutorialButton", OnResetTutorialClicked);
     }
 
     public override void StartState()
     {
         base.StartState();
 
+        _edgeScrollingSwitch.Value = _gameManager.IsEdgeScrollingMovementEnabled;
+        _POIsVisualizationSwitch.Value = _gameManager.ArePOIsVisualized;
+        _displayControlsMappingsSwitch.Value = _gameManager.AreControlsMappingsDisplayed;
+        _milestoneSkipSwitch.Value = _gameManager.CanSkipMilestones;
+
         _musicVolumeSlider.value = _soundSystem.MusicVolume;
         _sfxVolumeSlider.value = _soundSystem.EffectsVolume;
-        _showControlsSwitch.Value = _gameManager.ControlsVisibilityValueSet;
-        _edgeScrollingSwitch.Value = _gameManager.EdgeScrollingValueSet;
-        _tutorialSettings.style.display = GameSaveSystem.LoadTutorialCompletion() ? DisplayStyle.Flex : DisplayStyle.None;
+
+        _resetTutorialButton.SetEnabled(GameSaveSystem.LoadTutorialCompletion());
     }
     #endregion
 
@@ -79,6 +88,12 @@ public class SettingsMenu_UIState : AUIState
         ShowControlsToggledEvent?.Invoke(newValue);
     }
 
+    void OnMilestoneSkipToggled(bool newValue)
+    {
+        _soundSystem.PlayButtonClickSFX();
+        MilestoneSkipToggledEvent?.Invoke(newValue);
+    }
+
     void OnMusicVolumeChanged(ChangeEvent<float> evt)
     {
         MusicVolumeChangedEvent?.Invoke(evt.newValue);
@@ -92,7 +107,7 @@ public class SettingsMenu_UIState : AUIState
     void OnResetTutorialClicked(ClickEvent evt)
     {
         GameSaveSystem.SaveTutorial(false);
-        _tutorialSettings.style.display = DisplayStyle.None;
+        _resetTutorialButton.SetEnabled(false);
     }
     #endregion
 }

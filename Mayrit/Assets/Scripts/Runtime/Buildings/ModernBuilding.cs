@@ -35,7 +35,7 @@ public class ModernBuilding : MonoBehaviour
         _gameManager = ServiceLocator.Instance.Get<GameManager>();
 
         _pointOfInterest.IsBlocked = true;
-        IsActive = _gameManager.ModernVisualizationValueSet;
+        IsActive = _gameManager.AreModernBuildingsVisualized;
     }
 
     void Start()
@@ -59,9 +59,9 @@ public class ModernBuilding : MonoBehaviour
         if (_gameManager.IsInThirdPersonState || _gameManager.IsAtTourStopState)
             IsActive = false;
         else if (_gameManager.IsInAerialState)
-            IsActive = _gameManager.ModernVisualizationValueSet;
+            IsActive = _gameManager.AreModernBuildingsVisualized;
         else if (_gameManager.IsAtPOIState)
-            IsActive = _gameManager.ModernVisualizationValueSet && _gameManager.GameplayState.AtPOIState.Data.IsModernBuilding && _pointOfInterest.Data == _gameManager.GameplayState.AtPOIState.Data;
+            IsActive = _gameManager.AreModernBuildingsVisualized && _gameManager.GameplayState.AtPOIState.Data.IsModernBuilding && _pointOfInterest.Data == _gameManager.GameplayState.AtPOIState.Data;
     }
 
     void OnVisualizationToggled(bool value)

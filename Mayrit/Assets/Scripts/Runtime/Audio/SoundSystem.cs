@@ -14,8 +14,8 @@ public class SoundSystem : ABehaviourEntity<FiniteStateMachine<AMusicState>>
     public float ResumeGuardSeconds => _resumeGuardSeconds;
     public List<SoundDatabase.MusicList> MusicLists => _musicLists;
     public List<SoundDatabase.SFXlist> SFXLists => _SFXLists;
-    public float MusicVolumeSet => _gameManager.MusicVolumeValueSet;
-    public float SFXVolumeSet => _gameManager.SFXVolumeValueSet;
+    public float MusicVolumeSet => _gameManager.MusicVolume;
+    public float SFXVolumeSet => _gameManager.SFXVolume;
     #endregion
 
     #region EDITOR PROPERTIES

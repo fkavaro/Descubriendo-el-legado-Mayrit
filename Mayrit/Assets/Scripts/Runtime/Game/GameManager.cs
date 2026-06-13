@@ -22,12 +22,13 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
     public bool IsAtCollectibleState => _fsm.IsCurrentState(_gameplayState) && _gameplayState.IsInAtCollectibleState();
 
     public float SimulationSpeed => _gameSimulationSpeed;
-    public bool EdgeScrollingValueSet => _edgeScrollingValueSet;
-    public bool POIsVisibilityValueSet => _POIsVisibilityValueSet;
-    public bool ControlsVisibilityValueSet => _controlsVisibilityValueSet;
-    public bool ModernVisualizationValueSet => _modernVisualizationValueSet;
-    public float MusicVolumeValueSet => _musicVolumeValueSet;
-    public float SFXVolumeValueSet => _sfxVolumeValueSet;
+    public bool IsEdgeScrollingMovementEnabled => _IsEdgeScrollingMovementEnabled;
+    public bool ArePOIsVisualized => _arePOIsVisualized;
+    public bool AreControlsMappingsDisplayed => _areControlsMappingDisplayed;
+    public bool AreModernBuildingsVisualized => _areModernBuildingsDisplayed;
+    public bool CanSkipMilestones => _canSkipMilestones;
+    public float MusicVolume => _musicVolume;
+    public float SFXVolume => _sfxVolume;
 
     public ScenesController ScenesController => _scenesController;
     public UISystem UISystem => _uiSystem;
@@ -44,12 +45,13 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
     [SerializeField] float _gameSimulationSpeed = 1f;
 
     [Header("Settings values")]
-    [SerializeField] bool _edgeScrollingValueSet = true;
-    [SerializeField] bool _POIsVisibilityValueSet = true;
-    [SerializeField] bool _controlsVisibilityValueSet = true;
-    [SerializeField] bool _modernVisualizationValueSet = false;
-    [SerializeField] float _musicVolumeValueSet = 1f;
-    [SerializeField] float _sfxVolumeValueSet = 1f;
+    [SerializeField] bool _IsEdgeScrollingMovementEnabled = true;
+    [SerializeField] bool _arePOIsVisualized = true;
+    [SerializeField] bool _areControlsMappingDisplayed = true;
+    [SerializeField] bool _areModernBuildingsDisplayed = false;
+    [SerializeField] bool _canSkipMilestones = false;
+    [SerializeField] float _musicVolume = 1f;
+    [SerializeField] float _sfxVolume = 1f;
     #endregion
 
     #region EVENTS
@@ -60,8 +62,9 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
     public event Action<float> MusicVolumeChangedEvent;
     public event Action<float> SFXVolumeChangedEvent;
     public event Action<bool> ModernVisualizationToggled;
-    public event Action<bool> POIsVisualizationToggledEvent;
-    public event Action<bool> ControlsVisibilityToggledEvent;
+    public event Action<bool> POIsDisplayToggledEvent;
+    public event Action<bool> ControlsMappingsDisplayToggledEvent;
+    public event Action<bool> MilestoneSkipToggledEvent;
     public event Action PlayTourClickedEvent;
     public event Action TourAndPlayerResetEvent;
 
@@ -144,6 +147,7 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
         _uiSystem.SettingsMenuState.SFXVolumeChangedEvent += OnSFXVolumeChanged;
         _uiSystem.SettingsMenuState.ShowPOIsToggledEvent += OnPOIsVisualizationToggled;
         _uiSystem.SettingsMenuState.ShowControlsToggledEvent += OnControlsVisibilityToggled;
+        _uiSystem.SettingsMenuState.MilestoneSkipToggledEvent += OnMilestoneSkipToggled;
 
         _uiSystem.CreditsScreenState.CreditsClosedEvent += OnCreditsClosed;
 
@@ -374,32 +378,38 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
 
     void OnEdgeScrollingToggled(bool value)
     {
-        _edgeScrollingValueSet = value;
+        _IsEdgeScrollingMovementEnabled = value;
         EdgeScrollingToggledEvent?.Invoke(value);
     }
 
     void OnMusicVolumeChanged(float value)
     {
-        _musicVolumeValueSet = value;
+        _musicVolume = value;
         MusicVolumeChangedEvent?.Invoke(value);
     }
 
     void OnSFXVolumeChanged(float value)
     {
-        _sfxVolumeValueSet = value;
+        _sfxVolume = value;
         SFXVolumeChangedEvent?.Invoke(value);
     }
 
     void OnPOIsVisualizationToggled(bool value)
     {
-        _POIsVisibilityValueSet = value;
-        POIsVisualizationToggledEvent?.Invoke(value);
+        _arePOIsVisualized = value;
+        POIsDisplayToggledEvent?.Invoke(value);
     }
 
     void OnControlsVisibilityToggled(bool value)
     {
-        _controlsVisibilityValueSet = value;
-        ControlsVisibilityToggledEvent?.Invoke(value);
+        _areControlsMappingDisplayed = value;
+        ControlsMappingsDisplayToggledEvent?.Invoke(value);
+    }
+
+    void OnMilestoneSkipToggled(bool value)
+    {
+        _canSkipMilestones = value;
+        MilestoneSkipToggledEvent?.Invoke(value);
     }
 
     void OnCreditsClosed()
@@ -472,7 +482,7 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
 
     void OnModernVisualizationToggled(bool value)
     {
-        _modernVisualizationValueSet = value;
+        _areModernBuildingsDisplayed = value;
         ModernVisualizationToggled?.Invoke(value);
     }
 

@@ -103,7 +103,7 @@ public class CameraSystem : ABehaviourEntity<FiniteStateMachine<ACameraState>>
         }
 
         // Check edge scrolling initial state
-        _aerialCameraData.isEdgeScrolling = _gameManager.EdgeScrollingValueSet;
+        _aerialCameraData.isEdgeScrolling = _gameManager.IsEdgeScrollingMovementEnabled;
 
         base.Start();
     }
