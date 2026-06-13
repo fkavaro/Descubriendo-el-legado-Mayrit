@@ -106,6 +106,8 @@ public class TourManager : MonoBehaviour
                 _currentTour.Complete();
                 _playableCharacter.LocateAt(_currentTour.LastStopInList.transform);
             }
+            else
+                _currentTour.Reset();
         }
     }
 
