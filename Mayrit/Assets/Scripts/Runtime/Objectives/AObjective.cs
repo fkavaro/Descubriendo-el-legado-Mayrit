@@ -115,6 +115,8 @@ where T : AObjective<T, TData>
             UpdateModel();
             UpdateVFX();
         }
+        else
+            OnGameStateChangeNotThirdPerson();
     }
 
     void SetupDefaultLayerMask()
@@ -127,4 +129,10 @@ where T : AObjective<T, TData>
         }
     }
     #endregion
+
+    protected virtual void OnGameStateChangeNotThirdPerson()
+    {
+        _model.SetActive(false);
+        _vfx.SetActive(false);
+    }
 }

@@ -9,7 +9,7 @@ public class Collectible : AObjective<Collectible, CollectibleSO>
 
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.blue;
+        Gizmos.color = _isReached ? Color.darkViolet : Color.purple;
         Gizmos.DrawSphere(transform.position, _colliderRadius);
 
 #if UNITY_EDITOR
@@ -17,5 +17,18 @@ public class Collectible : AObjective<Collectible, CollectibleSO>
             UnityEditor.Handles.Label(transform.position + Vector3.up * (_colliderRadius + 1f),
             string.IsNullOrEmpty(_data.Data.Header) ? name : _data.Data.Header);
 #endif
+    }
+
+    protected override void OnGameStateChangeNotThirdPerson()
+    {
+        if (_gameManager.IsAtCollectibleState)
+        {
+            _vfx.SetActive(false);
+        }
+        else
+        {
+            _model.SetActive(false);
+            _vfx.SetActive(false);
+        }
     }
 }

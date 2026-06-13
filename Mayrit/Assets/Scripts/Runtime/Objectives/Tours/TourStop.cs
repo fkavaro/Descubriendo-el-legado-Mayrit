@@ -11,7 +11,7 @@ public class TourStop : AObjective<TourStop, DataSO>
     #region DEBUG GIZMOS
     void OnDrawGizmos()
     {
-        Gizmos.color = _isReached ? Color.green : Color.red;
+        Gizmos.color = _isReached ? Color.darkOrange : Color.yellow;
         Gizmos.DrawSphere(transform.position, _colliderRadius);
 
 #if UNITY_EDITOR
