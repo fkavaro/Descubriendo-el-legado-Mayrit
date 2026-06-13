@@ -19,16 +19,5 @@ public class AtPOI_GameState : AGameState
         UISystem.SwitchToInformationDisplayState(Data);
         CameraSystem.SwitchToOrbitalCamera(OrbitalCameraSettings);
         PlayableCharacter.SwitchToNotControlledState();
-
-        _gameManager.InputActions.UI.Enable();
-        _gameManager.InputActions.Camera.Enable();
-    }
-
-    public override void ExitState()
-    {
-        base.ExitState();
-
-        _gameManager.InputActions.UI.Disable();
-        _gameManager.InputActions.Camera.Disable();
     }
 }

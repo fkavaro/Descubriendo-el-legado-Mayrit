@@ -59,15 +59,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "ExitMode",
-                    "type": "Button",
-                    "id": "27d92c8b-0bbf-4ea8-b011-5f66747382a0",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -255,17 +246,6 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Select",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c3ac3d5c-ae6a-468e-8d42-cd1662358292",
-                    "path": "<Keyboard>/backspace",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ExitMode",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -636,7 +616,7 @@
                     "name": "Cancel",
                     "type": "Button",
                     "id": "15cef263-9014-4fd5-94d9-4e4a6234a6ef",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -714,7 +694,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "CloseContextualPanel",
+                    "name": "GoBack",
                     "type": "Button",
                     "id": "6d818cb1-0cd7-4382-abba-38b97262badc",
                     "expectedControlType": "",
@@ -1160,7 +1140,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "CloseContextualPanel",
+                    "action": "GoBack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

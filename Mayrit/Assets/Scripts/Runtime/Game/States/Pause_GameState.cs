@@ -14,13 +14,12 @@ public class Pause_GameState : AGameState
 
         UISystem.SwitchToPauseState();
         PlayableCharacter.SwitchToNotControlledState();
-
-        _gameManager.InputActions.UI.Enable();
     }
 
     public override void ExitState()
     {
+        base.ExitState();
+
         Time.timeScale = _gameManager.SimulationSpeed;
-        _gameManager.InputActions.UI.Disable();
     }
 }

@@ -33,7 +33,15 @@ public class Gameplay_GameState : AGameState
     {
         base.StartState();
 
+        _gameManager.InputActions.Camera.Enable();
+
         Fsm.CurrentState?.StartState();
+    }
+
+    public override void ExitState()
+    {
+        base.ExitState();
+        _gameManager.InputActions.Camera.Disable();
     }
 
     public void SwitchToAerialState() => Fsm.SwitchState(_aerialState);

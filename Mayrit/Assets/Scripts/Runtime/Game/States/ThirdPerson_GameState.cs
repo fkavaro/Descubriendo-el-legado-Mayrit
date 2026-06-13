@@ -16,8 +16,6 @@ public class ThirdPerson_GameState : AGameState
         CameraSystem.SwitchToThirdPersonCamera();
         PlayableCharacter.SwitchToControlledState();
 
-        _gameManager.InputActions.UI.Enable();
-        _gameManager.InputActions.Camera.Enable();
         _gameManager.InputActions.Player.Enable();
     }
 
@@ -25,8 +23,6 @@ public class ThirdPerson_GameState : AGameState
     {
         base.ExitState();
 
-        _gameManager.InputActions.UI.Disable();
-        _gameManager.InputActions.Camera.Disable();
         _gameManager.InputActions.Player.Disable();
     }
 }

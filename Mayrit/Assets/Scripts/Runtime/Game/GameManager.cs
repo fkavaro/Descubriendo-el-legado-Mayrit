@@ -123,9 +123,9 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
         _scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
         _scenesController.ScenesLoadedFullyEvent += OnScenesLoadedFully;
 
+        InputActions.UI.Enable();
         _inputActions.UI.Pause.performed += OnPauseInput;
-        _inputActions.UI.CloseContextualPanel.performed += OnCloseContextualPanelInput;
-        _inputActions.Camera.ExitMode.performed += OnChangeCameraInput;
+        _inputActions.UI.GoBack.performed += OnGoBackInput;
 
         _uiSystem = ServiceLocator.Instance.Get<UISystem>();
 
@@ -170,12 +170,6 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
         _progressSystem.MilestoneChangedEvent += OnMilestoneChanged;
 
         base.Start();
-    }
-
-    void OnChangeCameraInput(InputAction.CallbackContext context)
-    {
-        if (IsInThirdPersonState)
-            SwitchToAerialState();
     }
 
     protected override void Update()
@@ -435,9 +429,29 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
         SwitchToMainMenuState();
     }
 
-    void OnCloseContextualPanelInput(InputAction.CallbackContext context)
+    void OnGoBackInput(InputAction.CallbackContext context)
     {
-        OnContextualPanelClosed();
+        if (IsInMainMenuState)
+        {
+            if (_uiSystem.IsInSettingsMenuState)
+                OnSettingsClosed();
+            else if (_uiSystem.IsInCreditsScreenState)
+                OnCreditsClosed();
+        }
+        else if (IsInPauseState)
+        {
+            if (_uiSystem.IsInSettingsMenuState)
+                OnSettingsClosed();
+            else if (_uiSystem.IsInCreditsScreenState)
+                OnCreditsClosed();
+        }
+        else if (IsInGameplayState)
+        {
+            if (IsInThirdPersonState)
+                SwitchToAerialState();
+            else
+                OnContextualPanelClosed();
+        }
     }
 
     void OnPreviousMilestoneClicked()
@@ -470,7 +484,8 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
             SwitchToAerialState();
         else if (IsAtTourStopState || IsAtCollectibleState)
             SwitchToThirdPersonState();
-        else if (IsInAerialState)
+        // TODO should'nt be necessary if orbiting aorund city when clicked milestone info
+        else if (IsInAerialState && !_uiSystem.IsInAerialHUDState)
             _uiSystem.SwitchToAerialHUDState();
         else if (IsInPauseState && (_uiSystem.IsInSettingsMenuState || _uiSystem.IsInCreditsScreenState))
             _uiSystem.SwitchToPauseState();

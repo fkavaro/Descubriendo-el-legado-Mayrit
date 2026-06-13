@@ -145,15 +145,6 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""ExitMode"",
-                    ""type"": ""Button"",
-                    ""id"": ""27d92c8b-0bbf-4ea8-b011-5f66747382a0"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -341,17 +332,6 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Select"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""c3ac3d5c-ae6a-468e-8d42-cd1662358292"",
-                    ""path"": ""<Keyboard>/backspace"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ExitMode"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -722,7 +702,7 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""Cancel"",
                     ""type"": ""Button"",
                     ""id"": ""15cef263-9014-4fd5-94d9-4e4a6234a6ef"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -800,7 +780,7 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""CloseContextualPanel"",
+                    ""name"": ""GoBack"",
                     ""type"": ""Button"",
                     ""id"": ""6d818cb1-0cd7-4382-abba-38b97262badc"",
                     ""expectedControlType"": """",
@@ -1246,7 +1226,7 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""CloseContextualPanel"",
+                    ""action"": ""GoBack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1324,7 +1304,6 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
         m_Camera_Look = m_Camera.FindAction("Look", throwIfNotFound: true);
         m_Camera_Sprint = m_Camera.FindAction("Sprint", throwIfNotFound: true);
         m_Camera_Select = m_Camera.FindAction("Select", throwIfNotFound: true);
-        m_Camera_ExitMode = m_Camera.FindAction("ExitMode", throwIfNotFound: true);
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
@@ -1345,7 +1324,7 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
-        m_UI_CloseContextualPanel = m_UI.FindAction("CloseContextualPanel", throwIfNotFound: true);
+        m_UI_GoBack = m_UI.FindAction("GoBack", throwIfNotFound: true);
     }
 
     ~@GameInputActions()
@@ -1434,7 +1413,6 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Camera_Look;
     private readonly InputAction m_Camera_Sprint;
     private readonly InputAction m_Camera_Select;
-    private readonly InputAction m_Camera_ExitMode;
     /// <summary>
     /// Provides access to input actions defined in input action map "Camera".
     /// </summary>
@@ -1470,10 +1448,6 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Camera/Select".
         /// </summary>
         public InputAction @Select => m_Wrapper.m_Camera_Select;
-        /// <summary>
-        /// Provides access to the underlying input action "Camera/ExitMode".
-        /// </summary>
-        public InputAction @ExitMode => m_Wrapper.m_Camera_ExitMode;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1518,9 +1492,6 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
             @Select.started += instance.OnSelect;
             @Select.performed += instance.OnSelect;
             @Select.canceled += instance.OnSelect;
-            @ExitMode.started += instance.OnExitMode;
-            @ExitMode.performed += instance.OnExitMode;
-            @ExitMode.canceled += instance.OnExitMode;
         }
 
         /// <summary>
@@ -1550,9 +1521,6 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
             @Select.started -= instance.OnSelect;
             @Select.performed -= instance.OnSelect;
             @Select.canceled -= instance.OnSelect;
-            @ExitMode.started -= instance.OnExitMode;
-            @ExitMode.performed -= instance.OnExitMode;
-            @ExitMode.canceled -= instance.OnExitMode;
         }
 
         /// <summary>
@@ -1741,7 +1709,7 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_TrackedDevicePosition;
     private readonly InputAction m_UI_TrackedDeviceOrientation;
     private readonly InputAction m_UI_Pause;
-    private readonly InputAction m_UI_CloseContextualPanel;
+    private readonly InputAction m_UI_GoBack;
     /// <summary>
     /// Provides access to input actions defined in input action map "UI".
     /// </summary>
@@ -1798,9 +1766,9 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Pause => m_Wrapper.m_UI_Pause;
         /// <summary>
-        /// Provides access to the underlying input action "UI/CloseContextualPanel".
+        /// Provides access to the underlying input action "UI/GoBack".
         /// </summary>
-        public InputAction @CloseContextualPanel => m_Wrapper.m_UI_CloseContextualPanel;
+        public InputAction @GoBack => m_Wrapper.m_UI_GoBack;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1860,9 +1828,9 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
             @Pause.started += instance.OnPause;
             @Pause.performed += instance.OnPause;
             @Pause.canceled += instance.OnPause;
-            @CloseContextualPanel.started += instance.OnCloseContextualPanel;
-            @CloseContextualPanel.performed += instance.OnCloseContextualPanel;
-            @CloseContextualPanel.canceled += instance.OnCloseContextualPanel;
+            @GoBack.started += instance.OnGoBack;
+            @GoBack.performed += instance.OnGoBack;
+            @GoBack.canceled += instance.OnGoBack;
         }
 
         /// <summary>
@@ -1907,9 +1875,9 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
             @Pause.started -= instance.OnPause;
             @Pause.performed -= instance.OnPause;
             @Pause.canceled -= instance.OnPause;
-            @CloseContextualPanel.started -= instance.OnCloseContextualPanel;
-            @CloseContextualPanel.performed -= instance.OnCloseContextualPanel;
-            @CloseContextualPanel.canceled -= instance.OnCloseContextualPanel;
+            @GoBack.started -= instance.OnGoBack;
+            @GoBack.performed -= instance.OnGoBack;
+            @GoBack.canceled -= instance.OnGoBack;
         }
 
         /// <summary>
@@ -2057,13 +2025,6 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSelect(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "ExitMode" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnExitMode(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Player" which allows adding and removing callbacks.
@@ -2193,11 +2154,11 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPause(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "CloseContextualPanel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "GoBack" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnCloseContextualPanel(InputAction.CallbackContext context);
+        void OnGoBack(InputAction.CallbackContext context);
     }
 }
