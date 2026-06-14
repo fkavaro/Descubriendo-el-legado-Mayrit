@@ -43,7 +43,7 @@ LODGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5277610716852556032}
   serializedVersion: 2
-  m_LocalReferencePoint: {x: -0.02737385, y: 1.2140194, z: 0.0080087185}
+  m_LocalReferencePoint: {x: -0.02737385, y: 1.2140195, z: 0.0080087185}
   m_Size: 3.7142706
   m_FadeMode: 1
   m_AnimateCrossFading: 1
@@ -67,6 +67,7 @@ LODGroup:
     - renderer: {fileID: 301089912265227927}
     - renderer: {fileID: 6510952260988682613}
     - renderer: {fileID: 3591628215351586949}
+    - renderer: {fileID: 1259578116227483508}
   - screenRelativeHeight: 0.029783959
     fadeTransitionWidth: 0
     renderers:
