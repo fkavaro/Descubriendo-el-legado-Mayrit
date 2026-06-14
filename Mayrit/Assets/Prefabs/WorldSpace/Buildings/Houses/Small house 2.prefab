@@ -385,7 +385,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 4104
+  m_VersionIndex: 4113
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -542,7 +542,7 @@ LODGroup:
   m_AnimateCrossFading: 0
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.035138056
+  - screenRelativeHeight: 0.10937227
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 3903568745479861950}
@@ -708,7 +708,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7046791990992230881, guid: dcf8e4e4b719b3c47847b55e50700b52, type: 3}
       propertyPath: m_VersionIndex
-      value: 2761
+      value: 2770
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

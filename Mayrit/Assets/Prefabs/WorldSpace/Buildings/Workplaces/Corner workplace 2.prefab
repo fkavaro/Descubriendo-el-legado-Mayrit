@@ -1669,7 +1669,7 @@ LODGroup:
   m_AnimateCrossFading: 0
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.06805719
+  - screenRelativeHeight: 0.21183781
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 6301076256045942837}
@@ -3042,7 +3042,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2600
+  m_VersionIndex: 2612
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
