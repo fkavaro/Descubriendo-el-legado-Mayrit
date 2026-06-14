@@ -135,8 +135,8 @@ LODGroup:
   serializedVersion: 2
   m_LocalReferencePoint: {x: -0.019322693, y: 2.0189712, z: 0.0002501011}
   m_Size: 4.4627585
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
+  m_FadeMode: 1
+  m_AnimateCrossFading: 1
   m_LastLODIsBillboard: 0
   m_LODs:
   - screenRelativeHeight: 0.35542753
