@@ -12,7 +12,8 @@ public class LoadingScreen_UIState : AUIState
     public bool IsContinueClicked { get; private set; }
 
     VisualElement _infoLoadingScreen,
-        _blackLoadingScreen;
+        _blackLoadingScreen,
+        _overlayArea;
 
     Label _completedMilestonesCount,
         _totalMilestonesCount,
@@ -35,10 +36,11 @@ public class LoadingScreen_UIState : AUIState
     {
         _blackLoadingScreen = GetByName<VisualElement>("BlackLoadingScreen");
         _infoLoadingScreen = GetByName<VisualElement>("InfoLoadingScreen");
-        _completedMilestonesCount = GetByName<Label>("CompletedMilestonesCount");
-        _totalMilestonesCount = GetByName<Label>("TotalMilestonesCount");
-        _allFoundCollectiblesCount = GetByName<Label>("AllFoundCollectiblesCount");
-        _allTotalCollectiblesCount = GetByName<Label>("AllTotalCollectiblesCount");
+        _overlayArea = GetByName<VisualElement>("OverlayArea");
+        _completedMilestonesCount = GetByName<Label>("CompletedMilestonesCount", _overlayArea);
+        _totalMilestonesCount = GetByName<Label>("TotalMilestonesCount", _overlayArea);
+        _allFoundCollectiblesCount = GetByName<Label>("AllFoundCollectiblesCount", _overlayArea);
+        _allTotalCollectiblesCount = GetByName<Label>("AllTotalCollectiblesCount", _overlayArea);
 
         _contextualPanelComponent.ContinueClickedEvent += OnContinueButtonClicked;
     }
@@ -81,6 +83,7 @@ public class LoadingScreen_UIState : AUIState
     public new IEnumerator FadeInCoroutine()
     {
         yield return BlackFadeInCoroutine();
+        _overlayArea.style.display = DisplayStyle.Flex;
         _contextualPanelComponent.ShowDataWhileLoading(MilestoneData);
         _completedMilestonesCount.text = _gameManager.CompletedMilestonesCount.ToString();
         _totalMilestonesCount.text = _gameManager.TotalMilestonesCount.ToString();
@@ -103,6 +106,7 @@ public class LoadingScreen_UIState : AUIState
     {
         IsContinueClicked = true;
         _soundSystem.PlayButtonClickSFX();
+        _overlayArea.style.display = DisplayStyle.None;
         _contextualPanelComponent.ExitState();
     }
 

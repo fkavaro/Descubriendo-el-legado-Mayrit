@@ -52,8 +52,6 @@ public class CollectiblesManager : MonoBehaviour
         _soundSystem = ServiceLocator.Instance.Get<SoundSystem>();
 
         _scenesController.SceneLoadedPartiallyEvent += OnSceneLoadedPartially;
-
-        LoadSavedCollectiblesData();
     }
 
     void OnDisable()
@@ -70,10 +68,7 @@ public class CollectiblesManager : MonoBehaviour
     void OnSceneLoadedPartially(SceneDatabase.SceneType type, SceneDatabase.SceneName name)
     {
         if (type == SceneDatabase.SceneType.Milestone)
-        {
-            LoadSavedCollectiblesData();
             AttachToNewTracker(ServiceLocator.Instance.Get<CollectiblesTracker>());
-        }
     }
 
     void OnCollectibleFound(Collectible collectible)
@@ -94,8 +89,8 @@ public class CollectiblesManager : MonoBehaviour
     }
     #endregion
 
-    #region PRIVATE METHODS
-    void LoadSavedCollectiblesData()
+    #region PUBLIC METHODS
+    public void LoadSavedCollectiblesData()
     {
         _allFoundCollectiblesHash.Clear();
         _allFoundCollectiblesSOs.Clear();
@@ -111,7 +106,9 @@ public class CollectiblesManager : MonoBehaviour
             }
         }
     }
+    #endregion
 
+    #region PRIVATE METHODS
     void AttachToNewTracker(CollectiblesTracker tracker)
     {
         if (tracker == null)

@@ -11,6 +11,8 @@ public class LoadGame_GameState : AGameState
     {
         base.StartState();
 
+        _gameManager.CollectiblesManager.LoadSavedCollectiblesData();
+
         if (!SceneManager.GetSceneByName(SceneDatabase.SceneName.GameplayScene.ToString()).isLoaded)
             _gameManager.LoadGame();
         else
