@@ -46,9 +46,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NPCPool
   _namesDatabase: {fileID: 11400000, guid: af6943466f74fe945ba6cdf9206e5a26, type: 2}
   _femaleVillagerPrefabs:
-  - {fileID: 3715606356981372341, guid: 803e6ba6af4ae8243afaff1d48541509, type: 3}
+  - {fileID: 1898599761034133456, guid: fdda2964bf0f66849b84810e273b013b, type: 3}
+  - {fileID: 1898599761034133456, guid: c35b214041884c44eb6d57bf6902e9d1, type: 3}
+  - {fileID: 1898599761034133456, guid: 6296af3b34b91a5458e9b72712a3fe2f, type: 3}
+  - {fileID: 1898599761034133456, guid: 6aad31208c270cd419b230ed2dea279d, type: 3}
   _maleVillagerPrefabs:
-  - {fileID: 3715606356981372341, guid: 8f131c4c97429e142b7bae12e6146662, type: 3}
+  - {fileID: 1438929406938433254, guid: 805382d27224ae64790350b56113ebeb, type: 3}
+  - {fileID: 1438929406938433254, guid: 93ec7830c553b6c42ba3d33b71ef2ccb, type: 3}
+  - {fileID: 1438929406938433254, guid: f815055464a8108459c9e6f3f7f5ebfd, type: 3}
+  - {fileID: 1438929406938433254, guid: f723276606d82f046b7a3576b3211d9e, type: 3}
   _femaleRatio: 0.5
   _activeVillagersRatio: 0.3
   _maxActiveVillagers: 0
@@ -57,3 +63,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   _maxOverlapResults: 32
+  _poolAdjustmentBatchSize: 1
