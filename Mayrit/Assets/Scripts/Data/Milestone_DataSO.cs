@@ -11,6 +11,6 @@ public class Milestone_DataSO : DataSO
     [SerializeField] string _bgImageCaption;
 
     public SceneDatabase.SceneName SceneName => _sceneName;
-    public int MilestoneIndex => _milestoneIndex;
+    public int Idx => _milestoneIndex;
     public Sprite BgImage => _bgImage;
 }

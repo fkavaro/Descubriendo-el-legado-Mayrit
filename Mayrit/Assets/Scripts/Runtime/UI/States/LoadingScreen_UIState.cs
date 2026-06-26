@@ -90,7 +90,7 @@ public class LoadingScreen_UIState : AUIState
     {
         yield return BlackFadeInCoroutine();
         _overlayArea.style.display = DisplayStyle.Flex;
-        _contextualPanelComponent.ShowDataWhileLoading(MilestoneData);
+        _contextualPanelComponent.ShowMilestoneDataWhileLoading(MilestoneData);
         _completedMilestonesCount.text = _gameManager.CompletedMilestonesCount.ToString();
         _totalMilestonesCount.text = _gameManager.TotalMilestonesCount.ToString();
         _allFoundCollectiblesCount.text = _gameManager.CollectiblesManager.AllFoundCollectiblesCount.ToString();
@@ -119,6 +119,6 @@ public class LoadingScreen_UIState : AUIState
     void OnSceneLoadedPartially(SceneDatabase.SceneType type, SceneDatabase.SceneName name)
     {
         if (type == SceneDatabase.SceneType.Milestone)
-            _contextualPanelComponent.AfterLoading();
+            _contextualPanelComponent.AfterLoadingMilestone();
     }
 }

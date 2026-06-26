@@ -15,7 +15,8 @@ public class ContextualPanelComponent : AUIState
         _disclaimer,
         _description,
         _conservation,
-        _imageCaption;
+        _imageCaption,
+        _milestoneIdx;
 
     Button _closeButton,
         _continueButton,
@@ -30,7 +31,8 @@ public class ContextualPanelComponent : AUIState
         _sourcesList,
         _lowerArea,
         _closeArea,
-        _loadingAnimation;
+        _loadingAnimation,
+        _milestoneIdxArea;
 
     Tour CurrentTour => ServiceLocator.Instance.Get<Tour>();
     #endregion
@@ -69,6 +71,9 @@ public class ContextualPanelComponent : AUIState
         _continueButton = GetButtonAndRegisterCallback("ContinueButton", OnContinue, _lowerArea);
         _resetTourButton = GetButtonAndRegisterCallback("ResetTourButton", OnResetTour, _lowerArea);
         _loadingAnimation = GetByName<VisualElement>("LoadingAnimation");
+
+        _milestoneIdxArea = GetByName<VisualElement>("MilestoneIdxArea");
+        _milestoneIdx = GetByName<Label>("MilestoneIdx", _milestoneIdxArea);
     }
     #endregion
 
@@ -175,20 +180,31 @@ public class ContextualPanelComponent : AUIState
             _resetTourButton.style.display = DisplayStyle.None;
         }
 
-        _closeArea.style.display = DisplayStyle.Flex;
+        if (!data.IsMilestone)
+        {
+            _closeArea.style.display = DisplayStyle.Flex;
+            _milestoneIdxArea.style.display = DisplayStyle.None;
+        }
+        else
+        {
+            _closeArea.style.display = DisplayStyle.None;
+            _milestoneIdxArea.style.display = DisplayStyle.Flex;
+        }
     }
 
-    public void ShowDataWhileLoading(DataSO data)
+    public void ShowMilestoneDataWhileLoading(Milestone_DataSO data)
     {
         ShowData(data);
 
+        _milestoneIdxArea.style.display = DisplayStyle.Flex;
+        _milestoneIdx.text = (data.Idx + 1).ToString();
         _closeArea.style.display = DisplayStyle.None;
         _lowerArea.style.display = DisplayStyle.Flex;
         _loadingAnimation.style.display = DisplayStyle.Flex;
         _continueButton.style.display = DisplayStyle.None;
     }
 
-    public void AfterLoading()
+    public void AfterLoadingMilestone()
     {
         _closeArea.style.display = DisplayStyle.None;
         _lowerArea.style.display = DisplayStyle.Flex;
@@ -212,6 +228,8 @@ public class ContextualPanelComponent : AUIState
         _loadingAnimation.style.display = DisplayStyle.None;
         _continueButton.style.display = DisplayStyle.None;
         _resetTourButton.style.display = DisplayStyle.None;
+        _milestoneIdxArea.style.display = DisplayStyle.None;
+        _milestoneIdx.text = string.Empty;
     }
     #endregion
 

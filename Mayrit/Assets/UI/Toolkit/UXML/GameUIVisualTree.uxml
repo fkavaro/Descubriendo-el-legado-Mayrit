@@ -471,6 +471,9 @@
                 </ui:VisualElement>
             </ui:ScrollView>
         </ui:VisualElement>
+        <ui:VisualElement name="MilestoneIdxArea" style="position: absolute; top: 50px; right: auto; flex-shrink: 0; left: 40px; width: 60px; height: 60px;">
+            <ui:Label text="2" name="MilestoneIdx" class="disabled header" style="background-color: rgba(37, 41, 58, 0.86); border-left-color: rgba(76, 87, 142, 0.78); border-right-color: rgba(76, 87, 142, 0.78); border-top-color: rgba(76, 87, 142, 0.78); border-bottom-color: rgba(76, 87, 142, 0.78); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 30px; border-top-right-radius: 30px; border-bottom-right-radius: 30px; border-bottom-left-radius: 30px; padding-top: 2px;"/>
+        </ui:VisualElement>
         <ui:VisualElement name="CloseArea" style="position: absolute; top: 50px; right: 50px; flex-shrink: 0;">
             <ui:Button text="X" name="CloseContextualPanelButton" class="button closeButton smallButton" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; position: relative;"/>
             <ui:Label text="[Back]" class="HUDtext disabled" style="align-self: center; margin-top: 10px;"/>
