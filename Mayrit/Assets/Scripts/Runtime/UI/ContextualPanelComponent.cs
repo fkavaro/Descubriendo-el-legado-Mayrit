@@ -180,16 +180,7 @@ public class ContextualPanelComponent : AUIState
             _resetTourButton.style.display = DisplayStyle.None;
         }
 
-        if (!data.IsMilestone)
-        {
-            _closeArea.style.display = DisplayStyle.Flex;
-            _milestoneIdxArea.style.display = DisplayStyle.None;
-        }
-        else
-        {
-            _closeArea.style.display = DisplayStyle.None;
-            _milestoneIdxArea.style.display = DisplayStyle.Flex;
-        }
+        _closeArea.style.display = DisplayStyle.Flex;
     }
 
     public void ShowMilestoneDataWhileLoading(Milestone_DataSO data)
