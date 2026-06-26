@@ -21,14 +21,7 @@ public class Collectible : AObjective<Collectible, CollectibleSO>
 
     protected override void OnGameStateChangeNotThirdPerson()
     {
-        if (_gameManager.IsAtCollectibleState)
-        {
-            _vfx.SetActive(false);
-        }
-        else
-        {
-            _model.SetActive(false);
-            _vfx.SetActive(false);
-        }
+        _vfx.SetActive(false);
+        _model.SetActive(_gameManager.GameplayState.IsInAtCollectibleState);
     }
 }

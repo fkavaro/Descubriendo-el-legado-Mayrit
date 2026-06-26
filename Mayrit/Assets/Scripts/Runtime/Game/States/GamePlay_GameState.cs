@@ -49,11 +49,11 @@ public class Gameplay_GameState : AGameState
     }
 
     public void SwitchToAerialState() => Fsm.SwitchState(_aerialState);
-    public bool IsInAerialState() => Fsm.IsCurrentState(_aerialState);
+    public bool IsInAerialState => Fsm.IsCurrentState(_aerialState);
     public Aerial_GameState AerialState => _aerialState;
 
     public void SwitchToThirdPersonState() => Fsm.SwitchState(_thirdPersonState);
-    public bool IsInThirdPersonState() => Fsm.IsCurrentState(_thirdPersonState);
+    public bool IsInThirdPersonState => Fsm.IsCurrentState(_thirdPersonState);
     public ThirdPerson_GameState ThirdPersonState => _thirdPersonState;
 
     public void SwitchToAtPOIState(DataSO data, OrbitalCameraSettings orbitalCameraSettings)
@@ -62,7 +62,7 @@ public class Gameplay_GameState : AGameState
         _atPOIState.OrbitalCameraSettings = orbitalCameraSettings;
         Fsm.SwitchState(_atPOIState);
     }
-    public bool IsInAtPOIState() => Fsm.IsCurrentState(_atPOIState);
+    public bool IsInAtPOIState => Fsm.IsCurrentState(_atPOIState);
     public AtPOI_GameState AtPOIState => _atPOIState;
 
     public void SwitchToAtTourStopState(TourStop tourStop)
@@ -70,7 +70,7 @@ public class Gameplay_GameState : AGameState
         _atTourStopState.TourStop = tourStop;
         Fsm.SwitchState(_atTourStopState);
     }
-    public bool IsInAtTourStopState() => Fsm.IsCurrentState(_atTourStopState);
+    public bool IsInAtTourStopState => Fsm.IsCurrentState(_atTourStopState);
     public AtTourStop_GameState AtTourStopState => _atTourStopState;
 
     public void SwitchToAtCollectibleState(Collectible collectible)
@@ -78,6 +78,6 @@ public class Gameplay_GameState : AGameState
         _atCollectibleState.Collectible = collectible;
         Fsm.SwitchState(_atCollectibleState);
     }
-    public bool IsInAtCollectibleState() => Fsm.IsCurrentState(_atCollectibleState);
+    public bool IsInAtCollectibleState => Fsm.IsCurrentState(_atCollectibleState);
     public AtCollectible_GameState AtCollectibleState => _atCollectibleState;
 }

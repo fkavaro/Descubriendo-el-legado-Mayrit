@@ -16,11 +16,11 @@ public class GameManager : ABehaviourEntity<FiniteStateMachine<AGameState>>
     public bool IsInPauseState => _fsm.IsCurrentState(_pauseState);
     public bool IsInGameplayState => _fsm.IsCurrentState(_gameplayState);
     public Gameplay_GameState GameplayState => _gameplayState;
-    public bool IsInAerialState => _fsm.IsCurrentState(_gameplayState) && _gameplayState.IsInAerialState();
-    public bool IsInThirdPersonState => _fsm.IsCurrentState(_gameplayState) && _gameplayState.IsInThirdPersonState();
-    public bool IsAtPOIState => _fsm.IsCurrentState(_gameplayState) && _gameplayState.IsInAtPOIState();
-    public bool IsAtTourStopState => _fsm.IsCurrentState(_gameplayState) && _gameplayState.IsInAtTourStopState();
-    public bool IsAtCollectibleState => _fsm.IsCurrentState(_gameplayState) && _gameplayState.IsInAtCollectibleState();
+    public bool IsInAerialState => _fsm.IsCurrentState(_gameplayState) && _gameplayState.IsInAerialState;
+    public bool IsInThirdPersonState => _fsm.IsCurrentState(_gameplayState) && _gameplayState.IsInThirdPersonState;
+    public bool IsAtPOIState => _fsm.IsCurrentState(_gameplayState) && _gameplayState.IsInAtPOIState;
+    public bool IsAtTourStopState => _fsm.IsCurrentState(_gameplayState) && _gameplayState.IsInAtTourStopState;
+    public bool IsAtCollectibleState => _fsm.IsCurrentState(_gameplayState) && _gameplayState.IsInAtCollectibleState;
 
     public float SimulationSpeed => _gameSimulationSpeed;
 
