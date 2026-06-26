@@ -78,14 +78,11 @@
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="TutorialPlayerFollower" picking-mode="Ignore" style="flex-grow: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
-                <ui:VisualElement name="PlayerFollower" style="flex-grow: 1; width: 60px; height: 60px; position: absolute; top: 1100px; left: auto; display: flex;">
-                    <ui:VisualElement name="Angle" style="justify-content: space-between; align-self: stretch; background-color: rgba(37, 41, 58, 0.59); border-top-left-radius: 160px; border-top-right-radius: 160px; border-bottom-right-radius: 160px; border-bottom-left-radius: 160px; border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px; border-left-color: rgb(64, 73, 118); border-right-color: rgb(64, 73, 118); border-top-color: rgb(64, 73, 118); border-bottom-color: rgb(64, 73, 118); flex-grow: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
-                        <ui:VisualElement style="background-image: url(&quot;project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=6936960519852013934&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-up@2x&quot;); top: -40px; -unity-background-image-tint-color: rgb(64, 73, 118); width: 40px; height: 40px; right: 0; left: 0; align-self: center;"/>
+                <ui:VisualElement name="PlayerFollower" style="flex-grow: 1; width: 60px; height: 60px; position: absolute; top: 1100px; left: auto; display: flex; justify-content: center;">
+                    <ui:VisualElement name="Angle" style="justify-content: space-between; align-self: stretch; flex-grow: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex;">
+                        <ui:VisualElement style="background-image: url(&quot;project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=6936960519852013934&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-up@2x&quot;); top: -40px; -unity-background-image-tint-color: rgba(203, 153, 0, 0.78); width: 40px; height: 40px; right: 0; left: 0; align-self: center;"/>
                     </ui:VisualElement>
-                    <ui:VisualElement name="Icon" style="width: 30px; height: 40px; position: absolute; top: 13px; left: 15px; right: 16px; bottom: 16px;">
-                        <ui:Label text="." name="Label" style="color: rgb(255, 255, 255); font-size: 70px; -unity-text-align: middle-center; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-font-style: bold; position: absolute; top: -55px; left: 0; right: 0; bottom: auto;"/>
-                        <ui:VisualElement style="background-image: url(&quot;project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1304905567622442630&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-down@2x&quot;); width: 60px; height: 40px; align-self: center; position: absolute; top: 5px; left: auto;"/>
-                    </ui:VisualElement>
+                    <ui:VisualElement name="Icon" style="display: flex; background-image: url(&quot;project://database/Assets/Imports/Logo/Player%20icon.png?fileID=2800000&amp;guid=596ebc8804f9ed7438f20f01d52e2188&amp;type=3#Player icon&quot;); width: 60px; height: 60px; align-self: center; -unity-background-image-tint-color: rgba(255, 255, 255, 0.51);"/>
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="TutorialSteps" picking-mode="Ignore" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; justify-content: center; display: flex;">
