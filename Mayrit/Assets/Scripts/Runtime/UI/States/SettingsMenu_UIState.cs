@@ -50,10 +50,10 @@ public class SettingsMenu_UIState : AUIState
     {
         base.StartState();
 
-        _edgeScrollingSwitch.Value = _gameManager.IsEdgeScrollingMovementEnabled;
-        _POIsVisualizationSwitch.Value = _gameManager.ArePOIsVisualized;
-        _displayControlsMappingsSwitch.Value = _gameManager.AreControlsMappingsDisplayed;
-        _milestoneSkipSwitch.Value = _gameManager.CanSkipMilestones;
+        _edgeScrollingSwitch.SetWithoutEvent(_gameManager.IsEdgeScrollingMovementEnabled);
+        _POIsVisualizationSwitch.SetWithoutEvent(_gameManager.ArePOIsVisualized);
+        _displayControlsMappingsSwitch.SetWithoutEvent(_gameManager.AreControlsMappingsDisplayed);
+        _milestoneSkipSwitch.SetWithoutEvent(_gameManager.CanSkipMilestones);
 
         _musicVolumeSlider.value = _soundSystem.MusicVolume;
         _sfxVolumeSlider.value = _soundSystem.EffectsVolume;

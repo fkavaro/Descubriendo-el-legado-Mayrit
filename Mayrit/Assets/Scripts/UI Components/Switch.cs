@@ -58,6 +58,12 @@ public partial class Switch : VisualElement
         SetState(value);
     }
 
+    public void SetWithoutEvent(bool value)
+    {
+        _value = value;
+        SetState(value);
+    }
+
     void SetState(bool value)
     {
         _border.EnableInClassList("switch-border_on", value);

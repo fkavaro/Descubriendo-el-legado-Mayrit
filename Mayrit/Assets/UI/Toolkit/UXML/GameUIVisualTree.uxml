@@ -92,7 +92,7 @@
                     <ui:VisualElement name="Bg" picking-mode="Ignore" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
                     <ui:VisualElement picking-mode="Ignore" style="flex-grow: 1; align-self: auto; justify-content: center; width: 300px;">
                         <ui:Label text="¡Bienvenido!" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
-                        <ui:Label text="En esta experiencia viajarás entre los diferentes Hitos que marcaron la historia de Madrid: desde la fundación de Mayrit en el s.X hasta la construcción de la muralla cristiana en el s.XIII.&#10;Pulsa [Enter] para comenzar el tutorial." name="Text" class="text" style="-unity-text-align: middle-center;"/>
+                        <ui:Label text="En esta experiencia viajarás entre los diferentes Hitos que marcaron la historia de Madrid: desde la fundación de Mayrit en el s.X hasta la construcción de la muralla cristiana en el s.XIII.&#10;Pulsa &lt;b&gt;[Enter]&lt;/b&gt; para comenzar el tutorial." name="Text" class="text" style="-unity-text-align: middle-center;"/>
                     </ui:VisualElement>
                 </ui:VisualElement>
                 <ui:VisualElement name="ZoomOut" picking-mode="Ignore" style="position: absolute; flex-direction: row; display: none; width: 500px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px; left: auto; right: auto; bottom: 100px; top: auto; align-self: center;">
@@ -211,7 +211,7 @@
                     <ui:Image source="project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1304905567622442630&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-down@2x" name="Image" tint-color="rgb(220, 220, 220)" scale-mode="StretchToFill" style="display: flex; position: absolute; top: auto; left: -13px; width: 117px; height: 63px; align-self: center; bottom: -55px;"/>
                 </ui:VisualElement>
                 <ui:VisualElement name="ShowPOIInfo" picking-mode="Ignore" style="flex-grow: 1; display: none;">
-                    <ui:VisualElement name="ModernVisualization" style="position: absolute; top: auto; left: 75px; right: auto; bottom: 140px; align-self: center; flex-direction: row; justify-content: center; display: flex; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
+                    <ui:VisualElement name="ModernVisualization" style="position: absolute; top: auto; left: 60px; right: auto; bottom: 140px; align-self: center; flex-direction: row; justify-content: center; display: flex; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
                         <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
                         <ui:VisualElement style="flex-grow: 1; width: 300px;">
                             <ui:Label text="Visualización moderna" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
@@ -344,20 +344,20 @@
                     <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
                     <ui:VisualElement style="flex-grow: 1; width: 480px; justify-content: center;">
                         <ui:Label text="Controles de personaje" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center;"/>
-                        <ui:Label text="Pulsa las teclas [W], [A], [S] o [D], o las de flechas para moverlo. Irá más rápido si además pulsas la tecla [Shift]. Mueve el ratón para orientar la cámara en cualquier dirección.&#10;Puedes volver a la cámara aérea pulsando [Back].&#10;Pulsa [Enter] para continuar con el tutorial." name="Text" class="text" style="-unity-text-align: middle-center; -unity-font-style: normal;"/>
+                        <ui:Label text="Pulsa las teclas [W], [A], [S] o [D], o las de flechas para moverlo. Irá más rápido si además pulsas la tecla [Shift]. Mueve el ratón para orientar la cámara en cualquier dirección.&#10;Puedes volver a la cámara aérea pulsando [Back].&#10;Pulsa &lt;b&gt;[Enter]&lt;/b&gt; para continuar con el tutorial." name="Text" class="text" style="-unity-text-align: middle-center; -unity-font-style: normal;"/>
                     </ui:VisualElement>
                     <ui:Instance template="CharacterControlsMapping" style="display: flex;"/>
                 </ui:VisualElement>
                 <ui:VisualElement name="Tour" style="position: absolute; top: auto; left: auto; right: 20px; bottom: 230px; align-self: center; flex-direction: column; justify-content: center; display: none; width: 500px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
                     <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
                     <ui:Label text="Completar un Tour" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center; margin-right: 0; margin-bottom: 0; margin-left: 0;"/>
-                    <ui:Label text="Sigue la dirección de la brújula hacia la siguiente parada. Completarás el Tour tras visitarlas todas.&#10;Pulsa [Enter] para contiinuar con el tutorial." name="Text" class="text" style="-unity-text-align: middle-center;"/>
+                    <ui:Label text="Sigue la dirección de la brújula hacia la siguiente parada. Completarás el Tour tras visitarlas todas.&#10;Pulsa &lt;b&gt;[Enter]&lt;/b&gt; para continuar con el tutorial." name="Text" class="text" style="-unity-text-align: middle-center;"/>
                     <ui:Image source="project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1304905567622442630&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-down@2x" name="Image" tint-color="rgb(220, 220, 220)" scale-mode="StretchToFill" style="display: flex; position: absolute; width: 117px; height: 63px; align-self: center; bottom: -65px; right: 0;"/>
                 </ui:VisualElement>
                 <ui:VisualElement name="Collectibles" style="position: absolute; top: auto; left: 315px; right: auto; bottom: 0; align-self: center; flex-direction: column; justify-content: center; display: none; width: 500px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
                     <ui:VisualElement name="Bg" class="tutorialBlurBg" style="flex-grow: 1; display: flex;"/>
                     <ui:Label text="Encontrar Coleccionables" name="Subheader" class="subHeader" style="margin-top: 0; -unity-text-align: upper-center; margin-right: 0; margin-bottom: 0; margin-left: 0;"/>
-                    <ui:Label text="Sigue las pistas para encontrar cada coleccionable y descubrir información adicional.&#10;Pulsa [Enter] para contiinuar con el tutorial." name="Text" emoji-fallback-support="false" class="text" style="-unity-text-align: middle-center;"/>
+                    <ui:Label text="Sigue las pistas para encontrar cada coleccionable y descubrir información adicional.&#10;Pulsa &lt;b&gt;[Enter]&lt;/b&gt; para continuar con el tutorial." name="Text" emoji-fallback-support="false" class="text" style="-unity-text-align: middle-center;"/>
                     <ui:Image source="project://database/Assets/UI/Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1008301579157283121&amp;guid=2196264947afaa74a8b087d37850e618&amp;type=3#arrow-left@2x" name="Image" tint-color="rgb(220, 220, 220)" scale-mode="StretchToFill" style="display: flex; position: absolute; width: 63px; height: 117px; align-self: center; bottom: -20px; right: auto; left: -60px; top: auto;"/>
                 </ui:VisualElement>
                 <ui:VisualElement name="CheerUp" style="position: absolute; top: auto; left: auto; right: auto; bottom: 60px; align-self: center; flex-direction: column; justify-content: center; display: none; width: 600px; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
