@@ -273,7 +273,7 @@
 }
 
 .tutorialBlurBg {
-    background-color: rgba(37, 41, 58, 0.86);
+    background-color: rgba(24, 46, 91, 0.78);
     position: absolute;
     top: 0;
     left: 0;
@@ -284,10 +284,10 @@
     border-bottom-right-radius: 30px;
     border-bottom-left-radius: 30px;
     filter: blur(3);
-    border-left-color: rgb(64, 73, 118);
-    border-right-color: rgb(64, 73, 118);
-    border-top-color: rgb(76, 87, 142);
-    border-bottom-color: rgb(49, 56, 87);
+    border-left-color: rgb(47, 78, 144);
+    border-right-color: rgb(47, 78, 144);
+    border-top-color: rgb(83, 113, 178);
+    border-bottom-color: rgb(24, 50, 106);
     border-top-width: 5px;
     border-right-width: 5px;
     border-bottom-width: 5px;
@@ -372,19 +372,19 @@ Switch Label {
 
 .switch-border_on {
     background-color: rgba(39, 48, 94, 0);
-    border-left-color: rgb(86, 98, 159);
-    border-right-color: rgb(86, 98, 159);
-    border-top-color: rgb(86, 98, 159);
-    border-bottom-color: rgb(86, 98, 159);
+    border-left-color: rgb(88, 109, 155);
+    border-right-color: rgb(88, 109, 155);
+    border-top-color: rgb(88, 109, 155);
+    border-bottom-color: rgb(88, 109, 155);
 }
 
 .switch-border_on:hover {
     transition-duration: 0.2s;
-    border-left-color: rgb(100, 114, 185);
-    border-right-color: rgb(100, 114, 185);
-    border-top-color: rgb(100, 114, 185);
-    border-bottom-color: rgb(100, 114, 185);
-    background-color: rgba(39, 48, 94, 0.59);
+    border-left-color: rgb(82, 115, 188);
+    border-right-color: rgb(82, 115, 188);
+    border-top-color: rgb(82, 115, 188);
+    border-bottom-color: rgb(82, 115, 188);
+    background-color: rgba(32, 61, 122, 0.59);
 }
 
 .switch-knob {
@@ -559,7 +559,7 @@ Switch Label {
 }
 
 .unity-base-slider__fill {
-    background-color: rgb(86, 98, 159);
+    background-color: rgb(88, 109, 155);
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
@@ -592,7 +592,7 @@ Switch Label {
 }
 
 #unity-drag-container:hover {
-    background-color: rgba(39, 48, 94, 0.59);
+    background-color: rgba(32, 61, 122, 0.59);
 }
 
 #unity-tracker {
