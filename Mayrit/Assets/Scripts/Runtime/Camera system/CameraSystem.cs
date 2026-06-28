@@ -160,12 +160,13 @@ public class CameraSystem : ABehaviourEntity<FiniteStateMachine<ACameraState>>
             Debug.LogError("Cannot switch to third person camera: PlayableCharacter is null.");
             return;
         }
-        _thirdPersonCamera.LookAt.position = _playableCharacter.transform.position;
 
-        if (IsInOrbitalState)
-            SyncThirdPersonWithOrbital();
-        else if (IsInTourStopState)
-            SyncThirdPersonWithTourStop();
+        // Offset the camera target slightly above the player for better framing
+        Vector3 newTargetPosition = new(_playableCharacter.transform.position.x, _playableCharacter.transform.position.y + 1f, _playableCharacter.transform.position.z);
+
+        _thirdPersonCamera.LookAt.position = newTargetPosition;
+
+        SyncThirdPersonWithCharacter();
 
         _fsm.SwitchState(_thirdPersonState);
 
@@ -265,32 +266,16 @@ public class CameraSystem : ABehaviourEntity<FiniteStateMachine<ACameraState>>
             aerialOrbit.VerticalAxis.Value = signedPitch;
     }
 
-    void SyncThirdPersonWithOrbital()
+    void SyncThirdPersonWithCharacter()
     {
-        CinemachineOrbitalFollow orbitalOrbit = _orbitalCamera.GetComponent<CinemachineOrbitalFollow>();
+        float characterYaw = Mathf.Repeat(_playableCharacter.transform.eulerAngles.y, 360f);
 
-        float yaw = Mathf.Repeat(orbitalOrbit.HorizontalAxis.Value, 360f);
-        float pitch = Mathf.DeltaAngle(0f, orbitalOrbit.VerticalAxis.Value);
+        float defaultPitch = 15f;
 
         Vector2 limits = _thirdPersonCameraData._orbitClamp;
-        float clampedPitch = Mathf.Clamp(pitch, limits.x, limits.y);
+        float clampedPitch = Mathf.Clamp(defaultPitch, limits.x, limits.y);
 
-        _thirdPersonState.SyncToRotation(clampedPitch, yaw);
-    }
-
-    void SyncThirdPersonWithTourStop()
-    {
-        Transform tourStopCameraTransform = _tourStopState.Camera.transform;
-        Vector3 tourStopForward = tourStopCameraTransform.forward;
-
-        Vector3 eulerAngles = Quaternion.LookRotation(tourStopForward, Vector3.up).eulerAngles;
-        float pitch = Mathf.DeltaAngle(0f, eulerAngles.x);
-        float yaw = Mathf.Repeat(eulerAngles.y, 360f);
-
-        Vector2 limits = _thirdPersonCameraData._orbitClamp;
-        float clampedPitch = Mathf.Clamp(pitch, limits.x, limits.y);
-
-        _thirdPersonState.SyncToRotation(clampedPitch, yaw);
+        _thirdPersonState.SyncToRotation(clampedPitch, characterYaw);
     }
     #endregion
 
