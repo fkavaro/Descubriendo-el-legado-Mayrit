@@ -1,5 +1,3 @@
-# Descubriendo el legado: Mayrit — El videojuego como ventana al patrimonio invisible del Madrid andalusí
-
 <img width="1290" height="726" alt="Descubriendo el legado Mayrit - Cover (1080p)" src="https://github.com/user-attachments/assets/e837559e-ca9a-4be6-9192-739792cbe063" />
 
 
