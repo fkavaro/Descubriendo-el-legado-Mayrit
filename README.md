@@ -65,20 +65,10 @@ Consolidación de la Villa medieval y cierre de la cerca defensiva castellana.
 
 ---
 
-## Requisitos Técnicos y Optimización
-
-### Stack Tecnológico
+## Stack Tecnológico
 - **Motor Gráfico:** Unity (HDRP en su versión 6.3)
 - **Herramienta de Interfaz:** UI Toolkit (UIDocument) con la fuente de acento árabe ElMessiri
 - **Plataforma Objetivo:** PC (Windows)
-
-### Estrategias de Rendimiento
-Para garantizar una tasa de frames fluida renderizando entornos abiertos detallados con cientos de elementos, se integraron las siguientes técnicas:
-- **Multi-Scene Workflow:** Flujo de carga asíncrona mediante un `ScenesController`. El juego descarga el menú principal (`MainMenu`) y monta en paralelo la escena de *Gameplay* base junto a la escena específica de datos de oclusión del hito correspondiente.
-- **Occlusion Culling por Hito:** Al independizar los hitos en escenas, cada una almacena sus propios datos optimizados para mejorar el rendimiento.
-- **Culling de Comportamiento:** Desactivación automática del modelo y el renderizado de mallas de NPCs cuando la cámara se distancia, manteniendo únicamente la ejecución de su lógica subycente.
-- **LODs e Imposters:** Configuración de niveles de detalle (*LOD Groups*) en los modelos finales de edificios (con versiones simplificadas en la última franja) y uso de *Imposters* dinámicos en los árboles.
-- **Ajustes Avanzados de Render:** Uso de resoluciones dinámicas por *Software Training Post-processing* (STP) de Unity, Antialiasing Temporal (TAA) y optimización de cielos mediante gradientes y capas de nubes planas en lugar de volumétricas costosas.
 
 ---
 
