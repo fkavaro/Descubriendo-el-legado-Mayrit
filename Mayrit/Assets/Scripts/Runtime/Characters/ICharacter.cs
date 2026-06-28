@@ -26,6 +26,7 @@ public interface ICharacter : IBehaviourEntity
     float ArrivingDistance { get; }
     float NearDistance { get; }
     float FarDistance { get; }
+    float InteractionRange { get; }
     #endregion
     #region METHODS
     public void SetFullName(string given, string family);

@@ -27,6 +27,7 @@ where BehaviourSystemType : ABehaviourSystem
     public float ArrivingDistance => _arrivingDistance;
     public float NearDistance => _nearDistance;
     public float FarDistance => _farDistance;
+    public float InteractionRange => _interactionRange;
     #endregion
 
     #region EDITOR PROPERTIES

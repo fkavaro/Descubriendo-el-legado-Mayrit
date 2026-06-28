@@ -48,8 +48,18 @@ where NPCtype : INPC
         // Failure if other NPC is no longer in conversation
         if (!_otherNPC.InteractionController.IsStillTalkingWith(_npc))
         {
-            if (!_otherNPC.InteractionController.IsStillTalkingWith(_npc) && _npc.DebugMode)
+            if (_npc.DebugMode)
                 Debug.LogWarning($"[{_npc.Name}.GoToMiddlePointStrategy.Update()] other NPC {_otherNPC.Name} is no longer in conversation", _npc.GO);
+
+            _npc.InteractionController.ConversationInterrupted();
+            return Node.Status.Failure;
+        }
+
+        // Failure if other is too far away (conversation interrupted)
+        if (!_npc.InteractionController.IsStillTalkingWith(_otherNPC))
+        {
+            if (_npc.DebugMode)
+                Debug.LogWarning($"[{_npc.Name}.GoToMiddlePointStrategy.Update()] other NPC {_otherNPC.Name} is too far away", _npc.GO);
 
             _npc.InteractionController.ConversationInterrupted();
             return Node.Status.Failure;
